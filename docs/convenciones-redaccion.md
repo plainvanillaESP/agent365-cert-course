@@ -245,6 +245,35 @@ Authorization: Bearer <token>
 - **Nada de ASCII art ni cajas dibujadas con `+`, `-`, `|` o caracteres Unicode de box-drawing.** Si hace falta un diagrama, va en SVG en `assets/`. ASCII art se ve aceptable en GitHub o en un terminal pero queda como "developer doc" en el shell del curso, donde el alumno espera diagramas vectoriales legibles. Aplica también a tablas dibujadas, árboles de directorios y diagramas de flujo: SVG siempre.
 - **Capturas de admin centers (M02 en adelante):** cada paso operativo (clicar, configurar, validar) lleva su captura. La captura va **anotada**: rectángulo rojo alrededor del control concreto que el alumno tiene que pulsar, número en círculo si hay varios pasos en la misma pantalla. Sin anotaciones, una captura confunde más que ayuda.
 
+### Cómo se producen las infografías
+
+Las infografías y diagramas conceptuales del curso **no se generan con modelos de IA generativa de imagen** (Gemini Imagen, DALL-E, Midjourney, Stable Diffusion). Razones:
+
+- Inconsistencia visual entre infografías: cada una parece de un sitio distinto y rompe la identidad del curso.
+- No respetan paleta brand ni tipografía: salen colores y fuentes aleatorios.
+- Renderizan mal el texto técnico (nombres de productos, comandos, KQL).
+- Son PNG/JPG, no SVG: pixelan al zoom y no se pueden editar después.
+- Cada iteración es un nuevo prompt con resultado distinto: imposible mantener.
+
+**Producción real de cada tipo de visual:**
+
+| Tipo | Herramienta | Dónde vive |
+|---|---|---|
+| Diagrama conceptual estático (cajas, relaciones, capas) | SVG nativo escrito a mano | `assets/NN-descripcion.svg` del módulo |
+| Diagrama de flujo, secuencia, ER, gantt | Mermaid (se renderiza a SVG) | Inline en el `.md` con bloque `mermaid` |
+| Visualización de datos no interactiva | SVG nativo o `recharts` exportado | `assets/` |
+| Visualización de datos interactiva (filtros, tooltips) | Componente React con `recharts` | `shell/src/components/...` |
+| Iconografía dentro de diagrama | `lucide-react` | Inline en el componente o como `<svg>` |
+| Captura de UI real (admin center, portal) | PNG con anotaciones | `assets/` con rectángulo rojo y números en círculo |
+| Infografía interactiva (mapping, drag-drop, drilldown) | Componente React | `shell/src/components/...`, no markdown |
+
+**Paleta y tipografía obligatorias en SVG:**
+
+- Colores brand: `#7B2FBE` (PV purple 600), `#9A44E5` (PV purple 500), `#F68DAC` (PV pink 400), grises stone (#1c1917 → #f5f5f4). Fondos de cajas: gris stone-50/stone-900 según light/dark si el SVG va con `<style>` para modo oscuro; si no, fondo neutro siempre.
+- Para resaltar elementos críticos (el sujeto principal del diagrama): morado brand o borde morado.
+- Tipografía: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif` como font-family del SVG. **Nunca incrustar Inter ni Bricolage** en el SVG: las fonts no cargan en GitHub Pages al ser inline y todo cae al system font, mejor declararlo desde el principio.
+- ViewBox razonable (900-1200 ancho para diagramas full-width, 600-800 para inline pequeños).
+
 ---
 
 ## Términos y traducciones
