@@ -1,0 +1,100 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 14px; font-weight: 600; fill: white; }
+      .url    { font-size: 11px; font-family: ui-monospace, 'SF Mono', monospace; fill: #57534e; }
+      .role   { font-size: 11.5px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .reco   { font-size: 12px; font-weight: 600; fill: #1c1917; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">¿Dónde se asigna cada rol?</text>
+  <text x="40" y="58" class="sub">Cuatro admin centers · cada uno gestiona su catálogo · Entra es el preferido cuando es opcional</text>
+
+  <!-- ===== M365 admin center ===== -->
+  <rect x="40" y="100" width="220" height="280" rx="10" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40" y="100" width="220" height="38" rx="10" fill="#9A44E5"/>
+  <rect x="40" y="126" width="220" height="12" fill="#9A44E5"/>
+  <text x="58" y="125" class="h2">M365 admin center</text>
+
+  <text x="58" y="160" class="url">admin.microsoft.com</text>
+  <text x="58" y="174" class="url">→ Roles → Role assignments</text>
+
+  <text x="58" y="208" class="role" font-weight="600">Roles que asignas aquí:</text>
+  <text x="58" y="230" class="role">• AI Administrator</text>
+  <text x="58" y="248" class="role">• AI Reader</text>
+  <text x="58" y="266" class="role">• Billing Administrator</text>
+
+  <text x="58" y="298" class="role" font-style="italic" fill="#78716c">Interfaz simplificada,</text>
+  <text x="58" y="314" class="role" font-style="italic" fill="#78716c">orientada a tareas comunes.</text>
+  <text x="58" y="330" class="role" font-style="italic" fill="#78716c">Para PIM, scope y grupos →</text>
+  <text x="58" y="346" class="role" font-style="italic" fill="#78716c">usar Entra.</text>
+
+  <!-- ===== Microsoft Entra ===== -->
+  <rect x="280" y="100" width="220" height="280" rx="10" fill="#EFF6FF" stroke="#0284C7" stroke-width="2"/>
+  <rect x="280" y="100" width="220" height="38" rx="10" fill="#0284C7"/>
+  <rect x="280" y="126" width="220" height="12" fill="#0284C7"/>
+  <text x="298" y="125" class="h2">Microsoft Entra</text>
+
+  <text x="298" y="160" class="url">entra.microsoft.com</text>
+  <text x="298" y="174" class="url">→ Identity → Roles &amp; admins</text>
+
+  <text x="298" y="208" class="role" font-weight="600">Roles que asignas aquí:</text>
+  <text x="298" y="226" class="role">• Global Administrator</text>
+  <text x="298" y="242" class="role">• Global Reader</text>
+  <text x="298" y="258" class="role">• Agent ID Administrator</text>
+  <text x="298" y="274" class="role">• Agent ID Developer</text>
+  <text x="298" y="290" class="role">• Cloud App Administrator</text>
+  <text x="298" y="306" class="role">• CA Administrator</text>
+  <text x="298" y="322" class="role">• Lifecycle Workflows Admin</text>
+
+  <!-- Badge "preferido" -->
+  <rect x="298" y="340" width="120" height="22" rx="11" fill="#0284C7"/>
+  <text x="358" y="356" text-anchor="middle" font-size="10" font-weight="600" fill="white" letter-spacing="0.04em">PREFERIDO</text>
+
+  <!-- ===== Defender XDR ===== -->
+  <rect x="520" y="100" width="200" height="280" rx="10" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <rect x="520" y="100" width="200" height="38" rx="10" fill="#DC2626"/>
+  <rect x="520" y="126" width="200" height="12" fill="#DC2626"/>
+  <text x="538" y="125" class="h2">Defender XDR</text>
+
+  <text x="538" y="160" class="url">security.microsoft.com</text>
+  <text x="538" y="174" class="url">→ Permissions</text>
+
+  <text x="538" y="208" class="role" font-weight="600">Roles que asignas aquí:</text>
+  <text x="538" y="230" class="role">• Security Administrator</text>
+  <text x="538" y="248" class="role">• Security Operator</text>
+  <text x="538" y="266" class="role">• Security Reader</text>
+
+  <text x="538" y="300" class="role" font-style="italic" fill="#78716c">Solo aquí: roles que viven</text>
+  <text x="538" y="316" class="role" font-style="italic" fill="#78716c">en el portal de seguridad.</text>
+
+  <!-- ===== Microsoft Purview ===== -->
+  <rect x="740" y="100" width="200" height="280" rx="10" fill="#F0FDF4" stroke="#15803D" stroke-width="1.5"/>
+  <rect x="740" y="100" width="200" height="38" rx="10" fill="#15803D"/>
+  <rect x="740" y="126" width="200" height="12" fill="#15803D"/>
+  <text x="758" y="125" class="h2">Microsoft Purview</text>
+
+  <text x="758" y="160" class="url">purview.microsoft.com</text>
+  <text x="758" y="174" class="url">→ Roles &amp; scopes</text>
+
+  <text x="758" y="208" class="role" font-weight="600">Roles que asignas aquí:</text>
+  <text x="758" y="230" class="role">• Compliance Administrator</text>
+  <text x="758" y="248" class="role">• IRM Administrator</text>
+  <text x="758" y="266" class="role">• IRM Investigator</text>
+  <text x="758" y="284" class="role">• Compliance Reader</text>
+
+  <text x="758" y="316" class="role" font-style="italic" fill="#78716c">Solo aquí: roles de</text>
+  <text x="758" y="332" class="role" font-style="italic" fill="#78716c">compliance e IRM.</text>
+
+  <!-- ===== Banda inferior con recomendación ===== -->
+  <rect x="40" y="410" width="900" height="76" rx="8" fill="#FAFAF9" stroke="#D6D3D1" stroke-width="1"/>
+  <text x="60" y="436" class="reco">Recomendación operativa</text>
+  <text x="60" y="458" font-size="12" fill="#44403c">Para una organización mediana, asigna <tspan font-weight="600">desde Entra siempre que sea posible</tspan>: centraliza, permite asignación a grupos,</text>
+  <text x="60" y="474" font-size="12" fill="#44403c">habilita PIM y la UI siempre está más actualizada que la de M365 admin center. Solo usa los otros admin centers cuando el rol vive solo allí.</text>
+
+  <text x="490" y="525" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 04 · Fig. 4.2</text>
+</svg>

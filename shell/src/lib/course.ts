@@ -68,7 +68,7 @@ export const MODULES: CourseModule[] = [
   { id: 1,  slug: 'modulo-01-fundamentos',                  titulo: 'Fundamentos: ¿Qué es Microsoft Agent 365?',         duracionMin: 60,  areaExamen: 1, estado: 'producido', faseProduccion: 2, preguntas: 3  },
   { id: 2,  slug: 'modulo-02-arquitectura',                  titulo: 'Arquitectura y componentes',                         duracionMin: 75,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 3  },
   { id: 3,  slug: 'modulo-03-licenciamiento',                titulo: 'Licenciamiento, prerrequisitos y planificación',    duracionMin: 60,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 1  },
-  { id: 4,  slug: 'modulo-04-roles-administrativos',         titulo: 'Roles administrativos y delegación',                duracionMin: 45,  areaExamen: 1, estado: 'pendiente', faseProduccion: 3, preguntas: 1  },
+  { id: 4,  slug: 'modulo-04-roles-administrativos',         titulo: 'Roles administrativos y delegación',                duracionMin: 45,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 1  },
   { id: 5,  slug: 'modulo-05-configuracion-inicial',         titulo: 'Configuración inicial del tenant',                  duracionMin: 75,  areaExamen: 1, estado: 'pendiente', faseProduccion: 3, preguntas: 1  },
   { id: 6,  slug: 'modulo-06-entra-agent-id',                titulo: 'Microsoft Entra Agent ID e identidades',            duracionMin: 105, areaExamen: 2, estado: 'pendiente', faseProduccion: 4, preguntas: 11 },
   { id: 7,  slug: 'modulo-07-agent-registry-map',            titulo: 'Agent Registry y Agent Map',                         duracionMin: 75,  areaExamen: 3, estado: 'pendiente', faseProduccion: 4, preguntas: 4  },

@@ -226,12 +226,34 @@ const Q_EX_03_001: MultipleChoiceQuestion = {
     'La decisión standalone vs E7 depende del peso de Copilot, no de Agent 365. Con un 35 % de adopción Copilot creciendo al 5 % mensual, la organización está aún por debajo del break-even típico (60-70 %). E5 + Agent 365 standalone para los 1.400 usuarios que invocan agentes ($57 + $15 = $72 × 1.400 + Copilot ya pagado) es significativamente más barato que migrar los 4.000 a E7. La opción A sobrepaga ~$120.000/mes en E5 base que ya tienen y E7 a usuarios que no usan Copilot. La C mezcla SKUs sin justificación operativa (Agent 365 E7 no es un SKU; E7 es bundle completo). La D malentiende Frontier preview: es para validar capacidades nuevas, no para producción a 1.400 usuarios.',
 }
 
+const Q_EX_04_001: MultipleChoiceQuestion = {
+  id: 'EX-04-001',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-04.1',
+  area: 1,
+  bloom: 'Aplicar',
+  moduleId: 4,
+  prompt:
+    'Un analista de seguridad necesita revisar diariamente las alertas que Microsoft Defender XDR genera sobre agentes en el Agent Registry, correlacionarlas con la información del propio Registry y, cuando una alerta lo justifique, abrir un ticket al equipo de M365 admin. NO debe poder modificar políticas de Defender ni aprobar o bloquear agentes. ¿Qué combinación de roles aplica el principio de least-privilege correctamente?',
+  options: [
+    { id: 'A', text: 'Global Administrator. Es el más simple y cubre todo lo que necesita.' },
+    { id: 'B', text: 'Security Administrator + AI Administrator, para tener escritura en seguridad y en agentes.' },
+    { id: 'C', text: 'Security Operator + AI Reader, que permite investigar alertas en Defender y ver el Registry sin modificarlo.' },
+    { id: 'D', text: 'Security Reader, suficiente porque solo necesita leer.' },
+  ],
+  correctOptionId: 'C',
+  justification:
+    'Least-privilege exige asignar el mínimo rol que permite hacer la tarea. Security Operator permite investigar alertas y responder a incidentes en Defender (la tarea principal) sin escritura en políticas. AI Reader permite ver el Registry para correlacionar pero no modificar agentes. La combinación cubre exactamente las necesidades sin excederse. La opción A (Global Administrator) es el antipatrón clásico: sobreasigna privilegio. La B (Security Administrator + AI Administrator) da escritura donde la tarea solo requiere lectura/operación. La D (Security Reader) es insuficiente: el Reader no permite responder a incidentes, solo verlos.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
   Q_EX_01_001, Q_EX_01_002, Q_EX_01_003,
   Q_EX_02_001, Q_EX_02_002, Q_EX_02_003,
   Q_EX_03_001,
+  Q_EX_04_001,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {

@@ -1,0 +1,118 @@
+<svg viewBox="0 0 980 600" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub   { font-size: 13px; font-style: italic; fill: #57534e; }
+      .cat   { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }
+      .role  { font-size: 12.5px; font-weight: 600; fill: #1c1917; }
+      .desc  { font-size: 11px; fill: #57534e; }
+      .footer{ font-size: 11px; fill: #a8a29e; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Catálogo de roles administrativos</text>
+  <text x="40" y="58" class="sub">Cinco áreas funcionales · cada una con admin (escritura) y reader (lectura)</text>
+
+  <!-- ===== Categoría 1: Gobernanza de agentes (morado) ===== -->
+  <rect x="40" y="90" width="290" height="170" rx="10" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40" y="90" width="290" height="32" rx="10" fill="#9A44E5"/>
+  <rect x="40" y="116" width="290" height="6" fill="#9A44E5"/>
+  <text x="58" y="111" fill="white" class="cat">GOBERNANZA DE AGENTES · M365</text>
+
+  <text x="58" y="146" class="role">AI Administrator</text>
+  <text x="58" y="162" class="desc">Registry, Map, Settings, aprobaciones,</text>
+  <text x="58" y="176" class="desc">lifecycle del Agent workload</text>
+
+  <line x1="58" y1="190" x2="312" y2="190" stroke="#E9D8FF" stroke-width="1"/>
+
+  <text x="58" y="210" class="role">AI Reader</text>
+  <text x="58" y="226" class="desc">Solo lectura del Registry, Map,</text>
+  <text x="58" y="240" class="desc">métricas y configuración</text>
+
+  <!-- ===== Categoría 2: Identidad (azul) ===== -->
+  <rect x="350" y="90" width="290" height="170" rx="10" fill="#EFF6FF" stroke="#0284C7" stroke-width="1.5"/>
+  <rect x="350" y="90" width="290" height="32" rx="10" fill="#0284C7"/>
+  <rect x="350" y="116" width="290" height="6" fill="#0284C7"/>
+  <text x="368" y="111" fill="white" class="cat">IDENTIDAD · ENTRA</text>
+
+  <text x="368" y="146" class="role">Agent ID Administrator</text>
+  <text x="368" y="162" class="desc">Crear/editar/eliminar agent</text>
+  <text x="368" y="176" class="desc">identities, blueprints, principals</text>
+
+  <line x1="368" y1="190" x2="622" y2="190" stroke="#BFDBFE" stroke-width="1"/>
+
+  <text x="368" y="210" class="role">Agent ID Developer</text>
+  <text x="368" y="226" class="desc">Crear/modificar sus propios</text>
+  <text x="368" y="240" class="desc">agentes (no los de otros)</text>
+
+  <!-- ===== Categoría 3: Seguridad (rojo) ===== -->
+  <rect x="660" y="90" width="290" height="170" rx="10" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <rect x="660" y="90" width="290" height="32" rx="10" fill="#DC2626"/>
+  <rect x="660" y="116" width="290" height="6" fill="#DC2626"/>
+  <text x="678" y="111" fill="white" class="cat">SEGURIDAD · DEFENDER</text>
+
+  <text x="678" y="146" class="role">Security Administrator</text>
+  <text x="678" y="162" class="desc">Configura Defender, políticas</text>
+  <text x="678" y="176" class="desc">de seguridad, responde incidentes</text>
+
+  <line x1="678" y1="190" x2="932" y2="190" stroke="#FECACA" stroke-width="1"/>
+
+  <text x="678" y="210" class="role">Security Operator / Reader</text>
+  <text x="678" y="226" class="desc">Investigar y responder alertas</text>
+  <text x="678" y="240" class="desc">(Operator) o solo leer (Reader)</text>
+
+  <!-- ===== Categoría 4: Datos y compliance (verde) ===== -->
+  <rect x="40" y="290" width="290" height="170" rx="10" fill="#F0FDF4" stroke="#15803D" stroke-width="1.5"/>
+  <rect x="40" y="290" width="290" height="32" rx="10" fill="#15803D"/>
+  <rect x="40" y="316" width="290" height="6" fill="#15803D"/>
+  <text x="58" y="311" fill="white" class="cat">DATOS Y COMPLIANCE · PURVIEW</text>
+
+  <text x="58" y="346" class="role">Compliance Administrator</text>
+  <text x="58" y="362" class="desc">DLP, sensitivity labels, retention</text>
+  <text x="58" y="376" class="desc">aplicados a contenido de agentes</text>
+
+  <line x1="58" y1="390" x2="312" y2="390" stroke="#BBF7D0" stroke-width="1"/>
+
+  <text x="58" y="410" class="role">IRM Administrator</text>
+  <text x="58" y="426" class="desc">Insider Risk Management:</text>
+  <text x="58" y="440" class="desc">políticas y casos sobre agentes</text>
+
+  <!-- ===== Categoría 5: Operaciones (gris) ===== -->
+  <rect x="350" y="290" width="290" height="170" rx="10" fill="#FAFAF9" stroke="#57534E" stroke-width="1.5"/>
+  <rect x="350" y="290" width="290" height="32" rx="10" fill="#57534E"/>
+  <rect x="350" y="316" width="290" height="6" fill="#57534E"/>
+  <text x="368" y="311" fill="white" class="cat">OPERACIONES · M365 / ENTRA</text>
+
+  <text x="368" y="346" class="role">Lifecycle Workflows Admin</text>
+  <text x="368" y="362" class="desc">Configurar workflows de mover</text>
+  <text x="368" y="376" class="desc">y leaver, sponsorship transfer</text>
+
+  <line x1="368" y1="390" x2="622" y2="390" stroke="#D6D3D1" stroke-width="1"/>
+
+  <text x="368" y="410" class="role">Billing Administrator</text>
+  <text x="368" y="426" class="desc">Suscripciones, facturación,</text>
+  <text x="368" y="440" class="desc">consumo de Copilot Credits</text>
+
+  <!-- ===== Categoría especial: Globales ===== -->
+  <rect x="660" y="290" width="290" height="170" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="660" y="290" width="290" height="32" rx="10" fill="#C2410C"/>
+  <rect x="660" y="316" width="290" height="6" fill="#C2410C"/>
+  <text x="678" y="311" fill="white" class="cat">GLOBALES · TODO EL TENANT</text>
+
+  <text x="678" y="346" class="role">Global Administrator</text>
+  <text x="678" y="362" class="desc">Todo. Antipatrón asignar lo que</text>
+  <text x="678" y="376" class="desc">otro rol más limitado bastaría.</text>
+
+  <line x1="678" y1="390" x2="932" y2="390" stroke="#FED7AA" stroke-width="1"/>
+
+  <text x="678" y="410" class="role">Global Reader</text>
+  <text x="678" y="426" class="desc">Solo lectura de TODO. Útil para</text>
+  <text x="678" y="440" class="desc">auditoría y compliance.</text>
+
+  <!-- ===== Banda inferior con regla ===== -->
+  <rect x="40" y="490" width="910" height="58" rx="8" fill="#FAFAF9" stroke="#D6D3D1" stroke-width="1"/>
+  <text x="60" y="514" font-size="13" font-weight="600" fill="#1c1917">Regla operativa</text>
+  <text x="60" y="534" font-size="12" fill="#44403c">Combinar Readers de varias categorías cubre visibilidad transversal sin riesgo. Administrator solo cuando se necesita modificar.</text>
+
+  <text x="490" y="585" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 04 · Fig. 4.1</text>
+</svg>
