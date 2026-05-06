@@ -8,19 +8,28 @@
 
 ---
 
+## Sobre este sitio
+
+Este sitio es la **vista de revisión interna** del contenido del curso. Renderiza los módulos en formato navegable mientras se producen, pero no es el producto final que verá el alumno. La experiencia del alumno se construye en un shell React separado a partir de la **Fase 2.A** del plan.
+
+---
+
 ## Estado de producción
 
 | Fase | Descripción | Estado |
 |---|---|---|
-| Fase 0 | Investigación deep-research base | ✅ Completada |
-| Fase 1 | Diseño maestro (blueprint, áreas, evaluación, banco modelo) | ✅ Completada |
-| Fase 2 | Módulo 01 prototipo de calidad | 🚧 En revisión |
-| Fase 3 | Módulos 02-05 (Fundamentos & Setup) | ⏳ Pendiente |
-| Fase 4 | Módulos 06-09 (Identidad y ciclo de vida) | ⏳ Pendiente |
-| Fase 5 | Módulos 10-13 (Datos, monitorización, CCS) | ⏳ Pendiente |
-| Fase 6 | Módulos 14-16 (Avanzado) | ⏳ Pendiente |
-| Fase 7 | Módulo 17 — Evaluación final | ⏳ Pendiente |
-| Fase 8 | Pipeline de build (HTML interactivo + PDFs) | ⏳ Pendiente |
+| Fase 0 | Investigación deep-research base | Completada |
+| Fase 1 | Diseño maestro (blueprint, áreas, evaluación, banco modelo) | Completada |
+| Fase 2 | Módulo 01 prototipo de contenido | Completada |
+| **Fase 2.A** | **Prototipo del shell de e-learning con M01** | **En curso** |
+| Fase 3 | Módulos 02-05 (Fundamentos & Setup) | Pendiente |
+| Fase 4 | Módulos 06-09 (Identidad y ciclo de vida) | Pendiente |
+| Fase 5 | Módulos 10-13 (Datos, monitorización, CCS) | Pendiente |
+| Fase 6 | Módulos 14-16 (Avanzado) | Pendiente |
+| Fase 7 | Módulo 17 — Examen final | Pendiente |
+| Fase 8 | Shell completo + auth + certificación + PDFs | Pendiente |
+
+El detalle de cada fase está en [Plan de producción](PLAN.md).
 
 ---
 
@@ -28,11 +37,13 @@
 
 El curso tiene **17 módulos** que suman **18 horas de teoría + laboratorios** más una **evaluación final de 90 minutos** con 60 preguntas. Los módulos cubren cinco áreas de competencia:
 
-- **Plan and configure Microsoft Agent 365** — 15% del examen
-- **Manage agent identities with Microsoft Entra Agent ID** — 30% del examen *(la más pesada)*
-- **Manage the agent registry and lifecycle** — 15% del examen
-- **Implement data protection with Microsoft Purview** — 20% del examen
-- **Monitor, investigate and govern** — 20% del examen
+| Área | Peso del examen |
+|---|---|
+| Plan and configure Microsoft Agent 365 | 15% |
+| Manage agent identities with Microsoft Entra Agent ID | 30% |
+| Manage the agent registry and lifecycle | 15% |
+| Implement data protection with Microsoft Purview | 20% |
+| Monitor, investigate and govern | 20% |
 
 El detalle completo está en [Arquitectura del curso](docs/arquitectura-curso.md).
 
@@ -45,7 +56,7 @@ El detalle completo está en [Arquitectura del curso](docs/arquitectura-curso.md
 - [Arquitectura del curso](docs/arquitectura-curso.md) — el blueprint maestro de los 17 módulos.
 - [Auditoría de Fase 1](docs/auditoria-fase-1.md) — verificación sistemática de cobertura.
 - [Banco de preguntas modelo](docs/banco-preguntas-modelo.md) — 12 preguntas reales que muestran el estándar de calidad de la evaluación.
-- [Convenciones de redacción](docs/convenciones-redaccion.md) — tono, formato y estilo del curso.
+- [Convenciones de redacción](docs/convenciones-redaccion.md) — tono, formato, regla de cero emojis.
 
 ### Para revisar el contenido producido
 
@@ -54,13 +65,13 @@ El detalle completo está en [Arquitectura del curso](docs/arquitectura-curso.md
 ### Para entender el contexto
 
 - [Investigación deep-research mayo 2026](investigacion/deep-research-mayo-2026.md) — base fáctica del curso.
-- [Plan de producción](PLAN.md) — roadmap detallado de las 8 fases.
+- [Plan de producción](PLAN.md) — roadmap detallado de las 9 fases.
 - [Changelog](docs/changelog.md) — registro de decisiones y entregables.
 
 ---
 
-## Sobre este sitio
+## Cómo se actualiza este sitio
 
-Este sitio se genera automáticamente desde el repositorio fuente cada vez que se mergea contenido a `main`. Es la forma más cómoda de revisar el material en formato navegable; el repositorio en sí sigue siendo la fuente única de verdad.
+Cada vez que se mergea contenido a `main`, GitHub Actions ejecuta `scripts/build_site.py` y `mkdocs build`. El deploy es automático y tarda ~30 segundos.
 
-Para ver el repositorio: [github.com/plainvanillaESP/agent365-cert-course](https://github.com/plainvanillaESP/agent365-cert-course)
+Repositorio fuente: [github.com/plainvanillaESP/agent365-cert-course](https://github.com/plainvanillaESP/agent365-cert-course)

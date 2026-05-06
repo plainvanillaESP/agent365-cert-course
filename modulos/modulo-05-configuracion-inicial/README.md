@@ -1,7 +1,7 @@
 # Módulo 05 — Configuración inicial del tenant
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

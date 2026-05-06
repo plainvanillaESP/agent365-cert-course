@@ -1,7 +1,7 @@
 # Módulo 15 — Troubleshooting y casos prácticos
 
 **Duración:** 60 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

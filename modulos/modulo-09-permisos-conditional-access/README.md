@@ -1,7 +1,7 @@
 # Módulo 09 — Permisos, accesos y Conditional Access
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

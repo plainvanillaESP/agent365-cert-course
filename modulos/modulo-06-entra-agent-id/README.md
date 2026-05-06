@@ -1,7 +1,7 @@
 # Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
 
 **Duración:** 120 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

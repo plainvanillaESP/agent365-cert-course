@@ -1,7 +1,7 @@
 # Módulo 10 — Microsoft Purview y protección de datos
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

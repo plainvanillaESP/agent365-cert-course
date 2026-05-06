@@ -1,7 +1,7 @@
 # Módulo 08 — Despliegue, distribución y ciclo de vida
 
 **Duración:** 120 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

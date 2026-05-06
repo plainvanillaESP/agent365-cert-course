@@ -1,7 +1,7 @@
 # Módulo 04 — Roles administrativos y delegación
 
 **Duración:** 60 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

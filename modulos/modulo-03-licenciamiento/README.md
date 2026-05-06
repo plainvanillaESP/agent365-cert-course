@@ -1,7 +1,7 @@
 # Módulo 03 — Licenciamiento, prerrequisitos y planificación
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

@@ -110,17 +110,17 @@ Microsoft Entra Agent ID introduce **cuatro tipos de objetos nuevos** en la dire
 
 | Capacidad | Soporte |
 |---|---|
-| DSPM y DSPM for AI (classic) | ✓ — usa AI observability page para ver agent instances activos y riesgos |
-| Auditing | ✓ — agent-to-human, human-to-agent, agent-to-tools, agent-to-agent en unified audit log |
-| Data classification | ✓ — SITs y trainable classifiers detectan datos sensibles en prompts/responses |
-| Sensitivity labels | ✓ — agent instances necesitan VIEW + EXTRACT usage rights; contenido nuevo NO hereda labels |
+| DSPM y DSPM for AI (classic) | Sí — usa AI observability page para ver agent instances activos y riesgos |
+| Auditing | Sí — agent-to-human, human-to-agent, agent-to-tools, agent-to-agent en unified audit log |
+| Data classification | Sí — SITs y trainable classifiers detectan datos sensibles en prompts/responses |
+| Sensitivity labels | Sí — agent instances necesitan VIEW + EXTRACT usage rights; contenido nuevo NO hereda labels |
 | Encryption sin sensitivity labels | ✕ |
-| DLP | ✓ — bloquear/auditar agent-to-human, human-to-agent en Teams, OneDrive/SharePoint, emails (especificar agent instance como user) |
-| Insider Risk Management | ✓ — Risky AI usage policy template (prompt injection, protected materials) |
-| Communication Compliance | ✓ — Teams y emails |
-| eDiscovery | ✓ — `Type:Contains:Copilot activity` query |
-| Data Lifecycle Management | ✓ — retention policies para Teams, OneDrive/SharePoint, emails |
-| Compliance Manager | ✓ — templates regulatorios (EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA) |
+| DLP | Sí — bloquear/auditar agent-to-human, human-to-agent en Teams, OneDrive/SharePoint, emails (especificar agent instance como user) |
+| Insider Risk Management | Sí — Risky AI usage policy template (prompt injection, protected materials) |
+| Communication Compliance | Sí — Teams y emails |
+| eDiscovery | Sí — `Type:Contains:Copilot activity` query |
+| Data Lifecycle Management | Sí — retention policies para Teams, OneDrive/SharePoint, emails |
+| Compliance Manager | Sí — templates regulatorios (EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA) |
 
 ### 7. Microsoft Defender para Agent 365
 

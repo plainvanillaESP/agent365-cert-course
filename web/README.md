@@ -2,7 +2,7 @@
 
 Esta carpeta contendrá el e-learning HTML interactivo generado a partir del contenido fuente en markdown.
 
-**Estado:** ⏳ Pendiente — se construye en la Fase 8 del plan, una vez todos los módulos estén producidos.
+**Estado:** Pendiente — se construye en la Fase 8 del plan, una vez todos los módulos estén producidos.
 
 ## Estructura prevista
 

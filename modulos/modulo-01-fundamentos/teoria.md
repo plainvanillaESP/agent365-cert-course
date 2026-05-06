@@ -171,8 +171,8 @@ Microsoft Agent 365 está pensado para alinear a cuatro perfiles administrativos
 **Herramientas Agent 365 que utiliza:**
 
 - **Microsoft Entra Agent ID** — los cuatro tipos de objetos nuevos en el directorio: agent identity blueprint, blueprint principal, agent identity, agent user.
-- **Conditional Access para agentes** 🟢 GA — políticas con scope `All agent identities` o `All agent users`, condiciones por agent risk, grant Block.
-- **Identity Protection para agentes** 🟡 Preview (P2) — 6 detecciones offline, Risky Agents report con 90 días de histórico, acciones Confirm compromise / safe / Dismiss / Disable.
+- **Conditional Access para agentes** [GA] — políticas con scope `All agent identities` o `All agent users`, condiciones por agent risk, grant Block.
+- **Identity Protection para agentes** [Preview] (P2) — 6 detecciones offline, Risky Agents report con 90 días de histórico, acciones Confirm compromise / safe / Dismiss / Disable.
 - **Lifecycle workflows** — sponsorship con transferencia automática al manager si el sponsor sale; mover/leaver tasks.
 
 **Roles típicos:** Agent ID Administrator, Cloud Application Administrator, Conditional Access Administrator, Agent ID Developer.
@@ -201,7 +201,7 @@ Microsoft Agent 365 está pensado para alinear a cuatro perfiles administrativos
 - **Centralized monitoring** en Defender XDR.
 - **Out-of-the-box threat detections** — alertas en risky agent activities.
 - **Advanced hunting con KQL** sobre la tabla `CloudAppEvents`, filtrando por las cinco `ActionTypes` específicas de agentes (`InvokeAgent`, `InferenceCall`, `ExecuteToolBySDK`, `ExecuteToolByGateway`, `ExecuteToolByMCPServer`).
-- **Real-time protection durante runtime** 🟡 Preview — inspecciona invocaciones de tools antes de ejecutarlas; bloquea XPIA (Indirect Prompt Injection) y UPIA (Direct Prompt Injection); fail-open si Defender no responde en 1 segundo.
+- **Real-time protection durante runtime** [Preview] — inspecciona invocaciones de tools antes de ejecutarlas; bloquea XPIA (Indirect Prompt Injection) y UPIA (Direct Prompt Injection); fail-open si Defender no responde en 1 segundo.
 - **Defender for Cloud Apps AI Agent Inventory** — inventario adicional para agentes Copilot Studio, posture, attack paths.
 - **Detección de agentes locales / Shadow AI** — coordinada con Intune para bloquear OpenClaw, GitHub Copilot CLI, Claude Code y similares.
 
@@ -300,9 +300,9 @@ Un mismo evento puede tener relevancia en los dos productos: si un usuario le pa
 
 A lo largo del curso se etiquetan las capacidades con badges:
 
-- 🟢 **GA** — disponible para producción con SLA. Ejemplo: Conditional Access para agentes, Risks column (con E7), Compliance Manager para AI.
-- 🟡 **Preview pública** — disponible para todos los tenants pero con caveats explícitos. Ejemplo: Real-time protection durante runtime, Identity Protection para agentes, Registry sync multicloud, Shadow AI page.
-- 🔴 **Frontier preview** — solo para tenants en el programa preview de Microsoft. Ejemplo: agentic users autónomos con propio mailbox, Windows 365 for Agents fuera de EE. UU.
+- **GA** — disponible para producción con SLA. Ejemplo: Conditional Access para agentes, Risks column (con E7), Compliance Manager para AI.
+- **Preview pública** — disponible para todos los tenants pero con caveats explícitos. Ejemplo: Real-time protection durante runtime, Identity Protection para agentes, Registry sync multicloud, Shadow AI page.
+- **Frontier preview** — solo para tenants en el programa preview de Microsoft. Ejemplo: agentic users autónomos con propio mailbox, Windows 365 for Agents fuera de EE. UU.
 
 Cuando el curso describe una capacidad, indica explícitamente su estado para que el alumno sepa qué puede usar hoy en producción y qué requiere prudencia operativa adicional.
 

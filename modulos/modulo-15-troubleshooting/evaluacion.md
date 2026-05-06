@@ -1,6 +1,6 @@
 # Módulo 15 — Evaluación
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 
 ## Preguntas de comprobación
 

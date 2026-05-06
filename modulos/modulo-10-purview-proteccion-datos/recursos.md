@@ -1,6 +1,6 @@
 # Módulo 10 — Recursos
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 
 ## Documentación oficial Microsoft Learn
 

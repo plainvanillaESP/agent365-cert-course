@@ -36,8 +36,8 @@ Lee siempre primero estos archivos para tener contexto completo:
 ### Precisión técnica
 - **Toda afirmación factual debe tener fuente oficial Microsoft Learn**
 - Citar URL en formato markdown link al final de cada sección o como nota al pie
-- Si una capacidad está en preview, marcarla explícitamente con badge `🟡 Preview` o `🔴 Frontier preview`
-- Las capacidades GA llevan badge `🟢 GA mayo 2026` (o la fecha que corresponda)
+- Si una capacidad está en preview, marcarla explícitamente con badge `[Preview]` o `[Frontier preview]`
+- Las capacidades GA llevan badge `[GA] mayo 2026` (o la fecha que corresponda)
 - Distinguir explícitamente Microsoft 365 Agents SDK ≠ Microsoft Agent 365 SDK
 - Distinguir CCS (Copilot Control System) ≠ Agent 365
 
@@ -70,7 +70,7 @@ Cuando el usuario te pida producir contenido para un módulo:
 - No inventar fechas, nombres de roles, precios, o features que no estén en la investigación o en learn.microsoft.com verificable
 - No añadir contenido al README o PLAN sin que el usuario lo pida explícitamente
 - No producir contenido genérico de "introducción a la IA" — el alumno ya viene con contexto, ir al grano
-- No usar emojis salvo los badges de estado (🟢 🟡 🔴 ✅ ⏳)
+- No usar emojis nunca; iconos solo en el shell React (Lucide o Material UI)
 - No traducir nombres propios de productos Microsoft
 
 ## Comandos útiles

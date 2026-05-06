@@ -2,7 +2,7 @@
 
 Esta carpeta contendrá los PDFs descargables generados a partir del contenido fuente en markdown.
 
-**Estado:** ⏳ Pendiente — se construye en la Fase 8 del plan.
+**Estado:** Pendiente — se construye en la Fase 8 del plan.
 
 ## Outputs previstos
 

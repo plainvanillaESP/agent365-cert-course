@@ -1,7 +1,7 @@
 # Módulo 01 — Fundamentos: ¿Qué es Microsoft Agent 365?
 
 **Duración:** 60 minutos
-**Estado:** ✅ Producido (Fase 2 — prototipo de calidad)
+**Estado:** Producido (Fase 2 — prototipo de calidad)
 **Fase del curso:** F2
 **Área del examen:** 1 — *Plan and configure Microsoft Agent 365*
 **Preguntas en evaluación final:** 3 (EX-01-001, EX-01-002, EX-01-003)

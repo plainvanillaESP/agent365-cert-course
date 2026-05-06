@@ -1,7 +1,7 @@
 # Módulo 02 — Arquitectura y componentes
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

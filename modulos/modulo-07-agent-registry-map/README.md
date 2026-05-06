@@ -1,7 +1,7 @@
 # Módulo 07 — Agent Registry y Agent Map
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

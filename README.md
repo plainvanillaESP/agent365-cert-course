@@ -81,12 +81,12 @@ Ver [`PLAN.md`](./PLAN.md) para el roadmap detallado y el estado actual de cada 
 
 | Fase | Estado |
 |---|---|
-| Fase 0: Investigación deep-research | ✅ Completada |
-| Fase 1: Diseño maestro y blueprint | 🟡 En curso |
-| Fase 2: Producción Módulo 1 (prototipo) | ⏳ Pendiente |
-| Fase 3-6: Producción módulos 2-17 | ⏳ Pendiente |
-| Fase 7: Examen final + revisión integral | ⏳ Pendiente |
-| Fase 8: Build de e-learning web + PDFs | ⏳ Pendiente |
+| Fase 0: Investigación deep-research | Completada |
+| Fase 1: Diseño maestro y blueprint | En curso |
+| Fase 2: Producción Módulo 1 (prototipo) | Pendiente |
+| Fase 3-6: Producción módulos 2-17 | Pendiente |
+| Fase 7: Examen final + revisión integral | Pendiente |
+| Fase 8: Build de e-learning web + PDFs | Pendiente |
 
 ---
 
