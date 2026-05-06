@@ -80,7 +80,7 @@ export function Quiz({ moduleId }: QuizProps) {
 
           return (
             <li key={q.id}>
-              <QuestionCard index={idx} question={q} state={state}>
+              <QuestionCard index={idx} state={state}>
                 {isMultipleChoice(q) && ans.type === 'mc' && (
                   <QuestionMultipleChoice
                     question={q}
