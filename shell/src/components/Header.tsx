@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Sun, Moon, Menu } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { Logotipo } from '@/components/Logo'
+import { IconButton } from '@/components/Button'
 
 interface HeaderProps {
   onMenuToggle?: () => void
@@ -23,26 +24,29 @@ export function Header({ onMenuToggle }: HeaderProps) {
       className="sticky top-0 z-30 h-[var(--layout-header-h)] backdrop-blur-md border-b border-[var(--border-default)] bg-[var(--bg-overlay)]"
     >
       <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
-        {/* Logo + título del curso */}
-        <div className="flex items-center gap-3 min-w-0">
+        {/* Marca + título del curso */}
+        <div className="flex items-center gap-2 min-w-0">
           {onMenuToggle && (
-            <button
-              type="button"
+            <IconButton
               onClick={onMenuToggle}
-              className="lg:hidden size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] -ml-2"
-              aria-label="Abrir navegación"
+              label="Abrir navegación"
+              size="md"
+              className="lg:hidden -ml-1.5"
             >
-              <Menu className="size-[18px]" />
-            </button>
+              <Menu className="size-5" />
+            </IconButton>
           )}
 
-          <Link to="/" className="flex items-center gap-3 min-w-0 group">
-            <Logotipo className="h-6 sm:h-7 w-auto shrink-0" />
+          <Link
+            to="/"
+            className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
+          >
+            <Logotipo className="h-7 w-auto shrink-0" />
             <div className="hidden md:block min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
               <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
                 Microsoft Agent 365 IT Admin
               </div>
-              <div className="text-[11px] leading-tight text-[var(--text-muted)]">
+              <div className="text-[11px] leading-tight text-[var(--text-muted)] mt-px">
                 Curso de certificación
               </div>
             </div>
@@ -55,19 +59,18 @@ export function Header({ onMenuToggle }: HeaderProps) {
             href="https://github.com/plainvanillaESP/agent365-cert-course"
             target="_blank"
             rel="noopener noreferrer"
-            className="size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors"
             aria-label="Repositorio en GitHub"
+            className="size-9 inline-flex items-center justify-center rounded-md text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
           >
-            <GithubIcon className="size-[16px]" />
+            <GithubIcon className="size-[17px]" />
           </a>
-          <button
-            type="button"
+          <IconButton
             onClick={toggle}
-            className="size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors"
-            aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            size="md"
           >
-            {theme === 'dark' ? <Sun className="size-[16px]" /> : <Moon className="size-[16px]" />}
-          </button>
+            {theme === 'dark' ? <Sun className="size-[17px]" /> : <Moon className="size-[17px]" />}
+          </IconButton>
         </div>
       </div>
     </header>
