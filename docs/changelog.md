@@ -22,3 +22,9 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
   - Estructura del examen final: 60 preguntas, 90 min, 7 tipos, distribución por área
   - Matriz de competencias inicial con 87 objetivos cubiertos
   - Ruta de producción con dependencias entre módulos para Fases 2-7
+- `[Diseño]` **Revisión 1.1 del blueprint** tras feedback:
+  - Áreas reducidas de 8 a **5 estilo Microsoft Learn** (15-30%, múltiplos de 5). Identidad pasa a ser la más pesada (25-30%).
+  - Duración total recortada de 23h a **18h** (1080 min). Se aprietan minutajes de teoría manteniendo todos los laboratorios.
+  - Concepto de "certificación con validez de 18 meses" sustituido por **"constancia de finalización del curso"** sin caducidad ni recertificación.
+  - Tres caminos de aprendizaje eliminados: **itinerario único** de 16 módulos secuenciales.
+  - Reparto de preguntas reequilibrado por área y por módulo (60 preguntas exactas).
