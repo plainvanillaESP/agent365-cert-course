@@ -9,6 +9,9 @@ import { Quiz } from '@/components/quiz/Quiz'
 import { getQuestionsForModule } from '@/lib/quiz'
 import { Lab } from '@/components/lab/Lab'
 import { getLabForModule } from '@/lib/labs'
+import { Resources } from '@/components/resources/Resources'
+import { getResourcesForModule } from '@/lib/resources'
+import { ScrollProgress } from '@/components/ScrollProgress'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'evaluacion', 'recursos']
 
@@ -105,11 +108,18 @@ export function ModulePage() {
           </div>
         </header>
 
+        {/* Barra de progreso de lectura, solo en teoría con contenido */}
+        {section === 'teoria' && content && (
+          <ScrollProgress storageKey={`agent365-reading-m${module.id}-teoria`} />
+        )}
+
         {/* Contenido */}
         {section === 'evaluacion' && getQuestionsForModule(module.id).length > 0 ? (
           <Quiz moduleId={module.id} />
         ) : section === 'laboratorios' && getLabForModule(module.id) ? (
           <Lab moduleId={module.id} />
+        ) : section === 'recursos' && getResourcesForModule(module.id) ? (
+          <Resources moduleId={module.id} />
         ) : content ? (
           <MarkdownRenderer body={content.body} moduleSlug={module.slug} />
         ) : (
@@ -158,9 +168,12 @@ export function ModulePage() {
         )}
       </div>
 
-      {/* TOC derecha — solo en secciones markdown, no en quiz/lab */}
+      {/* TOC derecha — solo en teoría con markdown */}
       <aside className="hidden xl:block">
-        {content && section !== 'evaluacion' && section !== 'laboratorios' && <TableOfContents />}
+        {content &&
+          section !== 'evaluacion' &&
+          section !== 'laboratorios' &&
+          section !== 'recursos' && <TableOfContents />}
       </aside>
     </div>
   )
