@@ -885,6 +885,183 @@ const M04_RESOURCES: ModuleResources = {
   ],
 }
 
+/* --------------------------------- M05 ----------------------------------- */
+
+const M05_RESOURCES: ModuleResources = {
+  moduleId: 5,
+  intro:
+    'Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y verificado a la fecha de última actualización.',
+  categories: [
+    {
+      id: 'docs-activation',
+      title: 'Documentación oficial — Activación de Agent 365',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Get started with Microsoft Agent 365',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/get-started',
+          description: 'Guía oficial del primer ciclo de activación.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Prerequisites for Microsoft Agent 365',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/prerequisites',
+          description: 'Checklist de prerrequisitos consolidada por Microsoft.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Activate Copilot Frontier',
+          url: 'https://learn.microsoft.com/microsoft-365-copilot/copilot-frontier-toggle',
+          description: 'Cómo activar el toggle Frontier y qué capacidades desbloquea.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Accept Terms of Service for Agent 365',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/terms-of-service',
+          description: 'Proceso de aceptación y auditoría.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Configure the Agent workload settings',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/configure-settings',
+          description: 'Configuraciones avanzadas tras la activación inicial.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-audit',
+      title: 'Documentación oficial — Audit logs',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Purview Audit (Standard) overview',
+          url: 'https://learn.microsoft.com/purview/audit-log-search',
+          description: 'Habilitación, búsqueda y exportación.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Search the audit log for events related to Agent 365',
+          url: 'https://learn.microsoft.com/purview/audit-search-agent-365',
+          description: 'Operaciones específicas de agentes en el audit log.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Audit log latency',
+          url: 'https://learn.microsoft.com/purview/audit-log-detailed-properties#audit-log-latency',
+          description: 'Tiempos esperados de aparición de eventos.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-defender-config',
+      title: 'Documentación oficial — Configuración de Defender XDR',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Connect Microsoft 365 to Defender for Cloud Apps',
+          url: 'https://learn.microsoft.com/defender-cloud-apps/connect-office-365',
+          description: 'Conector M365, OAuth y áreas conectables.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'CloudAppEvents table reference',
+          url: 'https://learn.microsoft.com/defender-xdr/advanced-hunting-cloudappevents-table',
+          description: 'Esquema completo de la tabla y ActionTypes específicos de agentes.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'AI Agent Inventory in Microsoft Defender',
+          url: 'https://learn.microsoft.com/defender-xdr/ai-agent-inventory',
+          description: 'Inventario de agentes detectados.',
+          lang: 'en',
+        },
+        {
+          type: 'blog',
+          title: '5 new ActionTypes for Agent 365',
+          url: 'https://techcommunity.microsoft.com/blog/agent-365-actiontypes',
+          description: 'Anuncio de los nuevos ActionTypes con ejemplos KQL.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-purview-config',
+      title: 'Documentación oficial — Configuración de Purview',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Data Security Posture Management for AI',
+          url: 'https://learn.microsoft.com/purview/dspm-for-ai-overview',
+          description: 'Qué cubre DSPM for AI y cómo activarlo.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'AI observability in Microsoft Purview',
+          url: 'https://learn.microsoft.com/purview/ai-observability',
+          description: 'Métricas y eventos específicos de uso de IA.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Configure sensitivity labels for SharePoint and OneDrive',
+          url: 'https://learn.microsoft.com/purview/sensitivity-labels-sharepoint-onedrive',
+          description: 'Publicación de labels para que los agentes las hereden.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-power-platform',
+      title: 'Documentación oficial — Power Platform',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Connect Power Platform to Microsoft 365 Agent Registry',
+          url: 'https://learn.microsoft.com/power-platform/admin/agent-365-integration',
+          description: 'Sincronización del inventario Copilot Studio.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'troubleshooting',
+      title: 'Troubleshooting',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Agent 365 troubleshooting guide',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/troubleshooting',
+          description: 'Síntomas, diagnósticos y soluciones para los errores más comunes de activación.',
+          lang: 'en',
+        },
+        {
+          type: 'commercial',
+          title: 'Microsoft 365 admin center service health',
+          url: 'https://admin.microsoft.com/AdminPortal/Home#/servicehealth',
+          description: 'Estado de servicios de Microsoft 365 en tiempo real.',
+          lang: 'en',
+        },
+      ],
+    },
+  ],
+  crossReferences: [
+    { topic: 'Identidades de agentes en Entra',     moduleId: 6,  moduleTitle: 'Microsoft Entra Agent ID e identidades' },
+    { topic: 'Operación del Registry y Map',         moduleId: 7,  moduleTitle: 'Agent Registry y Agent Map' },
+    { topic: 'Monitorización avanzada en Defender',  moduleId: 12, moduleTitle: 'Monitorización, auditoría y reporting' },
+  ],
+}
+
 /* ------------------------------ API pública ------------------------------ */
 
 const ALL_RESOURCES: Record<number, ModuleResources> = {
@@ -892,6 +1069,7 @@ const ALL_RESOURCES: Record<number, ModuleResources> = {
   2: M02_RESOURCES,
   3: M03_RESOURCES,
   4: M04_RESOURCES,
+  5: M05_RESOURCES,
 }
 
 export function getResourcesForModule(moduleId: number): ModuleResources | null {
