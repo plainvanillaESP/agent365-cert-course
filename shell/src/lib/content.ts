@@ -2,17 +2,43 @@
  * Carga del contenido del curso desde los archivos .md del repositorio.
  *
  * Usa import.meta.glob de Vite para descubrir y cargar todos los .md
- * de modulos/, parsea el frontmatter YAML y entrega el body listo para
- * pasar a react-markdown.
+ * de modulos/, separa el frontmatter YAML del body markdown y entrega
+ * el body listo para pasar a react-markdown.
+ *
+ * Nota técnica: NO usamos gray-matter aquí. gray-matter depende de
+ * `Buffer` (API de Node) que no existe en el navegador y rompe el
+ * bundle con `ReferenceError: Buffer is not defined`. Como solo
+ * necesitamos el body (el frontmatter por ahora es metadata para CMS,
+ * no se consume en runtime del shell), un strip por regex es suficiente
+ * y elimina ~50 kB de dependencias.
  */
-import matter from 'gray-matter'
 
 export type ContentType = 'readme' | 'teoria' | 'laboratorios' | 'evaluacion' | 'recursos'
 
 export interface ParsedContent {
-  frontmatter: Record<string, unknown>
+  /**
+   * Frontmatter como string sin parsear. La parte amarilla entre los `---`.
+   * Si en el futuro hace falta consumirlo, parsearlo con `js-yaml`
+   * (browser-safe) en el lugar puntual donde se necesite.
+   */
+  frontmatterRaw: string
   body: string
   raw: string
+}
+
+const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
+
+/**
+ * Separa frontmatter y body de un .md. Si no hay frontmatter, devuelve
+ * el contenido íntegro como body.
+ */
+function splitFrontmatter(raw: string): { frontmatterRaw: string; body: string } {
+  const m = raw.match(FRONTMATTER_RE)
+  if (!m) return { frontmatterRaw: '', body: raw }
+  return {
+    frontmatterRaw: m[1],
+    body: raw.slice(m[0].length),
+  }
 }
 
 /**
@@ -71,10 +97,10 @@ export function loadContent(slug: string, type: ContentType): ParsedContent | nu
   const raw = contentMap.get(key)
   if (!raw) return null
 
-  const parsed = matter(raw)
+  const { frontmatterRaw, body } = splitFrontmatter(raw)
   return {
-    frontmatter: parsed.data,
-    body: parsed.content,
+    frontmatterRaw,
+    body,
     raw,
   }
 }
