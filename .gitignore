@@ -1,0 +1,43 @@
+# Build outputs
+pdfs/*.pdf
+web/modulos/*.html
+web/index.html
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp
+tmp/
+temp/
+*.bak
+*.tmp
+
+# Sensitive
+*.pem
+*.key
+secrets.json
+.env.local
+.env.production
