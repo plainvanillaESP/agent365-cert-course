@@ -6,7 +6,7 @@ Contenido fuente en markdown. Cada subcarpeta es un módulo del curso.
 
 | # | Módulo | Carpeta | Estado |
 |---|---|---|---|
-| 01 | Fundamentos: ¿Qué es Microsoft Agent 365? | [`modulo-01-fundamentos/`](./modulo-01-fundamentos/) | 🚧 Pendiente |
+| 01 | Fundamentos: ¿Qué es Microsoft Agent 365? | [`modulo-01-fundamentos/`](./modulo-01-fundamentos/) | ✅ Producido |
 | 02 | Arquitectura y componentes | [`modulo-02-arquitectura/`](./modulo-02-arquitectura/) | 🚧 Pendiente |
 | 03 | Licenciamiento, prerrequisitos y planificación | [`modulo-03-licenciamiento/`](./modulo-03-licenciamiento/) | 🚧 Pendiente |
 | 04 | Roles administrativos y delegación | [`modulo-04-roles-administrativos/`](./modulo-04-roles-administrativos/) | 🚧 Pendiente |

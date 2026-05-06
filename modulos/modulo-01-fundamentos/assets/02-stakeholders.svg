@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title>Los cuatro stakeholders core de Microsoft Agent 365</title>
+  <desc>Diagrama que muestra los cuatro perfiles administrativos que Microsoft Agent 365 alinea: M365 admin, Entra admin, Purview admin y Defender admin, con sus responsabilidades y herramientas.</desc>
+
+  <!-- Fondo -->
+  <rect width="900" height="540" fill="#FFFFFF"/>
+
+  <!-- Título -->
+  <text x="450" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#1F1F1F">Los cuatro stakeholders core</text>
+  <text x="450" y="68" text-anchor="middle" font-size="13" fill="#666" font-style="italic">Cada perfil opera desde su propio admin center; Agent 365 alinea los cuatro</text>
+
+  <!-- M365 admin (azul) -->
+  <g id="m365-admin" transform="translate(50, 110)">
+    <rect width="380" height="180" rx="10" fill="#E8F1FB" stroke="#0078D4" stroke-width="2"/>
+    <text x="20" y="32" font-size="16" font-weight="700" fill="#003E80">M365 admin</text>
+    <text x="20" y="55" font-size="11" fill="#0078D4" font-style="italic">Microsoft 365 admin center</text>
+
+    <text x="20" y="82" font-size="12" font-weight="600" fill="#1F1F1F">Responsabilidad</text>
+    <text x="20" y="100" font-size="11" fill="#444">Inventario, ciclo de vida y publishing</text>
+    <text x="20" y="116" font-size="11" fill="#444">de todos los agentes del tenant.</text>
+
+    <text x="20" y="142" font-size="12" font-weight="600" fill="#1F1F1F">Herramientas</text>
+    <text x="20" y="160" font-size="11" fill="#444">Agent Registry · Agent Map · Wizard</text>
+    <text x="20" y="174" font-size="11" fill="#444">de publishing · 11 acciones de gobernanza</text>
+  </g>
+
+  <!-- Entra admin (purple) -->
+  <g id="entra-admin" transform="translate(470, 110)">
+    <rect width="380" height="180" rx="10" fill="#F4F0F8" stroke="#7B2FBE" stroke-width="2"/>
+    <text x="20" y="32" font-size="16" font-weight="700" fill="#3D1A5C">Entra admin</text>
+    <text x="20" y="55" font-size="11" fill="#7B2FBE" font-style="italic">Microsoft Entra admin center</text>
+
+    <text x="20" y="82" font-size="12" font-weight="600" fill="#1F1F1F">Responsabilidad</text>
+    <text x="20" y="100" font-size="11" fill="#444">Identidad de cada agente, permisos,</text>
+    <text x="20" y="116" font-size="11" fill="#444">Conditional Access y lifecycle.</text>
+
+    <text x="20" y="142" font-size="12" font-weight="600" fill="#1F1F1F">Herramientas</text>
+    <text x="20" y="160" font-size="11" fill="#444">Agent ID (4 tipos de objetos) · CA agentes ·</text>
+    <text x="20" y="174" font-size="11" fill="#444">Identity Protection · Sponsorship + workflows</text>
+  </g>
+
+  <!-- Purview admin (green) -->
+  <g id="purview-admin" transform="translate(50, 320)">
+    <rect width="380" height="180" rx="10" fill="#E8F4EC" stroke="#107C41" stroke-width="2"/>
+    <text x="20" y="32" font-size="16" font-weight="700" fill="#0B5226">Purview admin</text>
+    <text x="20" y="55" font-size="11" fill="#107C41" font-style="italic">Microsoft Purview portal</text>
+
+    <text x="20" y="82" font-size="12" font-weight="600" fill="#1F1F1F">Responsabilidad</text>
+    <text x="20" y="100" font-size="11" fill="#444">Gobernanza, protección y compliance</text>
+    <text x="20" y="116" font-size="11" fill="#444">de los datos que los agentes usan.</text>
+
+    <text x="20" y="142" font-size="12" font-weight="600" fill="#1F1F1F">Herramientas</text>
+    <text x="20" y="160" font-size="11" fill="#444">DSPM for AI · DLP · IRM Risky AI usage ·</text>
+    <text x="20" y="174" font-size="11" fill="#444">eDiscovery · Compliance Manager (EU AI Act)</text>
+  </g>
+
+  <!-- Defender admin (red/orange) -->
+  <g id="defender-admin" transform="translate(470, 320)">
+    <rect width="380" height="180" rx="10" fill="#FCEBEA" stroke="#C73334" stroke-width="2"/>
+    <text x="20" y="32" font-size="16" font-weight="700" fill="#7A1D1E">Defender admin</text>
+    <text x="20" y="55" font-size="11" fill="#C73334" font-style="italic">Microsoft Defender XDR</text>
+
+    <text x="20" y="82" font-size="12" font-weight="600" fill="#1F1F1F">Responsabilidad</text>
+    <text x="20" y="100" font-size="11" fill="#444">Posture, detección de amenazas y</text>
+    <text x="20" y="116" font-size="11" fill="#444">respuesta sobre los agentes.</text>
+
+    <text x="20" y="142" font-size="12" font-weight="600" fill="#1F1F1F">Herramientas</text>
+    <text x="20" y="160" font-size="11" fill="#444">CloudAppEvents (KQL) · Real-time protection ·</text>
+    <text x="20" y="174" font-size="11" fill="#444">AI Agent Inventory · Shadow AI / Intune</text>
+  </g>
+
+  <!-- Pie -->
+  <text x="450" y="528" text-anchor="middle" font-size="11" fill="#999" font-style="italic">
+    Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 01
+  </text>
+</svg>
