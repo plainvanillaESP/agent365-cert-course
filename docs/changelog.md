@@ -32,3 +32,14 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
   - Identidad sube a 30% (era 25-30%) por densidad conceptual: 4 tipos de objetos nuevos en Entra, OBO/own identity, CA para agentes, ID Protection.
   - Reparto exacto: 9 / 18 / 9 / 12 / 12 = 60 preguntas.
   - Reparto a nivel de módulo reequilibrado coherentemente (M03→1, M06→11, M08→5, M10→5, M12→7, M14→2).
+- `[Diseño]` **Auditoría de Fase 1** completada en `docs/auditoria-fase-1.md`:
+  - Verificación sistemática de 96 temas del research contra los 17 módulos del blueprint.
+  - Resultado: 86 temas cubiertos explícitamente, 7 indirectamente, 0 gaps.
+  - 3 caveats técnicos identificados como ⚠️ (sensitivity labels en `.agent` files, ready-made SharePoint agents no editables, análiticas Foundry V2). Aplicados en este mismo commit.
+- `[Diseño]` **Banco de preguntas modelo** creado en `docs/banco-preguntas-modelo.md`:
+  - 12 preguntas reales completas (enunciado + opciones + respuesta + justificación + variantes).
+  - Cubren los 7 tipos de pregunta del examen, 5 niveles de Bloom, 3 dificultades, 5 áreas y 8 módulos.
+  - Establecen el estándar de calidad al que se ajustarán las 60 preguntas finales producidas en Fases 2-7.
+- `[Fix]` 3 caveats añadidos al blueprint:
+  - M14.2: sensitivity labels no se aplican directamente sobre `.agent` files; default ready-made SharePoint agents no son editables.
+  - M07.4: análiticas Foundry solo V2.

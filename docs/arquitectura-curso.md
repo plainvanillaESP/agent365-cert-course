@@ -404,7 +404,7 @@ Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijo
 | 7.1 Agent Registry: estructura | 15 min | Metadata por agente, columnas, filtros, ordenación. |
 | 7.2 Agent Map: visualización | 15 min | Clusters por plataforma, fit-to-view, full screen, max agents. |
 | 7.3 Hero metrics y Top actions | 15 min | Overview en profundidad. Pending requests, ownerless, at risk, exceptions. |
-| 7.4 Agent analytics | 10 min | Creators (org/Third Party/Microsoft), top platforms. |
+| 7.4 Agent analytics | 10 min | Creators (org/Third Party/Microsoft), top platforms. Análiticas Foundry solo soportan V2 — limitación a tener en cuenta para agentes V1 históricos. |
 | 7.5 Registry sync multicloud 🟡 Preview | 10 min | AWS Bedrock, Google Gemini Enterprise. Cómo se conecta y limitaciones. |
 | 7.6 Risks column 🟢 GA (con E7) | 10 min | Qué muestra, delay de hasta 1 hora, integración con Defender. |
 
@@ -739,7 +739,7 @@ Interpretar resultados. Construir variante que filtra por un agente específico.
 | Sección | Duración | Contenido |
 |---|---|---|
 | 14.1 Custom Templates en profundidad | 15 min | Componer plantilla. Casos. |
-| 14.2 SharePoint Agents governance | 10 min | .agent files, permisos archivo, RCD, RAC, DLP por extensión. |
+| 14.2 SharePoint Agents governance | 10 min | .agent files, permisos archivo, RCD, RAC, DLP por extensión. Limitaciones: sensitivity labels NO se aplican directamente sobre `.agent` files (solo vía extension); default ready-made SharePoint agents NO son editables. |
 | 14.3 Copilot Studio governance | 10 min | Power Platform admin center. DLP, block publishing, environment routing, sharing. |
 | 14.4 Registry sync multicloud 🟡 Preview | 5 min | AWS Bedrock, Google Gemini. Conexión y limitaciones. |
 | 14.5 Shadow AI page 🟡 Preview | 5 min | OpenClaw, GitHub Copilot CLI, Claude Code. |
