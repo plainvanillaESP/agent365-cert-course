@@ -276,9 +276,66 @@ Authorization: Bearer <token>
 
 ---
 
+## Reglas anti-IA (lenguaje + UI)
+
+> Estas reglas son **bloqueantes**. Cualquier contenido que las incumpla se devuelve para reescritura antes de mergear, da igual el módulo, el formato o quién lo haya producido.
+
+### En el contenido de los módulos (.md)
+
+**No usar estas frases ni sus variantes:**
+
+| Frase prohibida | Por qué |
+|---|---|
+| "Es importante mencionar que…" / "Cabe destacar que…" | Filler IA. Si es importante, dilo directamente. |
+| "En este sentido…" / "En este contexto…" | Conector vacío. |
+| "Vale la pena…" / "Conviene tener en cuenta…" como apertura | Imperativo blando IA. Sustituir por un imperativo directo o suprimir. |
+| "Como hemos visto…" / "Como se mencionó…" | El alumno puede saltar módulos. Usar referencia explícita: "(ver Módulo 03 § 3.2)". |
+| "En resumen…" / "En conclusión…" | Si la sección termina, termina. |
+| "Te ayudará a…" / "Te permitirá…" / "Podrás…" | Marketing-IA. Decir qué hace el producto, no qué siente el alumno. |
+| "Una experiencia interactiva / navegable / inmersiva" | Marketing puro. |
+| "Tu viaje de aprendizaje" / "Embárcate" / "Descubre" | Marketing puro. |
+| "Transformar / potenciar / elevar / desbloquear / aprovecha al máximo" | Marketing puro. |
+| "Ecosistema integrado" / "Solución end-to-end" | Marketing puro. |
+| "Según los expertos" / "Típicamente" / "Muchas empresas" sin fuente | Generalización sin sustento. |
+| "Fácilmente" / "De forma sencilla" / "En pocos minutos" | Falsa promesa. Si es fácil, se ve. |
+
+**Em-dashes (—):** permitidos como separador título-subtítulo (`Módulo 01 — Fundamentos`), en captions de figura (`Fig. 1.1 — descripción`) y en listas término-definición (`Agent Registry — inventario centralizado`). **No abusar** del em-dash en mitad de frase como recurso retórico — es uno de los marcadores típicos de prosa IA. Si una frase tiene 2+ em-dashes en línea, reescribir.
+
+**Conectores prohibidos:** "Por ende", "asimismo", "no obstante", "por consiguiente". Sustituir por conectores naturales: "y", "pero", "así", "entonces".
+
+### En la UI del shell (componentes React + textos hardcoded)
+
+**No mostrar nunca al alumno:**
+
+- **IDs internos del banco de preguntas** (`EX-XX-XXX`). Son códigos del PMO, no etiquetas para el usuario.
+- **Taxonomías pedagógicas** (Bloom: Aplicar / Comprender, OA-XX.N, ADKAR, etc.). Son metadata del diseño curricular.
+- **Tipo de pregunta** ("Drag & drop", "Multiple choice", "Escenario") como etiqueta. El alumno lo identifica por el formato.
+- **Dificultad** ("Fácil / Media / Difícil") como etiqueta. Si necesita aviso, redactarlo en lenguaje natural.
+- **Fases internas del proyecto** ("Fase 2.A", "Hito B"). Son lenguaje del PMO.
+- **Jerga DevOps** ("se actualiza al mergear a main", "deploy automático", "PR mergeado"). Irrelevante para el alumno.
+- **Meta del proyecto** ("Este sitio es el prototipo de…", "Este shell es la Fase 2.A…"). El alumno usa el sitio, no asiste a la sprint review.
+
+**Sí mostrar (información útil al alumno):**
+
+- Duración estimada del módulo (planifica su tiempo).
+- Número de preguntas que aporta el módulo al examen final (planifica el repaso).
+- Estado del módulo (disponible / próximamente).
+- Área del examen a la que pertenece y peso porcentual (qué priorizar).
+- Tras validar un quiz: número de preguntas correctas y feedback por pregunta.
+
+### Test rápido para detectar IA-leakage
+
+Antes de mergear cualquier .md o cualquier componente con texto:
+
+1. **Léelo en voz alta.** Si suena a folleto comercial, reescribir.
+2. **Búscate las palabras de la tabla.** `grep -ni "vale la pena\|cabe destacar\|en este sentido\|tu viaje\|experiencia interactiva\|transforma\|potencia\|desbloquea\|aprovecha al máximo\|te permitirá\|fácilmente"` debería devolver cero resultados.
+3. **Busca metadata de proyecto en UI.** `grep -rn "EX-\|OA-\|Bloom\|Fase \|Hito\|prototipo" shell/src/` solo debería devolver coincidencias en `lib/` o comentarios, nunca en strings que se rendericen.
+4. **Cuenta los em-dashes por archivo.** Más de un em-dash cada ~80 líneas en un .md sugiere abuso retórico — revisar.
+
+---
+
 ## Cosas que evitar
 
-- "Como vimos antes..." — el alumno puede saltar módulos. Usar referencias explícitas: "(ver Módulo 03 § Licenciamiento)".
 - Frases vacías como "es importante destacar que" o "cabe mencionar".
 - Emojis. Sin excepciones (ver sección anterior).
 - Traducir nombres propios de productos.

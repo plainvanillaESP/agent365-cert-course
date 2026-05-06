@@ -158,7 +158,7 @@ Agent 365 es un **control plane**: una capa que se coloca *encima* de los builde
 
 ### Los seis productos que se confunden con Agent 365
 
-Vale la pena fijarlos uno por uno porque la confusión entre ellos es la fuente del 80% de los errores en proyectos reales:
+Conviene fijarlos uno por uno porque la confusión entre ellos es la fuente del 80% de los errores en proyectos reales:
 
 | Producto | Para qué sirve | Relación con Agent 365 |
 |---|---|---|
@@ -178,7 +178,7 @@ Cuando un desarrollador escucha *«Microsoft tiene un SDK para agentes»*, suele
 
 Un agente real puede usar ambos: el primero para hablar con los usuarios, el segundo para ser inventariado, identificado y protegido. La elección no es excluyente.
 
-> Si un proveedor o partner te dice que su agente *«usa el Microsoft Agents SDK»*, vale la pena preguntar **cuál de los dos**. La respuesta cambia el modelo de gobernanza aplicable.
+> Si un proveedor o partner te dice que su agente *«usa el Microsoft Agents SDK»*, pregunta **cuál de los dos**. La respuesta cambia el modelo de gobernanza aplicable.
 
 ---
 

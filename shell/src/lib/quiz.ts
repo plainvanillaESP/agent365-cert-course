@@ -3,7 +3,7 @@
  *
  * El M01 contribuye con 3 preguntas al examen final del Área 1. En esta fase
  * (Hito B) están hardcodeadas en TypeScript para que el shell pueda
- * renderizarlas como una experiencia interactiva. En la Fase 8 se moverán
+ * renderizarlas como un quiz con feedback. En la Fase 8 se moverán
  * a un CMS o a frontmatter de los .md de cada módulo.
  *
  * Identificadores siguen la convención EX-MM-NNN (ver docs/banco-preguntas-modelo.md).

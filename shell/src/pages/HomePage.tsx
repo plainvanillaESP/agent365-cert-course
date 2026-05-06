@@ -35,7 +35,7 @@ export function HomePage() {
       <Section
         eyebrow="Roadmap"
         title="Estado de producción"
-        description="Este sitio se actualiza automáticamente al mergear contenido a main. Solo el Módulo 01 está producido al 100 % en este momento; el resto se publica en sucesivas fases del plan."
+        description="Solo el Módulo 01 está producido. El resto se publica progresivamente."
       >
         <Card>
           <ul className="divide-y divide-[var(--border-subtle)]">
@@ -61,7 +61,7 @@ export function HomePage() {
       <Section
         eyebrow="Temario"
         title="Los 17 módulos del curso"
-        description="Los módulos producidos son enlaces; los pendientes muestran su fase de producción."
+        description=""
       >
         <Card>
           <ul className="divide-y divide-[var(--border-subtle)]">
@@ -74,29 +74,6 @@ export function HomePage() {
           <Card>
             <ModuleRow module={MODULES[16]} isExam />
           </Card>
-        </div>
-      </Section>
-
-      <Section eyebrow="Sobre" title="Sobre este sitio" description="">
-        <div className="markdown-body">
-          <p>
-            Este shell es el prototipo del producto final del curso (Fase 2.A del plan).
-            Renderiza el contenido producido en markdown como una experiencia navegable con
-            tipografía técnica, modo oscuro y navegación lateral. Todavía no incluye
-            autenticación, evaluación interactiva ni generación de certificado: esas piezas
-            se añadirán en hitos posteriores de la Fase 2.A y se finalizarán en la Fase 8.
-          </p>
-          <p>
-            Repositorio fuente:{' '}
-            <a
-              href="https://github.com/plainvanillaESP/agent365-cert-course"
-              target="_blank"
-              rel="noreferrer"
-            >
-              github.com/plainvanillaESP/agent365-cert-course
-            </a>
-            .
-          </p>
         </div>
       </Section>
     </div>
