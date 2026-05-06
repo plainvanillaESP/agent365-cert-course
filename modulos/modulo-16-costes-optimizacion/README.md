@@ -1,7 +1,7 @@
 # Módulo 16 — Costes y optimización
 
 **Duración:** 60 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

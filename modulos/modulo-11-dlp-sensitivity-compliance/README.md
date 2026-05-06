@@ -1,7 +1,7 @@
 # Módulo 11 — DLP, sensitivity labels y compliance
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

@@ -13,10 +13,10 @@
 
 ### Ejemplos
 
-❌ Mal:
+Mal:
 > En este módulo aprenderemos juntos sobre el fascinante mundo de los agentes de IA en Microsoft 365, una tecnología revolucionaria que está cambiando la forma en que las empresas trabajan...
 
-✅ Bien:
+Bien:
 > Microsoft Agent 365 es el plano de control con el que un administrador inventa, gobierna y asegura todos los agentes de IA que operan en su tenant. No es una herramienta para *construir* agentes (eso sigue siendo Copilot Studio o Foundry); es la capa que se coloca encima de cualquier agente para hacerlo administrable.
 
 ---
@@ -168,14 +168,14 @@ Se usan en cualquier referencia a una capacidad concreta del producto:
 
 | Badge | Significado |
 |---|---|
-| 🟢 GA | General availability — disponible para producción |
-| 🟡 Preview | Preview pública — disponible para todos los tenants pero con caveats |
-| 🔴 Frontier | Frontier preview — solo para tenants en el programa preview |
-| ⚠️ Deprecated | Capacidad retirada o en proceso de retirada |
+| [GA] | General availability — disponible para producción |
+| [Preview] | Preview pública — disponible para todos los tenants pero con caveats |
+| [Frontier] | Frontier preview — solo para tenants en el programa preview |
+| [Deprecated] | Capacidad retirada o en proceso de retirada |
 
 Ejemplo de uso:
 ```markdown
-La página **Agent Map** 🟢 GA permite visualizar todos los agentes registrados en el tenant, incluidos los que provienen de plataformas externas vía registry sync 🟡 Preview.
+La página **Agent Map** [GA] permite visualizar todos los agentes registrados en el tenant, incluidos los que provienen de plataformas externas vía registry sync [Preview].
 ```
 
 ---
@@ -264,11 +264,23 @@ Authorization: Bearer <token>
 
 ---
 
+## Emojis e iconos
+
+**Regla absoluta: cero emojis en cualquier archivo del repositorio.** No se usan en módulos, en docs internas, en READMEs, en el plan, en commit messages ni en código. La regla aplica también a los emojis tipo "estado" (palomitas, ladrillos, relojes de arena) que parecen "neutros".
+
+**Excepción única:** los badges de estado del producto, que se escriben en texto entre corchetes — `[GA]`, `[Preview]`, `[Frontier]`, `[Deprecated]`. No son emojis.
+
+**Iconos:** solo en el shell React del curso (Fase 8.A en adelante). Las únicas dos librerías permitidas son **Lucide React** y **Material UI Icons**. Lucide es la opción por defecto por coherencia con el resto del stack de Plain Vanilla; Material UI se usa solo si Lucide no tiene el icono concreto. En markdown nunca hay iconos: siempre texto.
+
+**Por qué la regla es absoluta:** el contenido se renderiza en múltiples superficies (markdown en GitHub, MkDocs, eventual shell React, PDFs descargables). Cada superficie renderiza emojis distinto y muchos los renderizan mal. Texto siempre se ve igual.
+
+---
+
 ## Cosas que evitar
 
-- ❌ "Como vimos antes..." — el alumno puede saltar módulos. Usar referencias explícitas: "(ver Módulo 03 § Licenciamiento)".
-- ❌ Frases vacías como "es importante destacar que" o "cabe mencionar".
-- ❌ Emojis decorativos. Solo los badges de estado y los iconos en tablas funcionales (✅/❌).
-- ❌ Traducir nombres propios de productos.
-- ❌ Generalizaciones sin fuente: "según los expertos", "típicamente", "muchas empresas".
-- ❌ Capturas pixeladas o de versiones antiguas del admin center.
+- "Como vimos antes..." — el alumno puede saltar módulos. Usar referencias explícitas: "(ver Módulo 03 § Licenciamiento)".
+- Frases vacías como "es importante destacar que" o "cabe mencionar".
+- Emojis. Sin excepciones (ver sección anterior).
+- Traducir nombres propios de productos.
+- Generalizaciones sin fuente: "según los expertos", "típicamente", "muchas empresas".
+- Capturas pixeladas o de versiones antiguas del admin center.

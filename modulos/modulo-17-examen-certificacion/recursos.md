@@ -1,6 +1,6 @@
 # Módulo 17 — Recursos
 
-> 🚧 **Estado:** Pendiente de producción (Fase 7)
+> **Estado:** Pendiente de producción (Fase 7)
 
 ## Documentación oficial Microsoft Learn
 

@@ -1,7 +1,7 @@
 # Módulo 17 — Examen final de certificación
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción (Fase 7)
+**Estado:** Pendiente de producción (Fase 7)
 
 ## Estructura del examen
 

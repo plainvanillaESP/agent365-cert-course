@@ -1,6 +1,6 @@
 # Módulo 06 — Laboratorios
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 
 ## Prerrequisitos
 

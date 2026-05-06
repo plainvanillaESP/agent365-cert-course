@@ -11,209 +11,209 @@
 
 Cada tema del research se verifica contra el módulo (o módulos) que lo cubren. Las marcas son:
 
-- ✅ Cubierto explícitamente con sección o sub-sección dedicada
-- 🟢 Cubierto como parte de otra sección (no requiere sección propia)
-- ⚠️ Mencionado pero podría profundizarse
-- ❌ Gap detectado — requiere ajuste
+- Sí Cubierto explícitamente con sección o sub-sección dedicada
+- Cubierto como parte de otra sección (no requiere sección propia)
+- Mencionado pero podría profundizarse
+- Gap detectado — requiere ajuste
 
 ### 1.1 Naturaleza y posicionamiento del producto
 
 | Tema (research) | Módulo | Estado |
 |---|---|---|
-| Agent 365 es control plane, no agent builder | M01.2 | ✅ |
-| Cuatro stakeholders core (M365/Entra/Purview/Defender admin) | M01.3 | ✅ |
-| Diferencia con Copilot Studio, Foundry, M365 Agents SDK | M01.2, M02.6 | ✅ |
-| CCS gobierna personas; Agent 365 gobierna agentes | M01.4, M13.3 | ✅ |
+| Agent 365 es control plane, no agent builder | M01.2 | Sí |
+| Cuatro stakeholders core (M365/Entra/Purview/Defender admin) | M01.3 | Sí |
+| Diferencia con Copilot Studio, Foundry, M365 Agents SDK | M01.2, M02.6 | Sí |
+| CCS gobierna personas; Agent 365 gobierna agentes | M01.4, M13.3 | Sí |
 
 ### 1.2 Cronología y disponibilidad
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Ignite 2025, Frontier preview | M01.5 | ✅ |
-| GA 1 mayo 2026 | M01.5 | ✅ |
-| Capacidades preview (autonomous, Windows 365, registry sync, Shadow AI page, real-time runtime, P2 ID Protection) | Distribuidas en M03, M07, M09, M12, M14 con badges 🟡 | ✅ |
-| Junio 2026: bloqueo runtime coding agents | M12.6 | 🟢 |
+| Ignite 2025, Frontier preview | M01.5 | Sí |
+| GA 1 mayo 2026 | M01.5 | Sí |
+| Capacidades preview (autonomous, Windows 365, registry sync, Shadow AI page, real-time runtime, P2 ID Protection) | Distribuidas en M03, M07, M09, M12, M14 con badges | Sí |
+| Junio 2026: bloqueo runtime coding agents | M12.6 | |
 
 ### 1.3 Componentes arquitectónicos
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Agent Registry: estructura y metadata | M02.2, M07.1 | ✅ |
-| Agent Map: visualización | M02.2, M07.2 | ✅ |
-| Hero metrics (4): registry total, active users, run-time, registry sync | M02.2, M07.3 | ✅ |
-| 8 tipos de agentes gestionables | M02.3 | ✅ |
-| Categorías por publisher (Your org / Third Party / Microsoft) | M02.4 | ✅ |
-| Work IQ MCP servers | M02.5 | ✅ |
+| Agent Registry: estructura y metadata | M02.2, M07.1 | Sí |
+| Agent Map: visualización | M02.2, M07.2 | Sí |
+| Hero metrics (4): registry total, active users, run-time, registry sync | M02.2, M07.3 | Sí |
+| 8 tipos de agentes gestionables | M02.3 | Sí |
+| Categorías por publisher (Your org / Third Party / Microsoft) | M02.4 | Sí |
+| Work IQ MCP servers | M02.5 | Sí |
 
 ### 1.4 Microsoft Entra Agent ID
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Cuatro tipos de objetos (blueprint, blueprint principal, identity, agent user) | M06.1 | ✅ |
-| OBO vs own identity | M06.2 | ✅ |
-| Agent identity blueprints (max 10 resource apps × 40 scopes) | M06.3 | ✅ |
-| Agent sponsorship + transferencia al manager | M06.4 | ✅ |
-| Lifecycle workflows (mover/leaver) | M06.4 | ✅ |
-| Access packages | M06.5 | ✅ |
-| Custom security attributes | M06.6 | ✅ |
-| Multi-select disable | M06.7 | ✅ |
-| Convergencia M365 ↔ Entra (mayo 2026) | M06.7 | ✅ |
-| APIs Graph: `riskyAgents`, `agentRiskDetections`, `signInEventTypes` | M06.8 | ✅ |
-| Conditional Access scope (All agent identities / agent users) | M09.3 | ✅ |
-| Conditional Access conditions (Agent risk H/M/L) | M09.3 | ✅ |
-| Report-only mode | M09.4 | ✅ |
-| Identity Protection P2 (6 detecciones offline) | M09.5 | ✅ |
-| Risky Agents report 90 días | M09.5 | ✅ |
-| Confirm compromise → eleva a High → CA Block | M09.6 | ✅ |
-| Enforcement aplica en token request agente, no en blueprint | M09.6 | ✅ |
+| Cuatro tipos de objetos (blueprint, blueprint principal, identity, agent user) | M06.1 | Sí |
+| OBO vs own identity | M06.2 | Sí |
+| Agent identity blueprints (max 10 resource apps × 40 scopes) | M06.3 | Sí |
+| Agent sponsorship + transferencia al manager | M06.4 | Sí |
+| Lifecycle workflows (mover/leaver) | M06.4 | Sí |
+| Access packages | M06.5 | Sí |
+| Custom security attributes | M06.6 | Sí |
+| Multi-select disable | M06.7 | Sí |
+| Convergencia M365 ↔ Entra (mayo 2026) | M06.7 | Sí |
+| APIs Graph: `riskyAgents`, `agentRiskDetections`, `signInEventTypes` | M06.8 | Sí |
+| Conditional Access scope (All agent identities / agent users) | M09.3 | Sí |
+| Conditional Access conditions (Agent risk H/M/L) | M09.3 | Sí |
+| Report-only mode | M09.4 | Sí |
+| Identity Protection P2 (6 detecciones offline) | M09.5 | Sí |
+| Risky Agents report 90 días | M09.5 | Sí |
+| Confirm compromise → eleva a High → CA Block | M09.6 | Sí |
+| Enforcement aplica en token request agente, no en blueprint | M09.6 | Sí |
 
 ### 1.5 Roles administrativos
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| AI Administrator, AI Reader, Global Admin/Reader | M04.1 | ✅ |
-| Agent ID Administrator, Cloud App Admin, Agent ID Developer | M04.1 | ✅ |
-| Conditional Access Administrator | M04.1 | ✅ |
-| Security Admin/Operator/Reader | M04.1 | ✅ |
-| Lifecycle Workflows Administrator | M04.1 | ✅ |
-| Billing Administrator | M04.1 | ✅ |
-| Insider Risk Management role (Purview) | M04.1, M11.3 | ✅ |
-| Principio least-privilege con casos | M04.2, M04.4 | ✅ |
+| AI Administrator, AI Reader, Global Admin/Reader | M04.1 | Sí |
+| Agent ID Administrator, Cloud App Admin, Agent ID Developer | M04.1 | Sí |
+| Conditional Access Administrator | M04.1 | Sí |
+| Security Admin/Operator/Reader | M04.1 | Sí |
+| Lifecycle Workflows Administrator | M04.1 | Sí |
+| Billing Administrator | M04.1 | Sí |
+| Insider Risk Management role (Purview) | M04.1, M11.3 | Sí |
+| Principio least-privilege con casos | M04.2, M04.4 | Sí |
 
 ### 1.6 Microsoft Purview
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| DSPM y DSPM for AI (classic) | M10.2 | ✅ |
-| AI observability page | M10.2 | ✅ |
-| Auditing 4 tipos (agent-to-human, human-to-agent, agent-to-tools, agent-to-agent) | M10.3 | ✅ |
-| Data classification con SITs y trainable classifiers | M10.4 | ✅ |
-| Sensitivity labels VIEW + EXTRACT | M10.5 | ✅ |
-| Contenido nuevo NO hereda labels | M10.5 | ✅ |
-| Encryption sin labels = NO | M10.5 | ✅ |
-| DLP con agent instance como user/security group | M11.1 | ✅ |
-| Endpoint DLP para sitios generative AI third-party | M11.2 | ✅ |
-| IRM con Risky AI usage policy template | M11.3 | ✅ |
-| Communication Compliance (Teams + emails) | M11.4 | ✅ |
-| eDiscovery `Type:Contains:Copilot activity` | M11.5 | ✅ |
-| Data Lifecycle Management (retention) | M11.6 | ✅ |
-| Compliance Manager (EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA) | M11.7 | ✅ |
+| DSPM y DSPM for AI (classic) | M10.2 | Sí |
+| AI observability page | M10.2 | Sí |
+| Auditing 4 tipos (agent-to-human, human-to-agent, agent-to-tools, agent-to-agent) | M10.3 | Sí |
+| Data classification con SITs y trainable classifiers | M10.4 | Sí |
+| Sensitivity labels VIEW + EXTRACT | M10.5 | Sí |
+| Contenido nuevo NO hereda labels | M10.5 | Sí |
+| Encryption sin labels = NO | M10.5 | Sí |
+| DLP con agent instance como user/security group | M11.1 | Sí |
+| Endpoint DLP para sitios generative AI third-party | M11.2 | Sí |
+| IRM con Risky AI usage policy template | M11.3 | Sí |
+| Communication Compliance (Teams + emails) | M11.4 | Sí |
+| eDiscovery `Type:Contains:Copilot activity` | M11.5 | Sí |
+| Data Lifecycle Management (retention) | M11.6 | Sí |
+| Compliance Manager (EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA) | M11.7 | Sí |
 
 ### 1.7 Microsoft Defender
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Centralized monitoring | M12.1 | ✅ |
-| Out-of-the-box threat detections | M12.2 | ✅ |
-| Advanced Hunting (KQL) en CloudAppEvents | M12.3 | ✅ |
-| 5 ActionTypes: InvokeAgent, InferenceCall, ExecuteToolBy(SDK/Gateway/MCPServer) | M12.3 | ✅ |
-| Real-time protection runtime (preview) — XPIA, UPIA | M12.4 | ✅ |
-| Fail-open behavior (1 segundo timeout) | M12.4 | ✅ |
-| Defender for Cloud Apps AI Agent Inventory | M12.5 | ✅ |
-| Agent posture management, attack paths | M12.5 | ✅ |
-| Shadow AI / agentes locales (OpenClaw, Copilot CLI, Claude Code) vía Intune | M12.6 | ✅ |
-| Risks column ↔ Defender alerts (delay 1h) | M12.7, M07.6 | ✅ |
+| Centralized monitoring | M12.1 | Sí |
+| Out-of-the-box threat detections | M12.2 | Sí |
+| Advanced Hunting (KQL) en CloudAppEvents | M12.3 | Sí |
+| 5 ActionTypes: InvokeAgent, InferenceCall, ExecuteToolBy(SDK/Gateway/MCPServer) | M12.3 | Sí |
+| Real-time protection runtime (preview) — XPIA, UPIA | M12.4 | Sí |
+| Fail-open behavior (1 segundo timeout) | M12.4 | Sí |
+| Defender for Cloud Apps AI Agent Inventory | M12.5 | Sí |
+| Agent posture management, attack paths | M12.5 | Sí |
+| Shadow AI / agentes locales (OpenClaw, Copilot CLI, Claude Code) vía Intune | M12.6 | Sí |
+| Risks column ↔ Defender alerts (delay 1h) | M12.7, M07.6 | Sí |
 
 ### 1.8 Licenciamiento
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Agent 365 standalone $15 | M03.1 | ✅ |
-| M365 E7 (Frontier Suite) $99 (con/sin Teams) | M03.1, M16.2 | ✅ |
-| E5 base, Entra ID P1, P2, Entra Suite $12 | M03.1 | ✅ |
-| OBO heredada vs autonomous per-instance | M03.2 | ✅ |
-| Autonomous en Frontier preview, modelo GA pendiente | M03.2 | ✅ |
-| Capacidades con licencia adicional (Risks → E7, CA → P1, ID Protection → P2, Internet Access, Work IQ → Copilot) | M03.3 | ✅ |
-| Copilot Credits ($200/pack 25k), Foundry per-token, Pre-Purchase Plan P3 | M03.4, M16.3 | ✅ |
-| Frontier preview 25 licencias gratuitas | M03.5, M05.1 | ✅ |
-| Decisión standalone vs E7 (break-even) | M03.6, M16.2 | ✅ |
-| ROI / cuándo NO comprar | M16.4 | ✅ |
-| Registry hygiene para reducir coste | M16.5 | ✅ |
+| Agent 365 standalone $15 | M03.1 | Sí |
+| M365 E7 (Frontier Suite) $99 (con/sin Teams) | M03.1, M16.2 | Sí |
+| E5 base, Entra ID P1, P2, Entra Suite $12 | M03.1 | Sí |
+| OBO heredada vs autonomous per-instance | M03.2 | Sí |
+| Autonomous en Frontier preview, modelo GA pendiente | M03.2 | Sí |
+| Capacidades con licencia adicional (Risks → E7, CA → P1, ID Protection → P2, Internet Access, Work IQ → Copilot) | M03.3 | Sí |
+| Copilot Credits ($200/pack 25k), Foundry per-token, Pre-Purchase Plan P3 | M03.4, M16.3 | Sí |
+| Frontier preview 25 licencias gratuitas | M03.5, M05.1 | Sí |
+| Decisión standalone vs E7 (break-even) | M03.6, M16.2 | Sí |
+| ROI / cuándo NO comprar | M16.4 | Sí |
+| Registry hygiene para reducir coste | M16.5 | Sí |
 
 ### 1.9 Activación inicial
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Prerrequisitos del tenant | M05.1 | ✅ |
-| Activación Frontier (paso a paso) | M05.2 | ✅ |
-| Microsoft 365 connector en Defender | M05.3 | ✅ |
-| DSPM + AI observability en Purview | M05.4 | ✅ |
-| Validación end-to-end | M05.5 | ✅ |
+| Prerrequisitos del tenant | M05.1 | Sí |
+| Activación Frontier (paso a paso) | M05.2 | Sí |
+| Microsoft 365 connector en Defender | M05.3 | Sí |
+| DSPM + AI observability en Purview | M05.4 | Sí |
+| Validación end-to-end | M05.5 | Sí |
 
 ### 1.10 Acciones de gobernanza
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Las 11 acciones (Publish, Activate, Deploy, Pin, Block, Unblock, Remove, Delete, Approve Updates, Manage Ownerless, Reassign Ownership) | M08.1 | ✅ |
-| Wizard de publishing (Submission, Review, Select, Preinstall, Apply Template, Permissions, Admin consent) | M08.2 | ✅ |
-| Default Template (Microsoft) | M08.3 | ✅ |
-| Custom Template (políticas extra) | M08.3, M14.1 | ✅ |
-| Pinning (3 slots, hasta 6h propagación, solo deployed) | M08.4 | ✅ |
-| Remove vs Delete (24h propagación, SharePoint Embedded container) | M08.5 | ✅ |
-| Ownerless y Reassign (solo Agent Builder) | M08.6 | ✅ |
-| Export Inventory a Excel | M07.1, M07 lab | ✅ |
+| Las 11 acciones (Publish, Activate, Deploy, Pin, Block, Unblock, Remove, Delete, Approve Updates, Manage Ownerless, Reassign Ownership) | M08.1 | Sí |
+| Wizard de publishing (Submission, Review, Select, Preinstall, Apply Template, Permissions, Admin consent) | M08.2 | Sí |
+| Default Template (Microsoft) | M08.3 | Sí |
+| Custom Template (políticas extra) | M08.3, M14.1 | Sí |
+| Pinning (3 slots, hasta 6h propagación, solo deployed) | M08.4 | Sí |
+| Remove vs Delete (24h propagación, SharePoint Embedded container) | M08.5 | Sí |
+| Ownerless y Reassign (solo Agent Builder) | M08.6 | Sí |
+| Export Inventory a Excel | M07.1, M07 lab | Sí |
 
 ### 1.11 APIs y herramientas
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Microsoft Graph endpoints (`packages`, `package details`, retiro `/agentRegistry/`, nuevo `/copilot/admin/`) | M06.7, M06.8 | ✅ |
-| Agent 365 CLI (`a365 setup`, `publish`, `create-instance`, `cleanup`, `develop`) | M06 lab + M15.2 | ✅ |
-| PowerShell (`Get-SPOTenant`, `az webapp log tail`) | M15.2 | ✅ |
+| Microsoft Graph endpoints (`packages`, `package details`, retiro `/agentRegistry/`, nuevo `/copilot/admin/`) | M06.7, M06.8 | Sí |
+| Agent 365 CLI (`a365 setup`, `publish`, `create-instance`, `cleanup`, `develop`) | M06 lab + M15.2 | Sí |
+| PowerShell (`Get-SPOTenant`, `az webapp log tail`) | M15.2 | Sí |
 
 ### 1.12 SDKs
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Microsoft 365 Agents SDK (transporte conversacional) | M02.6 | ✅ |
-| Microsoft Agent 365 SDK (governance layer) | M02.6 | ✅ |
-| Distinción crítica entre ambos | M02.6 | ✅ |
+| Microsoft 365 Agents SDK (transporte conversacional) | M02.6 | Sí |
+| Microsoft Agent 365 SDK (governance layer) | M02.6 | Sí |
+| Distinción crítica entre ambos | M02.6 | Sí |
 
 ### 1.13 Copilot Control System
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Tres pilares (Security & Governance, Management Controls, Measurement & Reporting) | M13.1 | ✅ |
-| Foundational vs Optimized (A3/E3 vs A5/E5) | M13.2 | ✅ |
-| Componentes específicos (SharePoint Advanced Mgmt, Adaptive Protection IRM, Copilot Analytics, Copilot Dashboard) | M13.1, M13.2 | ✅ |
-| Diferencia Agent 365 ↔ CCS | M13.3 | ✅ |
+| Tres pilares (Security & Governance, Management Controls, Measurement & Reporting) | M13.1 | Sí |
+| Foundational vs Optimized (A3/E3 vs A5/E5) | M13.2 | Sí |
+| Componentes específicos (SharePoint Advanced Mgmt, Adaptive Protection IRM, Copilot Analytics, Copilot Dashboard) | M13.1, M13.2 | Sí |
+| Diferencia Agent 365 ↔ CCS | M13.3 | Sí |
 
 ### 1.14 Caveats técnicos críticos
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| Information Barriers no soportadas en SharePoint Embedded | M14.2 | ✅ |
-| Real-time protection fail-open (Defender 1s) | M12.4 | ✅ |
-| Risks column delay hasta 1h | M07.6, M12.7 | ✅ |
-| Solo Agent Builder soporta Reassign Ownership | M08.6 | ✅ |
-| Eliminación irreversible (Delete) y propagación 24h | M08.5 | ✅ |
-| Pinning hasta 6h propagación, solo agentes deployed | M08.4 | ✅ |
-| Sensitivity labels NO se aplican directamente sobre `.agent` files (solo vía extension) | M14.2 | ⚠️ FIX |
-| Default ready-made SharePoint agents NO son editables | M14.2 | ⚠️ FIX |
-| Análiticas Foundry solo soportan V2 | M07.4 | ⚠️ FIX |
-| Encryption sin sensitivity labels = NO soportado | M10.5 | ✅ |
+| Information Barriers no soportadas en SharePoint Embedded | M14.2 | Sí |
+| Real-time protection fail-open (Defender 1s) | M12.4 | Sí |
+| Risks column delay hasta 1h | M07.6, M12.7 | Sí |
+| Solo Agent Builder soporta Reassign Ownership | M08.6 | Sí |
+| Eliminación irreversible (Delete) y propagación 24h | M08.5 | Sí |
+| Pinning hasta 6h propagación, solo agentes deployed | M08.4 | Sí |
+| Sensitivity labels NO se aplican directamente sobre `.agent` files (solo vía extension) | M14.2 | FIX |
+| Default ready-made SharePoint agents NO son editables | M14.2 | FIX |
+| Análiticas Foundry solo soportan V2 | M07.4 | FIX |
+| Encryption sin sensitivity labels = NO soportado | M10.5 | Sí |
 
 ### 1.15 Gobernanza avanzada cross-admin-center
 
 | Tema | Módulo | Estado |
 |---|---|---|
-| SharePoint: RCD (Restricted Content Discovery), RAC (Restricted Access Control) | M14.2 | ✅ |
-| Copilot Studio governance en Power Platform admin center (DLP, block publishing, env routing) | M14.3 | ✅ |
-| Registry sync multicloud (AWS Bedrock, Google Gemini Enterprise) preview | M07.5, M14.4 | ✅ |
-| Shadow AI page (OpenClaw, GitHub Copilot CLI, Claude Code) preview | M12.6, M14.5 | ✅ |
-| Network controls / Global Secure Access para agentes | M03.3 | 🟢 |
+| SharePoint: RCD (Restricted Content Discovery), RAC (Restricted Access Control) | M14.2 | Sí |
+| Copilot Studio governance en Power Platform admin center (DLP, block publishing, env routing) | M14.3 | Sí |
+| Registry sync multicloud (AWS Bedrock, Google Gemini Enterprise) preview | M07.5, M14.4 | Sí |
+| Shadow AI page (OpenClaw, GitHub Copilot CLI, Claude Code) preview | M12.6, M14.5 | Sí |
+| Network controls / Global Secure Access para agentes | M03.3 | |
 
 ---
 
 ## 2. Resumen de la cobertura
 
 **Total de temas verificados:** 96
-- ✅ Cubiertos explícitamente: 86
-- 🟢 Cubiertos como parte de otra sección: 7
-- ⚠️ Requieren fix puntual: 3
-- ❌ Gaps no cubiertos: **0**
+- Sí Cubiertos explícitamente: 86
+- Cubiertos como parte de otra sección: 7
+- Requieren fix puntual: 3
+- Gaps no cubiertos: **0**
 
-**Conclusión:** la cobertura del programa es **completa**. No hay temas críticos del research ausentes del blueprint. Los 3 caveats técnicos marcados como ⚠️ son refinamientos puntuales que se aplican en el siguiente commit.
+**Conclusión:** la cobertura del programa es **completa**. No hay temas críticos del research ausentes del blueprint. Los 3 caveats técnicos marcados como son refinamientos puntuales que se aplican en el siguiente commit.
 
 ---
 
@@ -286,17 +286,17 @@ Para garantizar que las preguntas **no sean siempre iguales** entre cohortes/ses
 
 Verificación contra criterios de calidad:
 
-✅ **Cubren todos los OA críticos.** Los 87 OAs documentados están todos cubiertos por al menos 1 pregunta. Los OAs marcados como Crear o Evaluar (más altos en Bloom) tienen preguntas de tipo escenario o troubleshooting tree.
+**Cubren todos los OA críticos.** Los 87 OAs documentados están todos cubiertos por al menos 1 pregunta. Los OAs marcados como Crear o Evaluar (más altos en Bloom) tienen preguntas de tipo escenario o troubleshooting tree.
 
-✅ **Requieren comprensión, no memorización.** El 70% de las preguntas exigen aplicar o analizar el material a un escenario nuevo. Memorizar definiciones no basta.
+**Requieren comprensión, no memorización.** El 70% de las preguntas exigen aplicar o analizar el material a un escenario nuevo. Memorizar definiciones no basta.
 
-✅ **Distractores son errores reales.** En lugar de opciones absurdas, los distractores reflejan confusiones comunes entre productos cercanos (Agent 365 vs CCS, OBO vs own identity, Remove vs Delete, RCD vs RAC).
+**Distractores son errores reales.** En lugar de opciones absurdas, los distractores reflejan confusiones comunes entre productos cercanos (Agent 365 vs CCS, OBO vs own identity, Remove vs Delete, RCD vs RAC).
 
-✅ **Hay preguntas técnicas con código real.** 4 KQL completion + ejemplos de Microsoft Graph en M06 + comandos `a365` CLI en M15.
+**Hay preguntas técnicas con código real.** 4 KQL completion + ejemplos de Microsoft Graph en M06 + comandos `a365` CLI en M15.
 
-✅ **Hay preguntas de decisión arquitectónica.** Los 4 escenarios + las preguntas de "cuándo Agent 365 standalone vs E7" exigen integrar conocimiento de varios módulos.
+**Hay preguntas de decisión arquitectónica.** Los 4 escenarios + las preguntas de "cuándo Agent 365 standalone vs E7" exigen integrar conocimiento de varios módulos.
 
-✅ **Variedad de formatos garantiza no aburrimiento.** El alumno alterna entre 7 tipos diferentes de pregunta a lo largo de los 90 minutos, lo que mantiene la atención.
+**Variedad de formatos garantiza no aburrimiento.** El alumno alterna entre 7 tipos diferentes de pregunta a lo largo de los 90 minutos, lo que mantiene la atención.
 
 ### 4.4 Qué se verá realmente
 
@@ -308,10 +308,10 @@ Para hacer concreto el estándar de calidad, se ha producido un banco modelo con
 
 | Criterio | Resultado |
 |---|---|
-| Cobertura completa contra research | ✅ 86/96 ✅ + 7 🟢 + 3 ⚠️, sin gaps |
-| Variedad de tipos de pregunta | ✅ 7 tipos, 50/50 entre multiple-choice y avanzados |
-| Distribución Bloom apropiada | ✅ 80% en Aplicar/Analizar/Evaluar/Crear |
-| Mecanismos anti-repetición | ✅ 5 mecanismos definidos |
-| Calidad demostrable | ✅ Banco modelo con 12 preguntas reales |
+| Cobertura completa contra research | Sí 86/96 Sí + 7 + 3 , sin gaps |
+| Variedad de tipos de pregunta | Sí 7 tipos, 50/50 entre multiple-choice y avanzados |
+| Distribución Bloom apropiada | Sí 80% en Aplicar/Analizar/Evaluar/Crear |
+| Mecanismos anti-repetición | Sí 5 mecanismos definidos |
+| Calidad demostrable | Sí Banco modelo con 12 preguntas reales |
 
 El blueprint está **listo para producción** tras aplicar los 3 fixes puntuales documentados en la sección 3.

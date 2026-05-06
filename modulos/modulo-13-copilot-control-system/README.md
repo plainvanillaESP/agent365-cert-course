@@ -1,7 +1,7 @@
 # Módulo 13 — Copilot Control System integrado con Agent 365
 
 **Duración:** 60 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

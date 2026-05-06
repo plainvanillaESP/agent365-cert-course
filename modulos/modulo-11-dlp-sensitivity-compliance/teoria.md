@@ -1,6 +1,6 @@
 # Módulo 11: DLP, sensitivity labels y compliance
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 >
 > Ver [`PLAN.md`](../../PLAN.md) y [`docs/arquitectura-curso.md`](../../docs/arquitectura-curso.md) para el roadmap.
 

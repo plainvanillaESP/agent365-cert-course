@@ -1,7 +1,7 @@
 # Módulo 12 — Monitorización, auditoría y reporting con Defender
 
 **Duración:** 90 minutos
-**Estado:** 🚧 Pendiente de producción
+**Estado:** Pendiente de producción
 
 ## Archivos
 

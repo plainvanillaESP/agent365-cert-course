@@ -1,6 +1,6 @@
 # Módulo 08: Despliegue, distribución y ciclo de vida
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 >
 > Ver [`PLAN.md`](../../PLAN.md) y [`docs/arquitectura-curso.md`](../../docs/arquitectura-curso.md) para el roadmap.
 

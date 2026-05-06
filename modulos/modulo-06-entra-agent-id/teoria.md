@@ -1,6 +1,6 @@
 # Módulo 06: Microsoft Entra Agent ID e identidades de agentes
 
-> 🚧 **Estado:** Pendiente de producción (Fase 3-6)
+> **Estado:** Pendiente de producción (Fase 3-6)
 >
 > Ver [`PLAN.md`](../../PLAN.md) y [`docs/arquitectura-curso.md`](../../docs/arquitectura-curso.md) para el roadmap.
 

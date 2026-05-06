@@ -2,7 +2,7 @@
 
 > Diseño maestro detallado de los 17 módulos del curso. Este documento es la **fuente única de verdad** para la producción de contenido: define objetivos, duraciones, laboratorios, conceptos clave y el reparto de preguntas de la evaluación final. Cualquier cambio en la estructura del curso se refleja primero aquí y luego se propaga al contenido fuente.
 
-**Estado:** ✅ Versión 1.1 (Fase 1 completada)
+**Estado:** Sí Versión 1.1 (Fase 1 completada)
 **Última revisión:** mayo 2026
 
 ---
@@ -60,7 +60,7 @@ Requisitos para obtener la constancia:
 
 ### Idioma, tono y formato
 
-Ver [`convenciones-redaccion.md`](./convenciones-redaccion.md). Resumen: español de España, profesional pero directo, sin paja introductoria, con badges explícitos de estado de cada capacidad (🟢 GA / 🟡 Preview / 🔴 Frontier).
+Ver [`convenciones-redaccion.md`](./convenciones-redaccion.md). Resumen: español de España, profesional pero directo, sin paja introductoria, con badges explícitos de estado de cada capacidad ([GA] / [Preview] / [Frontier]).
 
 ### Itinerario único
 
@@ -405,8 +405,8 @@ Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijo
 | 7.2 Agent Map: visualización | 15 min | Clusters por plataforma, fit-to-view, full screen, max agents. |
 | 7.3 Hero metrics y Top actions | 15 min | Overview en profundidad. Pending requests, ownerless, at risk, exceptions. |
 | 7.4 Agent analytics | 10 min | Creators (org/Third Party/Microsoft), top platforms. Análiticas Foundry solo soportan V2 — limitación a tener en cuenta para agentes V1 históricos. |
-| 7.5 Registry sync multicloud 🟡 Preview | 10 min | AWS Bedrock, Google Gemini Enterprise. Cómo se conecta y limitaciones. |
-| 7.6 Risks column 🟢 GA (con E7) | 10 min | Qué muestra, delay de hasta 1 hora, integración con Defender. |
+| 7.5 Registry sync multicloud [Preview] | 10 min | AWS Bedrock, Google Gemini Enterprise. Cómo se conecta y limitaciones. |
+| 7.6 Risks column [GA] (con E7) | 10 min | Qué muestra, delay de hasta 1 hora, integración con Defender. |
 
 **Conceptos clave.** Agent Registry, Agent Map, Hero metric, Ownerless agent, Pending request, Registry sync, Risks column.
 
@@ -500,9 +500,9 @@ Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijo
 |---|---|---|
 | 9.1 Application vs Delegated Permissions | 10 min | Diferencias. Cuándo cada una. Common permissions list. |
 | 9.2 Admin consent | 10 min | Cómo otorgarlo. Por qué a veces queda pending. |
-| 9.3 Conditional Access para agentes 🟢 GA | 20 min | Scope, target, conditions, grants. Casos típicos. |
+| 9.3 Conditional Access para agentes [GA] | 20 min | Scope, target, conditions, grants. Casos típicos. |
 | 9.4 Report-only mode | 10 min | Por qué es crítico. Cómo monitorizar. |
-| 9.5 Identity Protection para agentes 🟡 Preview (P2) | 10 min | Detecciones offline, Risky Agents report. |
+| 9.5 Identity Protection para agentes [Preview] (P2) | 10 min | Detecciones offline, Risky Agents report. |
 | 9.6 Acciones: Confirm compromise, Confirm safe, Dismiss, Disable | 10 min | Efectos cascada en CA. |
 | 9.7 Resumen | 5 min | Cierre. |
 
@@ -598,7 +598,7 @@ Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijo
 | 11.4 Communication Compliance | 10 min | Teams + emails. Casos. |
 | 11.5 eDiscovery | 5 min | `Type:Contains:Copilot activity`. Workflow legal hold. |
 | 11.6 Data Lifecycle Management | 5 min | Retention policies. Audit log retention. |
-| 11.7 Compliance Manager para AI 🟢 GA | 10 min | Templates: EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA. |
+| 11.7 Compliance Manager para AI [GA] | 10 min | Templates: EU AI Act, NIST AI RMF, ISO 42001, ISO 23894, DORA. |
 | 11.8 Resumen | 5 min | Cierre. |
 
 **Conceptos clave.** DLP policy, Endpoint DLP, Insider Risk Management, Risky AI usage, Prompt injection, Communication Compliance, eDiscovery, Legal hold, Data Lifecycle Management, Compliance Manager, Regulatory template.
@@ -649,7 +649,7 @@ Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijo
 | 12.1 Centralized monitoring en Defender | 10 min | Cómo llegan los eventos. Connector. |
 | 12.2 Out-of-the-box threat detections | 10 min | Tipos de alertas. Severidad. |
 | 12.3 Advanced Hunting con KQL | 25 min | Tabla CloudAppEvents. ActionTypes (InvokeAgent, InferenceCall, ExecuteToolBy*). Queries de ejemplo. |
-| 12.4 Real-time protection runtime 🟡 Preview | 10 min | XPIA vs UPIA. Fail-open. Cómo se inserta en runtime. |
+| 12.4 Real-time protection runtime [Preview] | 10 min | XPIA vs UPIA. Fail-open. Cómo se inserta en runtime. |
 | 12.5 Defender for Cloud Apps: AI Agent Inventory | 10 min | Inventario. Posture. Attack paths. |
 | 12.6 Shadow AI / agentes locales | 5 min | Intune block policies. OpenClaw, GitHub Copilot CLI, Claude Code. |
 | 12.7 Risks column ↔ Defender alerts | 5 min | Correlación. Delay de hasta 1h. |
@@ -741,8 +741,8 @@ Interpretar resultados. Construir variante que filtra por un agente específico.
 | 14.1 Custom Templates en profundidad | 15 min | Componer plantilla. Casos. |
 | 14.2 SharePoint Agents governance | 10 min | .agent files, permisos archivo, RCD, RAC, DLP por extensión. Limitaciones: sensitivity labels NO se aplican directamente sobre `.agent` files (solo vía extension); default ready-made SharePoint agents NO son editables. |
 | 14.3 Copilot Studio governance | 10 min | Power Platform admin center. DLP, block publishing, environment routing, sharing. |
-| 14.4 Registry sync multicloud 🟡 Preview | 5 min | AWS Bedrock, Google Gemini. Conexión y limitaciones. |
-| 14.5 Shadow AI page 🟡 Preview | 5 min | OpenClaw, GitHub Copilot CLI, Claude Code. |
+| 14.4 Registry sync multicloud [Preview] | 5 min | AWS Bedrock, Google Gemini. Conexión y limitaciones. |
+| 14.5 Shadow AI page [Preview] | 5 min | OpenClaw, GitHub Copilot CLI, Claude Code. |
 | 14.6 Diseño de estrategia coherente | 10 min | Cómo evitar inconsistencias entre admin centers. Plantilla. |
 | 14.7 Resumen | 5 min | Cierre. |
 
