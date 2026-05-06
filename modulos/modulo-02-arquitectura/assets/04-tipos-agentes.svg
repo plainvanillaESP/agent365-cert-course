@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 580" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title>Los 8 tipos de agentes gestionables en Microsoft Agent 365 agrupados por plataforma de origen</title>
+  <desc>Cuatro familias de plataformas: Microsoft Copilot Studio (DA, CEA, BP), Microsoft Foundry (LOB, non-LOB, hosted), Microsoft 365 Copilot built-in (Agent Builder) y SharePoint (SharePoint agents). Encima de todos, la marca Agent instance que indica si el agente ha sido extendido con el Agent 365 SDK.</desc>
+
+  <defs>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .subtitle { font-size: 13.5px; fill: #57534e; font-style: italic; }
+      .platform-label { font-size: 12.5px; font-weight: 700; fill: #44403c; letter-spacing: 0.04em; text-transform: uppercase; }
+      .platform-sub { font-size: 11.5px; fill: #78716c; font-style: italic; }
+      .agent-name { font-size: 13.5px; font-weight: 700; fill: #1c1917; }
+      .agent-desc { font-size: 11px; fill: #57534e; }
+      .marker-label { font-size: 11.5px; font-weight: 700; fill: #7B2FBE; letter-spacing: 0.05em; text-transform: uppercase; }
+      .marker-desc { font-size: 11px; fill: #57534e; font-style: italic; }
+      .footer { font-size: 11px; fill: #a8a29e; font-style: italic; }
+    </style>
+  </defs>
+
+  <text x="40" y="40" class="title">Los 8 tipos de agentes gestionables</text>
+  <text x="40" y="62" class="subtitle">Distinción por plataforma de origen, no por uso final</text>
+
+  <!-- Plataforma 1: MCS -->
+  <rect x="40" y="100" width="500" height="180" rx="8" fill="#fef3f2" stroke="#dc2626" stroke-width="1.5" />
+  <text x="60" y="125" class="platform-label" fill="#991b1b">Microsoft Copilot Studio</text>
+  <text x="60" y="143" class="platform-sub">Low-code · canvas visual · 3 variantes</text>
+
+  <rect x="60" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1" />
+  <text x="74" y="184" class="agent-name">MCS DA</text>
+  <text x="74" y="204" class="agent-desc">Declarative Agent.</text>
+  <text x="74" y="220" class="agent-desc">Sin código.</text>
+  <text x="74" y="244" class="agent-desc" font-style="italic" fill="#78716c">Enraizado en M365.</text>
+
+  <rect x="220" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1" />
+  <text x="234" y="184" class="agent-name">MCS CEA</text>
+  <text x="234" y="204" class="agent-desc">Custom Engine</text>
+  <text x="234" y="220" class="agent-desc">Agent.</text>
+  <text x="234" y="244" class="agent-desc" font-style="italic" fill="#78716c">Reasoning propio.</text>
+
+  <rect x="380" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="1" />
+  <text x="394" y="184" class="agent-name">MCS BP</text>
+  <text x="394" y="204" class="agent-desc">Backend Plugin.</text>
+  <text x="394" y="220" class="agent-desc">No standalone.</text>
+  <text x="394" y="244" class="agent-desc" font-style="italic" fill="#78716c">Tools para otros.</text>
+
+  <!-- Plataforma 2: Foundry -->
+  <rect x="560" y="100" width="500" height="180" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+  <text x="580" y="125" class="platform-label" fill="#1e40af">Microsoft Foundry</text>
+  <text x="580" y="143" class="platform-sub">Pro-code · cualquier framework · 3 modelos de hosting</text>
+
+  <rect x="580" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1" />
+  <text x="594" y="184" class="agent-name">Foundry LOB</text>
+  <text x="594" y="204" class="agent-desc">Line of Business.</text>
+  <text x="594" y="220" class="agent-desc">Infra propia.</text>
+  <text x="594" y="244" class="agent-desc" font-style="italic" fill="#78716c">Para uso interno.</text>
+
+  <rect x="740" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1" />
+  <text x="754" y="184" class="agent-name">Foundry non-LOB</text>
+  <text x="754" y="204" class="agent-desc">Productos externos.</text>
+  <text x="754" y="220" class="agent-desc">Más flexible.</text>
+  <text x="754" y="244" class="agent-desc" font-style="italic" fill="#78716c">Para producto final.</text>
+
+  <rect x="900" y="160" width="145" height="100" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1" />
+  <text x="914" y="184" class="agent-name">Foundry hosted</text>
+  <text x="914" y="204" class="agent-desc">Foundry gestiona</text>
+  <text x="914" y="220" class="agent-desc">la infra.</text>
+  <text x="914" y="244" class="agent-desc" font-style="italic" fill="#78716c">Mínimo ops.</text>
+
+  <!-- Plataforma 3: Agent Builder -->
+  <rect x="40" y="305" width="335" height="170" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+  <text x="60" y="330" class="platform-label" fill="#166534">M365 Copilot built-in</text>
+  <text x="60" y="348" class="platform-sub">Constructor declarativo dentro de Copilot</text>
+  <rect x="60" y="365" width="295" height="95" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1" />
+  <text x="74" y="389" class="agent-name">Agent Builder</text>
+  <text x="74" y="409" class="agent-desc">Sin pasar por Copilot Studio.</text>
+  <text x="74" y="425" class="agent-desc">Dentro de la app de Copilot.</text>
+  <text x="74" y="447" class="agent-desc" font-style="italic" fill="#78716c">Único tipo con reasignación de ownership.</text>
+
+  <!-- Plataforma 4: SharePoint -->
+  <rect x="395" y="305" width="335" height="170" rx="8" fill="#fdf4ff" stroke="#a21caf" stroke-width="1.5" />
+  <text x="415" y="330" class="platform-label" fill="#86198f">SharePoint</text>
+  <text x="415" y="348" class="platform-sub">Agentes basados en .agent files</text>
+  <rect x="415" y="365" width="295" height="95" rx="6" fill="#ffffff" stroke="#a21caf" stroke-width="1" />
+  <text x="429" y="389" class="agent-name">SharePoint agent</text>
+  <text x="429" y="409" class="agent-desc">.agent file en librería SP.</text>
+  <text x="429" y="425" class="agent-desc">Declarativo, low-tech.</text>
+  <text x="429" y="447" class="agent-desc" font-style="italic" fill="#78716c">Sensitivity labels limitadas.</text>
+
+  <!-- Marca Agent instance (transversal) -->
+  <rect x="750" y="305" width="310" height="170" rx="8" fill="#faf5ff" stroke="#7B2FBE" stroke-width="2" stroke-dasharray="4,4" />
+  <text x="770" y="330" class="marker-label">Marca transversal</text>
+  <text x="770" y="350" class="agent-name" fill="#7B2FBE">Agent instance</text>
+  <text x="770" y="372" class="marker-desc">Cualquier agente extendido con el</text>
+  <text x="770" y="388" class="marker-desc">Microsoft Agent 365 SDK adquiere</text>
+  <text x="770" y="404" class="marker-desc">esta marca y obtiene:</text>
+  <text x="770" y="423" class="agent-desc">• Entra Agent ID</text>
+  <text x="770" y="441" class="agent-desc">• Telemetría → Defender</text>
+  <text x="770" y="459" class="agent-desc">• Acceso a Work IQ MCP</text>
+
+  <!-- Footer -->
+  <text x="550" y="555" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 02 · Fig. 2.2</text>
+</svg>

@@ -127,9 +127,90 @@ const Q_EX_01_003: DragAndDropQuestion = {
     'CA (Conditional Access) y lifecycle workflows viven en Microsoft Entra (Entra Agent ID). DLP y Compliance Manager viven en Microsoft Purview. El wizard de publishing y la aprobación de requests viven en Microsoft 365 admin center. KQL hunting vive en Microsoft Defender XDR.',
 }
 
+const Q_EX_02_001: DragAndDropQuestion = {
+  id: 'EX-02-001',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-02.1',
+  area: 1,
+  bloom: 'Aplicar',
+  moduleId: 2,
+  prompt:
+    'Empareja cada componente arquitectónico de Microsoft Agent 365 con el admin center donde un administrador lo gestiona principalmente.',
+  items: [
+    { id: 'c1', text: 'Agent Registry y Agent Map.' },
+    { id: 'c2', text: 'Conditional Access para agentes con grant Block.' },
+    { id: 'c3', text: 'DSPM for AI y Compliance Manager.' },
+    { id: 'c4', text: 'Tabla `CloudAppEvents` para hunting con KQL.' },
+    { id: 'c5', text: 'Lifecycle workflows con sponsorship transfer al manager.' },
+    { id: 'c6', text: 'Wizard de publishing y aprobación de requests.' },
+  ],
+  targets: [
+    { id: 'm365',     label: 'Microsoft 365 admin center' },
+    { id: 'entra',    label: 'Microsoft Entra admin center' },
+    { id: 'purview',  label: 'Microsoft Purview portal' },
+    { id: 'defender', label: 'Microsoft Defender XDR' },
+  ],
+  correctMap: {
+    c1: 'm365',
+    c2: 'entra',
+    c3: 'purview',
+    c4: 'defender',
+    c5: 'entra',
+    c6: 'm365',
+  },
+  justification:
+    'La arquitectura de Agent 365 reparte la gobernanza en cuatro admin centers. Registry, Map y wizard de publishing viven en Microsoft 365 admin center. Conditional Access y lifecycle workflows viven en Entra (dependen de la identidad). DSPM y Compliance Manager viven en Purview. KQL hunting vive en Defender. Saber a qué admin center ir es la primera competencia operativa del curso.',
+}
+
+const Q_EX_02_002: MultipleChoiceQuestion = {
+  id: 'EX-02-002',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-02.2',
+  area: 1,
+  bloom: 'Analizar',
+  moduleId: 2,
+  prompt:
+    'Un desarrollador comenta que su equipo va a desplegar varios «agentes Microsoft Agents Toolkit» en el tenant. Una arquitecta IT pregunta cómo aparecerán esos agentes en el Agent Registry de Microsoft 365 admin center. ¿Cuál es la respuesta correcta?',
+  options: [
+    { id: 'A', text: 'Aparecerán como tipo «Agent Toolkit», una novena categoría además de los 8 tipos estándar.' },
+    { id: 'B', text: 'No aparecerán en el Registry hasta que se conviertan a Agent Builder.' },
+    { id: 'C', text: 'Aparecerán como uno de los 8 tipos estándar (típicamente MCS CEA o Foundry) según cómo se haya configurado el deploy; Agent Toolkit es la herramienta de desarrollo, no un tipo de registro.' },
+    { id: 'D', text: 'Aparecerán como tipo «SharePoint agent» porque Toolkit despliega los agentes a una librería SharePoint.' },
+  ],
+  correctOptionId: 'C',
+  justification:
+    'El Microsoft 365 Agents Toolkit es una extensión de Visual Studio Code para construir agentes pro-code conversacionales. No es un tipo de agente: el agente que produce se registra como uno de los 8 tipos estándar (típicamente MCS CEA o Foundry) según el target del deploy. La opción A confunde herramienta con tipo. La B es inventada. La D mezcla SharePoint agents (.agent files en una librería) con el Toolkit (un IDE plugin).',
+}
+
+const Q_EX_02_003: MultipleChoiceQuestion = {
+  id: 'EX-02-003',
+  type: 'multiple-choice',
+  difficulty: 'facil',
+  oa: 'OA-02.1',
+  area: 1,
+  bloom: 'Comprender',
+  moduleId: 2,
+  prompt:
+    'Un partner tecnológico presenta un agente y dice que «usa el Microsoft Agents SDK para gobernarlo». ¿Qué debería responder un administrador IT con criterio?',
+  options: [
+    { id: 'A', text: '«Perfecto, entonces ya está cubierto por Agent 365.»' },
+    { id: 'B', text: '«Esa frase es ambigua: hay dos SDKs distintos. El Microsoft 365 Agents SDK es transporte conversacional; el Microsoft Agent 365 SDK es el que gobierna. Necesito saber cuál de los dos.»' },
+    { id: 'C', text: '«El Microsoft Agents SDK no existe; está confundiendo nombres de productos.»' },
+    { id: 'D', text: '«Da igual cuál de los dos, porque ambos hacen lo mismo desde la unificación de SDKs en mayo de 2026.»' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'La confusión entre los dos SDKs es uno de los errores más comunes en conversaciones con desarrolladores y partners. Microsoft 365 Agents SDK (paquete @microsoft/agents) cubre el transporte conversacional. Microsoft Agent 365 SDK (paquete @microsoft/agent365) cubre la gobernanza: identidad Entra, telemetría OpenTelemetry, acceso a Work IQ MCP. Solo el segundo «gobierna». La opción A acepta una afirmación ambigua. La C niega una realidad. La D inventa una unificación que no ha ocurrido.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
-const ALL_QUESTIONS: Question[] = [Q_EX_01_001, Q_EX_01_002, Q_EX_01_003]
+const ALL_QUESTIONS: Question[] = [
+  Q_EX_01_001, Q_EX_01_002, Q_EX_01_003,
+  Q_EX_02_001, Q_EX_02_002, Q_EX_02_003,
+]
 
 export function getQuestionsForModule(moduleId: number): Question[] {
   return ALL_QUESTIONS.filter(q => q.moduleId === moduleId)

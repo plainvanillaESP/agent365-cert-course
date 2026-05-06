@@ -16,8 +16,8 @@ const PHASES: Phase[] = [
   { id: '0',   desc: 'Investigación deep-research base',                 status: 'done'    },
   { id: '1',   desc: 'Diseño maestro (blueprint, áreas, banco modelo)',  status: 'done'    },
   { id: '2',   desc: 'Módulo 01 prototipo de contenido',                 status: 'done'    },
-  { id: '2.A', desc: 'Prototipo del shell de e-learning con M01',        status: 'current' },
-  { id: '3',   desc: 'Módulos 02–05 (Fundamentos & Setup)',              status: 'todo'    },
+  { id: '2.A', desc: 'Prototipo del shell de e-learning con M01',        status: 'done'    },
+  { id: '3',   desc: 'Módulos 02–05 (Fundamentos & Setup)',              status: 'current' },
   { id: '4',   desc: 'Módulos 06–09 (Identidad y ciclo de vida)',        status: 'todo'    },
   { id: '5',   desc: 'Módulos 10–13 (Datos, monitorización, CCS)',       status: 'todo'    },
   { id: '6',   desc: 'Módulos 14–16 (Avanzado)',                         status: 'todo'    },
@@ -35,7 +35,7 @@ export function HomePage() {
       <Section
         eyebrow="Roadmap"
         title="Estado de producción"
-        description="Solo el Módulo 01 está producido. El resto se publica progresivamente."
+        description="Los módulos producidos están disponibles. El resto se publica progresivamente."
       >
         <Card>
           <ul className="divide-y divide-[var(--border-subtle)]">
