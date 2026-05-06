@@ -1,0 +1,125 @@
+site_name: Microsoft Agent 365 IT Admin
+site_url: https://plainvanillaesp.github.io/agent365-cert-course/
+site_description: >-
+  Curso de certificación para administradores IT sobre Microsoft Agent 365 y
+  gobernanza de agentes de IA en Microsoft 365 — Plain Vanilla Solutions
+site_author: Plain Vanilla Solutions SL
+
+# El repositorio es privado pero Pages está activado vía Actions
+repo_url: https://github.com/plainvanillaESP/agent365-cert-course
+repo_name: plainvanillaESP/agent365-cert-course
+edit_uri: edit/main/
+
+# El contenido se prepara con scripts/build_site.py en docs_site/
+docs_dir: docs_site
+
+theme:
+  name: material
+  language: es
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - search.highlight
+    - search.suggest
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+
+plugins:
+  - search:
+      lang: es
+
+markdown_extensions:
+  - admonition
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+  - def_list
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+nav:
+  - Inicio: index.md
+  - Plan de producción: PLAN.md
+  - Diseño del curso:
+    - Arquitectura del curso: docs/arquitectura-curso.md
+    - Convenciones de redacción: docs/convenciones-redaccion.md
+    - Auditoría Fase 1: docs/auditoria-fase-1.md
+    - Banco de preguntas modelo: docs/banco-preguntas-modelo.md
+    - Matriz de competencias: docs/matriz-competencias.md
+    - Changelog: docs/changelog.md
+  - Investigación:
+    - Deep research mayo 2026: investigacion/deep-research-mayo-2026.md
+  - Módulos:
+    - Índice de módulos: modulos/README.md
+    - 01 - Fundamentos:
+      - Resumen: modulos/modulo-01-fundamentos/README.md
+      - Teoría: modulos/modulo-01-fundamentos/teoria.md
+      - Laboratorios: modulos/modulo-01-fundamentos/laboratorios.md
+      - Evaluación: modulos/modulo-01-fundamentos/evaluacion.md
+      - Recursos: modulos/modulo-01-fundamentos/recursos.md
+
+extra:
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://plainvanilla.ai
+      name: Plain Vanilla Solutions
+  generator: false
+
+extra_css:
+  - assets/styles.css
+
+copyright: >
+  Copyright © 2026 Plain Vanilla Solutions SL — uso interno de producción
