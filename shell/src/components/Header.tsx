@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Menu } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
-import { Logo } from '@/components/Logo'
+import { Logotipo } from '@/components/Logo'
+
+interface HeaderProps {
+  onMenuToggle?: () => void
+}
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -11,41 +15,58 @@ function GithubIcon({ className }: { className?: string }) {
   )
 }
 
-export function Header() {
+export function Header({ onMenuToggle }: HeaderProps) {
   const { theme, toggle } = useTheme()
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-md bg-[var(--bg-canvas)]/80 border-b border-[var(--border-default)]">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-3 group">
-          <Logo className="size-9 shrink-0" />
-          <div className="hidden sm:block">
-            <div className="text-[15px] font-semibold leading-tight font-display text-[var(--text-primary)]">
-              Microsoft Agent 365 IT Admin
-            </div>
-            <div className="text-[12px] text-[var(--text-muted)] leading-tight">
-              Plain Vanilla Solutions
-            </div>
-          </div>
-        </Link>
+    <header
+      className="sticky top-0 z-30 h-[var(--layout-header-h)] backdrop-blur-md border-b border-[var(--border-default)] bg-[var(--bg-overlay)]"
+    >
+      <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
+        {/* Logo + título del curso */}
+        <div className="flex items-center gap-3 min-w-0">
+          {onMenuToggle && (
+            <button
+              type="button"
+              onClick={onMenuToggle}
+              className="lg:hidden size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] -ml-2"
+              aria-label="Abrir navegación"
+            >
+              <Menu className="size-[18px]" />
+            </button>
+          )}
 
+          <Link to="/" className="flex items-center gap-3 min-w-0 group">
+            <Logotipo className="h-6 sm:h-7 w-auto shrink-0" />
+            <div className="hidden md:block min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
+              <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
+                Microsoft Agent 365 IT Admin
+              </div>
+              <div className="text-[11px] leading-tight text-[var(--text-muted)]">
+                Curso de certificación
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Acciones */}
         <div className="flex items-center gap-1">
           <a
             href="https://github.com/plainvanillaESP/agent365-cert-course"
             target="_blank"
             rel="noopener noreferrer"
-            className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] transition-colors"
+            className="size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors"
             aria-label="Repositorio en GitHub"
           >
-            <GithubIcon className="size-[18px]" />
+            <GithubIcon className="size-[16px]" />
           </a>
           <button
             type="button"
             onClick={toggle}
-            className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] transition-colors"
+            className="size-9 rounded-md flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors"
             aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
           >
-            {theme === 'dark' ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+            {theme === 'dark' ? <Sun className="size-[16px]" /> : <Moon className="size-[16px]" />}
           </button>
         </div>
       </div>
