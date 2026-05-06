@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title>Comparativa de los dos SDKs: Microsoft 365 Agents SDK frente a Microsoft Agent 365 SDK</title>
+  <desc>Dos SDKs ortogonales: el primero cubre transporte conversacional (recibir y enviar mensajes en Teams, Slack, Copilot); el segundo cubre gobernanza (identidad Entra, telemetría OpenTelemetry, acceso a Work IQ MCP). Un agente real puede usar ambos.</desc>
+
+  <defs>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .subtitle { font-size: 13.5px; fill: #57534e; font-style: italic; }
+      .sdk-name { font-size: 17px; font-weight: 700; fill: #1c1917; }
+      .sdk-pkg { font-size: 12px; fill: #57534e; font-family: ui-monospace, monospace; }
+      .sdk-purpose { font-size: 12.5px; fill: #44403c; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+      .sdk-list { font-size: 12.5px; fill: #1c1917; }
+      .sdk-list-sub { font-size: 11.5px; fill: #78716c; font-style: italic; }
+      .axis-label { font-size: 11.5px; font-weight: 700; fill: #7B2FBE; letter-spacing: 0.05em; text-transform: uppercase; }
+      .footer { font-size: 11px; fill: #a8a29e; font-style: italic; }
+    </style>
+  </defs>
+
+  <text x="40" y="40" class="title">Microsoft 365 Agents SDK vs Microsoft Agent 365 SDK</text>
+  <text x="40" y="62" class="subtitle">Dos SDKs ortogonales: uno transporta, el otro gobierna. Un agente real usa los dos.</text>
+
+  <!-- Eje horizontal central explicando la diferencia -->
+  <rect x="40" y="100" width="1020" height="38" rx="6" fill="#faf5ff" stroke="#7B2FBE" stroke-width="1" />
+  <text x="60" y="124" class="axis-label">Eje:</text>
+  <text x="115" y="124" class="sdk-list" font-style="italic">¿qué capa cubre cada SDK en la vida del agente?</text>
+
+  <!-- SDK 1: M365 Agents SDK (transporte) -->
+  <rect x="40" y="160" width="500" height="320" rx="10" fill="#ffffff" stroke="#0ea5e9" stroke-width="2" />
+  <rect x="40" y="160" width="500" height="48" rx="10" fill="#e0f2fe" />
+  <rect x="40" y="195" width="500" height="13" fill="#e0f2fe" />
+  <text x="60" y="190" class="sdk-name" fill="#075985">Microsoft 365 Agents SDK</text>
+  <text x="60" y="227" class="sdk-pkg">npm: @microsoft/agents</text>
+
+  <text x="60" y="262" class="sdk-purpose" fill="#0369a1">Para qué sirve</text>
+  <text x="60" y="282" class="sdk-list">Transporte conversacional.</text>
+  <text x="60" y="300" class="sdk-list-sub">Recibe y envía mensajes en canales Microsoft.</text>
+
+  <text x="60" y="335" class="sdk-purpose" fill="#0369a1">Capacidades clave</text>
+  <text x="60" y="357" class="sdk-list">• Mensajes en Teams, Slack, Copilot, FB Messenger</text>
+  <text x="60" y="378" class="sdk-list">• Adapters de canal y autenticación de bot</text>
+  <text x="60" y="399" class="sdk-list">• Manejo de turnos conversacionales</text>
+  <text x="60" y="420" class="sdk-list">• Compatible con cualquier reasoning engine</text>
+
+  <text x="60" y="455" class="sdk-purpose" fill="#0369a1">Cuándo es opcional</text>
+  <text x="60" y="475" class="sdk-list-sub">Sí: agentes autonomous o batch no lo necesitan.</text>
+
+  <!-- SDK 2: Agent 365 SDK (gobernanza) -->
+  <rect x="560" y="160" width="500" height="320" rx="10" fill="#ffffff" stroke="#7B2FBE" stroke-width="2" />
+  <rect x="560" y="160" width="500" height="48" rx="10" fill="#faf5ff" />
+  <rect x="560" y="195" width="500" height="13" fill="#faf5ff" />
+  <text x="580" y="190" class="sdk-name" fill="#5b21b6">Microsoft Agent 365 SDK</text>
+  <text x="580" y="227" class="sdk-pkg">npm: @microsoft/agent365  ·  + binario CLI</text>
+
+  <text x="580" y="262" class="sdk-purpose" fill="#7B2FBE">Para qué sirve</text>
+  <text x="580" y="282" class="sdk-list">Gobernanza.</text>
+  <text x="580" y="300" class="sdk-list-sub">Hace al agente inventariable, identificable y observable.</text>
+
+  <text x="580" y="335" class="sdk-purpose" fill="#7B2FBE">Capacidades clave</text>
+  <text x="580" y="357" class="sdk-list">• Identidad Entra Agent ID</text>
+  <text x="580" y="378" class="sdk-list">• Telemetría OpenTelemetry → Defender</text>
+  <text x="580" y="399" class="sdk-list">• Acceso a Work IQ MCP servers</text>
+  <text x="580" y="420" class="sdk-list">• Notificaciones a humanos vía Activity protocol</text>
+
+  <text x="580" y="455" class="sdk-purpose" fill="#7B2FBE">Cuándo es opcional</text>
+  <text x="580" y="475" class="sdk-list-sub">Técnicamente sí, pero sin él el agente no aparece en métricas.</text>
+
+  <!-- Footer con regla mnemotécnica -->
+  <rect x="40" y="500" width="1020" height="0" />
+  <text x="550" y="518" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 02 · Fig. 2.3</text>
+</svg>

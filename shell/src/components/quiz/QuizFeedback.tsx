@@ -16,7 +16,7 @@ export function QuizHeader({ totalQuestions, answeredCount }: QuizHeaderProps) {
             Evaluación interactiva
           </h3>
           <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
-            Estas son las {totalQuestions} preguntas oficiales del banco que el Módulo 01 aporta al examen final.
+            Las {totalQuestions} preguntas oficiales del banco que este módulo aporta al examen final.
             Responde y pulsa <span className="font-medium text-[var(--text-primary)]">Validar respuestas</span> para
             ver el resultado y la justificación de cada una.
           </p>
@@ -58,7 +58,7 @@ export function QuizResult({ score, total }: QuizResultProps) {
               Pleno: {score}/{total}
             </h3>
             <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed mt-1">
-              Has acertado todas las preguntas oficiales del Módulo 01. Estás preparado para avanzar al Módulo 02.
+              Has acertado todas las preguntas oficiales del módulo. Estás listo para el siguiente.
             </p>
           </div>
         </div>

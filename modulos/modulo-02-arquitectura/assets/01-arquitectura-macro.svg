@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title>Arquitectura macro de Microsoft Agent 365 con sus seis bloques</title>
+  <desc>Cuatro admin centers en la fila superior (M365, Entra, Purview, Defender) más dos componentes nuevos en la fila inferior (Work IQ MCP servers y Agent 365 SDK + CLI). El conjunto forma el control plane que gobierna los agentes ejecutándose en runtime.</desc>
+
+  <defs>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .subtitle { font-size: 13.5px; fill: #57534e; font-style: italic; }
+      .label-section { font-size: 13px; font-weight: 700; fill: #44403c; letter-spacing: 0.05em; text-transform: uppercase; }
+      .box-title { font-size: 14.5px; font-weight: 700; fill: #1c1917; }
+      .box-subtitle { font-size: 11.5px; fill: #57534e; font-style: italic; }
+      .box-list { font-size: 11.5px; fill: #44403c; }
+      .box-meta { font-size: 11px; fill: #78716c; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+      .footer { font-size: 11px; fill: #a8a29e; font-style: italic; }
+      .arrow-label { font-size: 12px; font-weight: 600; fill: #7B2FBE; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE" />
+    </marker>
+  </defs>
+
+  <!-- Título y subtítulo -->
+  <text x="40" y="40" class="title">Microsoft Agent 365 — Arquitectura macro</text>
+  <text x="40" y="62" class="subtitle">Plano de control distribuido sobre cuatro admin centers + dos componentes nuevos</text>
+
+  <!-- Marco general del control plane -->
+  <rect x="40" y="92" width="1020" height="280" rx="10" fill="#faf5ff" stroke="#7B2FBE" stroke-width="2" />
+  <text x="60" y="116" class="label-section" fill="#7B2FBE">Control plane — gobernanza de los agentes</text>
+
+  <!-- Bloque 1: M365 admin center -->
+  <rect x="60" y="135" width="240" height="225" rx="8" fill="#ffffff" stroke="#7B2FBE" stroke-width="1.5" />
+  <text x="78" y="160" class="box-meta">Admin center</text>
+  <text x="78" y="184" class="box-title">M365 admin center</text>
+  <text x="78" y="202" class="box-subtitle">admin.microsoft.com → Agents</text>
+  <line x1="78" y1="212" x2="282" y2="212" stroke="#e7e5e4" stroke-width="1" />
+  <text x="78" y="232" class="box-list">• Agent Registry</text>
+  <text x="78" y="252" class="box-list">• Agent Map</text>
+  <text x="78" y="272" class="box-list">• Hero metrics (Overview)</text>
+  <text x="78" y="292" class="box-list">• Wizard de publishing</text>
+  <text x="78" y="312" class="box-list">• 11 acciones de ciclo de vida</text>
+  <text x="78" y="345" class="box-meta" fill="#7B2FBE">Módulos M07, M08</text>
+
+  <!-- Bloque 2: Entra Agent ID -->
+  <rect x="320" y="135" width="240" height="225" rx="8" fill="#ffffff" stroke="#7B2FBE" stroke-width="1.5" />
+  <text x="338" y="160" class="box-meta">Admin center</text>
+  <text x="338" y="184" class="box-title">Entra Agent ID</text>
+  <text x="338" y="202" class="box-subtitle">entra.microsoft.com → Identity</text>
+  <line x1="338" y1="212" x2="542" y2="212" stroke="#e7e5e4" stroke-width="1" />
+  <text x="338" y="232" class="box-list">• 4 tipos de objetos nuevos</text>
+  <text x="338" y="252" class="box-list">• Conditional Access</text>
+  <text x="338" y="272" class="box-list">• Identity Protection</text>
+  <text x="338" y="292" class="box-list">• Lifecycle workflows</text>
+  <text x="338" y="312" class="box-list">• Sponsorship + manager xfer</text>
+  <text x="338" y="345" class="box-meta" fill="#7B2FBE">Módulos M06, M09</text>
+
+  <!-- Bloque 3: Purview AI -->
+  <rect x="580" y="135" width="240" height="225" rx="8" fill="#ffffff" stroke="#7B2FBE" stroke-width="1.5" />
+  <text x="598" y="160" class="box-meta">Admin center</text>
+  <text x="598" y="184" class="box-title">Purview AI</text>
+  <text x="598" y="202" class="box-subtitle">purview.microsoft.com</text>
+  <line x1="598" y1="212" x2="802" y2="212" stroke="#e7e5e4" stroke-width="1" />
+  <text x="598" y="232" class="box-list">• DSPM for AI</text>
+  <text x="598" y="252" class="box-list">• AI observability</text>
+  <text x="598" y="272" class="box-list">• DLP (agent instance = user)</text>
+  <text x="598" y="292" class="box-list">• Sensitivity labels (.agent)</text>
+  <text x="598" y="312" class="box-list">• Compliance Manager</text>
+  <text x="598" y="345" class="box-meta" fill="#7B2FBE">Módulos M10, M11</text>
+
+  <!-- Bloque 4: Defender XDR -->
+  <rect x="840" y="135" width="200" height="225" rx="8" fill="#ffffff" stroke="#7B2FBE" stroke-width="1.5" />
+  <text x="858" y="160" class="box-meta">Admin center</text>
+  <text x="858" y="184" class="box-title">Defender XDR</text>
+  <text x="858" y="202" class="box-subtitle">security.microsoft.com</text>
+  <line x1="858" y1="212" x2="1022" y2="212" stroke="#e7e5e4" stroke-width="1" />
+  <text x="858" y="232" class="box-list">• CloudAppEvents (KQL)</text>
+  <text x="858" y="252" class="box-list">• 5 ActionTypes nuevas</text>
+  <text x="858" y="272" class="box-list">• Real-time protection</text>
+  <text x="858" y="292" class="box-list">• AI Agent Inventory</text>
+  <text x="858" y="312" class="box-list">• Shadow AI / locales</text>
+  <text x="858" y="345" class="box-meta" fill="#7B2FBE">Módulo M12</text>
+
+  <!-- Flecha gobierna -->
+  <line x1="550" y1="380" x2="550" y2="430" stroke="#7B2FBE" stroke-width="2.5" marker-end="url(#arrow)" />
+  <rect x="495" y="392" width="110" height="24" rx="4" fill="#ffffff" stroke="#7B2FBE" stroke-width="1.5" />
+  <text x="550" y="409" class="arrow-label" text-anchor="middle">gobierna</text>
+
+  <!-- Bloque inferior: integración runtime -->
+  <rect x="40" y="445" width="1020" height="220" rx="10" fill="#fdf2f8" stroke="#E040FB" stroke-width="2" />
+  <text x="60" y="469" class="label-section" fill="#9d174d">Integración runtime — los agentes consumen estos componentes</text>
+
+  <!-- Bloque 5: Work IQ MCP -->
+  <rect x="60" y="488" width="490" height="160" rx="8" fill="#ffffff" stroke="#E040FB" stroke-width="1.5" />
+  <text x="78" y="513" class="box-meta">Componente runtime</text>
+  <text x="78" y="537" class="box-title">Work IQ MCP servers</text>
+  <text x="78" y="555" class="box-subtitle">Endpoints MCP gestionados por Microsoft</text>
+  <line x1="78" y1="565" x2="532" y2="565" stroke="#e7e5e4" stroke-width="1" />
+  <text x="78" y="584" class="box-list">• Outlook · Teams · SharePoint · OneDrive</text>
+  <text x="78" y="603" class="box-list">• User profile · Word · Dataverse / Dynamics · Copilot</text>
+  <text x="78" y="622" class="box-list" font-style="italic">• Aplica permisos, sensitivity labels y auditoría automáticamente.</text>
+
+  <!-- Bloque 6: Agent 365 SDK -->
+  <rect x="570" y="488" width="470" height="160" rx="8" fill="#ffffff" stroke="#E040FB" stroke-width="1.5" />
+  <text x="588" y="513" class="box-meta">Componente runtime</text>
+  <text x="588" y="537" class="box-title">Agent 365 SDK + CLI</text>
+  <text x="588" y="555" class="box-subtitle">npm: @microsoft/agent365 + binario CLI</text>
+  <line x1="588" y1="565" x2="1022" y2="565" stroke="#e7e5e4" stroke-width="1" />
+  <text x="588" y="584" class="box-list">• Identidad Entra Agent ID por agente</text>
+  <text x="588" y="603" class="box-list">• Telemetría OpenTelemetry → Defender</text>
+  <text x="588" y="622" class="box-list">• Notificaciones a humanos vía Activity protocol</text>
+
+  <!-- Footer -->
+  <text x="550" y="700" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 02 · Fig. 2.1</text>
+</svg>
