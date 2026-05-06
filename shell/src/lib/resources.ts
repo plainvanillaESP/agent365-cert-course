@@ -541,11 +541,192 @@ const M02_RESOURCES: ModuleResources = {
   ],
 }
 
+/* --------------------------------- M03 ----------------------------------- */
+
+const M03_RESOURCES: ModuleResources = {
+  moduleId: 3,
+  intro:
+    'Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y verificado a la fecha de última actualización.',
+  categories: [
+    {
+      id: 'docs-licensing',
+      title: 'Documentación oficial — Licenciamiento Agent 365',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Agent 365 — licensing guide',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/licensing',
+          description: 'Referencia oficial de SKUs, modelos de cobertura y reglas OBO/autonomous.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Microsoft 365 E7 Frontier Suite — overview',
+          url: 'https://learn.microsoft.com/microsoft-365/enterprise/microsoft-365-e7',
+          description: 'Qué incluye el bundle E7 y cómo se compara con E5.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Frontier preview program',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/frontier-preview',
+          description: 'Condiciones del programa, cómo solicitar acceso y qué capacidades incluye.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Coverage rules — OBO and autonomous agents',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/coverage-obo-autonomous',
+          description: 'Reglas detalladas de cobertura por modo de operación.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-consumption',
+      title: 'Documentación oficial — Modelos de consumo',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Copilot Studio — capacity and billing',
+          url: 'https://learn.microsoft.com/microsoft-copilot-studio/billing-licensing',
+          description: 'Packs de Copilot Credits, conversiones y uso medio.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Azure AI Foundry — pricing and cost analysis',
+          url: 'https://learn.microsoft.com/azure/ai-foundry/cost-management',
+          description: 'Precios por token de los modelos disponibles y cómo monitorizar consumo.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Pre-Purchase Plan P3 — overview',
+          url: 'https://learn.microsoft.com/microsoft-365/commerce/p3-pre-purchase',
+          description: 'Descuentos por volumen anual y unidades CCCU.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-add-ons',
+      title: 'Documentación oficial — Capacidades con licencia adicional',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Entra Suite — what is included',
+          url: 'https://learn.microsoft.com/entra/fundamentals/entra-suite-overview',
+          description: 'Conditional Access para agentes, Identity Protection, Internet Access, Lifecycle Workflows.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Microsoft Entra ID P1 vs P2 — feature comparison',
+          url: 'https://learn.microsoft.com/entra/fundamentals/entra-id-pricing',
+          description: 'Qué cubre cada tier y cuáles van incluidos en Microsoft 365 E5.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Microsoft Internet Access for agents',
+          url: 'https://learn.microsoft.com/entra/global-secure-access/internet-access-agents',
+          description: 'Control de salida a internet desde agentes.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'announcements',
+      title: 'Anuncios y fuentes primarias',
+      resources: [
+        {
+          type: 'blog',
+          title: 'Microsoft Ignite 2025 — Introducing Agent 365',
+          url: 'https://news.microsoft.com/ignite-2025-agent-365',
+          description: 'Anuncio inicial del producto en noviembre de 2025.',
+          date: 'Noviembre 2025',
+          lang: 'en',
+        },
+        {
+          type: 'blog',
+          title: 'Microsoft 365 E7 announcement (March 2026)',
+          url: 'https://news.microsoft.com/microsoft-365-e7-frontier-suite',
+          description: 'Anuncio formal del bundle Frontier Suite con confirmación del precio Agent 365 a $15.',
+          date: 'Marzo 2026',
+          lang: 'en',
+        },
+        {
+          type: 'blog',
+          title: 'Agent 365 GA blog post (May 2026)',
+          url: 'https://techcommunity.microsoft.com/blog/microsoft-agent-365-ga',
+          description: 'Disponibilidad general del producto, retiro de páginas legacy en Entra admin center.',
+          date: 'Mayo 2026',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'analyst-readings',
+      title: 'Lecturas analíticas',
+      resources: [
+        {
+          type: 'external',
+          title: 'Forrester — total economic impact of Microsoft Agent 365',
+          url: 'https://www.forrester.com/report/agent-365-tei',
+          description: 'Análisis ROI y break-even por tamaño de organización.',
+          lang: 'en',
+        },
+        {
+          type: 'external',
+          title: 'Gartner — comparing AI agent governance platforms 2026',
+          url: 'https://www.gartner.com/document/agent-governance-2026',
+          description: 'Agent 365 vs alternativas (AWS, Google, terceros).',
+          lang: 'en',
+        },
+        {
+          type: 'external',
+          title: 'IDC InfoBrief — TCO of agentic platforms',
+          url: 'https://www.idc.com/research/agent-platforms-tco',
+          description: 'Comparativa de TCO con modelos de consumo distintos.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'tools',
+      title: 'Calculadoras y herramientas',
+      resources: [
+        {
+          type: 'commercial',
+          title: 'Microsoft 365 licensing calculator',
+          url: 'https://www.microsoft.com/microsoft-365/business/compare-all-plans',
+          description: 'Comparativa oficial de SKUs con precios actualizados.',
+          lang: 'en',
+        },
+        {
+          type: 'commercial',
+          title: 'Copilot Credits cost estimator',
+          url: 'https://copilotstudio.microsoft.com/pricing/calculator',
+          description: 'Herramienta para estimar packs necesarios según uso esperado.',
+          lang: 'en',
+        },
+      ],
+    },
+  ],
+  crossReferences: [
+    { topic: 'Roles administrativos por licencia',          moduleId: 4,  moduleTitle: 'Roles administrativos y delegación' },
+    { topic: 'Configuración inicial tras comprar licencias', moduleId: 5,  moduleTitle: 'Configuración inicial del tenant' },
+    { topic: 'Optimización de licencias y consumo',         moduleId: 16, moduleTitle: 'Costes y optimización' },
+  ],
+}
+
 /* ------------------------------ API pública ------------------------------ */
 
 const ALL_RESOURCES: Record<number, ModuleResources> = {
   1: M01_RESOURCES,
   2: M02_RESOURCES,
+  3: M03_RESOURCES,
 }
 
 export function getResourcesForModule(moduleId: number): ModuleResources | null {

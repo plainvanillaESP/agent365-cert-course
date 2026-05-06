@@ -1,0 +1,112 @@
+<svg viewBox="0 0 980 460" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 14px; font-weight: 600; fill: white; }
+      .h3     { font-size: 13.5px; font-weight: 600; fill: #1c1917; }
+      .label  { font-size: 11.5px; fill: #44403c; }
+      .lbl-sm { font-size: 10.5px; fill: #78716c; }
+      .small  { font-size: 11px; fill: #44403c; }
+      .badge  { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Las cuatro fases del despliegue de Agent 365</text>
+  <text x="40" y="58" class="sub">Cada fase tiene un objetivo, un volumen de licencias y una métrica clave</text>
+
+  <!-- Línea de tiempo horizontal -->
+  <line x1="60" y1="200" x2="940" y2="200" stroke="#D6D3D1" stroke-width="2"/>
+
+  <!-- ===== Fase 1: Piloto Frontier ===== -->
+  <circle cx="170" cy="200" r="12" fill="#9A44E5" stroke="white" stroke-width="3"/>
+  <text x="170" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="white">1</text>
+
+  <rect x="80" y="100" width="180" height="32" rx="6" fill="#9A44E5"/>
+  <text x="170" y="121" text-anchor="middle" class="h2">Piloto Frontier</text>
+
+  <text x="170" y="155" text-anchor="middle" class="badge" fill="#7B2FBE">8-12 SEMANAS</text>
+  <text x="170" y="172" text-anchor="middle" class="small">25 licencias gratuitas</text>
+
+  <rect x="80" y="230" width="180" height="180" rx="6" fill="#FAF5FF" stroke="#E9D8FF"/>
+  <text x="92" y="252" class="h3">Casos bajo riesgo</text>
+  <text x="92" y="271" class="small">5-10 agentes informativos</text>
+  <text x="92" y="289" class="small">y asistentes internos</text>
+
+  <text x="92" y="318" class="h3">Configuración base</text>
+  <text x="92" y="336" class="small">Registry, Map y políticas</text>
+  <text x="92" y="354" class="small">iniciales en Purview</text>
+
+  <text x="92" y="382" class="h3" fill="#7B2FBE">Métrica</text>
+  <text x="92" y="398" class="small">feedback de usuarios</text>
+
+  <!-- ===== Fase 2: Expansión controlada ===== -->
+  <circle cx="400" cy="200" r="12" fill="#0284C7" stroke="white" stroke-width="3"/>
+  <text x="400" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="white">2</text>
+
+  <rect x="310" y="100" width="180" height="32" rx="6" fill="#0284C7"/>
+  <text x="400" y="121" text-anchor="middle" class="h2">Expansión controlada</text>
+
+  <text x="400" y="155" text-anchor="middle" class="badge" fill="#0369A1">3-4 MESES</text>
+  <text x="400" y="172" text-anchor="middle" class="small">100-500 licencias</text>
+
+  <rect x="310" y="230" width="180" height="180" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+  <text x="322" y="252" class="h3">Por área de negocio</text>
+  <text x="322" y="271" class="small">Sponsor por área</text>
+  <text x="322" y="289" class="small">Despliegue progresivo</text>
+
+  <text x="322" y="318" class="h3">Activaciones</text>
+  <text x="322" y="336" class="small">CA para agentes (P1)</text>
+  <text x="322" y="354" class="small">DLP en Purview</text>
+
+  <text x="322" y="382" class="h3" fill="#0284C7">Métrica</text>
+  <text x="322" y="398" class="small">% agentes con sponsor</text>
+
+  <!-- ===== Fase 3: GA por waves ===== -->
+  <circle cx="630" cy="200" r="12" fill="#0E7490" stroke="white" stroke-width="3"/>
+  <text x="630" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="white">3</text>
+
+  <rect x="540" y="100" width="180" height="32" rx="6" fill="#0E7490"/>
+  <text x="630" y="121" text-anchor="middle" class="h2">GA por waves</text>
+
+  <text x="630" y="155" text-anchor="middle" class="badge" fill="#0F766E">6-9 MESES</text>
+  <text x="630" y="172" text-anchor="middle" class="small">Despliegue completo</text>
+
+  <rect x="540" y="230" width="180" height="180" rx="6" fill="#ECFEFF" stroke="#A5F3FC"/>
+  <text x="552" y="252" class="h3">Patrón de waves</text>
+  <text x="552" y="271" class="small">Geografía · BU · función</text>
+  <text x="552" y="289" class="small">Formación + comunicación</text>
+
+  <text x="552" y="318" class="h3">Activaciones</text>
+  <text x="552" y="336" class="small">Monitorización proactiva</text>
+  <text x="552" y="354" class="small">en Defender</text>
+
+  <text x="552" y="382" class="h3" fill="#0E7490">Métrica</text>
+  <text x="552" y="398" class="small">cobertura · NPS · incidentes</text>
+
+  <!-- ===== Fase 4: Operación continua ===== -->
+  <circle cx="860" cy="200" r="12" fill="#15803D" stroke="white" stroke-width="3"/>
+  <text x="860" y="205" text-anchor="middle" font-size="11" font-weight="700" fill="white">4</text>
+
+  <rect x="770" y="100" width="180" height="32" rx="6" fill="#15803D"/>
+  <text x="860" y="121" text-anchor="middle" class="h2">Operación continua</text>
+
+  <text x="860" y="155" text-anchor="middle" class="badge" fill="#166534">PERMANENTE</text>
+  <text x="860" y="172" text-anchor="middle" class="small">Optimización iterativa</text>
+
+  <rect x="770" y="230" width="180" height="180" rx="6" fill="#F0FDF4" stroke="#BBF7D0"/>
+  <text x="782" y="252" class="h3">Optimización coste</text>
+  <text x="782" y="271" class="small">Licencias inactivas</text>
+  <text x="782" y="289" class="small">Ajuste Copilot Credits</text>
+
+  <text x="782" y="318" class="h3">Revisión trimestral</text>
+  <text x="782" y="336" class="small">Políticas Purview</text>
+  <text x="782" y="354" class="small">Defender vs amenazas</text>
+
+  <text x="782" y="382" class="h3" fill="#15803D">Métrica</text>
+  <text x="782" y="398" class="small">coste/agente activo</text>
+
+  <!-- Footer -->
+  <text x="490" y="445" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 03 · Fig. 3.4</text>
+</svg>

@@ -1,0 +1,97 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 16px; font-weight: 600; }
+      .label  { font-size: 12px; fill: #44403c; }
+      .lbl-sm { font-size: 11px; fill: #78716c; }
+      .price  { font-size: 18px; font-weight: 700; }
+      .small  { font-size: 11.5px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .arrow-label { font-size: 11px; font-weight: 600; }
+    </style>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE"/>
+    </marker>
+    <marker id="arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#C2410C"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">OBO vs autonomous: quién paga qué</text>
+  <text x="40" y="58" class="sub">Las dos modalidades de operación de un agente y cómo se cubren con licencia</text>
+
+  <!-- ===== OBO box (izquierda) ===== -->
+  <rect x="40" y="90" width="440" height="380" rx="12" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40" y="90" width="440" height="38" rx="12" fill="#9A44E5"/>
+  <rect x="40" y="116" width="440" height="12" fill="#9A44E5"/>
+  <text x="60" y="115" fill="white" class="h2">On-Behalf-Of (OBO) · cubierto · GA</text>
+
+  <!-- Usuario -->
+  <circle cx="120" cy="200" r="34" fill="white" stroke="#9A44E5" stroke-width="2"/>
+  <text x="120" y="205" text-anchor="middle" font-size="22" fill="#9A44E5" font-weight="700">U</text>
+  <text x="120" y="252" text-anchor="middle" class="label" font-weight="600">Usuario</text>
+  <text x="120" y="269" text-anchor="middle" class="lbl-sm">licencia Agent 365</text>
+
+  <!-- Flecha → -->
+  <line x1="160" y1="200" x2="240" y2="200" stroke="#9A44E5" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="200" y="190" text-anchor="middle" class="arrow-label" fill="#7B2FBE">invoca</text>
+
+  <!-- Agente -->
+  <rect x="260" y="170" width="140" height="60" rx="8" fill="white" stroke="#9A44E5" stroke-width="2"/>
+  <text x="330" y="195" text-anchor="middle" class="label" font-weight="600">Agente</text>
+  <text x="330" y="213" text-anchor="middle" class="lbl-sm">opera con token</text>
+  <text x="330" y="225" text-anchor="middle" class="lbl-sm">del usuario</text>
+
+  <!-- → Microsoft Graph -->
+  <line x1="330" y1="240" x2="330" y2="290" stroke="#9A44E5" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="345" y="270" class="arrow-label" fill="#7B2FBE">permisos del usuario</text>
+  <rect x="240" y="295" width="180" height="38" rx="6" fill="white" stroke="#A8A29E" stroke-width="1"/>
+  <text x="330" y="318" text-anchor="middle" class="label">Microsoft Graph · Outlook · SP</text>
+
+  <!-- Caja inferior con conclusión -->
+  <rect x="60" y="360" width="400" height="90" rx="8" fill="white" stroke="#E9D8FF"/>
+  <text x="80" y="385" class="label" font-weight="600">Resultado:</text>
+  <text x="80" y="406" class="small">1.000 licencias = 1.000 usuarios habilitados</text>
+  <text x="80" y="424" class="small">Sin límite de cuántos agentes registren ni</text>
+  <text x="80" y="442" class="small">con qué frecuencia los usen.</text>
+
+  <!-- ===== Autonomous box (derecha) ===== -->
+  <rect x="500" y="90" width="440" height="380" rx="12" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="500" y="90" width="440" height="38" rx="12" fill="#C2410C"/>
+  <rect x="500" y="116" width="440" height="12" fill="#C2410C"/>
+  <text x="520" y="115" fill="white" class="h2">Autonomous · per-instance · Frontier preview</text>
+
+  <!-- Sin usuario -->
+  <circle cx="580" cy="200" r="34" fill="white" stroke="#C2410C" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="580" y="207" text-anchor="middle" font-size="22" fill="#C2410C" font-weight="700">∅</text>
+  <text x="580" y="252" text-anchor="middle" class="label" font-weight="600">Sin usuario</text>
+  <text x="580" y="269" text-anchor="middle" class="lbl-sm">opera sin invocación</text>
+
+  <!-- Agente con identidad propia -->
+  <rect x="720" y="170" width="180" height="80" rx="8" fill="white" stroke="#C2410C" stroke-width="2"/>
+  <text x="810" y="192" text-anchor="middle" class="label" font-weight="600">Agente autonomous</text>
+  <text x="810" y="212" text-anchor="middle" class="lbl-sm">identidad propia Entra</text>
+  <text x="810" y="227" text-anchor="middle" class="lbl-sm" font-family="ui-monospace, monospace">agent@tenant.</text>
+  <text x="810" y="240" text-anchor="middle" class="lbl-sm" font-family="ui-monospace, monospace">onmicrosoft.com</text>
+
+  <!-- Flecha entre sin usuario y agente -->
+  <line x1="615" y1="200" x2="715" y2="200" stroke="#C2410C" stroke-width="2" marker-end="url(#arr-orange)"/>
+
+  <!-- Llamada propia -->
+  <line x1="810" y1="260" x2="810" y2="295" stroke="#C2410C" stroke-width="2" marker-end="url(#arr-orange)"/>
+  <text x="825" y="280" class="arrow-label" fill="#C2410C">permisos propios</text>
+  <rect x="720" y="300" width="180" height="38" rx="6" fill="white" stroke="#A8A29E" stroke-width="1"/>
+  <text x="810" y="323" text-anchor="middle" class="label">Mailbox · Teams · OneDrive</text>
+
+  <!-- Caja inferior -->
+  <rect x="520" y="360" width="400" height="90" rx="8" fill="white" stroke="#FED7AA"/>
+  <text x="540" y="385" class="label" font-weight="600" fill="#9A3412">Resultado:</text>
+  <text x="540" y="406" class="small">25 instancias gratuitas en Frontier preview</text>
+  <text x="540" y="424" class="small">Modelo per-instance separado del per-user</text>
+  <text x="540" y="442" class="small">No GA todavía: paso anunciado, no fechado</text>
+
+  <!-- Footer -->
+  <text x="490" y="510" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 03 · Fig. 3.2</text>
+</svg>

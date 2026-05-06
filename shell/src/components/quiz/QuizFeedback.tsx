@@ -16,7 +16,9 @@ export function QuizHeader({ totalQuestions, answeredCount }: QuizHeaderProps) {
             Evaluación interactiva
           </h3>
           <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
-            Las {totalQuestions} preguntas oficiales del banco que este módulo aporta al examen final.
+            {totalQuestions === 1
+              ? <>La pregunta oficial del banco que este módulo aporta al examen final.</>
+              : <>Las {totalQuestions} preguntas oficiales del banco que este módulo aporta al examen final.</>}{' '}
             Responde y pulsa <span className="font-medium text-[var(--text-primary)]">Validar respuestas</span> para
             ver el resultado y la justificación de cada una.
           </p>
