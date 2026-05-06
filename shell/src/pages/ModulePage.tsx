@@ -7,6 +7,8 @@ import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import { TableOfContents } from '@/components/TableOfContents'
 import { Quiz } from '@/components/quiz/Quiz'
 import { getQuestionsForModule } from '@/lib/quiz'
+import { Lab } from '@/components/lab/Lab'
+import { getLabForModule } from '@/lib/labs'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'evaluacion', 'recursos']
 
@@ -106,6 +108,8 @@ export function ModulePage() {
         {/* Contenido */}
         {section === 'evaluacion' && getQuestionsForModule(module.id).length > 0 ? (
           <Quiz moduleId={module.id} />
+        ) : section === 'laboratorios' && getLabForModule(module.id) ? (
+          <Lab moduleId={module.id} />
         ) : content ? (
           <MarkdownRenderer body={content.body} moduleSlug={module.slug} />
         ) : (
@@ -154,9 +158,9 @@ export function ModulePage() {
         )}
       </div>
 
-      {/* TOC derecha — solo en secciones markdown, no en quiz */}
+      {/* TOC derecha — solo en secciones markdown, no en quiz/lab */}
       <aside className="hidden xl:block">
-        {content && section !== 'evaluacion' && <TableOfContents />}
+        {content && section !== 'evaluacion' && section !== 'laboratorios' && <TableOfContents />}
       </aside>
     </div>
   )
