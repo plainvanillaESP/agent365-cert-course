@@ -3,6 +3,17 @@
 @import "highlight.js/styles/github-dark.css" layer(highlight-dark);
 
 /*
+ * Configurar el variante `dark:` de Tailwind para que active sobre la clase
+ * `.dark` del <html> (controlada por el toggle del header) en lugar de
+ * `prefers-color-scheme` del sistema. Esto sincroniza el variante con el resto
+ * del CSS (que usa selector `html.dark`) y evita que el toggle del sitio
+ * deje el HTML con .dark pero el variante `dark:` desactivado, lo cual
+ * causaba que el logotipo positivo (texto negro) se mostrara sobre el fondo
+ * oscuro del header.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
  * Sistema de diseño del curso Microsoft Agent 365 IT Admin
  *
  * Estilo: documentación técnica tipo Microsoft Learn.
