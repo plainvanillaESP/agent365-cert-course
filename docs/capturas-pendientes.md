@@ -149,6 +149,123 @@ Tres capturas en Entra (catálogo, detalle de rol, wizard de asignación), una e
 
 ---
 
+### Módulo 05 — Configuración inicial del tenant
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 3 M05). Es el módulo de Fase 3 que MÁS se beneficiará de capturas reales por ser puramente operativo.
+
+#### M05-CAP-01 · Toggle Copilot Frontier en M365 admin center
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.2 Paso 1.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/copilot/settings`
+- **Vista exacta:** página de Copilot Settings con la sección «User access» visible y el toggle «Copilot Frontier» destacado.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Sección «User access» (cabecera).
+  2. Toggle «Copilot Frontier» en estado Off (estado inicial).
+  3. Aviso de capacidades preview que aparece al activar.
+  4. Botón Save final.
+- **Anonimización:** ninguna.
+- **Filename:** `M05-CAP-01-frontier-toggle.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-01-frontier-toggle.png`
+
+#### M05-CAP-02 · Modal de Terms of Service de Agent 365
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.2 Paso 2.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents` (la primera vez)
+- **Vista exacta:** modal pop-up de Terms of Service que aparece automáticamente al entrar al Agent workload por primera vez.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Título del modal «Microsoft Agent 365 Terms of Service».
+  2. Cuerpo del texto (puede mostrar solo el inicio, suficiente).
+  3. Checkbox de aceptación.
+  4. Botón Accept.
+- **Anonimización:** si aparece nombre del aceptante o tenant en algún lado, blurrar.
+- **Filename:** `M05-CAP-02-terms-of-service-modal.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-02-terms-of-service-modal.png`
+
+#### M05-CAP-03 · Página Overview del Agent workload con las 4 hero metrics
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.2 Paso 3 + 5.5.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents/overview`
+- **Vista exacta:** página Overview tras la activación. Las 4 hero metrics arriba, el menú lateral del workload visible (Overview, Registry, Map, Settings).
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Hero metric 1: Agent Registry total.
+  2. Hero metric 2: Active users (últimos 30 días).
+  3. Hero metric 3: Agent run-time (horas).
+  4. Hero metric 4: Registry sync.
+  5. Menú lateral con las 4 entradas (Overview, Registry, Map, Settings).
+- **Anonimización:** si los números tienen valores reales que pueden ser sensibles, sustituir por «42» o similares para los ejemplos.
+- **Filename:** `M05-CAP-03-overview-hero-metrics.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-03-overview-hero-metrics.png`
+
+#### M05-CAP-04 · Configuración del conector Microsoft 365 en Defender
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.3 + Lab 05.2 Parte A.
+- **URL del admin center:** `https://security.microsoft.com/cloudapps/connectedapps`
+- **Vista exacta:** wizard de añadir conector M365. Idealmente capturar el paso donde se eligen las áreas a conectar (SharePoint, OneDrive, Teams, etc.).
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Buscador con «Microsoft 365» seleccionado.
+  2. Lista de áreas conectables con checkboxes.
+  3. Selector de tipo de autenticación (OAuth recomendado).
+  4. Botón Connect.
+- **Anonimización:** si hay datos del tenant visibles, blurrar.
+- **Filename:** `M05-CAP-04-defender-m365-connector.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-04-defender-m365-connector.png`
+
+#### M05-CAP-05 · DSPM for AI activación en Purview
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.4.
+- **URL del admin center:** `https://purview.microsoft.com/dspm/aiusage`
+- **Vista exacta:** página de DSPM for AI antes o durante la activación. Si ya está activo, capturar el dashboard inicial con métricas vacías o iniciales.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Título «Data Security Posture Management for AI».
+  2. Botón Activate (si aún no está activo) o estado «Active».
+  3. Panel de Audit policies activas.
+  4. Sub-sección AI observability con su estado.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M05-CAP-05-dspm-for-ai-activation.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-05-dspm-for-ai-activation.png`
+
+#### M05-CAP-06 · KQL en Defender XDR Hunting con eventos de agente
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.3 + 5.5 + Lab 05.2 Parte D.
+- **URL del admin center:** `https://security.microsoft.com/v2/advanced-hunting`
+- **Vista exacta:** Advanced hunting con la consulta `CloudAppEvents | where ActionType startswith "Agent" | take 10` ejecutada y al menos algunas filas de resultado visibles.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Editor KQL con la consulta visible.
+  2. Botón Run query.
+  3. Tabla de resultados con al menos 1 fila.
+  4. Columnas relevantes: TimeGenerated, ActionType, AccountObjectId, Application.
+  5. Botón Export results (mencionable para evidencia de auditoría).
+- **Anonimización:** si las filas muestran AccountObjectId o emails reales, blurrar o sustituir por valores de ejemplo (Adele Vance, Megan Bowen).
+- **Filename:** `M05-CAP-06-defender-kql-agent-events.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-06-defender-kql-agent-events.png`
+
+#### M05-CAP-07 · Activity explorer de Purview con eventos AI
+
+- **Ubicación en el curso:** `modulos/modulo-05-configuracion-inicial/teoria.md` § 5.4 + 5.5.
+- **URL del admin center:** `https://purview.microsoft.com/activityexplorer`
+- **Vista exacta:** Activity explorer filtrado por Activity = «AI prompt» o «AI response» con al menos un evento visible.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Filtro de Activity aplicado.
+  2. Filtro de fecha (últimas 24 horas).
+  3. Tabla de actividades con al menos una fila.
+  4. Columnas relevantes: Activity, User, Timestamp, Sensitivity label.
+- **Anonimización:** sustituir nombres de usuarios reales por nombres ficticios.
+- **Filename:** `M05-CAP-07-purview-activity-explorer.png`
+- **Path final:** `modulos/modulo-05-configuracion-inicial/assets/capturas/M05-CAP-07-purview-activity-explorer.png`
+
+#### Total M05: 7 capturas
+
+Dos capturas en M365 admin center (Frontier toggle, Overview), una del modal Terms of Service, dos en Defender (conector M365, KQL hunting), dos en Purview (DSPM activation, Activity explorer). Coste estimado de captura: 45-75 minutos en un tenant que ya esté operando.
+
+---
+
 ## Plantilla para nuevas entradas
 
 Al añadir capturas de un módulo nuevo, copiar esta plantilla:

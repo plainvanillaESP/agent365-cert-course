@@ -247,6 +247,44 @@ const Q_EX_04_001: MultipleChoiceQuestion = {
     'Least-privilege exige asignar el mínimo rol que permite hacer la tarea. Security Operator permite investigar alertas y responder a incidentes en Defender (la tarea principal) sin escritura en políticas. AI Reader permite ver el Registry para correlacionar pero no modificar agentes. La combinación cubre exactamente las necesidades sin excederse. La opción A (Global Administrator) es el antipatrón clásico: sobreasigna privilegio. La B (Security Administrator + AI Administrator) da escritura donde la tarea solo requiere lectura/operación. La D (Security Reader) es insuficiente: el Reader no permite responder a incidentes, solo verlos.',
 }
 
+const Q_EX_05_001: DragAndDropQuestion = {
+  id: 'EX-05-001',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-05.2',
+  area: 1,
+  bloom: 'Aplicar',
+  moduleId: 5,
+  prompt:
+    'Ordena los siguientes pasos en la secuencia correcta para activar Microsoft Agent 365 desde cero en un tenant productivo. El primer paso (posición 1) es el que se hace antes de tocar ningún admin center; el último (posición 6) es el que confirma que todo está operativo.',
+  items: [
+    { id: 's1', text: 'Configurar el conector Microsoft 365 en Defender for Cloud Apps.' },
+    { id: 's2', text: 'Verificar prerrequisitos: licencias asignadas, audit logs habilitados, rol Global Administrator o AI Administrator.' },
+    { id: 's3', text: 'Activar Data Security Posture Management (DSPM) for AI en Microsoft Purview.' },
+    { id: 's4', text: 'Aceptar Terms of Service la primera vez que se navega a M365 admin → Agents.' },
+    { id: 's5', text: 'Lanzar un agente de prueba y verificar que aparece en los tres admin centers.' },
+    { id: 's6', text: 'Activar el toggle Copilot Frontier en M365 admin → Copilot → Settings → User access (si aplica).' },
+  ],
+  targets: [
+    { id: 'p1', label: 'Posición 1 — Antes de tocar admin centers' },
+    { id: 'p2', label: 'Posición 2' },
+    { id: 'p3', label: 'Posición 3 — Entrada al Agent workload' },
+    { id: 'p4', label: 'Posición 4' },
+    { id: 'p5', label: 'Posición 5' },
+    { id: 'p6', label: 'Posición 6 — Confirmación final' },
+  ],
+  correctMap: {
+    s2: 'p1', // Verificar prerrequisitos
+    s6: 'p2', // Frontier toggle
+    s4: 'p3', // Terms of Service
+    s1: 'p4', // Defender connector
+    s3: 'p5', // DSPM Purview
+    s5: 'p6', // Validar end-to-end
+  },
+  justification:
+    'La activación tiene un orden estricto basado en dependencias. Sin verificar prerrequisitos, los siguientes pasos pueden fallar silenciosamente. Frontier toggle activa el modo preview (si la organización lo va a usar) y debe ser anterior a Terms of Service. Los Terms of Service son la puerta de entrada al workload: sin aceptarlos no se puede entrar al Overview ni configurar nada. Los conectores de Defender y Purview son dos pasos independientes entre sí, pero ambos requieren que el workload esté activo, por lo que van después de Terms of Service. La validación end-to-end es siempre el último paso: confirma que todo lo anterior funciona en cadena. Saltar el orden no rompe el sistema de inmediato pero deja huecos que aparecen como errores días después.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
@@ -254,6 +292,7 @@ const ALL_QUESTIONS: Question[] = [
   Q_EX_02_001, Q_EX_02_002, Q_EX_02_003,
   Q_EX_03_001,
   Q_EX_04_001,
+  Q_EX_05_001,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {
