@@ -22,7 +22,8 @@ const PHASES: Phase[] = [
   { id: '5',   desc: 'Módulos 10–13 (Datos, monitorización, CCS)',       status: 'todo'    },
   { id: '6',   desc: 'Módulos 14–16 (Avanzado)',                         status: 'todo'    },
   { id: '7',   desc: 'Módulo 17 — Evaluación final',                     status: 'todo'    },
-  { id: '8',   desc: 'Shell completo + auth + certificación + PDFs',     status: 'todo'    },
+  { id: '8',   desc: 'Plataforma multi-curso, autenticación y backend',   status: 'todo'    },
+  { id: '9',   desc: 'Panel admin de cursos, certificación y PDFs',       status: 'todo'    },
 ]
 
 export function HomePage() {
