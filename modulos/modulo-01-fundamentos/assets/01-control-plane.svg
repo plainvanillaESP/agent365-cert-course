@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title>Microsoft Agent 365 como control plane sobre builders y runtimes</title>
+  <desc>Diagrama de capas que muestra Microsoft Agent 365 como plano de control encima de los builders (Copilot Studio, Foundry, M365 Agents SDK, Agent Builder, SharePoint agents, Agent 365 SDK).</desc>
+
+  <!-- Fondo -->
+  <rect width="900" height="620" fill="#FFFFFF"/>
+
+  <!-- Capa superior: Microsoft Agent 365 (control plane) -->
+  <g id="control-plane">
+    <!-- Caja contenedora -->
+    <rect x="40" y="40" width="820" height="190" rx="10" fill="#F4F0F8" stroke="#7B2FBE" stroke-width="2.5"/>
+
+    <!-- Etiqueta de capa -->
+    <text x="60" y="75" font-size="22" font-weight="700" fill="#3D1A5C">Microsoft Agent 365</text>
+    <text x="60" y="98" font-size="14" fill="#6B4882" font-style="italic">Control plane — gobernanza, observabilidad y seguridad</text>
+
+    <!-- 4 cuadrantes -->
+    <g transform="translate(60, 120)">
+      <!-- 1. Registry & Map (M365) -->
+      <rect x="0" y="0" width="180" height="90" rx="6" fill="#FFFFFF" stroke="#7B2FBE" stroke-width="1.5"/>
+      <text x="90" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#3D1A5C">Registry &amp; Map</text>
+      <text x="90" y="48" text-anchor="middle" font-size="11" fill="#6B4882">Microsoft 365</text>
+      <text x="90" y="62" text-anchor="middle" font-size="11" fill="#6B4882">admin center</text>
+      <text x="90" y="80" text-anchor="middle" font-size="10" fill="#999">M365 admin</text>
+
+      <!-- 2. Entra Agent ID -->
+      <rect x="200" y="0" width="180" height="90" rx="6" fill="#FFFFFF" stroke="#7B2FBE" stroke-width="1.5"/>
+      <text x="290" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#3D1A5C">Entra Agent ID</text>
+      <text x="290" y="48" text-anchor="middle" font-size="11" fill="#6B4882">Identidades, CA,</text>
+      <text x="290" y="62" text-anchor="middle" font-size="11" fill="#6B4882">ID Protection</text>
+      <text x="290" y="80" text-anchor="middle" font-size="10" fill="#999">Entra admin</text>
+
+      <!-- 3. Purview AI obs -->
+      <rect x="400" y="0" width="180" height="90" rx="6" fill="#FFFFFF" stroke="#7B2FBE" stroke-width="1.5"/>
+      <text x="490" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#3D1A5C">Purview AI obs.</text>
+      <text x="490" y="48" text-anchor="middle" font-size="11" fill="#6B4882">DSPM, DLP,</text>
+      <text x="490" y="62" text-anchor="middle" font-size="11" fill="#6B4882">IRM, Compliance</text>
+      <text x="490" y="80" text-anchor="middle" font-size="10" fill="#999">Purview admin</text>
+
+      <!-- 4. Defender KQL -->
+      <rect x="600" y="0" width="180" height="90" rx="6" fill="#FFFFFF" stroke="#7B2FBE" stroke-width="1.5"/>
+      <text x="690" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#3D1A5C">Defender KQL</text>
+      <text x="690" y="48" text-anchor="middle" font-size="11" fill="#6B4882">Hunting, real-time</text>
+      <text x="690" y="62" text-anchor="middle" font-size="11" fill="#6B4882">protection, posture</text>
+      <text x="690" y="80" text-anchor="middle" font-size="10" fill="#999">Defender admin</text>
+    </g>
+  </g>
+
+  <!-- Flecha "gobierna" -->
+  <g id="connector">
+    <line x1="450" y1="240" x2="450" y2="305" stroke="#7B2FBE" stroke-width="2.5" stroke-dasharray="0"/>
+    <polygon points="450,315 444,303 456,303" fill="#7B2FBE"/>
+    <rect x="385" y="262" width="130" height="22" rx="4" fill="#FFFFFF" stroke="#7B2FBE" stroke-width="1"/>
+    <text x="450" y="277" text-anchor="middle" font-size="12" font-weight="600" fill="#7B2FBE">gobierna</text>
+  </g>
+
+  <!-- Capa inferior: Builders y runtimes -->
+  <g id="builders">
+    <rect x="40" y="320" width="820" height="260" rx="10" fill="#F8F8F8" stroke="#999" stroke-width="2"/>
+
+    <text x="60" y="355" font-size="22" font-weight="700" fill="#333">Builders y runtimes</text>
+    <text x="60" y="378" font-size="14" fill="#666" font-style="italic">Construyen y ejecutan agentes; Agent 365 los inventaria pero no los reemplaza</text>
+
+    <!-- Fila 1: builders principales -->
+    <g transform="translate(60, 405)">
+      <!-- Copilot Studio -->
+      <rect x="0" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="90" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Copilot Studio</text>
+      <text x="90" y="46" text-anchor="middle" font-size="10" fill="#666">DA, CEA, BP</text>
+
+      <!-- Foundry -->
+      <rect x="200" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="290" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Microsoft Foundry</text>
+      <text x="290" y="46" text-anchor="middle" font-size="10" fill="#666">LOB / non-LOB / hosted</text>
+
+      <!-- M365 Agents SDK -->
+      <rect x="400" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="490" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">M365 Agents SDK</text>
+      <text x="490" y="46" text-anchor="middle" font-size="10" fill="#666">Transporte conversacional</text>
+
+      <!-- AWS Bedrock / Google Gemini -->
+      <rect x="600" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="690" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">AWS Bedrock /</text>
+      <text x="690" y="46" text-anchor="middle" font-size="10" fill="#666">Gemini Enterprise (sync)</text>
+    </g>
+
+    <!-- Fila 2: builders adicionales -->
+    <g transform="translate(60, 485)">
+      <!-- Agent Builder -->
+      <rect x="0" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="90" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Agent Builder</text>
+      <text x="90" y="46" text-anchor="middle" font-size="10" fill="#666">Declarative en Copilot</text>
+
+      <!-- SharePoint agents -->
+      <rect x="200" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="290" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">SharePoint agents</text>
+      <text x="290" y="46" text-anchor="middle" font-size="10" fill="#666">Basados en .agent files</text>
+
+      <!-- Agent Toolkit -->
+      <rect x="400" y="0" width="180" height="60" rx="6" fill="#FFFFFF" stroke="#666" stroke-width="1.5"/>
+      <text x="490" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#333">Agent Toolkit</text>
+      <text x="490" y="46" text-anchor="middle" font-size="10" fill="#666">M365 Agents Toolkit</text>
+
+      <!-- Agent 365 SDK (highlighted) -->
+      <rect x="600" y="0" width="180" height="60" rx="6" fill="#F4F0F8" stroke="#7B2FBE" stroke-width="1.5"/>
+      <text x="690" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#3D1A5C">Agent 365 SDK</text>
+      <text x="690" y="46" text-anchor="middle" font-size="10" fill="#6B4882">Extensión de gobernanza</text>
+    </g>
+  </g>
+
+  <!-- Nota inferior -->
+  <text x="450" y="603" text-anchor="middle" font-size="11" fill="#999" font-style="italic">
+    Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 01
+  </text>
+</svg>
