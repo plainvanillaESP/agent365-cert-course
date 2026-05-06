@@ -1,3 +1,13 @@
+---
+modulo: 1
+tipo: recursos
+titulo: "Recursos del Módulo 01"
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+---
+
 # Módulo 01 — Recursos
 
 > Enlaces oficiales para profundizar en los temas tratados en el módulo. Todas las URLs apuntan a páginas activas en mayo de 2026; si Microsoft mueve algún contenido, validar en el changelog del módulo.
