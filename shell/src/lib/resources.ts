@@ -721,12 +721,177 @@ const M03_RESOURCES: ModuleResources = {
   ],
 }
 
+/* --------------------------------- M04 ----------------------------------- */
+
+const M04_RESOURCES: ModuleResources = {
+  moduleId: 4,
+  intro:
+    'Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y verificado a la fecha de última actualización.',
+  categories: [
+    {
+      id: 'docs-agent365-roles',
+      title: 'Documentación oficial — Roles para Agent 365',
+      resources: [
+        {
+          type: 'docs',
+          title: 'AI Administrator role overview',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/roles/ai-administrator',
+          description: 'Qué cubre el rol AI Administrator y sus límites.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'AI Reader role overview',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/roles/ai-reader',
+          description: 'El rol de lectura más útil del catálogo de Agent 365.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Roles required to manage Microsoft Agent 365',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/manage-roles',
+          description: 'Visión consolidada de qué rol se necesita para cada tarea.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-entra-roles',
+      title: 'Documentación oficial — Roles de Microsoft Entra',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Built-in roles in Microsoft Entra',
+          url: 'https://learn.microsoft.com/entra/identity/role-based-access-control/permissions-reference',
+          description: 'Lista exhaustiva de los más de 60 roles built-in.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Agent ID Administrator and Developer roles',
+          url: 'https://learn.microsoft.com/entra/agent-id/roles',
+          description: 'Roles específicos para gestionar identidades de agentes.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Global Administrator best practices',
+          url: 'https://learn.microsoft.com/entra/identity/role-based-access-control/best-practices',
+          description: 'Por qué evitar Global Administrator permanente y cómo gestionar break-glass.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Conditional Access Administrator role',
+          url: 'https://learn.microsoft.com/entra/identity/role-based-access-control/permissions-reference#conditional-access-administrator',
+          description: 'Rol específico para gestionar Conditional Access.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-defender-purview-roles',
+      title: 'Documentación oficial — Roles de Defender, Purview y M365',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Defender XDR roles',
+          url: 'https://learn.microsoft.com/defender-xdr/manage-rbac',
+          description: 'Security Administrator, Operator, Reader y sus diferencias.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Microsoft Purview Compliance roles',
+          url: 'https://learn.microsoft.com/purview/microsoft-365-compliance-center-permissions',
+          description: 'Roles de Purview Compliance Center.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Insider Risk Management roles',
+          url: 'https://learn.microsoft.com/purview/insider-risk-management-permissions',
+          description: 'IRM Administrator, Investigator, Analyst y sus límites.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Microsoft 365 admin center roles',
+          url: 'https://learn.microsoft.com/microsoft-365/admin/add-users/about-admin-roles',
+          description: 'Roles que se asignan desde admin.microsoft.com.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-pim',
+      title: 'Documentación oficial — PIM y Access Reviews',
+      resources: [
+        {
+          type: 'docs',
+          title: 'What is Privileged Identity Management',
+          url: 'https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure',
+          description: 'Visión general del servicio PIM.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Configure Microsoft Entra role settings in PIM',
+          url: 'https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings',
+          description: 'Políticas de activación: duración máxima, justificación, MFA, aprobación.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Access Reviews overview',
+          url: 'https://learn.microsoft.com/entra/id-governance/access-reviews-overview',
+          description: 'Cómo configurar revisiones periódicas de roles asignados.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'best-practices',
+      title: 'Lecturas y guías de buenas prácticas',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Zero Trust deployment plan for identity',
+          url: 'https://learn.microsoft.com/security/zero-trust/deploy/identity',
+          description: 'Guía oficial Zero Trust aplicada a roles e identidad.',
+          lang: 'en',
+        },
+        {
+          type: 'external',
+          title: 'CIS Microsoft 365 Foundations Benchmark',
+          url: 'https://www.cisecurity.org/benchmark/microsoft_365',
+          description: 'Benchmark con recomendaciones específicas sobre asignación de roles.',
+          lang: 'en',
+        },
+        {
+          type: 'external',
+          title: 'NIST SP 800-53 — least privilege',
+          url: 'https://csrc.nist.gov/projects/risk-management/sp800-53-controls/release-search',
+          description: 'Referencia normativa del principio de least-privilege.',
+          lang: 'en',
+        },
+      ],
+    },
+  ],
+  crossReferences: [
+    { topic: 'Configuración inicial del tenant',         moduleId: 5, moduleTitle: 'Configuración inicial del tenant' },
+    { topic: 'Identidades de agentes en profundidad',    moduleId: 6, moduleTitle: 'Microsoft Entra Agent ID e identidades' },
+    { topic: 'Conditional Access para agentes',          moduleId: 9, moduleTitle: 'Permisos, accesos y Conditional Access' },
+  ],
+}
+
 /* ------------------------------ API pública ------------------------------ */
 
 const ALL_RESOURCES: Record<number, ModuleResources> = {
   1: M01_RESOURCES,
   2: M02_RESOURCES,
   3: M03_RESOURCES,
+  4: M04_RESOURCES,
 }
 
 export function getResourcesForModule(moduleId: number): ModuleResources | null {
