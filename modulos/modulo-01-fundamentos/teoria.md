@@ -117,7 +117,7 @@ Agent 365 es un **control plane**: una capa que se coloca *encima* de los builde
 
 *Fig. 1.1 — Microsoft Agent 365 se sitúa por encima de los builders y runtimes. Es complementario, no competidor.*
 
-(Diagrama SVG accesible en `assets/01-control-plane.svg`)
+![Diagrama: Microsoft Agent 365 como control plane sobre los builders y runtimes](./assets/01-control-plane.svg)
 
 ### Los seis productos que se confunden con Agent 365
 
@@ -207,7 +207,9 @@ Microsoft Agent 365 está pensado para alinear a cuatro perfiles administrativos
 
 **Roles típicos:** Security Administrator, Security Operator, Security Reader.
 
-(Diagrama de los cuatro stakeholders disponible en `assets/02-stakeholders.svg`)
+![Diagrama: los cuatro stakeholders core de Microsoft Agent 365](./assets/02-stakeholders.svg)
+
+*Fig. 1.2 — Los cuatro perfiles administrativos que Microsoft Agent 365 alinea, con sus admin centers y herramientas principales.*
 
 ### Por qué importa esta alineación
 
