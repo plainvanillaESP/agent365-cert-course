@@ -86,26 +86,36 @@ export function HomePage() {
 function Hero() {
   return (
     <header className="pt-2 pb-8">
-      <div className="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-3">
-        Plain Vanilla Solutions · Curso de certificación
-      </div>
-      <h1 className="font-display text-[34px] sm:text-[40px] leading-[1.1] tracking-[-0.025em] font-bold text-[var(--text-primary)] mb-4">
-        Microsoft Agent 365 IT Admin
-      </h1>
-      <p className="text-[16px] leading-relaxed text-[var(--text-secondary)] max-w-[640px]">
-        Curso de certificación para administradores IT sobre Microsoft Agent 365 y la
-        gobernanza de agentes de IA en Microsoft 365. 17 módulos estructurados, 18 horas
-        de teoría y laboratorios, evaluación final medible y constancia de finalización.
-      </p>
-      <div className="mt-7">
-        <ButtonLink
-          to="/modulo/1/teoria"
-          variant="primary"
-          size="lg"
-          iconRight={<ArrowRight className="size-4 stroke-[2.25]" aria-hidden />}
-        >
-          Empezar por el Módulo 01
-        </ButtonLink>
+      <div className="flex items-start gap-5 sm:gap-7">
+        <img
+          src={`${import.meta.env.BASE_URL}agent365-logo-256.png`}
+          alt=""
+          className="size-[72px] sm:size-[96px] rounded-[18px] shrink-0 mt-1"
+          aria-hidden
+        />
+        <div className="flex-1 min-w-0">
+          <div className="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-3">
+            Plain Vanilla Solutions · Curso de certificación
+          </div>
+          <h1 className="font-display text-[34px] sm:text-[40px] leading-[1.1] tracking-[-0.025em] font-bold text-[var(--text-primary)] mb-4">
+            Microsoft Agent 365 IT Admin
+          </h1>
+          <p className="text-[16px] leading-relaxed text-[var(--text-secondary)] max-w-[640px]">
+            Curso de certificación para administradores IT sobre Microsoft Agent 365 y la
+            gobernanza de agentes de IA en Microsoft 365. 17 módulos estructurados, 18 horas
+            de teoría y laboratorios, evaluación final medible y constancia de finalización.
+          </p>
+          <div className="mt-7">
+            <ButtonLink
+              to="/modulo/1/teoria"
+              variant="primary"
+              size="lg"
+              iconRight={<ArrowRight className="size-4 stroke-[2.25]" aria-hidden />}
+            >
+              Empezar por el Módulo 01
+            </ButtonLink>
+          </div>
+        </div>
       </div>
     </header>
   )
