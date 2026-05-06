@@ -122,39 +122,9 @@ Agent 365 es un **control plane**: una capa que se coloca *encima* de los builde
 
 ### El mapa de capas
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                                                                    │
-│   Microsoft Agent 365  (control plane)                             │
-│   ┌──────────┬──────────┬──────────┬──────────┐                   │
-│   │ Registry │  Entra   │ Purview  │ Defender │                   │
-│   │  & Map   │ Agent ID │  AI obs. │  KQL     │                   │
-│   └──────────┴──────────┴──────────┴──────────┘                   │
-│                          ▲                                         │
-│                          │ gobierna                                │
-│                          │                                         │
-│   ┌──────────────────────┴────────────────────────────┐           │
-│   │                                                    │           │
-│   │  Builders y runtimes (lo que ejecuta)             │           │
-│   │                                                    │           │
-│   │  ┌─────────────┐  ┌──────────────┐  ┌──────────┐ │           │
-│   │  │  Copilot    │  │  Microsoft   │  │ M365     │ │           │
-│   │  │  Studio     │  │  Foundry     │  │ Agents   │ │           │
-│   │  │             │  │              │  │ SDK      │ │           │
-│   │  └─────────────┘  └──────────────┘  └──────────┘ │           │
-│   │  ┌─────────────┐  ┌──────────────┐  ┌──────────┐ │           │
-│   │  │ Agent       │  │  SharePoint  │  │ Agent    │ │           │
-│   │  │ Builder     │  │  agents      │  │ 365 SDK  │ │           │
-│   │  └─────────────┘  └──────────────┘  └──────────┘ │           │
-│   │                                                    │           │
-│   └────────────────────────────────────────────────────┘           │
-│                                                                    │
-└────────────────────────────────────────────────────────────────────┘
-```
+![Diagrama: Microsoft Agent 365 como control plane sobre los builders y runtimes](./assets/01-control-plane.svg)
 
 *Fig. 1.1 — Microsoft Agent 365 se sitúa por encima de los builders y runtimes. Es complementario, no competidor.*
-
-![Diagrama: Microsoft Agent 365 como control plane sobre los builders y runtimes](./assets/01-control-plane.svg)
 
 ### Los seis productos que se confunden con Agent 365
 

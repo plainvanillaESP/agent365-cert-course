@@ -241,7 +241,9 @@ Authorization: Bearer <token>
 
 - **Capturas:** PNG, máximo 1600px ancho. Nombrarlas `assets/NN-descripcion-corta.png`. Anotaciones con flechas o cajas de color rojo (#D7263D, color brand Plain Vanilla).
 - **Diagramas:** SVG cuando sea posible. Si se generan con herramientas externas, exportar también el fuente (drawio, mermaid, etc.).
-- **Pie de imagen:** siempre describir la captura debajo en texto, para accesibilidad y para que el alumno entienda el contexto sin verla.
+- **Pie de imagen:** siempre describir la captura debajo en texto, para accesibilidad y para que el alumno entienda el contexto sin verla. El pie va **después** de la imagen, no antes.
+- **Nada de ASCII art ni cajas dibujadas con `+`, `-`, `|` o caracteres Unicode de box-drawing.** Si hace falta un diagrama, va en SVG en `assets/`. ASCII art se ve aceptable en GitHub o en un terminal pero queda como "developer doc" en el shell del curso, donde el alumno espera diagramas vectoriales legibles. Aplica también a tablas dibujadas, árboles de directorios y diagramas de flujo: SVG siempre.
+- **Capturas de admin centers (M02 en adelante):** cada paso operativo (clicar, configurar, validar) lleva su captura. La captura va **anotada**: rectángulo rojo alrededor del control concreto que el alumno tiene que pulsar, número en círculo si hay varios pasos en la misma pantalla. Sin anotaciones, una captura confunde más que ayuda.
 
 ---
 
