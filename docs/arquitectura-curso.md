@@ -70,19 +70,23 @@ El curso tiene **un único itinerario** que cubre los 17 módulos en orden con d
 
 ## 1. Áreas de competencia
 
-Las cinco áreas que estructuran el curso y la evaluación final, siguiendo el formato de las certificaciones de Microsoft Learn (4-5 áreas con pesos en rangos de múltiplos de 5):
+Las cinco áreas que estructuran el curso y la evaluación final, con pesos fijos basados en densidad conceptual y criticidad operativa para un administrador IT:
 
 | Área | Peso | Módulos que la cubren |
 |---|---|---|
-| **1. Plan and configure Microsoft Agent 365** | 15-20% | M01, M02, M03, M04, M05 |
-| **2. Manage agent identities with Microsoft Entra Agent ID** | 25-30% | M06, M09 |
-| **3. Manage the agent registry and lifecycle** | 15-20% | M07, M08 |
-| **4. Implement data protection with Microsoft Purview** | 20-25% | M10, M11 |
-| **5. Monitor, investigate and govern** | 15-20% | M12, M13, M14, M15, M16 |
+| **1. Plan and configure Microsoft Agent 365** | 15% | M01, M02, M03, M04, M05 |
+| **2. Manage agent identities with Microsoft Entra Agent ID** | 30% | M06, M09 |
+| **3. Manage the agent registry and lifecycle** | 15% | M07, M08 |
+| **4. Implement data protection with Microsoft Purview** | 20% | M10, M11 |
+| **5. Monitor, investigate and govern** | 20% | M12, M13, M14, M15, M16 |
 
 **Total:** 60 preguntas en la evaluación final, distribuidas según los pesos.
 
-La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent ID es el componente diferenciador de Agent 365 frente a otros productos de gobernanza de IA.
+**Justificación de los pesos:**
+
+- **Área 2 (30%) es la más pesada** porque concentra lo más distintivo y conceptualmente más denso del curso: cuatro tipos de objetos nuevos en Entra (blueprint, blueprint principal, agent identity, agent user), flujos OBO vs own identity, Conditional Access para agentes, Identity Protection con 6 detecciones nuevas. Sin dominar esta área, no se gobierna nada del producto.
+- **Áreas 4 y 5 (20% cada una)** reflejan que la protección de datos y la monitorización son los dos bloques operativos donde el admin pasa más tiempo una vez el producto está en marcha. Purview es crítico para compliance regulatoria (EU AI Act); KQL hunting en Defender es una skill técnica con peso real.
+- **Áreas 1 y 3 (15% cada una)** son foundational pero menos profundas: la primera es el onboarding del producto (factual: qué licencia, qué rol, cómo se enciende) y la tercera es operación mecánica (enumeración de las 11 acciones del ciclo de vida, filtros del registry).
 
 ---
 
@@ -92,18 +96,18 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 |---|---|---|---|---|---|---|
 | 01 | Fundamentos: ¿Qué es Microsoft Agent 365? | 60 min | F2 | — | 0 | 3 |
 | 02 | Arquitectura y componentes | 75 min | F3 | M01 | 1 | 3 |
-| 03 | Licenciamiento, prerrequisitos y planificación | 60 min | F3 | M01, M02 | 1 | 2 |
+| 03 | Licenciamiento, prerrequisitos y planificación | 60 min | F3 | M01, M02 | 1 | 1 |
 | 04 | Roles administrativos y delegación | 45 min | F3 | M02 | 1 | 1 |
 | 05 | Configuración inicial del tenant | 75 min | F3 | M03, M04 | 2 | 1 |
-| 06 | Microsoft Entra Agent ID e identidades | 105 min | F4 | M02, M04 | 3 | 10 |
+| 06 | Microsoft Entra Agent ID e identidades | 105 min | F4 | M02, M04 | 3 | 11 |
 | 07 | Agent Registry y Agent Map | 75 min | F4 | M02, M05 | 2 | 4 |
-| 08 | Despliegue, distribución y ciclo de vida | 90 min | F4 | M07 | 3 | 6 |
+| 08 | Despliegue, distribución y ciclo de vida | 90 min | F4 | M07 | 3 | 5 |
 | 09 | Permisos, accesos y Conditional Access | 75 min | F4 | M06, M08 | 2 | 7 |
-| 10 | Microsoft Purview y protección de datos | 75 min | F5 | M02, M07 | 2 | 6 |
+| 10 | Microsoft Purview y protección de datos | 75 min | F5 | M02, M07 | 2 | 5 |
 | 11 | DLP, sensitivity labels y compliance | 75 min | F5 | M10 | 3 | 7 |
-| 12 | Monitorización, auditoría y reporting | 75 min | F5 | M02, M07, M10 | 2 | 6 |
+| 12 | Monitorización, auditoría y reporting | 75 min | F5 | M02, M07, M10 | 2 | 7 |
 | 13 | Copilot Control System integrado | 45 min | F5 | M01, M02 | 1 | 1 |
-| 14 | Gobernanza avanzada y políticas | 60 min | F6 | M07, M08, M11, M12 | 2 | 1 |
+| 14 | Gobernanza avanzada y políticas | 60 min | F6 | M07, M08, M11, M12 | 2 | 2 |
 | 15 | Troubleshooting y casos prácticos | 45 min | F6 | Todos los anteriores | 3 | 1 |
 | 16 | Costes y optimización | 45 min | F6 | M03 | 1 | 1 |
 | 17 | Evaluación final | 90 min | F7 | Todos | — | — |
@@ -236,8 +240,7 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 
 *Lab 03.1.* Hoja de cálculo con 4 escenarios reales (5.000 / 1.000 / 200 / 50 usuarios, mix de tipos de agentes). El alumno calcula coste mensual recomendado, justifica la elección entre Agent 365 standalone vs E7, y dimensiona el consumo de Copilot Credits para los agentes Copilot Studio. Output: hoja de cálculo completada + 1 párrafo de justificación por escenario.
 
-**Reparto a la evaluación final.** 2 preguntas (Área 1):
-- 1 cálculo: coste mensual de un escenario dado.
+**Reparto a la evaluación final.** 1 pregunta (Área 1):
 - 1 escenario: cuándo Agent 365 standalone vs E7.
 
 ---
@@ -366,7 +369,7 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 *Lab 06.2.* Crear una agent identity desde el blueprint con `a365 create-instance identity`. Validar que aparece en Entra admin center → Agent ID. Filtrar por Agent Blueprint ID.
 *Lab 06.3.* Configurar a un usuario como sponsor de la agent identity. Simular su salida (disable). Verificar que el lifecycle workflow notifica al manager y reasigna el sponsorship.
 
-**Reparto a la evaluación final.** 10 preguntas (Área 2):
+**Reparto a la evaluación final.** 11 preguntas (Área 2):
 - 2 multiple-choice sobre los cuatro tipos de objetos.
 - 1 drag-and-drop: emparejar capacidad ↔ tipo de objeto.
 - 1 escenario: elegir OBO vs own identity para un caso.
@@ -376,6 +379,7 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 - 1 multiple-response: capacidades del blueprint.
 - 1 multiple-choice: comportamiento de sponsorship.
 - 1 multiple-choice: lifecycle workflow trigger.
+- 1 multiple-choice: convergencia M365 ↔ Entra (APIs migradas).
 
 ---
 
@@ -466,13 +470,12 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 *Lab 08.2.* Pin el agente al slot Administrator. Block con justificación. Unblock. Verificar comportamiento en cada paso.
 *Lab 08.3.* Crear un agente Agent Builder con un usuario de prueba. Hard-delete el usuario en Entra. Verificar que aparece en Manage Ownerless Agents. Reasignar ownership a otro usuario.
 
-**Reparto a la evaluación final.** 6 preguntas (Área 3):
+**Reparto a la evaluación final.** 5 preguntas (Área 3):
 - 1 ordenamiento: secuenciar acciones del ciclo de vida.
 - 1 multiple-choice: Remove vs Delete.
 - 1 multiple-choice: Reassign solo aplica a qué tipo de agente.
 - 1 escenario: aplicar Custom Template para una restricción dada.
-- 1 multiple-response: efectos de Pin.
-- 1 escenario: diseñar ciclo de vida completo.
+- 1 multiple-response: efectos de Pin y propagación.
 
 ---
 
@@ -562,12 +565,11 @@ La identidad de agentes (área 2) es la más pesada porque Microsoft Entra Agent
 *Lab 10.1.* Desde Microsoft Purview portal → DSPM → AI observability. Listar agent instances activos, identificar agentes con riesgo IRM. Capturar la página principal con interpretación.
 *Lab 10.2.* Buscar todas las actividades del agente desplegado en Lab 08.1 en los últimos 7 días. Filtrar por tipo de evento (agent-to-human, agent-to-tools). Exportar resultados.
 
-**Reparto a la evaluación final.** 6 preguntas (Área 4):
+**Reparto a la evaluación final.** 5 preguntas (Área 4):
 - 2 multiple-choice: capabilities soportadas vs no soportadas.
 - 1 escenario: aplicar sensitivity label.
 - 1 multiple-choice: requisitos de VIEW + EXTRACT.
 - 1 query: encontrar X actividad en unified audit log.
-- 1 multiple-choice: limitación de DSPM en agentes.
 
 ---
 
@@ -671,12 +673,13 @@ CloudAppEvents
 Interpretar resultados. Construir variante que filtra por un agente específico.
 *Lab 12.2.* Habilitar real-time protection. Simular XPIA con prompt malicioso embebido en documento. Verificar bloqueo. Probar comportamiento fail-open.
 
-**Reparto a la evaluación final.** 6 preguntas (Área 5):
-- 2 KQL: completar query para responder X.
+**Reparto a la evaluación final.** 7 preguntas (Área 5):
+- 2 KQL: completar query para responder una pregunta dada.
 - 1 multiple-choice: XPIA vs UPIA.
 - 1 multiple-choice: comportamiento fail-open.
-- 1 escenario: investigar incidente.
+- 1 escenario: investigar incidente con cadena de eventos.
 - 1 escenario: correlación Risks column ↔ alerta Defender.
+- 1 multiple-choice: detección Shadow AI / agentes locales.
 
 ---
 
@@ -755,8 +758,9 @@ Interpretar resultados. Construir variante que filtra por un agente específico.
 *Lab 14.1.* Componer Custom Template añadiendo Restrict External Content sharing + Entra Access Package + Endpoint DLP a un agent. Aplicar a un agente publicado. Validar.
 *Lab 14.2.* En SharePoint admin center, identificar un site sensible. Aplicar RCD para deshabilitar agent features. Aplicar RAC para limitar acceso a un grupo. Verificar comportamiento.
 
-**Reparto a la evaluación final.** 1 pregunta (Área 5):
+**Reparto a la evaluación final.** 2 preguntas (Área 5):
 - 1 escenario: componer Custom Template para un caso.
+- 1 multiple-choice: RCD vs RAC en SharePoint.
 
 ---
 
@@ -864,11 +868,11 @@ Estructura completa en la sección [4. Estructura de la evaluación final](#4-es
 
 | Área | Peso | Preguntas |
 |---|---|---|
-| 1. Plan and configure Microsoft Agent 365 | 15-20% | 10 |
-| 2. Manage agent identities with Microsoft Entra Agent ID | 25-30% | 17 |
-| 3. Manage the agent registry and lifecycle | 15-20% | 10 |
-| 4. Implement data protection with Microsoft Purview | 20-25% | 13 |
-| 5. Monitor, investigate and govern | 15-20% | 10 |
+| 1. Plan and configure Microsoft Agent 365 | 15% | 9 |
+| 2. Manage agent identities with Microsoft Entra Agent ID | 30% | 18 |
+| 3. Manage the agent registry and lifecycle | 15% | 9 |
+| 4. Implement data protection with Microsoft Purview | 20% | 12 |
+| 5. Monitor, investigate and govern | 20% | 12 |
 | **Total** | **100%** | **60** |
 
 ### Distribución por tipo de pregunta
@@ -904,11 +908,11 @@ El banco completo se mantiene en `modulos/modulo-17-examen-certificacion/banco-p
 
 | Área | Objetivos de aprendizaje | # Preguntas |
 |---|---|---|
-| 1. Plan and configure Microsoft Agent 365 | OA-01.1 a OA-01.5; OA-02.1 a OA-02.5; OA-03.1 a OA-03.6; OA-04.1 a OA-04.4; OA-05.1 a OA-05.5 | 10 |
-| 2. Manage agent identities with Microsoft Entra Agent ID | OA-06.1 a OA-06.7; OA-09.1 a OA-09.6 | 17 |
-| 3. Manage the agent registry and lifecycle | OA-07.1 a OA-07.5; OA-08.1 a OA-08.6 | 10 |
-| 4. Implement data protection with Microsoft Purview | OA-10.1 a OA-10.5; OA-11.1 a OA-11.6 | 13 |
-| 5. Monitor, investigate and govern | OA-12.1 a OA-12.7; OA-13.1 a OA-13.3; OA-14.1 a OA-14.6; OA-15.1 a OA-15.3; OA-16.1 a OA-16.4 | 10 |
+| 1. Plan and configure Microsoft Agent 365 | OA-01.1 a OA-01.5; OA-02.1 a OA-02.5; OA-03.1 a OA-03.6; OA-04.1 a OA-04.4; OA-05.1 a OA-05.5 | 9 |
+| 2. Manage agent identities with Microsoft Entra Agent ID | OA-06.1 a OA-06.7; OA-09.1 a OA-09.6 | 18 |
+| 3. Manage the agent registry and lifecycle | OA-07.1 a OA-07.5; OA-08.1 a OA-08.6 | 9 |
+| 4. Implement data protection with Microsoft Purview | OA-10.1 a OA-10.5; OA-11.1 a OA-11.6 | 12 |
+| 5. Monitor, investigate and govern | OA-12.1 a OA-12.7; OA-13.1 a OA-13.3; OA-14.1 a OA-14.6; OA-15.1 a OA-15.3; OA-16.1 a OA-16.4 | 12 |
 
 **Total:** 87 objetivos de aprendizaje cubiertos por 60 preguntas. Cada pregunta cubre 1-2 objetivos principales.
 

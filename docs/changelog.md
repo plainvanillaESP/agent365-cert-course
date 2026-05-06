@@ -23,8 +23,12 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
   - Matriz de competencias inicial con 87 objetivos cubiertos
   - Ruta de producción con dependencias entre módulos para Fases 2-7
 - `[Diseño]` **Revisión 1.1 del blueprint** tras feedback:
-  - Áreas reducidas de 8 a **5 estilo Microsoft Learn** (15-30%, múltiplos de 5). Identidad pasa a ser la más pesada (25-30%).
+  - Áreas reducidas de 8 a **5 estilo Microsoft Learn**. Identidad pasa a ser la más pesada.
   - Duración total recortada de 23h a **18h** (1080 min). Se aprietan minutajes de teoría manteniendo todos los laboratorios.
   - Concepto de "certificación con validez de 18 meses" sustituido por **"constancia de finalización del curso"** sin caducidad ni recertificación.
   - Tres caminos de aprendizaje eliminados: **itinerario único** de 16 módulos secuenciales.
-  - Reparto de preguntas reequilibrado por área y por módulo (60 preguntas exactas).
+- `[Diseño]` **Revisión 1.2 del blueprint:** pesos finales del examen.
+  - Pesos cambiados de rangos (estilo Microsoft Learn) a **valores exactos** justificados técnicamente: 15% / 30% / 15% / 20% / 20%.
+  - Identidad sube a 30% (era 25-30%) por densidad conceptual: 4 tipos de objetos nuevos en Entra, OBO/own identity, CA para agentes, ID Protection.
+  - Reparto exacto: 9 / 18 / 9 / 12 / 12 = 60 preguntas.
+  - Reparto a nivel de módulo reequilibrado coherentemente (M03→1, M06→11, M08→5, M10→5, M12→7, M14→2).
