@@ -12,9 +12,9 @@ export function App() {
 
   return (
     <BrowserRouter basename={basename}>
-      <div className="min-h-dvh">
+      <div className="min-h-dvh flex flex-col">
         <Header onMenuToggle={() => setNavOpen(o => !o)} />
-        <div className="flex">
+        <div className="flex flex-1 min-h-0">
           <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />
           <main className="flex-1 min-w-0 px-5 sm:px-8 lg:px-12 py-8 lg:py-10">
             <Routes>

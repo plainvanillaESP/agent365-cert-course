@@ -7,16 +7,9 @@ export interface TocHeading {
 }
 
 interface TocProps {
-  /**
-   * Selector raíz dentro del cual buscar headings.
-   */
   rootSelector?: string
 }
 
-/**
- * TOC derecha auto-generada del documento actual con scroll spy.
- * Detecta los h2 y h3 del article.markdown-body y resalta el visible.
- */
 export function TableOfContents({ rootSelector = '.markdown-body' }: TocProps) {
   const [headings, setHeadings] = useState<TocHeading[]>([])
   const [activeId, setActiveId] = useState<string>('')
@@ -31,15 +24,12 @@ export function TableOfContents({ rootSelector = '.markdown-body' }: TocProps) {
       const id = el.id
       const text = el.textContent || ''
       const level = parseInt(el.tagName.substring(1), 10)
-      if (id) {
-        found.push({ id, text, level })
-      }
+      if (id) found.push({ id, text, level })
     })
     setHeadings(found)
 
     if (found.length === 0) return
 
-    // Scroll spy
     const observer = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
@@ -62,35 +52,38 @@ export function TableOfContents({ rootSelector = '.markdown-body' }: TocProps) {
     return () => observer.disconnect()
   }, [rootSelector])
 
-  if (headings.length === 0) {
-    return null
-  }
+  if (headings.length === 0) return null
 
   return (
-    <nav aria-label="Tabla de contenidos" className="sticky top-[calc(var(--layout-header-h)+1rem)]">
-      <div className="text-[10.5px] font-semibold uppercase tracking-[0.06em] text-[var(--text-muted)] mb-2 pl-3">
+    <nav aria-label="Tabla de contenidos" className="sticky top-[calc(var(--layout-header-h)+1.5rem)]">
+      <div className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)] mb-3">
         En esta página
       </div>
-      <ul className="space-y-0">
-        {headings.map(h => (
-          <li key={h.id}>
-            <a
-              href={`#${h.id}`}
-              className={[
-                'toc-link',
-                h.level === 3 && 'toc-link-h3',
-                activeId === h.id && 'active',
-              ].filter(Boolean).join(' ')}
-              onClick={e => {
-                e.preventDefault()
-                document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                history.pushState(null, '', `#${h.id}`)
-              }}
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
+      <ul className="border-l border-[var(--border-subtle)] space-y-px">
+        {headings.map(h => {
+          const isActive = activeId === h.id
+          return (
+            <li key={h.id}>
+              <a
+                href={`#${h.id}`}
+                className={[
+                  'block py-1 pr-2 transition-colors leading-snug -ml-px border-l-2 no-underline',
+                  h.level === 3 ? 'pl-7 text-[12.5px]' : 'pl-3 text-[13px]',
+                  isActive
+                    ? 'border-[var(--border-active)] text-[var(--text-active)] font-medium'
+                    : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]',
+                ].join(' ')}
+                onClick={e => {
+                  e.preventDefault()
+                  document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  history.pushState(null, '', `#${h.id}`)
+                }}
+              >
+                {h.text}
+              </a>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )

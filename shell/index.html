@@ -8,17 +8,32 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Curso de certificación para administradores IT sobre Microsoft Agent 365 y la gobernanza de agentes de IA en Microsoft 365. Producido por Plain Vanilla Solutions." />
-    <meta name="theme-color" content="#7B2FBE" />
+
+    <!-- theme-color cambia con el modo -->
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0908" media="(prefers-color-scheme: dark)" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="Microsoft Agent 365 IT Admin — Plain Vanilla" />
     <meta property="og:description" content="Curso de certificación de 18 horas sobre Microsoft Agent 365 y gobernanza de agentes de IA en M365." />
     <meta property="og:type" content="website" />
 
+    <!-- Aplicar tema antes del primer paint para evitar FOUC -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = stored === 'dark' || (stored === null && prefersDark);
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Tipografías -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
     <title>Microsoft Agent 365 IT Admin — Plain Vanilla</title>
   </head>
