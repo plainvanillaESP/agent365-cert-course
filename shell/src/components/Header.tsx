@@ -42,12 +42,20 @@ export function Header({ onMenuToggle }: HeaderProps) {
             className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
           >
             <Logotipo className="h-7 w-auto shrink-0" />
-            <div className="hidden md:block min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
-              <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
-                Microsoft Agent 365 IT Admin
-              </div>
-              <div className="text-[11px] leading-tight text-[var(--text-muted)] mt-px">
-                Curso de certificación
+            <div className="hidden md:flex items-center gap-2.5 min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
+              <img
+                src={`${import.meta.env.BASE_URL}agent365-logo-64.png`}
+                alt=""
+                className="size-7 rounded-md shrink-0"
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
+                  Microsoft Agent 365 IT Admin
+                </div>
+                <div className="text-[11px] leading-tight text-[var(--text-muted)] mt-px">
+                  Curso de certificación
+                </div>
               </div>
             </div>
           </Link>
