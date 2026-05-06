@@ -47,11 +47,11 @@ sub_secciones:
 
 Al finalizar este módulo, el alumno será capaz de:
 
-- **OA-01.1** Explicar en una frase el propósito de Microsoft Agent 365 y por qué se diferencia de un agent builder. *(Comprender)*
-- **OA-01.2** Identificar los cuatro stakeholders core que Microsoft Agent 365 alinea y la responsabilidad de cada uno. *(Recordar)*
-- **OA-01.3** Distinguir Microsoft Agent 365 de Copilot Control System, Microsoft 365 Agents SDK, Microsoft Agent 365 SDK y Copilot Studio. *(Analizar)*
-- **OA-01.4** Reconocer los principales hitos cronológicos del producto (Ignite 2025, GA 1 mayo 2026, capacidades en preview). *(Recordar)*
-- **OA-01.5** Argumentar la necesidad de gobernar agentes de IA citando casos concretos de agent sprawl, shadow AI y agentes locales. *(Evaluar)*
+- **Explicar** en una frase el propósito de Microsoft Agent 365 y por qué se diferencia de un agent builder.
+- **Identificar** los cuatro stakeholders core que Microsoft Agent 365 alinea y la responsabilidad de cada uno.
+- **Distinguir** Microsoft Agent 365 de Copilot Control System, Microsoft 365 Agents SDK, Microsoft Agent 365 SDK y Copilot Studio.
+- **Reconocer** los principales hitos cronológicos del producto (Ignite 2025, GA 1 mayo 2026, capacidades en preview).
+- **Argumentar** la necesidad de gobernar agentes de IA citando casos concretos de agent sprawl, shadow AI y agentes locales.
 
 ---
 
