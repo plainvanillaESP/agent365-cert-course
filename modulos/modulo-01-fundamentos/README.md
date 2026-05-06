@@ -1,3 +1,14 @@
+---
+modulo: 1
+tipo: readme
+titulo: "Módulo 01 — Fundamentos: ¿Qué es Microsoft Agent 365?"
+duracion_min: 60
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+---
+
 # Módulo 01 — Fundamentos: ¿Qué es Microsoft Agent 365?
 
 **Duración:** 60 minutos

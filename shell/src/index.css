@@ -1,0 +1,436 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github-dark.css";
+
+/*
+ * Tokens de diseño Plain Vanilla
+ * Convertidos al formato Tailwind v4 (@theme inline)
+ */
+
+@theme {
+  /* Colores brand Plain Vanilla */
+  --color-pv-purple-50: #F8F2FE;
+  --color-pv-purple-100: #EFE0FB;
+  --color-pv-purple-200: #DDC1F6;
+  --color-pv-purple-300: #C39DEB;
+  --color-pv-purple-400: #A56FDD;
+  --color-pv-purple-500: #9A44E5;  /* Principal — gradiente start */
+  --color-pv-purple-600: #7B2FBE;  /* Brand primary */
+  --color-pv-purple-700: #5E1F92;
+  --color-pv-purple-800: #3D1A5C;
+  --color-pv-purple-900: #2A1240;
+
+  --color-pv-pink-50: #FFF0F5;
+  --color-pv-pink-100: #FFE2EC;
+  --color-pv-pink-200: #FFC2D7;
+  --color-pv-pink-300: #FBA5C2;
+  --color-pv-pink-400: #F68DAC;  /* Brand accent — gradiente end */
+  --color-pv-pink-500: #EC6E94;
+  --color-pv-pink-600: #D74F7B;
+
+  /* Grises operativos */
+  --color-pv-gray-50: #FAFAF9;
+  --color-pv-gray-100: #F5F4F2;
+  --color-pv-gray-200: #E7E5E1;
+  --color-pv-gray-300: #C9C5BD;
+  --color-pv-gray-400: #999489;
+  --color-pv-gray-500: #6F6B62;
+  --color-pv-gray-600: #4A4741;
+  --color-pv-gray-700: #2F2D29;
+  --color-pv-gray-800: #1F1D1A;
+  --color-pv-gray-900: #100F0D;
+
+  /* Tipografías */
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Sombras */
+  --shadow-pv-sm: 0 1px 2px 0 rgb(123 47 190 / 0.04);
+  --shadow-pv-md: 0 4px 12px -2px rgb(123 47 190 / 0.08), 0 2px 4px -2px rgb(123 47 190 / 0.06);
+  --shadow-pv-lg: 0 12px 32px -8px rgb(123 47 190 / 0.12), 0 4px 8px -4px rgb(123 47 190 / 0.08);
+
+  /* Radios estandarizados */
+  --radius-pv-sm: 6px;
+  --radius-pv-md: 10px;
+  --radius-pv-lg: 16px;
+  --radius-pv-xl: 24px;
+}
+
+/*
+ * Variables CSS para modo claro/oscuro
+ * Se aplican automáticamente según la clase del <html>
+ */
+
+:root {
+  --bg-canvas: var(--color-pv-gray-50);
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: var(--color-pv-gray-100);
+  --bg-muted: var(--color-pv-gray-100);
+  --text-primary: var(--color-pv-gray-900);
+  --text-secondary: var(--color-pv-gray-600);
+  --text-muted: var(--color-pv-gray-400);
+  --border-default: var(--color-pv-gray-200);
+  --border-strong: var(--color-pv-gray-300);
+  --code-bg: var(--color-pv-gray-100);
+  --code-text: var(--color-pv-purple-700);
+}
+
+html.dark {
+  --bg-canvas: var(--color-pv-gray-900);
+  --bg-surface: var(--color-pv-gray-800);
+  --bg-surface-hover: var(--color-pv-gray-700);
+  --bg-muted: var(--color-pv-gray-800);
+  --text-primary: var(--color-pv-gray-50);
+  --text-secondary: var(--color-pv-gray-300);
+  --text-muted: var(--color-pv-gray-400);
+  --border-default: var(--color-pv-gray-700);
+  --border-strong: var(--color-pv-gray-600);
+  --code-bg: var(--color-pv-gray-700);
+  --code-text: var(--color-pv-pink-300);
+}
+
+/*
+ * Estilos base
+ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "ss02", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Tipografía display para titulares
+ */
+h1, h2, h3, h4, h5, h6,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+/*
+ * Animaciones de entrada
+ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/*
+ * Gradiente brand reutilizable
+ */
+.bg-pv-gradient {
+  background: linear-gradient(135deg, var(--color-pv-purple-500) 0%, var(--color-pv-pink-400) 100%);
+}
+
+.text-pv-gradient {
+  background: linear-gradient(135deg, var(--color-pv-purple-500) 0%, var(--color-pv-pink-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/*
+ * Estilo de "prose" para markdown renderizado
+ */
+.markdown-body {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.markdown-body > * + * {
+  margin-top: 1.25rem;
+}
+
+.markdown-body h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.markdown-body h2 {
+  font-size: 1.625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.markdown-body h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-body h4 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.markdown-body p {
+  margin-block: 1rem;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.markdown-body em {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.5rem;
+}
+
+.markdown-body ul {
+  list-style: disc;
+}
+
+.markdown-body ol {
+  list-style: decimal;
+}
+
+.markdown-body li {
+  margin-block: 0.25rem;
+}
+
+.markdown-body li > p {
+  margin-block: 0.25rem;
+}
+
+.markdown-body a {
+  color: var(--color-pv-purple-600);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.markdown-body a:hover {
+  color: var(--color-pv-pink-500);
+}
+
+html.dark .markdown-body a {
+  color: var(--color-pv-purple-300);
+}
+
+html.dark .markdown-body a:hover {
+  color: var(--color-pv-pink-300);
+}
+
+.markdown-body code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.markdown-body pre {
+  background-color: var(--color-pv-gray-900);
+  color: var(--color-pv-gray-100);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-pv-md);
+  overflow-x: auto;
+  border: 1px solid var(--color-pv-gray-800);
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-weight: 400;
+}
+
+.markdown-body blockquote {
+  border-left: 3px solid var(--color-pv-purple-500);
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin-block: 1.25rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  background: linear-gradient(90deg, rgb(154 68 229 / 0.04) 0%, transparent 100%);
+}
+
+.markdown-body blockquote > * {
+  font-style: inherit;
+}
+
+.markdown-body table {
+  width: 100%;
+  margin-block: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pv-md);
+  overflow: hidden;
+  font-size: 0.95rem;
+}
+
+.markdown-body th {
+  background-color: var(--bg-muted);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.markdown-body td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-default);
+  vertical-align: top;
+}
+
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-body img,
+.markdown-body svg {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-pv-md);
+  margin-block: 1.5rem;
+}
+
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid var(--border-default);
+  margin-block: 2.5rem;
+}
+
+/* Badges de estado del producto: [GA], [Preview], [Frontier], [Deprecated] */
+.badge-status {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  vertical-align: 0.05em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge-status-ga {
+  background-color: rgb(34 197 94 / 0.12);
+  color: rgb(21 128 61);
+  border: 1px solid rgb(34 197 94 / 0.3);
+}
+
+.badge-status-preview {
+  background-color: rgb(245 158 11 / 0.12);
+  color: rgb(180 83 9);
+  border: 1px solid rgb(245 158 11 / 0.3);
+}
+
+.badge-status-frontier {
+  background-color: rgb(239 68 68 / 0.12);
+  color: rgb(185 28 28);
+  border: 1px solid rgb(239 68 68 / 0.3);
+}
+
+.badge-status-deprecated {
+  background-color: rgb(120 113 108 / 0.12);
+  color: rgb(87 83 78);
+  border: 1px solid rgb(120 113 108 / 0.3);
+  text-decoration: line-through;
+}
+
+html.dark .badge-status-ga {
+  background-color: rgb(34 197 94 / 0.16);
+  color: rgb(134 239 172);
+}
+
+html.dark .badge-status-preview {
+  background-color: rgb(245 158 11 / 0.16);
+  color: rgb(252 211 77);
+}
+
+html.dark .badge-status-frontier {
+  background-color: rgb(239 68 68 / 0.16);
+  color: rgb(252 165 165);
+}
+
+/*
+ * Scrollbar minimalista
+ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 5px;
+  border: 2px solid var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-pv-purple-400);
+}
+
+/*
+ * Selection
+ */
+::selection {
+  background-color: var(--color-pv-purple-200);
+  color: var(--color-pv-purple-900);
+}
+
+html.dark ::selection {
+  background-color: var(--color-pv-purple-700);
+  color: var(--color-pv-purple-50);
+}
+
+/*
+ * Focus visible global
+ */
+:focus-visible {
+  outline: 2px solid var(--color-pv-purple-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

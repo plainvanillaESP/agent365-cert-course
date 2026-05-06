@@ -1,3 +1,22 @@
+---
+modulo: 1
+tipo: laboratorios
+titulo: "Laboratorios del Módulo 01"
+duracion_min: 15
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+laboratorios:
+  - id: "01.1"
+    titulo: "Mapeo de escenarios al producto correcto"
+    duracion_min: 15
+    dificultad: basico
+    requiere_tenant: false
+    licencias_requeridas: []
+    roles_requeridos: []
+---
+
 # Módulo 01 — Laboratorios
 
 > Este módulo no incluye laboratorios prácticos en tenant. Es un módulo conceptual de apertura del curso. En su lugar se propone un **ejercicio de mapeo** que refuerza la distinción entre los productos del ecosistema Microsoft AI/agentes.

@@ -1,3 +1,18 @@
+---
+modulo: 1
+tipo: evaluacion
+titulo: "Evaluación del Módulo 01"
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+preguntas_oficiales:
+  - EX-01-001
+  - EX-01-002
+  - EX-01-003
+caso_estudio: "Plain Coffee SL"
+---
+
 # Módulo 01 — Evaluación
 
 > Este módulo aporta **3 preguntas** a la evaluación final del curso (área 1: *Plan and configure Microsoft Agent 365*). Las preguntas están redactadas con calidad final y forman parte del banco oficial. Junto a cada pregunta se incluyen variantes de reformulación para evitar repetición entre cohortes.

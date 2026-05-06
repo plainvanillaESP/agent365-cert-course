@@ -1,3 +1,40 @@
+---
+modulo: 1
+tipo: teoria
+titulo: "Fundamentos: ¿Qué es Microsoft Agent 365?"
+duracion_min: 60
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+prerrequisitos: []
+objetivos_aprendizaje:
+  - OA-01.1
+  - OA-01.2
+  - OA-01.3
+  - OA-01.4
+  - OA-01.5
+sub_secciones:
+  - id: "1.1"
+    titulo: "El problema que resuelve Agent 365"
+    duracion_min: 10
+  - id: "1.2"
+    titulo: "Posicionamiento: control plane, no builder"
+    duracion_min: 15
+  - id: "1.3"
+    titulo: "Los cuatro stakeholders core"
+    duracion_min: 10
+  - id: "1.4"
+    titulo: "Agent 365 vs Copilot Control System (CCS)"
+    duracion_min: 10
+  - id: "1.5"
+    titulo: "Cronología del producto"
+    duracion_min: 5
+  - id: "1.6"
+    titulo: "Resumen y próximos pasos"
+    duracion_min: 10
+---
+
 # Módulo 01 — Fundamentos: ¿Qué es Microsoft Agent 365?
 
 **Duración estimada:** 60 minutos
