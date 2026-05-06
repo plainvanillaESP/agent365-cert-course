@@ -5,6 +5,8 @@ import { findModule, getAreaForModule, formatDuration } from '@/lib/course'
 import { loadContent, type ContentType } from '@/lib/content'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import { TableOfContents } from '@/components/TableOfContents'
+import { Quiz } from '@/components/quiz/Quiz'
+import { getQuestionsForModule } from '@/lib/quiz'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'evaluacion', 'recursos']
 
@@ -102,7 +104,9 @@ export function ModulePage() {
         </header>
 
         {/* Contenido */}
-        {content ? (
+        {section === 'evaluacion' && getQuestionsForModule(module.id).length > 0 ? (
+          <Quiz moduleId={module.id} />
+        ) : content ? (
           <MarkdownRenderer body={content.body} moduleSlug={module.slug} />
         ) : (
           <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
@@ -150,9 +154,9 @@ export function ModulePage() {
         )}
       </div>
 
-      {/* TOC derecha */}
+      {/* TOC derecha — solo en secciones markdown, no en quiz */}
       <aside className="hidden xl:block">
-        {content && <TableOfContents />}
+        {content && section !== 'evaluacion' && <TableOfContents />}
       </aside>
     </div>
   )
