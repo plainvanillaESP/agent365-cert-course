@@ -1,0 +1,99 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .label  { font-size: 12px; fill: #44403c; }
+      .price  { font-size: 26px; font-weight: 700; }
+      .unit   { font-size: 11px; fill: #78716c; }
+      .skuname{ font-size: 14px; font-weight: 600; }
+      .item   { font-size: 11.5px; fill: #44403c; }
+      .badge  { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="40" y="38" class="title">SKUs y precios para Microsoft Agent 365</text>
+  <text x="40" y="58" class="sub">Mayo 2026 · USD list price por usuario y mes</text>
+
+  <!-- ===== Card Agent 365 standalone ===== -->
+  <rect x="40"  y="90" width="290" height="220" rx="10" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40"  y="90" width="290" height="44"  rx="10" fill="#9A44E5"/>
+  <rect x="40"  y="124" width="290" height="10" fill="#9A44E5"/>
+  <text x="60" y="118" class="skuname" fill="white">Microsoft Agent 365</text>
+  <text x="60" y="170" class="price" fill="#1c1917">$15</text>
+  <text x="115" y="170" class="unit">USD/usuario/mes</text>
+  <text x="60" y="190" class="badge" fill="#7B2FBE">STANDALONE · GA</text>
+  <line x1="60" y1="205" x2="310" y2="205" stroke="#E9D8FF" stroke-width="1"/>
+  <text x="60"  y="225" class="item">• Agent workload en M365 admin center</text>
+  <text x="60"  y="243" class="item">• Entra Agent ID básica</text>
+  <text x="60"  y="261" class="item">• Integración con Purview y Defender</text>
+  <text x="60"  y="285" class="item" font-weight="600" fill="#9A3412">No incluye Risks column ni CA</text>
+
+  <!-- ===== Card M365 E7 ===== -->
+  <rect x="350" y="90" width="290" height="220" rx="10" fill="#FAF5FF" stroke="#7B2FBE" stroke-width="2"/>
+  <rect x="350" y="90" width="290" height="44"  rx="10" fill="#7B2FBE"/>
+  <rect x="350" y="124" width="290" height="10" fill="#7B2FBE"/>
+  <text x="370" y="118" class="skuname" fill="white">Microsoft 365 E7 · Frontier</text>
+  <text x="370" y="170" class="price" fill="#1c1917">$99</text>
+  <text x="430" y="170" class="unit">USD/usuario/mes</text>
+  <text x="370" y="190" class="badge" fill="#7B2FBE">BUNDLE · GA · RECOMENDADO &gt;60 % COPILOT</text>
+  <line x1="370" y1="205" x2="620" y2="205" stroke="#E9D8FF" stroke-width="1"/>
+  <text x="370" y="225" class="item">• Todo Microsoft 365 E5</text>
+  <text x="370" y="243" class="item">• Microsoft 365 Copilot</text>
+  <text x="370" y="261" class="item">• Microsoft Agent 365</text>
+  <text x="370" y="279" class="item">• Microsoft Entra Suite</text>
+  <text x="370" y="297" class="item" font-weight="600" fill="#7B2FBE">+ Risks column en Registry</text>
+
+  <!-- ===== Card M365 E5 base ===== -->
+  <rect x="660" y="90" width="290" height="220" rx="10" fill="#F5F5F4" stroke="#A8A29E" stroke-width="1.5"/>
+  <rect x="660" y="90" width="290" height="44"  rx="10" fill="#57534E"/>
+  <rect x="660" y="124" width="290" height="10" fill="#57534E"/>
+  <text x="680" y="118" class="skuname" fill="white">Microsoft 365 E5</text>
+  <text x="680" y="170" class="price" fill="#1c1917">$57</text>
+  <text x="745" y="170" class="unit">USD/usuario/mes</text>
+  <text x="680" y="190" class="badge" fill="#57534E">BASE · NECESITA ADD-ONS</text>
+  <line x1="680" y1="205" x2="930" y2="205" stroke="#D6D3D1" stroke-width="1"/>
+  <text x="680" y="225" class="item">• Productividad Microsoft 365</text>
+  <text x="680" y="243" class="item">• Entra ID P1 + P2</text>
+  <text x="680" y="261" class="item">• Defender XDR · Purview</text>
+  <text x="680" y="285" class="item" font-weight="600" fill="#9A3412">+ Agent 365 ($15) para gobernar agentes</text>
+
+  <!-- ===== Add-ons fila ===== -->
+  <text x="40" y="355" class="title" font-size="16px">Add-ons y licencias relacionadas</text>
+
+  <rect x="40"  y="375" width="220" height="120" rx="8" fill="white" stroke="#E7E5E4" stroke-width="1"/>
+  <text x="58"  y="400" class="skuname">Entra Suite</text>
+  <text x="58"  y="430" class="price" font-size="20px" fill="#1c1917">$12</text>
+  <text x="100" y="430" class="unit">/usuario/mes</text>
+  <text x="58"  y="455" class="item">CA agentes · ID Protection</text>
+  <text x="58"  y="473" class="item">Internet Access · Lifecycle</text>
+  <text x="58"  y="490" class="item" fill="#78716c">Incluida en E7</text>
+
+  <rect x="280" y="375" width="220" height="120" rx="8" fill="white" stroke="#E7E5E4" stroke-width="1"/>
+  <text x="298" y="400" class="skuname">Microsoft 365 Copilot</text>
+  <text x="298" y="430" class="price" font-size="20px" fill="#1c1917">$30</text>
+  <text x="340" y="430" class="unit">/usuario/mes</text>
+  <text x="298" y="455" class="item">Copilot en Word, Excel, etc.</text>
+  <text x="298" y="473" class="item">Acceso a Work IQ MCP</text>
+  <text x="298" y="490" class="item" fill="#78716c">Incluida en E7</text>
+
+  <rect x="520" y="375" width="190" height="120" rx="8" fill="white" stroke="#E7E5E4" stroke-width="1"/>
+  <text x="538" y="400" class="skuname">Entra ID P1</text>
+  <text x="538" y="430" class="price" font-size="20px" fill="#1c1917">$6</text>
+  <text x="566" y="430" class="unit">/usuario/mes</text>
+  <text x="538" y="455" class="item">Conditional Access básico</text>
+  <text x="538" y="473" class="item" fill="#78716c">Incluido en E5</text>
+
+  <rect x="730" y="375" width="220" height="120" rx="8" fill="white" stroke="#E7E5E4" stroke-width="1"/>
+  <text x="748" y="400" class="skuname">Entra ID P2</text>
+  <text x="748" y="430" class="price" font-size="20px" fill="#1c1917">$9</text>
+  <text x="780" y="430" class="unit">/usuario/mes</text>
+  <text x="748" y="455" class="item">Identity Protection con</text>
+  <text x="748" y="473" class="item">detecciones de agentes</text>
+  <text x="748" y="490" class="item" fill="#78716c">Incluido en E5</text>
+
+  <!-- Footer -->
+  <text x="490" y="555" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 03 · Fig. 3.1</text>
+</svg>
