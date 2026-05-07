@@ -266,6 +266,249 @@ Dos capturas en M365 admin center (Frontier toggle, Overview), una del modal Ter
 
 ---
 
+### Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M06). Es el módulo más denso del curso (Área 2, 30 % del examen). Las capturas reales darían contexto operativo a los 3 labs y a las 11 preguntas oficiales.
+
+#### M06-CAP-01 · Página de Agents → Blueprints en Entra admin center
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.3 + Lab 06.1 Parte E.
+- **URL del admin center:** `https://entra.microsoft.com/#view/Microsoft_AAD_IAM/Agents/Blueprints`
+- **Vista exacta:** lista de blueprints del tenant tras crear `bp-rrhh-faq-001`. Mostrar al menos un blueprint creado.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Nav lateral con `Identity → Agents → Blueprints` resaltado.
+  2. Botón **+ New blueprint** arriba a la derecha.
+  3. Fila con `bp-rrhh-faq-001` y su display name.
+  4. Columna de status `Active`.
+  5. Columna de identities count (`0` o el número actual).
+- **Anonimización:** ninguna específica si solo aparece el blueprint del lab.
+- **Filename:** `M06-CAP-01-entra-blueprints-list.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-01-entra-blueprints-list.png`
+
+#### M06-CAP-02 · Detalle de un blueprint con permisos heredables
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.3 + Lab 06.1 Parte E.
+- **URL del admin center:** click sobre `bp-rrhh-faq-001` desde la lista anterior.
+- **Vista exacta:** panel de detalle del blueprint con las 5 secciones visibles: metadata, inheritable permissions, restrictions, lifecycle, custom security attributes.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Display name y description.
+  2. Sección **Inheritable permissions** con los 3 scopes de Microsoft Graph.
+  3. Sección **Restrictions** con `allowedAuthenticationFlows: [onBehalfOf]`.
+  4. Sección **Lifecycle** con `auditLevel: verbose`.
+  5. Sección **Custom security attributes** con `Department: HR`.
+  6. Botón **Edit** y **Delete** arriba a la derecha (mencionar pero no usar en el lab).
+- **Anonimización:** ninguna.
+- **Filename:** `M06-CAP-02-blueprint-detail.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-02-blueprint-detail.png`
+
+#### M06-CAP-03 · Lista de Agent identities filtrada por blueprint
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.1 + Lab 06.2 Parte B.
+- **URL del admin center:** `https://entra.microsoft.com/#view/Microsoft_AAD_IAM/Agents/AgentIdentities`
+- **Vista exacta:** lista de agent identities filtrada por `blueprintId eq 'bp-rrhh-faq-001'`. Mostrar al menos `agent-rrhh-faq-nominas-001` y campos clave.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Filtro aplicado por blueprint.
+  2. Columna `Display name` con `RRHH-FAQ-Nominas`.
+  3. Columna `Sponsor` con UPN del sponsor.
+  4. Columna `Status` (Active).
+  5. Columna `Custom security attributes` (resumida o expandible).
+  6. Botón **Bulk disable** arriba (mencionar pero no usar).
+- **Anonimización:** sustituir UPN reales por nombres ficticios si aparecen.
+- **Filename:** `M06-CAP-03-agent-identities-list.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-03-agent-identities-list.png`
+
+#### M06-CAP-04 · Configuración de sponsor en una agent identity
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.4 + Lab 06.3 Parte B.
+- **URL del admin center:** click sobre una agent identity → tab **Sponsorship**.
+- **Vista exacta:** panel de sponsorship de una agent identity con UPN del sponsor, toggle de `transferOnLeaver`, fecha de última transferencia (si aplica).
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. UPN del sponsor configurado.
+  2. Toggle `transferOnLeaver: true`.
+  3. Toggle `transferOnMover: false` (default).
+  4. Campo `Last transfer` (vacío inicialmente, después de Lab 06.3 con timestamp).
+  5. Botón **Change sponsor** (mencionar).
+- **Anonimización:** sustituir UPN reales.
+- **Filename:** `M06-CAP-04-sponsor-configuration.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-04-sponsor-configuration.png`
+
+#### M06-CAP-05 · Lifecycle workflow editor para sponsorship transfer
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.4 + Lab 06.3 Parte A.
+- **URL del admin center:** `https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityGovernance/LifecycleWorkflows`
+- **Vista exacta:** editor del workflow `Agent sponsorship transfer on leaver` con sus tasks visibles.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Nombre del workflow.
+  2. Trigger `onLeaver` con scope `all users`.
+  3. Lista de tasks: `notifyManager`, `transferAgentSponsorship`, `requireReviewWithinDays`.
+  4. Status `Active` y last run.
+  5. Botón **Run history** (mencionar para verificación tras Lab 06.3).
+- **Anonimización:** ninguna específica.
+- **Filename:** `M06-CAP-05-lifecycle-workflow-editor.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-05-lifecycle-workflow-editor.png`
+
+#### M06-CAP-06 · KQL para riskyAgents en Defender XDR Hunting
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.8.
+- **URL del admin center:** `https://security.microsoft.com/v2/advanced-hunting`
+- **Vista exacta:** Advanced hunting con consulta KQL sobre `riskyAgents`. Si Identity Protection no detecta riesgos, alternativa: consulta sobre `CloudAppEvents` filtrada por agent.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Editor KQL con consulta visible.
+  2. Botón Run query.
+  3. Tabla de resultados (puede estar vacía en tenant nuevo: documentar y aceptar).
+  4. Columna `riskLevel` y `riskState`.
+- **Anonimización:** sustituir IDs y UPNs reales si aparecen.
+- **Filename:** `M06-CAP-06-defender-risky-agents-kql.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-06-defender-risky-agents-kql.png`
+
+#### Total M06: 6 capturas
+
+Cinco capturas en Microsoft Entra (blueprints list, blueprint detail, agent identities list, sponsor configuration, lifecycle workflow editor) y una en Defender XDR. Coste estimado de captura: 60-90 minutos. Es el módulo con más capturas pendientes por su densidad operativa.
+
+---
+
+### Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M06). Es el módulo más denso del curso (105 min, 11 preguntas examen) y se beneficiaría especialmente de capturas reales del Entra admin center con datos de blueprints e identities reales.
+
+#### M06-CAP-01 · Lista de Agent identity blueprints en Entra
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.1 + 6.3.
+- **URL del admin center:** `https://entra.microsoft.com/#view/Microsoft_AAD_AgentID/BlueprintsListBlade` (o `Identity → Agent ID → Blueprints` según el menú actual).
+- **Vista exacta:** lista de blueprints del tenant. Idealmente el blueprint `blueprint-rrhh-001` creado en Lab 06.1 visible junto a 1-2 blueprints adicionales de ejemplo.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Botón «Add blueprint» que invoca el wizard.
+  2. Columna Display name con el blueprint resaltado.
+  3. Columna Active identities (cuántas instances existen).
+  4. Columna Last reviewed.
+  5. Filtro / búsqueda.
+- **Anonimización:** sustituir nombres de blueprints reales por nombres ficticios consistentes con el caso Plain Coffee SL.
+- **Filename:** `M06-CAP-01-entra-blueprints-list.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-01-entra-blueprints-list.png`
+
+#### M06-CAP-02 · Detalle de un blueprint con permisos heredables
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.3 (anatomía del blueprint).
+- **URL del admin center:** click sobre `blueprint-rrhh-001` en la lista anterior.
+- **Vista exacta:** página de detalle del blueprint con las pestañas Overview, Inheritable permissions, Restrictions, Custom security attributes, Lifecycle.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Pestaña Inheritable permissions activa.
+  2. Lista de scopes definidos (User.Read.All, Group.Read.All, TeamsActivity.Send).
+  3. Indicador `3/40` o similar mostrando uso del límite.
+  4. Pestaña Custom security attributes con los pares Department=HR, DataSensitivity=Internal.
+  5. Botón Edit del blueprint.
+- **Anonimización:** ninguna específica (el blueprint es de prueba).
+- **Filename:** `M06-CAP-02-blueprint-inheritable-permissions.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-02-blueprint-inheritable-permissions.png`
+
+#### M06-CAP-03 · Lista de Agent identities filtrada por blueprint
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.1 + Lab 06.2 Parte B.
+- **URL del admin center:** `Entra admin center → Identity → Agent ID → Agent identities`.
+- **Vista exacta:** lista de identities con filtro `agentBlueprintId = blueprint-rrhh-001` aplicado, mostrando `Agent-RRHH-FAQ` y otras identities asociadas al mismo blueprint.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Filtro aplicado (chip visible arriba).
+  2. Columna Display name con `Agent-RRHH-FAQ`.
+  3. Columna Blueprint ID.
+  4. Columna Account enabled.
+  5. Botón «Bulk disable» que demuestra multi-select disable.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M06-CAP-03-identities-list-filtered.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-03-identities-list-filtered.png`
+
+#### M06-CAP-04 · Detalle de agent identity con sponsor configurado
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.4 + Lab 06.3 Parte A.
+- **URL del admin center:** click sobre `Agent-RRHH-FAQ` en la lista anterior.
+- **Vista exacta:** detalle de la agent identity con la sección Sponsorship visible: sponsor asignado, `transferOnLeaver = true`, `requireReview` (puede estar `false` si la cuenta sponsor sigue activa).
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Sección Sponsorship.
+  2. Campo Sponsor con el nombre del usuario.
+  3. Toggle Transfer on leaver.
+  4. Campo Account enabled.
+  5. Sección Inherited permissions del blueprint.
+- **Anonimización:** sustituir nombre del sponsor real por `Luis Ortega` (consistente con el caso del curso).
+- **Filename:** `M06-CAP-04-identity-sponsor-detail.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-04-identity-sponsor-detail.png`
+
+#### M06-CAP-05 · Configuración de Lifecycle workflow `onLeaver`
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.4 + Lab 06.3 Parte B.
+- **URL del admin center:** `Entra admin center → Identity Governance → Lifecycle workflows → seleccionar workflow → Tasks`.
+- **Vista exacta:** detalle de un workflow con trigger `onLeaver` y al menos las tasks `notifyManager`, `transferAgentSponsorship`, `markRequireReview` añadidas.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Campo Trigger con `onLeaver`.
+  2. Campo Scope con `allUsers` o `selected groups`.
+  3. Tabla de tasks con las 3 tasks visibles.
+  4. Toggle Enabled del workflow.
+  5. Sección Workflow history con ejecuciones recientes.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M06-CAP-05-lifecycle-workflow-onleaver.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-05-lifecycle-workflow-onleaver.png`
+
+#### M06-CAP-06 · Custom security attributes en directorio + asignación a identity
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.6.
+- **URL del admin center:** `Entra admin center → Identity → Custom security attributes` y luego asignación en la identity.
+- **Vista exacta:** preferiblemente dos capturas combinadas en una imagen: izquierda con la definición de los attributes a nivel directorio (Department, DataSensitivity, BusinessOwner, AgentPurpose), derecha con la asignación a `Agent-RRHH-FAQ`.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Lista de attribute sets definidos.
+  2. Attribute Department con valores predefinidos (HR, Finance, Sales, Engineering).
+  3. Vista de la identity con sus custom security attributes asignados.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M06-CAP-06-custom-security-attributes.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-06-custom-security-attributes.png`
+
+#### M06-CAP-07 · Multi-select disable de agent identities
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.4 (último bloque).
+- **URL del admin center:** `Entra admin center → Identity → Agent ID → Agent identities` con varias identities seleccionadas.
+- **Vista exacta:** la lista con 3-5 identities seleccionadas (checkbox marcado) y el modal o dropdown de bulk action visible con la opción «Disable selected».
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Checkboxes marcados de las identities seleccionadas.
+  2. Contador «5 selected» o similar.
+  3. Botón / dropdown de Bulk actions.
+  4. Opción «Disable» destacada.
+  5. Contador de impacto («This will affect 5 identities and X dependent agents»).
+- **Anonimización:** sustituir nombres de identities por valores ficticios.
+- **Filename:** `M06-CAP-07-bulk-disable-identities.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-07-bulk-disable-identities.png`
+
+#### M06-CAP-08 · Graph Explorer ejecutando `/beta/identityProtection/riskyAgents`
+
+- **Ubicación en el curso:** `modulos/modulo-06-entra-agent-id/teoria.md` § 6.8 + Lab 06.2 Parte C.
+- **URL del admin center:** `https://developer.microsoft.com/en-us/graph/graph-explorer`
+- **Vista exacta:** Graph Explorer con la consulta `GET https://graph.microsoft.com/beta/identityProtection/riskyAgents` ejecutada y respuesta JSON visible con al menos 1 agente listado.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Campo URL con la query.
+  2. Botón Run query.
+  3. Respuesta JSON con array `value` y al menos 1 elemento.
+  4. Property `riskLevel` y `riskState` visibles en el JSON.
+  5. Acceso a permisos/scopes consentidos para esta query.
+- **Anonimización:** sustituir IDs de agentes reales por valores de ejemplo.
+- **Filename:** `M06-CAP-08-graph-explorer-risky-agents.png`
+- **Path final:** `modulos/modulo-06-entra-agent-id/assets/capturas/M06-CAP-08-graph-explorer-risky-agents.png`
+
+#### Total M06: 8 capturas
+
+Cinco capturas en Entra admin center (lista blueprints, detalle blueprint, lista identities, detalle identity con sponsor, custom security attributes), una en Identity Governance (lifecycle workflow), una de bulk action (multi-select disable) y una en Graph Explorer (riskyAgents). Coste estimado de captura: 60-90 minutos en un tenant operativo con blueprints y identities ya creados (idealmente tras ejecutar los labs del módulo).
+
+---
+
 ## Plantilla para nuevas entradas
 
 Al añadir capturas de un módulo nuevo, copiar esta plantilla:

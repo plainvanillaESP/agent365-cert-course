@@ -1,0 +1,85 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 13.5px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .name   { font-size: 14px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11.5px; fill: #57534e; }
+      .badge  { font-size: 10.5px; font-weight: 600; }
+      .rel    { font-size: 12px; fill: #44403c; font-style: italic; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE"/>
+    </marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0284C7"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">Los cuatro tipos de objetos en Microsoft Entra Agent ID</text>
+  <text x="40" y="58" class="sub">Cuatro tipos distintos · una sola relación funcional · OOP útil como analogía</text>
+
+  <rect x="80" y="100" width="380" height="180" rx="10" fill="#FAF5FF" stroke="#9A44E5" stroke-width="2"/>
+  <rect x="80" y="100" width="380" height="36" rx="10" fill="#9A44E5"/>
+  <rect x="80" y="126" width="380" height="10" fill="#9A44E5"/>
+  <text x="100" y="123" class="h2">1 · AGENT IDENTITY BLUEPRINT</text>
+  <text x="100" y="160" class="name">La plantilla</text>
+  <text x="100" y="180" class="desc">Define permisos, restricciones y metadatos.</text>
+  <text x="100" y="196" class="desc">No autentica nada por sí sola.</text>
+  <text x="100" y="222" class="rel">Como una clase en programación: el molde,</text>
+  <text x="100" y="238" class="rel">no la instancia.</text>
+  <rect x="100" y="248" width="160" height="20" rx="10" fill="white" stroke="#9A44E5"/>
+  <text x="180" y="262" text-anchor="middle" class="badge" fill="#7B2FBE">agentIdentityBlueprint</text>
+
+  <rect x="500" y="100" width="380" height="180" rx="10" fill="#EFF6FF" stroke="#0284C7" stroke-width="1.5"/>
+  <rect x="500" y="100" width="380" height="36" rx="10" fill="#0284C7"/>
+  <rect x="500" y="126" width="380" height="10" fill="#0284C7"/>
+  <text x="520" y="123" class="h2">2 · BLUEPRINT PRINCIPAL</text>
+  <text x="520" y="160" class="name">El service principal del blueprint</text>
+  <text x="520" y="180" class="desc">Necesario para que admin consents queden</text>
+  <text x="520" y="196" class="desc">vinculados al blueprint, no a cada agente.</text>
+  <text x="520" y="222" class="rel">Constructor estático del blueprint.</text>
+  <text x="520" y="238" class="rel">Se crea automáticamente al crear el blueprint.</text>
+  <rect x="520" y="248" width="280" height="20" rx="10" fill="white" stroke="#0284C7"/>
+  <text x="660" y="262" text-anchor="middle" class="badge" fill="#0369A1">tags: HideApp + AgentBlueprintPrincipal</text>
+
+  <line x1="460" y1="190" x2="500" y2="190" stroke="#7B2FBE" stroke-width="1.5"/>
+  <text x="480" y="183" text-anchor="middle" class="rel" fill="#7B2FBE" font-size="10">1:1</text>
+
+  <rect x="80" y="320" width="380" height="180" rx="10" fill="#F0FDF4" stroke="#15803D" stroke-width="2"/>
+  <rect x="80" y="320" width="380" height="36" rx="10" fill="#15803D"/>
+  <rect x="80" y="346" width="380" height="10" fill="#15803D"/>
+  <text x="100" y="343" class="h2">3 · AGENT IDENTITY</text>
+  <text x="100" y="380" class="name">La instancia concreta</text>
+  <text x="100" y="400" class="desc">Esta es la que autentica y hace llamadas a Graph.</text>
+  <text x="100" y="416" class="desc">Hereda permisos del blueprint.</text>
+  <text x="100" y="442" class="rel">Una por cada agente desplegado: 1 blueprint</text>
+  <text x="100" y="458" class="rel">de RRHH puede generar 5 agent identities.</text>
+  <rect x="100" y="468" width="120" height="20" rx="10" fill="white" stroke="#15803D"/>
+  <text x="160" y="482" text-anchor="middle" class="badge" fill="#166534">agentIdentity</text>
+
+  <line x1="270" y1="280" x2="270" y2="320" stroke="#7B2FBE" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <text x="305" y="305" class="rel" fill="#7B2FBE" font-size="10">produce 1:N</text>
+
+  <rect x="500" y="320" width="380" height="180" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="500" y="320" width="380" height="36" rx="10" fill="#C2410C"/>
+  <rect x="500" y="346" width="380" height="10" fill="#C2410C"/>
+  <text x="520" y="343" class="h2">4 · AGENT USER · OPCIONAL</text>
+  <text x="520" y="380" class="name">Identidad humana-like</text>
+  <text x="520" y="400" class="desc">Mailbox, presencia en Teams, organigrama.</text>
+  <text x="520" y="416" class="desc">Solo para agentes autonomous que reciben</text>
+  <text x="520" y="432" class="desc">email/Teams o aparecen en organigramas.</text>
+  <text x="520" y="458" class="rel">Una propiedad opcional de agent identity.</text>
+  <rect x="520" y="468" width="220" height="20" rx="10" fill="white" stroke="#C2410C"/>
+  <text x="630" y="482" text-anchor="middle" class="badge" fill="#9A3412">User · userType = AgentUser</text>
+
+  <line x1="460" y1="410" x2="500" y2="410" stroke="#0284C7" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr-blue)"/>
+  <text x="480" y="403" text-anchor="middle" class="rel" fill="#0284C7" font-size="10">0:1</text>
+
+  <rect x="40" y="525" width="900" height="36" rx="6" fill="#FAFAF9" stroke="#D6D3D1"/>
+  <text x="60" y="548" font-size="11.5" fill="#44403c"><tspan font-weight="600">OOP:</tspan> Blueprint = clase · Blueprint principal = singleton de la clase · Agent identity = instancia · Agent user = propiedad opcional</text>
+
+  <text x="490" y="575" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 06 · Fig. 6.1</text>
+</svg>
