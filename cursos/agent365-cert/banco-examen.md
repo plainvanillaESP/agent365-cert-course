@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 20
+total_preguntas_actuales: 29
 ultima_actualizacion: 2026-05-07
 ---
 
@@ -25,8 +25,8 @@ ultima_actualizacion: 2026-05-07
 | M04 — Roles administrativos | 1 | Completo |
 | M05 — Configuración inicial | 1 | Completo |
 | M06 — Entra Agent ID | 11 | Completo |
-| M07 — Agent Registry | 4 | Pendiente migración |
-| M08 — Ciclo de vida | 5 | Pendiente migración |
+| M07 — Agent Registry | 4 | Completo |
+| M08 — Ciclo de vida | 5 | Completo |
 | M09 — Permisos y CA | 7 | Pendiente producción |
 | M10 — Purview | 5 | Pendiente producción |
 | M11 — DLP y compliance | 7 | Pendiente producción |
@@ -654,4 +654,249 @@ opciones:
     texto: "Las APIs antiguas devuelven warnings en el header pero siguen funcionando. Sin fecha de fin anunciada."
 justificacion: |
   La convergencia del 1 de mayo de 2026 inicia una ventana de retrocompatibilidad y soporte hasta noviembre de 2026. Durante ese periodo, las APIs /beta/agentRegistry/* redireccionan automáticamente a las nuevas /beta/copilot/admin/* con respuestas funcionales pero con Deprecation headers en cada respuesta. A partir de noviembre de 2026 devuelven 410 Gone y los clientes deben usar las nuevas rutas obligatoriamente.
+:::
+
+## Área 3 — Discover, manage and govern agents day to day
+
+### Módulo 07 — Agent Registry y Agent Map
+
+::: pregunta
+id: EX-07-001
+modulo: 7
+oa: OA-07.3
+area: 3
+tipo: multiple-choice
+dificultad: facil
+bloom: Recordar
+enunciado: |
+  ¿En qué pantalla del Microsoft 365 admin center aparece destacada la lista de agentes sin owner asignado (ownerless agents)?
+opciones:
+  - id: a
+    texto: "Agents → Registry, en la columna Risks."
+  - id: b
+    texto: "Agents → Map, como nodos sin etiqueta."
+  - id: c
+    texto: "Agents → Overview, en la sección Top actions for you dentro de la categoría «Ownerless agents»."
+    correcta: true
+  - id: d
+    texto: "Agents → Settings, como advertencias de configuración."
+justificacion: |
+  La página Overview agrupa cuatro categorías de Top actions for you: Pending requests, Agents at risk, Ownerless agents y With exceptions. Es el centro de mando diario del IT admin. La A confunde Ownerless con Risks (son métricas distintas). La B es falsa: el Map muestra agentes pero no destaca específicamente los ownerless. La D es falsa: Settings es para configuración del workload, no para alertas operativas.
+:::
+
+::: pregunta
+id: EX-07-002
+modulo: 7
+oa: OA-07.1
+area: 3
+tipo: scenario
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  El CISO te pregunta: «¿Cuántos agentes de Third Party activos tenemos en producción que estén usando Copilot Studio y, además, tengan algún risk score Medium o superior?». ¿Qué combinación de filtros aplicas en el Registry para responder?
+opciones:
+  - id: a
+    texto: "Filtrar por Publisher = Microsoft + Platform = Copilot Studio + Risk = Medium, High, Critical."
+  - id: b
+    texto: "Filtrar por Publisher = Third Party + Platform = Copilot Studio + Status = Active + Risk = Medium, High, Critical."
+    correcta: true
+  - id: c
+    texto: "Filtrar solo por Risk = High, Critical y descartar los que no sean de Third Party manualmente."
+  - id: d
+    texto: "No es posible: los filtros del Registry son mutuamente excluyentes y no se pueden combinar."
+justificacion: |
+  Los filtros del Registry son acumulativos (AND entre filtros distintos, OR dentro del mismo filtro). La respuesta requiere combinar cuatro filtros: Publisher = Third Party (no Microsoft), Platform = Copilot Studio, Status = Active (en producción), y Risk con tres valores marcados (Medium, High, Critical). La A confunde Microsoft con Third Party. La C ignora los filtros disponibles. La D es falsa: los filtros se combinan.
+:::
+
+::: pregunta
+id: EX-07-003
+modulo: 7
+oa: OA-07.3
+area: 3
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  ¿Cuáles son los requisitos para que aparezca poblada la Risks column en el Registry y en la vista de detalle de cada agente?
+opciones:
+  - id: a
+    texto: "Cualquier licencia M365 E3 o superior basta para que la Risks column aparezca poblada."
+  - id: b
+    texto: "Licencia E7 (o equivalente con módulo de Risk) + conector Microsoft 365 configurado en Defender XDR + DSPM for AI activo en Microsoft Purview."
+    correcta: true
+  - id: c
+    texto: "Licencia Agent 365 standalone con DSPM activo; Defender no es necesario."
+  - id: d
+    texto: "Solo se necesita Identity Protection P2 en Microsoft Entra ID."
+justificacion: |
+  La Risks column requiere E7 (o equivalente) y que la cadena de conectores funcione: Defender XDR conectado a M365 (sin él no llega telemetría de seguridad) y DSPM for AI activo en Purview (aporta señales adicionales sobre acceso a datos sensibles). Sin uno de los tres, la columna aparece vacía o incompleta.
+:::
+
+::: pregunta
+id: EX-07-004
+modulo: 7
+oa: OA-07.5
+area: 3
+tipo: scenario
+dificultad: media
+bloom: Analizar
+enunciado: |
+  Abres el Agent Map de tu tenant y observas que el agente Foundry-Finanzas-HUB tiene 6 conexiones entrantes desde otros agentes (Reportes, Análisis, Forecast, Audit, Compliance y Risk). El resto de agentes del cluster Foundry tienen 0 conexiones entrantes. ¿Qué te dice esta información sobre la arquitectura?
+opciones:
+  - id: a
+    texto: "Hay un problema: los 6 agentes con 0 conexiones entrantes están huérfanos y deberían eliminarse."
+  - id: b
+    texto: "Foundry-Finanzas-HUB es un agente hub del que dependen 6 workflows. Es un punto crítico de fallo: si se rompe, los 6 dependientes dejarán de funcionar."
+    correcta: true
+  - id: c
+    texto: "Hay un ciclo en el grafo: el grafo es inválido y necesita refactor inmediato."
+  - id: d
+    texto: "Los 6 agentes con 0 entrantes son los que reciben más uso; el HUB es solo telemetría."
+justificacion: |
+  La dirección de las flechas en el Agent Map representa invocación: A → B significa que A invoca a B. Si HUB tiene 6 conexiones entrantes, hay 6 agentes que lo invocan en algún punto de su lógica. Esto lo convierte en un agente hub: punto único de paso por el que circulan varios workflows. Si HUB falla, los 6 dependientes fallan. La A confunde dirección de flecha con orfandad. La C es falsa: 6 entrantes a 1 nodo NO es un ciclo. La D invierte el significado de la flecha.
+:::
+
+### Módulo 08 — Ciclo de vida del agente
+
+::: pregunta
+id: EX-08-001
+modulo: 8
+oa: OA-08.6
+area: 3
+tipo: drag-and-drop
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Ordena las siguientes acciones del ciclo de vida de un agente desde la idea hasta la retirada definitiva. La posición 1 es la primera acción que se ejecuta; la posición 6 es la última.
+items:
+  - id: a1
+    texto: "Delete (eliminación irreversible)."
+  - id: a2
+    texto: "Activate (aprobar y dejar activo en el catálogo)."
+  - id: a3
+    texto: "Publish (enviar a publish desde la plataforma de creación)."
+  - id: a4
+    texto: "Deploy (distribuir a los usuarios destinatarios)."
+  - id: a5
+    texto: "Pin (fijar al slot Administrator para visibilidad alta)."
+  - id: a6
+    texto: "Remove (retirar del despliegue antes del Delete final)."
+targets:
+  - id: p1
+    label: "Posición 1 — Primera acción"
+  - id: p2
+    label: "Posición 2"
+  - id: p3
+    label: "Posición 3"
+  - id: p4
+    label: "Posición 4"
+  - id: p5
+    label: "Posición 5"
+  - id: p6
+    label: "Posición 6 — Última acción"
+correct_map:
+  a3: p1
+  a2: p2
+  a4: p3
+  a5: p4
+  a6: p5
+  a1: p6
+justificacion: |
+  El ciclo es: Publish (developer envía) → Activate (admin aprueba) → Deploy (distribuir a usuarios) → Pin (visibilidad alta) → Remove (retirar del despliegue, reversible) → Delete (irreversible). Saltarse Remove e ir directo a Delete es legal pero un antipatrón: mejor hacer Remove, esperar 1-2 semanas y solo entonces Delete.
+:::
+
+::: pregunta
+id: EX-08-002
+modulo: 8
+oa: OA-08.4
+area: 3
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  Tu equipo te pregunta si pueden recuperar un agente que acabas de eliminar (Delete) hace 2 horas. ¿Qué les respondes?
+opciones:
+  - id: a
+    texto: "No, Delete es irreversible inmediatamente; el agente ya no existe en el directorio."
+  - id: b
+    texto: "Sí, durante las primeras 24 horas un Global Administrator puede ejecutar Restore-Agent365Agent -Id <agent-id> para cancelar la eliminación. Pasadas las 24 h el SharePoint Embedded container se borrará y la operación devolverá 404 Not Found."
+    correcta: true
+  - id: c
+    texto: "Sí, pero solo si el agente tenía requireReview: true; en ese caso se puede restaurar en cualquier momento dentro del período de review."
+  - id: d
+    texto: "Sí, los agentes Delete pasan a una papelera de Entra que los conserva 30 días, igual que los usuarios deshabilitados."
+justificacion: |
+  Delete tiene una ventana de 24 horas durante la cual un Global Administrator puede ejecutar Restore-Agent365Agent. Tras las 24 h, el SharePoint Embedded container se marca para borrarse físicamente. La A es falsa: durante las 24 h sí hay rescate. La C confunde flags de M06 con la ventana de Delete. La D es falsa: no existe papelera equivalente para agentes.
+:::
+
+::: pregunta
+id: EX-08-003
+modulo: 8
+oa: OA-08.5
+area: 3
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  La acción Reassign Ownership desde el M365 admin center está disponible para…
+opciones:
+  - id: a
+    texto: "Cualquier agente del Registry independientemente de su plataforma origen."
+  - id: b
+    texto: "Solo agentes creados con Agent Builder. Para Copilot Studio se reasigna desde Power Platform admin center y para Foundry desde Azure portal."
+    correcta: true
+  - id: c
+    texto: "Solo agentes con transferOnLeaver: true en su sponsor configuration."
+  - id: d
+    texto: "Solo agentes que están en estado Pending approval; una vez activos, la propiedad es inmutable."
+justificacion: |
+  Una de las limitaciones más confundidas del módulo. Reassign Ownership desde M365 admin center solo aplica a agentes Agent Builder. Los agentes Copilot Studio se reasignan desde Power Platform admin center → Environments → Apps. Los Foundry desde Azure portal → AI Foundry resource → Access control (IAM). La A es falsa por esa limitación. La C confunde sponsor con ownership técnico. La D es falsa.
+:::
+
+::: pregunta
+id: EX-08-004
+modulo: 8
+oa: OA-08.2
+area: 3
+tipo: scenario
+dificultad: dificil
+bloom: Aplicar
+enunciado: |
+  El equipo de Compliance te pide aplicar 6 restricciones específicas (sharing externo bloqueado, cross-site SharePoint bloqueado, sensitivity Confidential mínimo, DLP Block on Confidential, CA con MFA + dispositivo compliant, logging verbose) a TODOS los agentes nuevos del departamento Finanzas. ¿Cuál es la mejor forma de implementarlo?
+opciones:
+  - id: a
+    texto: "Aplicar manualmente cada política a cada agente nuevo durante el wizard de publishing, en el paso 6 «Permissions review»."
+  - id: b
+    texto: "Crear una Custom Template llamada HighlySensitiveDataTemplate con esas 6 políticas y aplicarla en el paso 5 «Apply Template» del wizard a cada agente nuevo de Finanzas."
+    correcta: true
+  - id: c
+    texto: "Modificar la Default Template del tenant para incluir esas políticas; afectará a todos los agentes nuevos del tenant entero."
+  - id: d
+    texto: "Crear una Conditional Access policy específica para Finanzas; las otras políticas no son configurables centralmente."
+justificacion: |
+  El patrón correcto para un conjunto de restricciones específicas que aplican a una categoría de agentes (Finanzas) es crear una Custom Template una vez y aplicarla en el paso 5 del wizard cada vez que se publica un agente de Finanzas. La A es manual y propenso a errores. La C aplicaría a TODOS los agentes del tenant, sobrerestringiendo. La D solo cubre Conditional Access; las otras 5 políticas no son cubiertas por CA.
+:::
+
+::: pregunta
+id: EX-08-005
+modulo: 8
+oa: OA-08.3
+area: 3
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  ¿Cuál de las siguientes afirmaciones describe correctamente el comportamiento de Pin en Microsoft Agent 365?
+opciones:
+  - id: a
+    texto: "Pin requiere que el agente esté en estado Pending approval; una vez activo, no se puede pinear."
+  - id: b
+    texto: "Pin tiene 3 slots (Microsoft, Administrator, User) y la propagación a la UI cliente puede tardar hasta 6 horas. Solo se puede pinear un agente al slot Administrator a la vez; pinear otro despinea automáticamente al anterior."
+    correcta: true
+  - id: c
+    texto: "Pin es irreversible: una vez pineado, la única forma de quitarlo es mediante Delete del agente."
+  - id: d
+    texto: "Pin se puede aplicar a cualquier agente del Registry, esté deployed o no."
+justificacion: |
+  Los tres elementos de la B son correctos: 3 slots Pin, propagación cliente hasta 6 h por caching, y solo un agente puede ocupar el slot Administrator a la vez. La A invierte: Pin requiere agente activo y deployed. La C es falsa: Pin es reversible vía Unpin. La D es falsa: Pin solo aplica a agentes deployed.
 :::
