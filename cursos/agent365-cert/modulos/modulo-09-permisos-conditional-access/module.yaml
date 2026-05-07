@@ -1,30 +1,81 @@
 spec_version: '1.0'
 id: 9
 slug: modulo-09-permisos-conditional-access
-titulo: Permisos, accesos y Conditional Access
+titulo: "Permisos, accesos y Conditional Access para agentes"
 duracion_min: 75
 area_examen: 2
-estado: pendiente
-fase_produccion: 4
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+estado: produciendo
+fase_produccion: 2
+ultima_actualizacion: 2026-05-07
+prerrequisitos:
+  - 1
+  - 4
+  - 6
+prerrequisitos_externos:
+  - "Microsoft Entra ID familiarity (CA básica para usuarios)"
+objetivos_aprendizaje:
+  - id: OA-09.1
+    texto: "Distinguir los cuatro tipos de permisos que un agente puede tener: heredados del blueprint, delegated (OBO), application (own identity) y custom security attributes para gobernanza."
+    bloom: Comprender
+  - id: OA-09.2
+    texto: "Configurar Conditional Access policies sobre workload identities de agentes, incluyendo grants Block, MFA y dispositivo compliant, distinguiendo lo que aplica a usuarios humanos de lo que aplica a agentes."
+    bloom: Aplicar
+  - id: OA-09.3
+    texto: "Aplicar políticas de bloqueo basadas en risk score (Risky Sign-Ins for Agents, Risky Agents) usando Microsoft Entra Identity Protection."
+    bloom: Aplicar
+  - id: OA-09.4
+    texto: "Reconocer las seis detecciones específicas de Identity Protection que aplican a agentes y explicar qué señal detecta cada una."
+    bloom: Comprender
+  - id: OA-09.5
+    texto: "Diferenciar la trazabilidad de permisos en OBO vs own identity: qué scopes se aplican en cada interacción, dónde se ven las trazas en los sign-in logs."
+    bloom: Analizar
+  - id: OA-09.6
+    texto: "Diseñar una política de acceso end-to-end que combine permisos del blueprint, Conditional Access y reglas de Identity Protection para un caso de uso concreto."
+    bloom: Crear
+glosario:
+  - termino: "Workload identity"
+    definicion: "Categoría que engloba service principals (aplicaciones) y agent identities en Microsoft Entra. Sujeto al que se aplican las CA policies para agentes."
+  - termino: "Inheritable permissions"
+    definicion: "Lista de scopes Graph que el blueprint declara y que las agent identities derivadas heredan automáticamente."
+  - termino: "Delegated permissions"
+    definicion: "Permisos que actúan en modo OBO con el contexto del usuario invocador. Intersección entre blueprint, licencia del usuario y consent."
+  - termino: "Application permissions"
+    definicion: "Permisos que actúan en modo own identity sin contexto de usuario. Son los del blueprint completos. Requieren admin consent."
+  - termino: "Conditional Access for workload identities"
+    definicion: "Extensión del motor CA de Entra que permite condicionar el acceso de agentes. Requiere licencia Workload Identities Premium."
+  - termino: "Risky Sign-Ins for Agents"
+    definicion: "Vista de Identity Protection con eventos individuales arriesgados de agentes."
+  - termino: "Risky Agents"
+    definicion: "Vista agregada de Identity Protection a nivel de agent identity."
+  - termino: "Anomalous token use"
+    definicion: "Detección de Identity Protection sobre patrones de uso del token de agent identity."
+  - termino: "Atypical agent travel"
+    definicion: "Detección de tokens emitidos a workload identity que aparecen en regiones geográficas imposibles."
+  - termino: "Token issuer anomaly"
+    definicion: "Detección de tokens cuyo issuer no es el tenant del agente o cuya firma es inválida."
+  - termino: "Suspicious agent application activity"
+    definicion: "Detección de operaciones que el blueprint no debería heredar (escalada de privilegios)."
+  - termino: "Verified threat actor signals"
+    definicion: "Detección de IPs o ASN marcadas por Microsoft Threat Intelligence."
+  - termino: "Adversary-in-the-middle (AiTM)"
+    definicion: "Detección de patrones consistentes con un proxy malicioso interceptando tokens del agente."
+  - termino: "Workload Identities Premium"
+    definicion: "Licencia Entra que habilita CA policies sobre workload identities. Incluida en E7 y vendida standalone."
+  - termino: "Risk dismissal"
+    definicion: "Acción manual del admin que cierra un riesgo en Identity Protection con justificación auditable."
+  - termino: "Continuous Access Evaluation (CAE)"
+    definicion: "Mecanismo que re-evalúa el token de un agente en runtime cuando cambian las condiciones (revocación, cambio de risk score)."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "9.1 Los cuatro tipos de permisos de un agente"
+  - "9.2 Conditional Access para agentes (workload identities)"
+  - "9.3 Identity Protection y las seis detecciones para agentes"
+  - "9.4 Trazabilidad: OBO vs own identity en sign-in logs"
+  - "9.5 Composición de defensas: blueprint + CA + ID Protection"
+  - "9.6 Operaciones del día a día"
 laboratorios: []
 preguntas_aporta_examen_final: 7
