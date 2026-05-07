@@ -131,7 +131,7 @@ export function Quiz({ moduleId }: QuizProps) {
             onClick={reset}
             iconLeft={<RotateCcw className="size-[16px] stroke-[2]" aria-hidden />}
           >
-            Reiniciar evaluación
+            Reiniciar práctica
           </Button>
         )}
       </div>

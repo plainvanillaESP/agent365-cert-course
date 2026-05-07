@@ -49,8 +49,29 @@ export type Question = MultipleChoiceQuestion | DragAndDropQuestion
 
 /* ---------------------------- Banco de preguntas --------------------------- */
 
-const Q_EX_01_001: MultipleChoiceQuestion = {
-  id: 'EX-01-001',
+/**
+ * NOTA — Convivencia de preguntas TS y markdown durante la transición a la spec del paquete.
+ *
+ * La spec del paquete (`docs/course-package-spec.md` v1.0) declara como fuente de verdad
+ * los `quiz-practica.md` de cada módulo y el `banco-examen.md` del curso. Hasta que el
+ * Bloque D introduzca el parser real desde markdown, las preguntas que ve el alumno
+ * en el navegador siguen viviendo aquí en TS, mantenidas en sincronía manual con
+ * los markdown:
+ *
+ *  - Preguntas Q-NN-M (quiz de práctica del módulo): identificadores `Q_PRACT_NN_M`.
+ *    Subset que sale del `quiz-practica.md` del módulo. NO debe contener preguntas
+ *    del banco final.
+ *  - Preguntas EX-NN-MMM (banco oficial del examen final): NO se cargan en `lib/quiz.ts`.
+ *    Viven solo en `cursos/{slug}/banco-examen.md` y se rendizaran cuando se implemente
+ *    el componente del examen final (Fase 7, M17).
+ *
+ * Para los módulos M02-M08 todavía no migrados (sus preguntas aquí siguen identificadas
+ * como `Q_EX_NN_*`), seguirán mostrándose como "evaluación" hasta su refactor en
+ * Bloques C y D. Esto es deuda técnica explícita.
+ */
+
+const Q_PRACT_01_1: MultipleChoiceQuestion = {
+  id: 'Q-01-1',
   type: 'multiple-choice',
   difficulty: 'facil',
   oa: 'OA-01.1',
@@ -58,20 +79,20 @@ const Q_EX_01_001: MultipleChoiceQuestion = {
   bloom: 'Comprender',
   moduleId: 1,
   prompt:
-    'Una compañía está evaluando Microsoft Agent 365 y Microsoft Copilot Studio para su estrategia de IA. ¿Cuál es la diferencia fundamental entre ambos productos?',
+    'El equipo de ingeniería de tu empresa quiere construir un agente conversacional desde cero usando código y desplegarlo en una aplicación Teams interna. Está debatiendo qué herramientas utilizar. ¿Cuál de los siguientes productos del ecosistema de Microsoft cubre la **construcción** del agente, frente a los demás que cubren capas distintas?',
   options: [
-    { id: 'A', text: 'Copilot Studio crea agentes y Agent 365 los gobierna; son productos complementarios, no alternativos.' },
-    { id: 'B', text: 'Agent 365 reemplaza a Copilot Studio porque integra creación y gobernanza en una sola plataforma.' },
-    { id: 'C', text: 'Copilot Studio se usa para agentes basados en Foundry; Agent 365 se usa para agentes basados en SharePoint.' },
-    { id: 'D', text: 'Agent 365 es la versión empresarial de Copilot Studio con licencia E5.' },
+    { id: 'A', text: 'Microsoft Agent 365: porque incluye Agent Builder con un kit de desarrollo SDK.' },
+    { id: 'B', text: 'Copilot Control System: porque controla qué agentes se pueden desplegar en Teams.' },
+    { id: 'C', text: 'Microsoft 365 Agents SDK: es el framework oficial para construir agentes con código.' },
+    { id: 'D', text: 'Microsoft Purview: porque protege los datos del agente desde el día cero.' },
   ],
-  correctOptionId: 'A',
+  correctOptionId: 'C',
   justification:
-    'Microsoft Agent 365 es un control plane de gobernanza, observabilidad y seguridad. No crea agentes; gobierna los que ya existen, sin importar la plataforma de origen (Copilot Studio, Foundry, M365 Agents SDK, SharePoint, etc.). Es complementario, no competidor.',
+    'El Microsoft 365 Agents SDK es el kit oficial para construir agentes con código (TypeScript, C#, Python). Agent 365 NO construye agentes, los gobierna; CCS no construye nada, gobierna el comportamiento de Copilot Chat para los humanos; Purview protege datos pero no es un constructor de agentes. Cuidado con la confusión nominal: el M365 Agents SDK (constructor) ≠ el Agent 365 SDK (extensión del control plane).',
 }
 
-const Q_EX_01_002: MultipleChoiceQuestion = {
-  id: 'EX-01-002',
+const Q_PRACT_01_3: MultipleChoiceQuestion = {
+  id: 'Q-01-3',
   type: 'scenario',
   difficulty: 'media',
   oa: 'OA-01.3',
@@ -79,20 +100,20 @@ const Q_EX_01_002: MultipleChoiceQuestion = {
   bloom: 'Aplicar',
   moduleId: 1,
   prompt:
-    'La directora de IT de Plain Coffee SL pregunta: «Tenemos 800 empleados con licencia M365 Copilot. Algunos usuarios crean agentes con Agent Builder y los compañeros se quejan de que no saben qué pueden hacer ni si están aprobados por IT. Además, queremos limitar el tiempo que los empleados pasan usando Copilot Chat porque vemos un descenso en la productividad colaborativa.»\n\n¿Qué solución corresponde a cada problema?',
+    'El CISO de Lumen Logística (4.500 empleados de oficina, M365 Copilot desplegado a 2.000) escribe un email al equipo IT con tres preocupaciones:\n\n1. «Necesitamos saber qué porcentaje del tiempo que pasan los empleados en Teams están usando Copilot Chat para resumir reuniones.»\n2. «Tenemos un agente Copilot Studio del equipo Comercial que envía resúmenes de oportunidades, pero nadie sabe a qué documentos está accediendo realmente.»\n3. «Queremos forzar que los nuevos empleados pasen 30 días sin acceso a Copilot Chat hasta completar la formación de uso responsable.»\n\n¿Qué producto resuelve cada preocupación?',
   options: [
-    { id: 'A', text: 'Ambos problemas se resuelven con Microsoft Agent 365.' },
-    { id: 'B', text: 'Ambos problemas se resuelven con Copilot Control System (CCS).' },
-    { id: 'C', text: 'El primer problema se resuelve con Agent 365; el segundo con CCS.' },
-    { id: 'D', text: 'El primer problema se resuelve con CCS; el segundo con Agent 365.' },
+    { id: 'A', text: '1 → CCS · 2 → Agent 365 · 3 → CCS' },
+    { id: 'B', text: '1 → Agent 365 · 2 → CCS · 3 → Agent 365' },
+    { id: 'C', text: 'Las tres preocupaciones se resuelven con Agent 365 porque las tres tocan IA.' },
+    { id: 'D', text: 'Las tres preocupaciones se resuelven con CCS porque las tres afectan a empleados.' },
   ],
-  correctOptionId: 'C',
+  correctOptionId: 'A',
   justification:
-    'Agent 365 gobierna a los agentes: el primer problema (inventariar agentes creados por usuarios, aprobarlos, hacerlos visibles) es exactamente su alcance. CCS gobierna a las personas usando IA: el segundo problema (uso de Copilot Chat por humanos, productividad colaborativa) corresponde a Copilot Analytics + Viva Insights, que viven en CCS. La opción D invierte el principio.',
+    'Medir el uso de Copilot Chat por humanos (1) es trabajo de CCS (Copilot Analytics + Viva Insights). Auditar a qué documentos accede un agente Copilot Studio (2) es trabajo de Agent 365 (Agent Registry + Purview integrado). Restringir el acceso de empleados a Copilot Chat (3) es trabajo de CCS. Regla mnemotécnica: Agent 365 gobierna agentes; CCS gobierna humanos usando IA.',
 }
 
-const Q_EX_01_003: DragAndDropQuestion = {
-  id: 'EX-01-003',
+const Q_PRACT_01_5: DragAndDropQuestion = {
+  id: 'Q-01-5',
   type: 'drag-and-drop',
   difficulty: 'media',
   oa: 'OA-01.2',
@@ -100,14 +121,13 @@ const Q_EX_01_003: DragAndDropQuestion = {
   bloom: 'Aplicar',
   moduleId: 1,
   prompt:
-    'Empareja cada responsabilidad operativa con el stakeholder de Microsoft Agent 365 que la asume principalmente.',
+    'Empareja cada acción operativa de gobernanza con el admin center que la ejecuta.',
   items: [
-    { id: 'r1', text: 'Aplicar políticas de Conditional Access que bloqueen agentes con riesgo high.' },
-    { id: 'r2', text: 'Crear DLP policies que traten al `agent instance` como user.' },
-    { id: 'r3', text: 'Aprobar requests de agentes pendientes desde el wizard de publishing.' },
-    { id: 'r4', text: 'Investigar incidentes con KQL en la tabla `CloudAppEvents`.' },
-    { id: 'r5', text: 'Configurar lifecycle workflows para sponsorship transfer al manager.' },
-    { id: 'r6', text: 'Aplicar templates regulatorios (EU AI Act, ISO 42001) en Compliance Manager.' },
+    { id: 'a1', text: 'Habilitar DSPM for AI sobre el tenant.' },
+    { id: 'a2', text: 'Pin un agente al slot Administrator para grupo «Dirección Comercial».' },
+    { id: 'a3', text: 'Investigar el riesgo de un agente comprometido en Risky Agents report.' },
+    { id: 'a4', text: 'Aplicar la plantilla «EU AI Act» en Compliance Manager.' },
+    { id: 'a5', text: 'Configurar el conector de Microsoft 365 para Defender XDR.' },
   ],
   targets: [
     { id: 'm365',     label: 'M365 admin'     },
@@ -116,15 +136,14 @@ const Q_EX_01_003: DragAndDropQuestion = {
     { id: 'defender', label: 'Defender admin' },
   ],
   correctMap: {
-    r1: 'entra',
-    r2: 'purview',
-    r3: 'm365',
-    r4: 'defender',
-    r5: 'entra',
-    r6: 'purview',
+    a1: 'purview',
+    a2: 'm365',
+    a3: 'entra',
+    a4: 'purview',
+    a5: 'defender',
   },
   justification:
-    'CA (Conditional Access) y lifecycle workflows viven en Microsoft Entra (Entra Agent ID). DLP y Compliance Manager viven en Microsoft Purview. El wizard de publishing y la aprobación de requests viven en Microsoft 365 admin center. KQL hunting vive en Microsoft Defender XDR.',
+    'DSPM for AI y Compliance Manager viven en Microsoft Purview. Pin del Agent Registry vive en M365 admin center (los slots Microsoft / Administrator / User son del wizard de publishing). Risky Agents report y la gestión de riesgo de identidades de agente viven en Microsoft Entra (Entra Agent ID Protection). El conector M365 de Defender XDR es la pieza que activa la ingesta de telemetría de agentes en Defender.',
 }
 
 const Q_EX_02_001: DragAndDropQuestion = {
@@ -746,7 +765,7 @@ const Q_EX_08_005: MultipleChoiceQuestion = {
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
-  Q_EX_01_001, Q_EX_01_002, Q_EX_01_003,
+  Q_PRACT_01_1, Q_PRACT_01_3, Q_PRACT_01_5,
   Q_EX_02_001, Q_EX_02_002, Q_EX_02_003,
   Q_EX_03_001,
   Q_EX_04_001,

@@ -13,7 +13,7 @@
  * y elimina ~50 kB de dependencias.
  */
 
-export type ContentType = 'readme' | 'teoria' | 'laboratorios' | 'evaluacion' | 'recursos'
+export type ContentType = 'readme' | 'teoria' | 'laboratorios' | 'evaluacion' | 'quiz-practica' | 'recursos'
 
 export interface ParsedContent {
   /**
@@ -101,7 +101,7 @@ void ACTIVE_COURSE_SLUG  // referenced in comments; reserved for multi-course (F
  * Carga un archivo de contenido del módulo dado.
  *
  * @param slug - slug del módulo (ej: 'modulo-01-fundamentos')
- * @param type - tipo de contenido (teoria, laboratorios, evaluacion, recursos)
+ * @param type - tipo de contenido (teoria, laboratorios, quiz-practica, recursos, evaluacion legacy)
  * @returns frontmatter parseado y body markdown, o null si el archivo no existe
  */
 export function loadContent(slug: string, type: ContentType): ParsedContent | null {

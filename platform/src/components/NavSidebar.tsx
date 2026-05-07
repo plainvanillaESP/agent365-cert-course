@@ -6,7 +6,7 @@ import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course
 const SECTIONS = [
   { slug: 'teoria',       label: 'Teoría',       icon: BookOpenText  },
   { slug: 'laboratorios', label: 'Laboratorios', icon: FlaskConical  },
-  { slug: 'evaluacion',   label: 'Evaluación',   icon: ClipboardCheck },
+  { slug: 'quiz-practica', label: 'Práctica',     icon: ClipboardCheck },
   { slug: 'recursos',     label: 'Recursos',     icon: Link2          },
 ] as const
 
