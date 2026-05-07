@@ -533,6 +533,92 @@ const Q_EX_06_011: MultipleChoiceQuestion = {
     'La convergencia del 1 de mayo de 2026 inicia una ventana de retrocompatibilidad y soporte hasta noviembre de 2026. Durante ese periodo, las APIs /beta/agentRegistry/* redireccionan automáticamente a las nuevas /beta/copilot/admin/* con respuestas funcionales pero con Deprecation headers en cada respuesta. A partir de noviembre de 2026 devuelven 410 Gone y los clientes deben usar las nuevas rutas obligatoriamente.',
 }
 
+/* ================================ M07 ===================================== */
+
+const Q_EX_07_001: MultipleChoiceQuestion = {
+  id: 'EX-07-001',
+  type: 'multiple-choice',
+  difficulty: 'facil',
+  oa: 'OA-07.3',
+  area: 3,
+  bloom: 'Recordar',
+  moduleId: 7,
+  prompt:
+    '¿En qué pantalla del Microsoft 365 admin center aparece destacada la lista de agentes sin owner asignado (ownerless agents)?',
+  options: [
+    { id: 'A', text: 'Agents → Registry, en la columna Risks.' },
+    { id: 'B', text: 'Agents → Map, como nodos sin etiqueta.' },
+    { id: 'C', text: 'Agents → Overview, en la sección Top actions for you dentro de la categoría «Ownerless agents».' },
+    { id: 'D', text: 'Agents → Settings, como advertencias de configuración.' },
+  ],
+  correctOptionId: 'C',
+  justification:
+    'La página Overview agrupa cuatro categorías de Top actions for you: Pending requests, Agents at risk, Ownerless agents y With exceptions. Es el centro de mando diario del IT admin. La A confunde Ownerless con Risks (son métricas distintas). La B es falsa: el Map muestra agentes pero no destaca específicamente los ownerless. La D es falsa: Settings es para configuración del workload, no para alertas operativas.',
+}
+
+const Q_EX_07_002: MultipleChoiceQuestion = {
+  id: 'EX-07-002',
+  type: 'scenario',
+  difficulty: 'media',
+  oa: 'OA-07.1',
+  area: 3,
+  bloom: 'Aplicar',
+  moduleId: 7,
+  prompt:
+    'El CISO te pregunta: «¿Cuántos agentes de Third Party activos tenemos en producción que estén usando Copilot Studio y, además, tengan algún risk score Medium o superior?». ¿Qué combinación de filtros aplicas en el Registry para responder?',
+  options: [
+    { id: 'A', text: 'Filtrar por Publisher = Microsoft + Platform = Copilot Studio + Risk = Medium, High, Critical.' },
+    { id: 'B', text: 'Filtrar por Publisher = Third Party + Platform = Copilot Studio + Status = Active + Risk = Medium, High, Critical.' },
+    { id: 'C', text: 'Filtrar solo por Risk = High, Critical y descartar los que no sean de Third Party manualmente.' },
+    { id: 'D', text: 'No es posible: los filtros del Registry son mutuamente excluyentes y no se pueden combinar.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'Los filtros del Registry son acumulativos (AND entre filtros distintos, OR dentro del mismo filtro). La respuesta requiere combinar cuatro filtros: Publisher = Third Party (no Microsoft), Platform = Copilot Studio, Status = Active (en producción), y Risk con tres valores marcados (Medium, High, Critical). La A confunde Microsoft con Third Party. La C ignora los filtros disponibles. La D es falsa: los filtros se combinan.',
+}
+
+const Q_EX_07_003: MultipleChoiceQuestion = {
+  id: 'EX-07-003',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-07.3',
+  area: 3,
+  bloom: 'Recordar',
+  moduleId: 7,
+  prompt:
+    '¿Cuáles son los requisitos para que aparezca poblada la Risks column en el Registry y en la vista de detalle de cada agente?',
+  options: [
+    { id: 'A', text: 'Cualquier licencia M365 E3 o superior basta para que la Risks column aparezca poblada.' },
+    { id: 'B', text: 'Licencia E7 (o equivalente con módulo de Risk) + conector Microsoft 365 configurado en Defender XDR + DSPM for AI activo en Microsoft Purview.' },
+    { id: 'C', text: 'Licencia Agent 365 standalone con DSPM activo; Defender no es necesario.' },
+    { id: 'D', text: 'Solo se necesita Identity Protection P2 en Microsoft Entra ID.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'La Risks column requiere E7 (o equivalente) y que la cadena de conectores funcione: Defender XDR conectado a M365 (sin él no llega telemetría de seguridad) y DSPM for AI activo en Purview (aporta señales adicionales sobre acceso a datos sensibles). Sin uno de los tres, la columna aparece vacía o incompleta.',
+}
+
+const Q_EX_07_004: MultipleChoiceQuestion = {
+  id: 'EX-07-004',
+  type: 'scenario',
+  difficulty: 'media',
+  oa: 'OA-07.5',
+  area: 3,
+  bloom: 'Analizar',
+  moduleId: 7,
+  prompt:
+    'Abres el Agent Map de tu tenant y observas que el agente Foundry-Finanzas-HUB tiene 6 conexiones entrantes desde otros agentes (Reportes, Análisis, Forecast, Audit, Compliance y Risk). El resto de agentes del cluster Foundry tienen 0 conexiones entrantes. ¿Qué te dice esta información sobre la arquitectura?',
+  options: [
+    { id: 'A', text: 'Hay un problema: los 6 agentes con 0 conexiones entrantes están huérfanos y deberían eliminarse.' },
+    { id: 'B', text: 'Foundry-Finanzas-HUB es un agente hub del que dependen 6 workflows. Es un punto crítico de fallo: si se rompe, los 6 dependientes dejarán de funcionar.' },
+    { id: 'C', text: 'Hay un ciclo en el grafo: el grafo es inválido y necesita refactor inmediato.' },
+    { id: 'D', text: 'Los 6 agentes con 0 entrantes son los que reciben más uso; el HUB es solo telemetría.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'La dirección de las flechas en el Agent Map representa invocación: A → B significa que A invoca a B. Si HUB tiene 6 conexiones entrantes, hay 6 agentes que lo invocan en algún punto de su lógica. Esto lo convierte en un agente hub: punto único de paso por el que circulan varios workflows. Si HUB falla, los 6 dependientes fallan. La A confunde dirección de flecha con orfandad. La C es falsa: 6 entrantes a 1 nodo NO es un ciclo. La D invierte el significado de la flecha.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
@@ -543,6 +629,7 @@ const ALL_QUESTIONS: Question[] = [
   Q_EX_05_001,
   Q_EX_06_001, Q_EX_06_002, Q_EX_06_003, Q_EX_06_004, Q_EX_06_005,
   Q_EX_06_006, Q_EX_06_007, Q_EX_06_008, Q_EX_06_009, Q_EX_06_010, Q_EX_06_011,
+  Q_EX_07_001, Q_EX_07_002, Q_EX_07_003, Q_EX_07_004,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {

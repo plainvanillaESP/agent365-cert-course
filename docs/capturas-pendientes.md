@@ -373,6 +373,132 @@ Cinco capturas en Microsoft Entra (blueprints list, blueprint detail, agent iden
 
 ---
 
+### Módulo 07 — Agent Registry y Agent Map
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M07). Es el primer módulo puramente operativo: los alumnos se beneficiarán especialmente de capturas reales aquí.
+
+#### M07-CAP-01 · Página Overview con hero metrics y Top actions for you
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.3.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents/overview`
+- **Vista exacta:** Overview completo con las 4 hero metrics arriba y las 4 categorías de Top actions for you abajo. Idealmente con números reales (no ceros).
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Hero metric Agent Registry total con sparkline.
+  2. Hero metric Active users (30d).
+  3. Hero metric Agent run-time.
+  4. Hero metric Registry sync con plataformas conectadas.
+  5. Sección Top actions for you con las 4 categorías destacadas.
+  6. Conteos de cada categoría (Pending requests, At risk, Ownerless, With exceptions).
+- **Anonimización:** sustituir números reales por valores de ejemplo razonables si los reales son sensibles.
+- **Filename:** `M07-CAP-01-overview-hero-actions.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-01-overview-hero-actions.png`
+
+#### M07-CAP-02 · Agent Registry con filtros aplicados
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.1 + Lab 07.1 Parte B.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents/registry`
+- **Vista exacta:** Registry con filtros laterales aplicados (al menos Publisher = Third Party + Status = Active). Mostrar 5-10 filas de ejemplo en la tabla.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Filtros laterales con checkboxes marcados.
+  2. Header de columnas con las columnas estándar.
+  3. Una fila con badge de status «Active» destacada.
+  4. Una fila con badge de risk «High» o «Critical» destacada (si E7 activo).
+  5. Botón Customize columns arriba.
+  6. Botón Export arriba.
+- **Anonimización:** sustituir nombres reales de agentes por ficticios (Adele Vance pattern). Sustituir UPN reales.
+- **Filename:** `M07-CAP-02-registry-filtered.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-02-registry-filtered.png`
+
+#### M07-CAP-03 · Vista de detalle de un agente
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.1.
+- **URL del admin center:** click sobre una fila del Registry → panel lateral.
+- **Vista exacta:** panel de detalle de un agente con sus 6 secciones: identidad/owner, plataforma/configuración, permisos, risk panel (E7), actividad, capabilities.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Sección Identity & Owner con UPN del owner y sponsor.
+  2. Sección Permissions con scopes listados.
+  3. Risk panel con risk level y top causes (si E7).
+  4. Gráfica de actividad últimos 30 días.
+  5. Sección Capabilities con datasources y plugins.
+  6. Botones de acción arriba (Edit, Disable, Delete).
+- **Anonimización:** sustituir UPN reales por nombres ficticios.
+- **Filename:** `M07-CAP-03-agent-detail-panel.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-03-agent-detail-panel.png`
+
+#### M07-CAP-04 · Agent Map con clusters por plataforma
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.2 + Lab 07.1 Parte C.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents/map`
+- **Vista exacta:** Agent Map con al menos 2 clusters de plataformas distintas y, si es posible, una conexión agent-to-agent visible.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Cluster Copilot Studio con sus agentes.
+  2. Cluster Foundry (si aplica).
+  3. Una conexión A → B entre agentes.
+  4. Botón Fit to view.
+  5. Botón Full screen.
+  6. Buscador de nodos.
+- **Anonimización:** sustituir nombres reales de agentes en los nodos.
+- **Filename:** `M07-CAP-04-agent-map-clusters.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-04-agent-map-clusters.png`
+
+#### M07-CAP-05 · Pending requests al expandir desde Overview
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.3 + caso de estudio P2.
+- **URL del admin center:** click sobre «Pending requests» en Top actions for you.
+- **Vista exacta:** lista de agentes pending approval con sus capabilities visibles, botones de approve/reject por cada uno.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Header con el conteo de pending.
+  2. Una fila con un agente Third Party de ejemplo, sus capabilities expandibles.
+  3. Botones Approve y Reject por cada agente.
+  4. Botón de bulk approve (si aplica).
+- **Anonimización:** sustituir nombres reales de agentes y publishers.
+- **Filename:** `M07-CAP-05-pending-requests-list.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-05-pending-requests-list.png`
+
+#### M07-CAP-06 · Risks column con risk panel expandido (requiere E7)
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.6.
+- **URL del admin center:** click sobre el risk badge de un agente con Risk = High o Critical.
+- **Vista exacta:** risk panel del agente con risk score numérico, top 3 risk causes, trend, y botones de acción.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Risk level badge (High o Critical).
+  2. Risk score numérico (0-100).
+  3. Top 3 risk causes listadas con su origen (Defender / Identity Protection / DSPM).
+  4. Sparkline de trend últimos 7 días.
+  5. Botón Mark as false positive.
+  6. Botón Investigate in Defender.
+  7. Botón Disable agent.
+- **Anonimización:** ninguna específica si los datos no incluyen UPN reales.
+- **Filename:** `M07-CAP-06-risk-panel-detail.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-06-risk-panel-detail.png`
+
+#### M07-CAP-07 · Exportación a Excel completada
+
+- **Ubicación en el curso:** `modulos/modulo-07-agent-registry-map/teoria.md` § 7.1 + Lab 07.2 Parte A-C.
+- **URL del admin center:** N/A (es captura del archivo .xlsx descargado).
+- **Vista exacta:** workbook abierto en Excel con la hoja del inventario y al menos una PivotTable visible.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Hoja con todas las columnas exportadas.
+  2. Indicador de cantidad de filas (X agentes).
+  3. PivotTable plataforma × estado en hoja secundaria.
+  4. PivotTable owner × risk level en hoja secundaria.
+- **Anonimización:** sustituir UPN y nombres reales.
+- **Filename:** `M07-CAP-07-excel-export-pivot.png`
+- **Path final:** `modulos/modulo-07-agent-registry-map/assets/capturas/M07-CAP-07-excel-export-pivot.png`
+
+#### Total M07: 7 capturas
+
+Cinco capturas en M365 admin center (Overview, Registry filtrado, detalle de agente, Map, Pending requests), una de Risk panel (requiere E7) y una de Excel con PivotTables. Coste estimado: 60-75 minutos. Capturas de alta prioridad por la naturaleza operativa del módulo.
+
+---
+
 ### Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
 
 > Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M06). Es el módulo más denso del curso (105 min, 11 preguntas examen) y se beneficiaría especialmente de capturas reales del Entra admin center con datos de blueprints e identities reales.
