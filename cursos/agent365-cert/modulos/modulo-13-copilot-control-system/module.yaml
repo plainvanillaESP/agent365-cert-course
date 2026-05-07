@@ -1,0 +1,30 @@
+spec_version: '1.0'
+id: 13
+slug: modulo-13-copilot-control-system
+titulo: Copilot Control System integrado con Agent 365
+duracion_min: 45
+area_examen: 5
+estado: pendiente
+fase_produccion: 5
+ultima_actualizacion: '2026-05-06'
+prerrequisitos: []
+prerrequisitos_externos: []
+objetivos_aprendizaje: []
+glosario: []
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios: []
+preguntas_aporta_examen_final: 1

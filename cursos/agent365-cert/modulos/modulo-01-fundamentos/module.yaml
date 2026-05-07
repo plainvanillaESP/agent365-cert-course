@@ -1,0 +1,70 @@
+spec_version: '1.0'
+id: 1
+slug: modulo-01-fundamentos
+titulo: 'Fundamentos: ¿Qué es Microsoft Agent 365?'
+duracion_min: 60
+area_examen: 1
+estado: producido
+fase_produccion: 2
+ultima_actualizacion: 2026-05-06
+prerrequisitos: []
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-01.1
+  texto: ''
+  bloom: ''
+- id: OA-01.2
+  texto: ''
+  bloom: ''
+- id: OA-01.3
+  texto: ''
+  bloom: ''
+- id: OA-01.4
+  texto: ''
+  bloom: ''
+- id: OA-01.5
+  texto: ''
+  bloom: ''
+glosario: []
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria:
+- id: '1.1'
+  titulo: El problema que resuelve Agent 365
+  duracion_min: 10
+- id: '1.2'
+  titulo: 'Posicionamiento: control plane, no builder'
+  duracion_min: 15
+- id: '1.3'
+  titulo: Los cuatro stakeholders core
+  duracion_min: 10
+- id: '1.4'
+  titulo: Agent 365 vs Copilot Control System (CCS)
+  duracion_min: 10
+- id: '1.5'
+  titulo: Cronología del producto
+  duracion_min: 5
+- id: '1.6'
+  titulo: Resumen y próximos pasos
+  duracion_min: 10
+laboratorios:
+- id: '01.1'
+  titulo: Mapeo de escenarios al producto correcto
+  duracion_min: 15
+  dificultad: basico
+  requiere_tenant: false
+  licencias_requeridas: []
+  roles_requeridos: []
+preguntas_aporta_examen_final: 3

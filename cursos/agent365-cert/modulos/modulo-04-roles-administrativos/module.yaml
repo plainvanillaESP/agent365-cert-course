@@ -1,0 +1,65 @@
+spec_version: '1.0'
+id: 4
+slug: modulo-04-roles-administrativos
+titulo: Roles administrativos y delegación
+duracion_min: 45
+area_examen: 1
+estado: producido
+fase_produccion: 3
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 02 — Arquitectura y componentes
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-04.1
+  texto: Identificar el rol mínimo necesario para realizar una tarea dada (least-privilege).
+  bloom: Aplicar
+- id: OA-04.2
+  texto: Distinguir AI Administrator vs AI Reader vs Global Administrator y sus límites.
+  bloom: Analizar
+- id: OA-04.3
+  texto: Diseñar un esquema de delegación para una organización con separación de
+    funciones (Adopción, Seguridad, Compliance).
+  bloom: Crear
+- id: OA-04.4
+  texto: Asignar roles desde Microsoft 365 admin center y desde Microsoft Entra admin
+    center.
+  bloom: Aplicar
+glosario:
+- AI Administrator
+- AI Reader
+- Agent ID Administrator
+- Agent ID Developer
+- Global Administrator
+- Global Reader
+- Least-privilege
+- Separation of duties
+- PIM (Privileged Identity Management)
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '04.1'
+  titulo: Asignar roles least-privilege a un equipo de seguridad
+  duracion_min: 25
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365
+  - Microsoft Entra ID P1 (para PIM)
+  roles_requeridos:
+  - Global Administrator (para asignar otros roles)
+  - Privileged Role Administrator
+preguntas_aporta_examen_final: 1

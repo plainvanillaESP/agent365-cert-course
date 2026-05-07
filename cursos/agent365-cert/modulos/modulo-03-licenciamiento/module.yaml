@@ -1,0 +1,71 @@
+spec_version: '1.0'
+id: 3
+slug: modulo-03-licenciamiento
+titulo: Licenciamiento, prerrequisitos y planificación
+duracion_min: 60
+area_examen: 1
+estado: producido
+fase_produccion: 3
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 01 — Fundamentos
+- Módulo 02 — Arquitectura y componentes
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-03.1
+  texto: Comparar las opciones de licenciamiento (Agent 365 standalone, E7, E5+add-ons)
+    y recomendar la adecuada para un escenario dado.
+  bloom: Evaluar
+- id: OA-03.2
+  texto: Aplicar las reglas de cobertura OBO vs autonomous a un caso real.
+  bloom: Aplicar
+- id: OA-03.3
+  texto: Identificar qué capacidades requieren licencias adicionales (Risks column,
+    CA para agentes, ID Protection para agentes).
+  bloom: Recordar
+- id: OA-03.4
+  texto: Calcular el coste mensual estimado de una organización dada (usuarios, número
+    de agentes, plataforma de creación).
+  bloom: Aplicar
+- id: OA-03.5
+  texto: Distinguir las tres líneas de billing simultáneas (Agent 365 per-seat, Copilot
+    Studio Credits, Foundry per-token) y atribuir consumo a cada una.
+  bloom: Analizar
+- id: OA-03.6
+  texto: Diseñar un plan de despliegue gradual partiendo de un piloto Frontier preview.
+  bloom: Crear
+glosario:
+- Per-seat
+- Per-instance
+- OBO (On-Behalf-Of)
+- Autonomous agent
+- Frontier preview
+- Copilot Credits
+- CCCU
+- Pre-Purchase Plan P3
+- Risks column
+- Break-even
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '03.1'
+  titulo: Calculadora de licenciamiento
+  duracion_min: 25
+  dificultad: basico
+  requiere_tenant: false
+  licencias_requeridas: []
+  roles_requeridos: []
+preguntas_aporta_examen_final: 1

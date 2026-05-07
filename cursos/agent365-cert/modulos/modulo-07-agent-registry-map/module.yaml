@@ -1,0 +1,75 @@
+spec_version: '1.0'
+id: 7
+slug: modulo-07-agent-registry-map
+titulo: Agent Registry y Agent Map
+duracion_min: 75
+area_examen: 3
+estado: producido
+fase_produccion: 4
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 02 — Arquitectura y componentes
+- Módulo 05 — Configuración inicial del tenant
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-07.1
+  texto: Navegar Registry y Map y aplicar filtros relevantes.
+  bloom: Aplicar
+- id: OA-07.2
+  texto: Exportar inventario completo a Excel y analizarlo.
+  bloom: Aplicar
+- id: OA-07.3
+  texto: Interpretar las hero metrics y las top actions for you de Overview.
+  bloom: Analizar
+- id: OA-07.4
+  texto: Identificar agentes registrados desde plataformas externas vía registry sync.
+  bloom: Recordar
+- id: OA-07.5
+  texto: Visualizar conexiones agent-to-agent en multi-agent workflows.
+  bloom: Analizar
+glosario:
+- Agent Registry
+- Agent Map
+- Hero metric
+- Ownerless agent
+- Pending request
+- Registry sync
+- Risks column
+- Top actions for you
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '07.1'
+  titulo: Recorrido completo por Registry y Map con filtros
+  duracion_min: 25
+  dificultad: basico
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365 (cualquier SKU)
+  roles_requeridos:
+  - AI Reader (mínimo)
+  - AI Administrator (recomendado para acciones)
+- id: '07.2'
+  titulo: Exportar inventario y analizar en Excel
+  duracion_min: 20
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365
+  - Microsoft Excel (Microsoft 365 Apps)
+  roles_requeridos:
+  - AI Reader
+preguntas_aporta_examen_final: 4
