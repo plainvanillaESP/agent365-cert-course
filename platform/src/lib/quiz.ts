@@ -529,10 +529,10 @@ const Q_PRACT_06_4: MultipleChoiceQuestion = {
     'El caso describe un agente invocado por un usuario que accede a datos del propio usuario invocador. Es el patrón clásico de OBO (on-behalf-of): el agente recibe el contexto del usuario y opera con sus permisos. Cada usuario invocador debe tener licencia Agent 365. La opción B confunde acceso a datos de varios usuarios con autonomous: en OBO el agente accede a datos del invocador en cada interacción, no a datos de terceros. La C inventa una regla sobre Foundry. La D inventa el requisito E7.',
 }
 
-/* ================================ M07 ===================================== */
+/* ============================ Módulo 07 — quiz práctica ===================== */
 
-const Q_EX_07_001: MultipleChoiceQuestion = {
-  id: 'EX-07-001',
+const Q_PRACT_07_1: MultipleChoiceQuestion = {
+  id: 'Q-07-1',
   type: 'multiple-choice',
   difficulty: 'facil',
   oa: 'OA-07.3',
@@ -540,20 +540,20 @@ const Q_EX_07_001: MultipleChoiceQuestion = {
   bloom: 'Recordar',
   moduleId: 7,
   prompt:
-    '¿En qué pantalla del Microsoft 365 admin center aparece destacada la lista de agentes sin owner asignado (ownerless agents)?',
+    'Entras en M365 admin center → Agents → Overview y ves el bloque «Top actions for you». ¿Cuál de las siguientes categorías NO aparece en ese bloque?',
   options: [
-    { id: 'A', text: 'Agents → Registry, en la columna Risks.' },
-    { id: 'B', text: 'Agents → Map, como nodos sin etiqueta.' },
-    { id: 'C', text: 'Agents → Overview, en la sección Top actions for you dentro de la categoría «Ownerless agents».' },
-    { id: 'D', text: 'Agents → Settings, como advertencias de configuración.' },
+    { id: 'A', text: 'Pending requests' },
+    { id: 'B', text: 'Agents at risk' },
+    { id: 'C', text: 'Top performing agents' },
+    { id: 'D', text: 'Ownerless agents' },
   ],
   correctOptionId: 'C',
   justification:
-    'La página Overview agrupa cuatro categorías de Top actions for you: Pending requests, Agents at risk, Ownerless agents y With exceptions. Es el centro de mando diario del IT admin. La A confunde Ownerless con Risks (son métricas distintas). La B es falsa: el Map muestra agentes pero no destaca específicamente los ownerless. La D es falsa: Settings es para configuración del workload, no para alertas operativas.',
+    'Las cuatro categorías de Top actions for you son: Pending requests, Agents at risk, Ownerless agents y With exceptions. Top performing agents NO existe como categoría: Overview se centra en lo que requiere atención del admin, no en métricas de uso. Las métricas de uso viven en Microsoft 365 Copilot Dashboard, no en Overview.',
 }
 
-const Q_EX_07_002: MultipleChoiceQuestion = {
-  id: 'EX-07-002',
+const Q_PRACT_07_2: MultipleChoiceQuestion = {
+  id: 'Q-07-2',
   type: 'scenario',
   difficulty: 'media',
   oa: 'OA-07.1',
@@ -561,64 +561,85 @@ const Q_EX_07_002: MultipleChoiceQuestion = {
   bloom: 'Aplicar',
   moduleId: 7,
   prompt:
-    'El CISO te pregunta: «¿Cuántos agentes de Third Party activos tenemos en producción que estén usando Copilot Studio y, además, tengan algún risk score Medium o superior?». ¿Qué combinación de filtros aplicas en el Registry para responder?',
+    'El responsable de seguridad pregunta: «¿Cuántos agentes Microsoft (publisher Microsoft) están desplegados en la plataforma Foundry y siguen en risk Low pero llevan inactivos más de 30 días?». ¿Qué combinación de filtros aplicas en el Registry para responder?',
   options: [
-    { id: 'A', text: 'Filtrar por Publisher = Microsoft + Platform = Copilot Studio + Risk = Medium, High, Critical.' },
-    { id: 'B', text: 'Filtrar por Publisher = Third Party + Platform = Copilot Studio + Status = Active + Risk = Medium, High, Critical.' },
-    { id: 'C', text: 'Filtrar solo por Risk = High, Critical y descartar los que no sean de Third Party manualmente.' },
-    { id: 'D', text: 'No es posible: los filtros del Registry son mutuamente excluyentes y no se pueden combinar.' },
+    { id: 'A', text: 'Publisher = Microsoft + Platform = Foundry + Risk = Low + Last activity = > 30 days.' },
+    { id: 'B', text: 'Publisher = Third Party + Platform = Foundry + Risk = Low; el filtro de inactividad no existe en el Registry.' },
+    { id: 'C', text: 'Solo se puede filtrar por dos de esas dimensiones simultáneamente; combinar las cuatro requiere exportar a Excel.' },
+    { id: 'D', text: 'Status = Pending + Risk = Low. La inactividad se infiere del estado Pending.' },
   ],
-  correctOptionId: 'B',
+  correctOptionId: 'A',
   justification:
-    'Los filtros del Registry son acumulativos (AND entre filtros distintos, OR dentro del mismo filtro). La respuesta requiere combinar cuatro filtros: Publisher = Third Party (no Microsoft), Platform = Copilot Studio, Status = Active (en producción), y Risk con tres valores marcados (Medium, High, Critical). La A confunde Microsoft con Third Party. La C ignora los filtros disponibles. La D es falsa: los filtros se combinan.',
+    'Los filtros del Registry son acumulativos (AND lógico entre filtros distintos) y combinables sin límite práctico. Se combinan los cuatro: Publisher = Microsoft, Platform = Foundry, Risk = Low, Last activity (días). La opción B confunde Microsoft con Third Party. La C inventa una limitación. La D confunde inactividad con estado Pending.',
 }
 
-const Q_EX_07_003: MultipleChoiceQuestion = {
-  id: 'EX-07-003',
-  type: 'multiple-choice',
-  difficulty: 'media',
-  oa: 'OA-07.3',
-  area: 3,
-  bloom: 'Recordar',
-  moduleId: 7,
-  prompt:
-    '¿Cuáles son los requisitos para que aparezca poblada la Risks column en el Registry y en la vista de detalle de cada agente?',
-  options: [
-    { id: 'A', text: 'Cualquier licencia M365 E3 o superior basta para que la Risks column aparezca poblada.' },
-    { id: 'B', text: 'Licencia E7 (o equivalente con módulo de Risk) + conector Microsoft 365 configurado en Defender XDR + DSPM for AI activo en Microsoft Purview.' },
-    { id: 'C', text: 'Licencia Agent 365 standalone con DSPM activo; Defender no es necesario.' },
-    { id: 'D', text: 'Solo se necesita Identity Protection P2 en Microsoft Entra ID.' },
-  ],
-  correctOptionId: 'B',
-  justification:
-    'La Risks column requiere E7 (o equivalente) y que la cadena de conectores funcione: Defender XDR conectado a M365 (sin él no llega telemetría de seguridad) y DSPM for AI activo en Purview (aporta señales adicionales sobre acceso a datos sensibles). Sin uno de los tres, la columna aparece vacía o incompleta.',
-}
-
-const Q_EX_07_004: MultipleChoiceQuestion = {
-  id: 'EX-07-004',
+const Q_PRACT_07_5: MultipleChoiceQuestion = {
+  id: 'Q-07-5',
   type: 'scenario',
-  difficulty: 'media',
+  difficulty: 'dificil',
   oa: 'OA-07.5',
   area: 3,
   bloom: 'Analizar',
   moduleId: 7,
   prompt:
-    'Abres el Agent Map de tu tenant y observas que el agente Foundry-Finanzas-HUB tiene 6 conexiones entrantes desde otros agentes (Reportes, Análisis, Forecast, Audit, Compliance y Risk). El resto de agentes del cluster Foundry tienen 0 conexiones entrantes. ¿Qué te dice esta información sobre la arquitectura?',
+    'En el Agent Map detectas un patrón con tres agentes: Reportes-Mensuales invoca a Datos-Crudos, que invoca a Limpieza-ETL, que a su vez invoca a Reportes-Mensuales. Las flechas dibujan un triángulo cerrado. ¿Cómo interpretas este patrón y cuál es la prioridad de actuación?',
   options: [
-    { id: 'A', text: 'Hay un problema: los 6 agentes con 0 conexiones entrantes están huérfanos y deberían eliminarse.' },
-    { id: 'B', text: 'Foundry-Finanzas-HUB es un agente hub del que dependen 6 workflows. Es un punto crítico de fallo: si se rompe, los 6 dependientes dejarán de funcionar.' },
-    { id: 'C', text: 'Hay un ciclo en el grafo: el grafo es inválido y necesita refactor inmediato.' },
-    { id: 'D', text: 'Los 6 agentes con 0 entrantes son los que reciben más uso; el HUB es solo telemetría.' },
+    { id: 'A', text: 'Es un grafo de dependencias estándar; no requiere acción específica.' },
+    { id: 'B', text: 'Es un ciclo (loop circular) entre tres agentes. Es un antipatrón: puede provocar invocaciones recursivas, costes en spiral y comportamientos impredecibles. Prioridad alta de revisión con los owners para refactorizar.' },
+    { id: 'C', text: 'Es un cluster cohesionado que indica una buena arquitectura modular.' },
+    { id: 'D', text: 'Indica que los tres agentes son redundantes y pueden consolidarse en uno solo.' },
   ],
   correctOptionId: 'B',
   justification:
-    'La dirección de las flechas en el Agent Map representa invocación: A → B significa que A invoca a B. Si HUB tiene 6 conexiones entrantes, hay 6 agentes que lo invocan en algún punto de su lógica. Esto lo convierte en un agente hub: punto único de paso por el que circulan varios workflows. Si HUB falla, los 6 dependientes fallan. La A confunde dirección de flecha con orfandad. La C es falsa: 6 entrantes a 1 nodo NO es un ciclo. La D invierte el significado de la flecha.',
+    'Tres flechas formando un triángulo cerrado representa un ciclo en el grafo dirigido (A → B → C → A). Es un antipatrón clásico: en runtime puede provocar invocaciones recursivas con timeouts agotados, spiral de costes y comportamientos no deterministas. La prioridad alta es refactorizar: típicamente uno de los tres agentes debería tener un trigger externo en lugar de invocarse desde dentro del ciclo.',
 }
 
-/* ================================ M08 ===================================== */
+/* ============================ Módulo 08 — quiz práctica ===================== */
 
-const Q_EX_08_001: DragAndDropQuestion = {
-  id: 'EX-08-001',
+const Q_PRACT_08_2: MultipleChoiceQuestion = {
+  id: 'Q-08-2',
+  type: 'scenario',
+  difficulty: 'dificil',
+  oa: 'OA-08.4',
+  area: 3,
+  bloom: 'Analizar',
+  moduleId: 8,
+  prompt:
+    'El compañero Pedro eliminó por error el agente «Comercial-Forecast» hace 26 horas. El agente era usado por 80 personas del equipo Comercial. Pedro pregunta cómo recuperarlo. ¿Qué le respondes?',
+  options: [
+    { id: 'A', text: 'Ejecutar Restore-Agent365Agent -Id <agent-id> con rol Global Administrator. Tarda menos de 5 minutos.' },
+    { id: 'B', text: 'El agente ya no se puede recuperar: la ventana de 24 h ha expirado y el SharePoint Embedded container ya está marcado para borrado físico. Hay que recrear el agente desde cero (o desde un backup del .agent file si existe).' },
+    { id: 'C', text: 'Pedir al equipo de Defender XDR que restaure el agente desde el AI Agent Inventory.' },
+    { id: 'D', text: 'Restaurar el agent identity en Microsoft Entra; con eso el agente vuelve a aparecer en el Registry.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'La ventana de retroceso de Delete es 24 h. A las 26 h, Restore-Agent365Agent devuelve 404 Not Found y el contenedor SharePoint Embedded está marcado para borrado físico. La respuesta operativa es recrear desde cero. Lección aprendida: la diferencia entre Remove (reversible) y Delete (24 h) es crítica. Siempre Remove primero, esperar y solo entonces Delete.',
+}
+
+const Q_PRACT_08_3: MultipleChoiceQuestion = {
+  id: 'Q-08-3',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-08.3',
+  area: 3,
+  bloom: 'Aplicar',
+  moduleId: 8,
+  prompt:
+    'Has pineado el agente «Servicio-IT-FAQ» al slot Administrator para todo el grupo «Empleados nuevos». 30 minutos después, los empleados se quejan de que no ven el agente en su panel. ¿Cuál es la causa más probable?',
+  options: [
+    { id: 'A', text: 'Pin no se aplicó: hay que volver a ejecutar la acción.' },
+    { id: 'B', text: 'El slot Administrator solo es visible para usuarios con rol IT Administrator.' },
+    { id: 'C', text: 'La propagación de Pin a la UI cliente puede tardar hasta 6 horas por caching. Es comportamiento esperado.' },
+    { id: 'D', text: 'El agente debe estar también pineado al slot User para que los usuarios lo vean.' },
+  ],
+  correctOptionId: 'C',
+  justification:
+    'La propagación de Pin a la UI cliente tiene una latencia de hasta 6 horas por caching en los clientes Office (Word, Outlook, Teams). 30 minutos es muy poco para diagnosticar un fallo: el comportamiento esperado es esperar a que se propague.',
+}
+
+const Q_PRACT_08_5: DragAndDropQuestion = {
+  id: 'Q-08-5',
   type: 'drag-and-drop',
   difficulty: 'media',
   oa: 'OA-08.6',
@@ -626,117 +647,31 @@ const Q_EX_08_001: DragAndDropQuestion = {
   bloom: 'Aplicar',
   moduleId: 8,
   prompt:
-    'Ordena las siguientes acciones del ciclo de vida de un agente desde la idea hasta la retirada definitiva. La posición 1 es la primera acción que se ejecuta; la posición 6 es la última.',
+    'Empareja cada acción de gobernanza con la categoría del ciclo de vida a la que pertenece principalmente.',
   items: [
-    { id: 'a1', text: 'Delete (eliminación irreversible).' },
-    { id: 'a2', text: 'Activate (aprobar y dejar activo en el catálogo).' },
-    { id: 'a3', text: 'Publish (enviar a publish desde la plataforma de creación).' },
-    { id: 'a4', text: 'Deploy (distribuir a los usuarios destinatarios).' },
-    { id: 'a5', text: 'Pin (fijar al slot Administrator para visibilidad alta).' },
-    { id: 'a6', text: 'Remove (retirar del despliegue antes del Delete final).' },
+    { id: 'g1', text: 'Approve update (revisar y aprobar la nueva versión publicada).' },
+    { id: 'g2', text: 'Pin (fijar al slot Administrator del catálogo).' },
+    { id: 'g3', text: 'Block (bloquear definitivamente el agente).' },
+    { id: 'g4', text: 'Reassign Ownership (cambiar el owner técnico).' },
+    { id: 'g5', text: 'Remove (retirar del despliegue, reversible).' },
+    { id: 'g6', text: 'Activate (aprobar y dejar activo en el catálogo).' },
   ],
   targets: [
-    { id: 'p1', label: 'Posición 1 — Primera acción' },
-    { id: 'p2', label: 'Posición 2' },
-    { id: 'p3', label: 'Posición 3' },
-    { id: 'p4', label: 'Posición 4' },
-    { id: 'p5', label: 'Posición 5' },
-    { id: 'p6', label: 'Posición 6 — Última acción' },
+    { id: 'deploy',      label: 'Activación / Despliegue' },
+    { id: 'visibility',  label: 'Visibilidad y promoción' },
+    { id: 'maintenance', label: 'Mantenimiento (cambios y updates)' },
+    { id: 'retirement',  label: 'Retirada / Bloqueo' },
   ],
   correctMap: {
-    a3: 'p1', // Publish
-    a2: 'p2', // Activate
-    a4: 'p3', // Deploy
-    a5: 'p4', // Pin
-    a6: 'p5', // Remove
-    a1: 'p6', // Delete
+    g1: 'maintenance',
+    g2: 'visibility',
+    g3: 'retirement',
+    g4: 'maintenance',
+    g5: 'retirement',
+    g6: 'deploy',
   },
   justification:
-    'El ciclo es: Publish (developer envía) → Activate (admin aprueba) → Deploy (distribuir a usuarios) → Pin (visibilidad alta) → Remove (retirar del despliegue, reversible) → Delete (irreversible). Saltarse Remove e ir directo a Delete es legal pero un antipatrón: mejor hacer Remove, esperar 1-2 semanas y solo entonces Delete.',
-}
-
-const Q_EX_08_002: MultipleChoiceQuestion = {
-  id: 'EX-08-002',
-  type: 'multiple-choice',
-  difficulty: 'media',
-  oa: 'OA-08.4',
-  area: 3,
-  bloom: 'Recordar',
-  moduleId: 8,
-  prompt:
-    'Tu equipo te pregunta si pueden recuperar un agente que acabas de eliminar (Delete) hace 2 horas. ¿Qué les respondes?',
-  options: [
-    { id: 'A', text: 'No, Delete es irreversible inmediatamente; el agente ya no existe en el directorio.' },
-    { id: 'B', text: 'Sí, durante las primeras 24 horas un Global Administrator puede ejecutar Restore-Agent365Agent -Id <agent-id> para cancelar la eliminación. Pasadas las 24 h y el SharePoint Embedded container se borrará y la operación devolverá 404 Not Found.' },
-    { id: 'C', text: 'Sí, pero solo si el agente tenía requireReview: true; en ese caso se puede restaurar en cualquier momento dentro del período de review.' },
-    { id: 'D', text: 'Sí, los agentes Delete pasan a una papelera de Entra que los conserva 30 días, igual que los usuarios deshabilitados.' },
-  ],
-  correctOptionId: 'B',
-  justification:
-    'Delete tiene una ventana de 24 horas durante la cual un Global Administrator puede ejecutar Restore-Agent365Agent. Tras las 24 h, el SharePoint Embedded container se marca para borrarse físicamente. La A es falsa: durante las 24 h sí hay rescate. La C confunde flags de M06 con la ventana de Delete. La D es falsa: no existe papelera equivalente para agentes.',
-}
-
-const Q_EX_08_003: MultipleChoiceQuestion = {
-  id: 'EX-08-003',
-  type: 'multiple-choice',
-  difficulty: 'media',
-  oa: 'OA-08.5',
-  area: 3,
-  bloom: 'Recordar',
-  moduleId: 8,
-  prompt:
-    'La acción Reassign Ownership desde el M365 admin center está disponible para…',
-  options: [
-    { id: 'A', text: 'Cualquier agente del Registry independientemente de su plataforma origen.' },
-    { id: 'B', text: 'Solo agentes creados con Agent Builder. Para Copilot Studio se reasigna desde Power Platform admin center y para Foundry desde Azure portal.' },
-    { id: 'C', text: 'Solo agentes con transferOnLeaver: true en su sponsor configuration.' },
-    { id: 'D', text: 'Solo agentes que están en estado Pending approval; una vez activos, la propiedad es inmutable.' },
-  ],
-  correctOptionId: 'B',
-  justification:
-    'Una de las limitaciones más confundidas del módulo. Reassign Ownership desde M365 admin center solo aplica a agentes Agent Builder. Los agentes Copilot Studio se reasignan desde Power Platform admin center → Environments → Apps. Los Foundry desde Azure portal → AI Foundry resource → Access control (IAM). La A es falsa por esa limitación. La C confunde sponsor con ownership técnico. La D es falsa.',
-}
-
-const Q_EX_08_004: MultipleChoiceQuestion = {
-  id: 'EX-08-004',
-  type: 'scenario',
-  difficulty: 'dificil',
-  oa: 'OA-08.2',
-  area: 3,
-  bloom: 'Aplicar',
-  moduleId: 8,
-  prompt:
-    'El equipo de Compliance te pide aplicar 6 restricciones específicas (sharing externo bloqueado, cross-site SharePoint bloqueado, sensitivity Confidential mínimo, DLP Block on Confidential, CA con MFA + dispositivo compliant, logging verbose) a TODOS los agentes nuevos del departamento Finanzas. ¿Cuál es la mejor forma de implementarlo?',
-  options: [
-    { id: 'A', text: 'Aplicar manualmente cada política a cada agente nuevo durante el wizard de publishing, en el paso 6 «Permissions review».' },
-    { id: 'B', text: 'Crear una Custom Template llamada HighlySensitiveDataTemplate con esas 6 políticas y aplicarla en el paso 5 «Apply Template» del wizard a cada agente nuevo de Finanzas.' },
-    { id: 'C', text: 'Modificar la Default Template del tenant para incluir esas políticas; afectará a todos los agentes nuevos del tenant entero.' },
-    { id: 'D', text: 'Crear una Conditional Access policy específica para Finanzas; las otras políticas no son configurables centralmente.' },
-  ],
-  correctOptionId: 'B',
-  justification:
-    'El patrón correcto para un conjunto de restricciones específicas que aplican a una categoría de agentes (Finanzas) es crear una Custom Template una vez y aplicarla en el paso 5 del wizard cada vez que se publica un agente de Finanzas. La A es manual y propenso a errores. La C aplicaría a TODOS los agentes del tenant, sobrerestringiendo. La D solo cubre Conditional Access; las otras 5 políticas no son cubiertas por CA.',
-}
-
-const Q_EX_08_005: MultipleChoiceQuestion = {
-  id: 'EX-08-005',
-  type: 'multiple-choice',
-  difficulty: 'media',
-  oa: 'OA-08.3',
-  area: 3,
-  bloom: 'Recordar',
-  moduleId: 8,
-  prompt:
-    '¿Cuál de las siguientes afirmaciones describe correctamente el comportamiento de Pin en Microsoft Agent 365?',
-  options: [
-    { id: 'A', text: 'Pin requiere que el agente esté en estado Pending approval; una vez activo, no se puede pinear.' },
-    { id: 'B', text: 'Pin tiene 3 slots (Microsoft, Administrator, User) y la propagación a la UI cliente puede tardar hasta 6 horas. Solo se puede pinear un agente al slot Administrator a la vez; pinear otro despinea automáticamente al anterior.' },
-    { id: 'C', text: 'Pin es irreversible: una vez pineado, la única forma de quitarlo es mediante Delete del agente.' },
-    { id: 'D', text: 'Pin se puede aplicar a cualquier agente del Registry, esté deployed o no.' },
-  ],
-  correctOptionId: 'B',
-  justification:
-    'Los tres elementos de la B son correctos: 3 slots Pin, propagación cliente hasta 6 h por caching, y solo un agente puede ocupar el slot Administrator a la vez. La A invierte: Pin requiere agente activo y deployed. La C es falsa: Pin es reversible vía Unpin. La D es falsa: Pin solo aplica a agentes deployed.',
+    'Las 11 acciones se agrupan en cuatro categorías: Activación / Despliegue (Activate, Deploy), Visibilidad y promoción (Pin, Unpin), Mantenimiento (Approve update, Reassign Ownership, Edit metadata) y Retirada / Bloqueo (Remove, Block, Delete, Restore). Conocer la categoría te permite anticipar el impacto de la acción.',
 }
 
 /* --------------------------- API pública del banco -------------------------- */
@@ -748,8 +683,8 @@ const ALL_QUESTIONS: Question[] = [
   Q_PRACT_04_1, Q_PRACT_04_2, Q_PRACT_04_5,
   Q_PRACT_05_1, Q_PRACT_05_2, Q_PRACT_05_5,
   Q_PRACT_06_1, Q_PRACT_06_3, Q_PRACT_06_4,
-  Q_EX_07_001, Q_EX_07_002, Q_EX_07_003, Q_EX_07_004,
-  Q_EX_08_001, Q_EX_08_002, Q_EX_08_003, Q_EX_08_004, Q_EX_08_005,
+  Q_PRACT_07_1, Q_PRACT_07_2, Q_PRACT_07_5,
+  Q_PRACT_08_2, Q_PRACT_08_3, Q_PRACT_08_5,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {
