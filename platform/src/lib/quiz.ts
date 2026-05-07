@@ -146,8 +146,8 @@ const Q_PRACT_01_5: DragAndDropQuestion = {
     'DSPM for AI y Compliance Manager viven en Microsoft Purview. Pin del Agent Registry vive en M365 admin center (los slots Microsoft / Administrator / User son del wizard de publishing). Risky Agents report y la gestión de riesgo de identidades de agente viven en Microsoft Entra (Entra Agent ID Protection). El conector M365 de Defender XDR es la pieza que activa la ingesta de telemetría de agentes en Defender.',
 }
 
-const Q_EX_02_001: DragAndDropQuestion = {
-  id: 'EX-02-001',
+const Q_PRACT_02_1: DragAndDropQuestion = {
+  id: 'Q-02-1',
   type: 'drag-and-drop',
   difficulty: 'media',
   oa: 'OA-02.1',
@@ -155,153 +155,300 @@ const Q_EX_02_001: DragAndDropQuestion = {
   bloom: 'Aplicar',
   moduleId: 2,
   prompt:
-    'Empareja cada componente arquitectónico de Microsoft Agent 365 con el admin center donde un administrador lo gestiona principalmente.',
+    'Empareja cada capacidad de la página de detalle de un agente en el Registry con el admin center que la alimenta de datos.',
   items: [
-    { id: 'c1', text: 'Agent Registry y Agent Map.' },
-    { id: 'c2', text: 'Conditional Access para agentes con grant Block.' },
-    { id: 'c3', text: 'DSPM for AI y Compliance Manager.' },
-    { id: 'c4', text: 'Tabla `CloudAppEvents` para hunting con KQL.' },
-    { id: 'c5', text: 'Lifecycle workflows con sponsorship transfer al manager.' },
-    { id: 'c6', text: 'Wizard de publishing y aprobación de requests.' },
+    { id: 'c1', text: 'Risks column con score Low / Medium / High.' },
+    { id: 'c2', text: 'AI Agent Inventory consolidado de agentes locales y SaaS.' },
+    { id: 'c3', text: 'Sensitivity labels heredados de los archivos `.agent`.' },
+    { id: 'c4', text: 'Pin / Block / Approve update sobre el agente.' },
+    { id: 'c5', text: 'Estado de identidad de agente (active, disabled, blocked) con sus `appId`.' },
   ],
   targets: [
     { id: 'm365',     label: 'Microsoft 365 admin center' },
-    { id: 'entra',    label: 'Microsoft Entra admin center' },
-    { id: 'purview',  label: 'Microsoft Purview portal' },
+    { id: 'entra',    label: 'Microsoft Entra' },
+    { id: 'purview',  label: 'Microsoft Purview' },
     { id: 'defender', label: 'Microsoft Defender XDR' },
   ],
   correctMap: {
-    c1: 'm365',
-    c2: 'entra',
+    c1: 'defender',
+    c2: 'defender',
     c3: 'purview',
-    c4: 'defender',
+    c4: 'm365',
     c5: 'entra',
-    c6: 'm365',
   },
   justification:
-    'La arquitectura de Agent 365 reparte la gobernanza en cuatro admin centers. Registry, Map y wizard de publishing viven en Microsoft 365 admin center. Conditional Access y lifecycle workflows viven en Entra (dependen de la identidad). DSPM y Compliance Manager viven en Purview. KQL hunting vive en Defender. Saber a qué admin center ir es la primera competencia operativa del curso.',
+    'Aunque la página de detalle del agente es UNA vista en M365 admin center, gran parte de la información que muestra proviene de los otros admin centers: la Risks column la alimenta Defender XDR (que también consolida el AI Agent Inventory incluyendo agentes locales detectados como Shadow AI), los sensitivity labels los aplica Purview sobre el archivo .agent, y el estado de identidad lo gestiona Entra Agent ID. Solo las acciones operativas como Pin / Block / Approve viven nativamente en M365 admin center.',
 }
 
-const Q_EX_02_002: MultipleChoiceQuestion = {
-  id: 'EX-02-002',
-  type: 'multiple-choice',
-  difficulty: 'media',
-  oa: 'OA-02.2',
-  area: 1,
-  bloom: 'Analizar',
-  moduleId: 2,
-  prompt:
-    'Un desarrollador comenta que su equipo va a desplegar varios «agentes Microsoft Agents Toolkit» en el tenant. Una arquitecta IT pregunta cómo aparecerán esos agentes en el Agent Registry de Microsoft 365 admin center. ¿Cuál es la respuesta correcta?',
-  options: [
-    { id: 'A', text: 'Aparecerán como tipo «Agent Toolkit», una novena categoría además de los 8 tipos estándar.' },
-    { id: 'B', text: 'No aparecerán en el Registry hasta que se conviertan a Agent Builder.' },
-    { id: 'C', text: 'Aparecerán como uno de los 8 tipos estándar (típicamente MCS CEA o Foundry) según cómo se haya configurado el deploy; Agent Toolkit es la herramienta de desarrollo, no un tipo de registro.' },
-    { id: 'D', text: 'Aparecerán como tipo «SharePoint agent» porque Toolkit despliega los agentes a una librería SharePoint.' },
-  ],
-  correctOptionId: 'C',
-  justification:
-    'El Microsoft 365 Agents Toolkit es una extensión de Visual Studio Code para construir agentes pro-code conversacionales. No es un tipo de agente: el agente que produce se registra como uno de los 8 tipos estándar (típicamente MCS CEA o Foundry) según el target del deploy. La opción A confunde herramienta con tipo. La B es inventada. La D mezcla SharePoint agents (.agent files en una librería) con el Toolkit (un IDE plugin).',
-}
-
-const Q_EX_02_003: MultipleChoiceQuestion = {
-  id: 'EX-02-003',
+const Q_PRACT_02_3: MultipleChoiceQuestion = {
+  id: 'Q-02-3',
   type: 'multiple-choice',
   difficulty: 'facil',
-  oa: 'OA-02.1',
+  oa: 'OA-02.3',
   area: 1,
   bloom: 'Comprender',
   moduleId: 2,
   prompt:
-    'Un partner tecnológico presenta un agente y dice que «usa el Microsoft Agents SDK para gobernarlo». ¿Qué debería responder un administrador IT con criterio?',
+    'En el Agent Registry hay tres categorías de Publisher. ¿Cuál de las siguientes afirmaciones describe correctamente esa clasificación?',
   options: [
-    { id: 'A', text: '«Perfecto, entonces ya está cubierto por Agent 365.»' },
-    { id: 'B', text: '«Esa frase es ambigua: hay dos SDKs distintos. El Microsoft 365 Agents SDK es transporte conversacional; el Microsoft Agent 365 SDK es el que gobierna. Necesito saber cuál de los dos.»' },
-    { id: 'C', text: '«El Microsoft Agents SDK no existe; está confundiendo nombres de productos.»' },
-    { id: 'D', text: '«Da igual cuál de los dos, porque ambos hacen lo mismo desde la unificación de SDKs en mayo de 2026.»' },
+    { id: 'A', text: 'Microsoft (agentes desarrollados por Microsoft), Third Party (partners verificados que han pasado por el ISV program) y Your organization (agentes creados por usuarios o IT del propio tenant).' },
+    { id: 'B', text: 'Microsoft (first party), Open Source (agentes con licencia OSS) y Custom (creados internamente).' },
+    { id: 'C', text: 'Verified, Pending Verification y Blocked, según el estado de la aprobación de IT.' },
+    { id: 'D', text: 'Trusted, Untrusted y Quarantine, según el risk score asignado por Defender.' },
+  ],
+  correctOptionId: 'A',
+  justification:
+    'Las tres categorías de Publisher en el Registry son Microsoft, Third Party (partners ISV con verificación oficial) y Your organization (agentes creados por la propia empresa). Esta clasificación es independiente del estado de aprobación (que vive en otra columna) y del risk score (que vive en la Risks column). La opción B inventa categorías. La C confunde Publisher con estado de approval. La D confunde Publisher con risk classification.',
+}
+
+const Q_PRACT_02_5: MultipleChoiceQuestion = {
+  id: 'Q-02-5',
+  type: 'scenario',
+  difficulty: 'dificil',
+  oa: 'OA-02.5',
+  area: 1,
+  bloom: 'Analizar',
+  moduleId: 2,
+  prompt:
+    'Un equipo está construyendo un agente Foundry que durante el runtime necesita consultar las reuniones próximas del usuario en Outlook y los archivos compartidos recientemente con el equipo. El líder técnico pregunta si tiene que llamar a Microsoft Graph desde el agente o si hay otra vía. ¿Cuál es la respuesta arquitectónicamente más correcta?',
+  options: [
+    { id: 'A', text: 'Sí, necesariamente. El agente debe llamar Microsoft Graph con su agent identity para acceder al calendario y archivos.' },
+    { id: 'B', text: 'No es necesario llamar Graph directamente: el agente puede consumir esos datos vía Work IQ MCP servers, que exponen contexto del usuario (calendario, archivos, contactos, etc.) como herramientas MCP estandarizadas en runtime.' },
+    { id: 'C', text: 'Sí, pero usando el SDK de Outlook y el SDK de SharePoint, no Graph.' },
+    { id: 'D', text: 'No tiene sentido la pregunta: los agentes Foundry no pueden acceder a datos del usuario en runtime.' },
   ],
   correctOptionId: 'B',
   justification:
-    'La confusión entre los dos SDKs es uno de los errores más comunes en conversaciones con desarrolladores y partners. Microsoft 365 Agents SDK (paquete @microsoft/agents) cubre el transporte conversacional. Microsoft Agent 365 SDK (paquete @microsoft/agent365) cubre la gobernanza: identidad Entra, telemetría OpenTelemetry, acceso a Work IQ MCP. Solo el segundo «gobierna». La opción A acepta una afirmación ambigua. La C niega una realidad. La D inventa una unificación que no ha ocurrido.',
+    'Work IQ MCP servers son una pieza arquitectónica clave de Agent 365: exponen contexto del usuario (calendario, mail, archivos, contactos, equipos, etc.) como herramientas MCP estandarizadas que cualquier agente puede consumir en runtime sin escribir integraciones contra Microsoft Graph. Esto reduce código, centraliza permisos y hace que la gobernanza de qué datos toca el agente sea automática (Purview ve los accesos vía MCP). La opción A funciona pero es la opción \'vieja\': implica más código, más permisos, más superficie de ataque.',
 }
 
-const Q_EX_03_001: MultipleChoiceQuestion = {
-  id: 'EX-03-001',
-  type: 'multiple-choice',
+const Q_PRACT_03_1: MultipleChoiceQuestion = {
+  id: 'Q-03-1',
+  type: 'scenario',
   difficulty: 'media',
   oa: 'OA-03.1',
   area: 1,
   bloom: 'Evaluar',
   moduleId: 3,
   prompt:
-    'Una empresa de 4.000 empleados con Microsoft 365 E5 corporativo tiene actualmente Copilot desplegado en el 35 % de su plantilla (1.400 licencias) y planea desplegar Microsoft Agent 365 a esos mismos 1.400 usuarios. La adopción de Copilot lleva 6 meses creciendo al 5 % mensual y la dirección no quiere cambiar la dinámica. ¿Cuál es la recomendación de licenciamiento más adecuada?',
+    'TextilNova es una empresa de 2.000 empleados con Microsoft 365 E3 (no E5). El CIO acaba de licenciar Microsoft 365 Copilot al 80 % de la plantilla (1.600 usuarios) y quiere desplegar Agent 365 a esos mismos 1.600. La adopción de Copilot está estable en ese nivel desde hace tres meses. ¿Cuál es la recomendación de licenciamiento más adecuada?',
   options: [
-    { id: 'A', text: 'Migrar toda la plantilla a Microsoft 365 E7 ($99 × 4.000 = $396.000/mes) para tener gobernanza completa con Risks column desde el inicio.' },
-    { id: 'B', text: 'Mantener E5 como base, comprar 1.400 licencias Agent 365 standalone ($15) y mantener Copilot solo en los usuarios que ya lo tienen, revisando la decisión cuando la adopción Copilot supere el 60 %.' },
-    { id: 'C', text: 'Comprar Agent 365 E7 únicamente para los 1.400 usuarios con Copilot y dejar al resto sin Agent 365.' },
-    { id: 'D', text: 'Contratar Frontier preview con 25 licencias gratuitas y desplegar Agent 365 solo a esos 25 usuarios mientras se evalúa la decisión.' },
+    { id: 'A', text: 'Migrar los 1.600 usuarios con Copilot a Microsoft 365 E7. Por encima del 60 % de adopción Copilot el bundle E7 es típicamente más eficiente y simplifica el SKU stack.' },
+    { id: 'B', text: 'Mantener E3, comprar Agent 365 standalone para los 1.600 usuarios y mantener Copilot en su SKU actual.' },
+    { id: 'C', text: 'Migrar toda la plantilla (2.000 usuarios) a E7, incluyendo los 400 que no usan Copilot.' },
+    { id: 'D', text: 'Esperar 6 meses al GA de Frontier preview para tomar la decisión con datos reales.' },
+  ],
+  correctOptionId: 'A',
+  justification:
+    'Con Copilot estable al 80 % en una organización con E3 base, E7 es probablemente la opción óptima: bundle Copilot + Agent 365 + uplift a E5 implícito en E7 en un solo SKU para los 1.600 usuarios que ya pagan Copilot. La opción B funciona pero suma SKU stack para 1.600 usuarios y exige mantener tres líneas de billing en paralelo. La C sobreasigna a 400 usuarios sin Copilot. La D es procastinación: los datos ya están y la decisión se puede tomar. Regla operativa: standalone si Copilot < 60 %; E7 si Copilot > 60 %.',
+}
+
+const Q_PRACT_03_2: MultipleChoiceQuestion = {
+  id: 'Q-03-2',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-03.2',
+  area: 1,
+  bloom: 'Aplicar',
+  moduleId: 3,
+  prompt:
+    'Un agente Foundry desplegado en producción opera de dos formas según el caso: (a) responde a preguntas que un usuario le hace en Teams (modo OBO sobre el usuario que pregunta) y (b) procesa cada noche un batch de 5.000 facturas sin un usuario que lo invoque (modo autonomous con su propia identidad). ¿Qué afirmación sobre cobertura de licencias es correcta?',
+  options: [
+    { id: 'A', text: 'Solo necesita licencia el usuario que invoca al agente en Teams. El batch nocturno no consume licencias porque no hay un usuario asociado.' },
+    { id: 'B', text: 'El uso OBO consume licencia del usuario invocador (debe tener Agent 365). El uso autonomous consume mensajes de la cuota del agente (Foundry capacity) y se contabiliza como consumo de la identidad de agente.' },
+    { id: 'C', text: 'Ambos modos requieren que el agente tenga licencia Agent 365 propia, sin importar quién lo invoque.' },
+    { id: 'D', text: 'El modo autonomous requiere E7 obligatoriamente; OBO admite cualquier SKU.' },
   ],
   correctOptionId: 'B',
   justification:
-    'La decisión standalone vs E7 depende del peso de Copilot, no de Agent 365. Con un 35 % de adopción Copilot creciendo al 5 % mensual, la organización está aún por debajo del break-even típico (60-70 %). E5 + Agent 365 standalone para los 1.400 usuarios que invocan agentes ($57 + $15 = $72 × 1.400 + Copilot ya pagado) es significativamente más barato que migrar los 4.000 a E7. La opción A sobrepaga ~$120.000/mes en E5 base que ya tienen y E7 a usuarios que no usan Copilot. La C mezcla SKUs sin justificación operativa (Agent 365 E7 no es un SKU; E7 es bundle completo). La D malentiende Frontier preview: es para validar capacidades nuevas, no para producción a 1.400 usuarios.',
+    'OBO (on-behalf-of): el agente actúa con el contexto del usuario; el usuario debe tener Agent 365. Si no lo tiene, el agente no responde. Autonomous: el agente actúa con su propia identidad de agente; consume cuota de su plataforma (Foundry messages, MCS messages, etc.). No hay un usuario que pague por el invoke. Confundir ambos modos lleva a infralicenciamiento (caso A) o sobrelicenciamiento (caso C). La opción D inventa una restricción.',
 }
 
-const Q_EX_04_001: MultipleChoiceQuestion = {
-  id: 'EX-04-001',
-  type: 'multiple-choice',
+const Q_PRACT_03_5: DragAndDropQuestion = {
+  id: 'Q-03-5',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-03.5',
+  area: 1,
+  bloom: 'Comprender',
+  moduleId: 3,
+  prompt:
+    'Empareja cada concepto de billing con la línea de billing que lo gestiona.',
+  items: [
+    { id: 'b1', text: 'Agent 365 standalone $15/usuario/mes.' },
+    { id: 'b2', text: 'Foundry capacity ($X/1k mensajes para agentes autonomous).' },
+    { id: 'b3', text: 'Copilot Studio messages para agentes Agent Builder y MCS CEA.' },
+    { id: 'b4', text: 'M365 Copilot $30/usuario/mes (incluido en E7).' },
+    { id: 'b5', text: 'Microsoft 365 E5 base $57/usuario/mes.' },
+  ],
+  targets: [
+    { id: 'a365',     label: 'Línea Agent 365 (per-seat)' },
+    { id: 'copilot',  label: 'Línea Copilot (per-seat)' },
+    { id: 'm365',     label: 'Línea M365 base (per-seat)' },
+    { id: 'capacity', label: 'Línea de capacity (consumo)' },
+  ],
+  correctMap: {
+    b1: 'a365',
+    b2: 'capacity',
+    b3: 'capacity',
+    b4: 'copilot',
+    b5: 'm365',
+  },
+  justification:
+    'Las tres líneas de billing simultáneas que el responsable financiero necesita modelar: per-seat M365 (E3/E5/E7) la base, per-seat Copilot y Agent 365 según despliegue, y capacity de mensajes (Foundry capacity y Copilot Studio messages) según consumo real de agentes autonomous. Confundir capacity con per-seat es el error de planificación financiera más frecuente.',
+}
+
+const Q_PRACT_04_1: MultipleChoiceQuestion = {
+  id: 'Q-04-1',
+  type: 'scenario',
   difficulty: 'media',
   oa: 'OA-04.1',
   area: 1,
   bloom: 'Aplicar',
   moduleId: 4,
   prompt:
-    'Un analista de seguridad necesita revisar diariamente las alertas que Microsoft Defender XDR genera sobre agentes en el Agent Registry, correlacionarlas con la información del propio Registry y, cuando una alerta lo justifique, abrir un ticket al equipo de M365 admin. NO debe poder modificar políticas de Defender ni aprobar o bloquear agentes. ¿Qué combinación de roles aplica el principio de least-privilege correctamente?',
+    'Marta del equipo de Adopción de tu empresa necesita: ver el inventario completo de agentes en el Registry, configurar plantillas de publishing Custom para distintos departamentos y aprobar pending requests cuando llegan. NO debe poder modificar roles, ni tocar políticas Defender o Purview. ¿Qué rol mínimo le asignas?',
   options: [
-    { id: 'A', text: 'Global Administrator. Es el más simple y cubre todo lo que necesita.' },
-    { id: 'B', text: 'Security Administrator + AI Administrator, para tener escritura en seguridad y en agentes.' },
-    { id: 'C', text: 'Security Operator + AI Reader, que permite investigar alertas en Defender y ver el Registry sin modificarlo.' },
-    { id: 'D', text: 'Security Reader, suficiente porque solo necesita leer.' },
+    { id: 'A', text: 'Global Administrator. Es la opción más rápida.' },
+    { id: 'B', text: 'AI Administrator. Permite gestionar plantillas, aprobar requests y leer todo el Registry. NO incluye modificación de roles ni controles de Defender/Purview.' },
+    { id: 'C', text: 'AI Reader + Cloud Application Administrator. Para leer el Registry y aprobar requests.' },
+    { id: 'D', text: 'Privileged Role Administrator. Es necesario para gestionar plantillas porque las plantillas son políticas.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'AI Administrator es exactamente el rol diseñado para el perfil descrito: gestión completa del workload Agents (Registry, plantillas, aprobaciones) sin tocar identidad ni roles ni datos. La opción A sobreasigna privilegio (antipatrón). La C confunde: AI Reader no permite aprobar requests, y Cloud Application Administrator es un rol de Entra apps/SP no relacionado con plantillas. La D inventa: Privileged Role Administrator es para gestionar elegibilidades PIM, no plantillas.',
+}
+
+const Q_PRACT_04_2: MultipleChoiceQuestion = {
+  id: 'Q-04-2',
+  type: 'multiple-choice',
+  difficulty: 'facil',
+  oa: 'OA-04.2',
+  area: 1,
+  bloom: 'Comprender',
+  moduleId: 4,
+  prompt:
+    '¿Cuál de las siguientes afirmaciones describe correctamente la diferencia entre AI Administrator y AI Reader?',
+  options: [
+    { id: 'A', text: 'AI Administrator escribe (gestiona plantillas, aprueba/bloquea agentes, configura settings); AI Reader solo lee (consulta Registry, Map, métricas).' },
+    { id: 'B', text: 'AI Administrator es full admin del tenant, AI Reader es lectura del tenant entero.' },
+    { id: 'C', text: 'AI Administrator gestiona Microsoft Entra Agent ID; AI Reader gestiona el Agent Registry.' },
+    { id: 'D', text: 'AI Administrator gestiona producción; AI Reader gestiona Frontier preview.' },
+  ],
+  correctOptionId: 'A',
+  justification:
+    'La separación es escritura vs lectura dentro del workload Agents (no del tenant entero). AI Administrator hace acciones (publish, approve, block, pin, plantillas, settings); AI Reader solo lee. La opción B confunde con Global Admin/Global Reader. La C inventa un reparto que no existe (Entra Agent ID lo gobierna Agent ID Administrator, otro rol distinto). La D inventa una distinción por entorno.',
+}
+
+const Q_PRACT_04_5: DragAndDropQuestion = {
+  id: 'Q-04-5',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-04.1',
+  area: 1,
+  bloom: 'Aplicar',
+  moduleId: 4,
+  prompt:
+    'Empareja cada tarea con el rol mínimo que la cubre.',
+  items: [
+    { id: 't1', text: 'Aprobar un pending request de un agente nuevo en el wizard de publishing.' },
+    { id: 't2', text: 'Configurar una blueprint de identidad en Entra Agent ID.' },
+    { id: 't3', text: 'Investigar una alerta de Defender XDR sobre un agente comprometido.' },
+    { id: 't4', text: 'Aplicar una sensitivity label sobre un archivo `.agent` en Purview.' },
+    { id: 't5', text: 'Consultar el Registry y exportarlo a Excel sin modificar nada.' },
+  ],
+  targets: [
+    { id: 'ai-admin',       label: 'AI Administrator' },
+    { id: 'agent-id-admin', label: 'Agent ID Administrator' },
+    { id: 'sec-op',         label: 'Security Operator' },
+    { id: 'compl-admin',    label: 'Compliance Administrator' },
+    { id: 'ai-reader',      label: 'AI Reader' },
+  ],
+  correctMap: {
+    t1: 'ai-admin',
+    t2: 'agent-id-admin',
+    t3: 'sec-op',
+    t4: 'compl-admin',
+    t5: 'ai-reader',
+  },
+  justification:
+    'Cada tarea tiene su rol mínimo. Aprobar requests → AI Administrator. Configurar blueprint → Agent ID Administrator (rol específico de Entra Agent ID, distinto de AI Administrator). Investigar alerta Defender → Security Operator. Aplicar sensitivity label → Compliance Administrator (Purview). Leer y exportar Registry → AI Reader. La trampa más frecuente: Agent ID Administrator y AI Administrator suenan parecido pero son roles distintos.',
+}
+
+const Q_PRACT_05_1: MultipleChoiceQuestion = {
+  id: 'Q-05-1',
+  type: 'multiple-choice',
+  difficulty: 'facil',
+  oa: 'OA-05.1',
+  area: 1,
+  bloom: 'Recordar',
+  moduleId: 5,
+  prompt:
+    'Estás a punto de activar Agent 365 en un tenant productivo y revisas el checklist de prerrequisitos. ¿Cuál de los siguientes elementos NO es prerrequisito para activar el workload?',
+  options: [
+    { id: 'A', text: 'Audit logs habilitados en el tenant.' },
+    { id: 'B', text: 'Licencias Agent 365 asignadas a los usuarios piloto.' },
+    { id: 'C', text: 'Un blueprint de identidad creado previamente en Entra Agent ID.' },
+    { id: 'D', text: 'El admin que activa tiene rol Global Administrator o AI Administrator.' },
   ],
   correctOptionId: 'C',
   justification:
-    'Least-privilege exige asignar el mínimo rol que permite hacer la tarea. Security Operator permite investigar alertas y responder a incidentes en Defender (la tarea principal) sin escritura en políticas. AI Reader permite ver el Registry para correlacionar pero no modificar agentes. La combinación cubre exactamente las necesidades sin excederse. La opción A (Global Administrator) es el antipatrón clásico: sobreasigna privilegio. La B (Security Administrator + AI Administrator) da escritura donde la tarea solo requiere lectura/operación. La D (Security Reader) es insuficiente: el Reader no permite responder a incidentes, solo verlos.',
+    'Crear un blueprint de identidad en Entra Agent ID es una tarea posterior a la activación: hace falta tener el workload activo para entrar a Entra Agent ID y crear el blueprint. Las opciones A, B y D sí son prerrequisitos: sin audit logs los eventos del workload no se persisten; sin licencias asignadas no hay quien invoque agentes; sin rol no se puede activar el workload.',
 }
 
-const Q_EX_05_001: DragAndDropQuestion = {
-  id: 'EX-05-001',
-  type: 'drag-and-drop',
+const Q_PRACT_05_2: MultipleChoiceQuestion = {
+  id: 'Q-05-2',
+  type: 'scenario',
   difficulty: 'media',
   oa: 'OA-05.2',
+  area: 1,
+  bloom: 'Analizar',
+  moduleId: 5,
+  prompt:
+    'Un compañero tuyo ha activado Agent 365 hace dos días siguiendo notas internas. Hoy el responsable de Defender informa de que NO recibe ningún evento de agentes en CloudAppEvents pese a que los usuarios ya están invocando agentes desde Teams. Tú revisas el setup y todo lo demás (Registry visible, Purview DSPM activado, Terms of Service aceptados) parece correcto. ¿Cuál es el paso más probable que se ha saltado?',
+  options: [
+    { id: 'A', text: 'Aceptar Terms of Service del workload Agents (el compañero los aceptó hace dos días, así que están).' },
+    { id: 'B', text: 'Configurar el Microsoft 365 connector en Defender for Cloud Apps. Sin él, Defender no ingiere telemetría del workload Agents.' },
+    { id: 'C', text: 'Activar el toggle Frontier preview, sin el cual no se generan eventos.' },
+    { id: 'D', text: 'Asignar licencias Agent 365 a los usuarios (los usuarios invocan, luego ya tienen).' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'El conector M365 en Defender for Cloud Apps es la pieza que activa la ingesta de telemetría del workload Agents en Defender XDR. Sin él, Defender no \'ve\' los agentes y CloudAppEvents queda vacío respecto al workload. Es uno de los pasos más fáciles de olvidar porque su síntoma no es un error visible al activar, sino la ausencia silenciosa de datos un par de días después.',
+}
+
+const Q_PRACT_05_5: DragAndDropQuestion = {
+  id: 'Q-05-5',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-05.5',
   area: 1,
   bloom: 'Aplicar',
   moduleId: 5,
   prompt:
-    'Ordena los siguientes pasos en la secuencia correcta para activar Microsoft Agent 365 desde cero en un tenant productivo. El primer paso (posición 1) es el que se hace antes de tocar ningún admin center; el último (posición 6) es el que confirma que todo está operativo.',
+    'Empareja cada acción de validación end-to-end del setup con el admin center donde la verificarías.',
   items: [
-    { id: 's1', text: 'Configurar el conector Microsoft 365 en Defender for Cloud Apps.' },
-    { id: 's2', text: 'Verificar prerrequisitos: licencias asignadas, audit logs habilitados, rol Global Administrator o AI Administrator.' },
-    { id: 's3', text: 'Activar Data Security Posture Management (DSPM) for AI en Microsoft Purview.' },
-    { id: 's4', text: 'Aceptar Terms of Service la primera vez que se navega a M365 admin → Agents.' },
-    { id: 's5', text: 'Lanzar un agente de prueba y verificar que aparece en los tres admin centers.' },
-    { id: 's6', text: 'Activar el toggle Copilot Frontier en M365 admin → Copilot → Settings → User access (si aplica).' },
+    { id: 'v1', text: 'Confirmar que el agente de prueba aparece en el Agent Registry con su Type y Publisher correctos.' },
+    { id: 'v2', text: 'Confirmar que el agente de prueba aparece en AI Agent Inventory con su Risk score calculado.' },
+    { id: 'v3', text: 'Confirmar que el agente de prueba aparece en DSPM for AI con su exposición de datos visible.' },
+    { id: 'v4', text: 'Confirmar que la identidad del agente de prueba existe como objeto agent identity con su `appId`.' },
+    { id: 'v5', text: 'Confirmar que se puede aprobar un pending request del agente desde el wizard de publishing.' },
   ],
   targets: [
-    { id: 'p1', label: 'Posición 1 — Antes de tocar admin centers' },
-    { id: 'p2', label: 'Posición 2' },
-    { id: 'p3', label: 'Posición 3 — Entrada al Agent workload' },
-    { id: 'p4', label: 'Posición 4' },
-    { id: 'p5', label: 'Posición 5' },
-    { id: 'p6', label: 'Posición 6 — Confirmación final' },
+    { id: 'm365',     label: 'M365 admin center' },
+    { id: 'entra',    label: 'Entra admin center' },
+    { id: 'purview',  label: 'Microsoft Purview portal' },
+    { id: 'defender', label: 'Microsoft Defender XDR' },
   ],
   correctMap: {
-    s2: 'p1', // Verificar prerrequisitos
-    s6: 'p2', // Frontier toggle
-    s4: 'p3', // Terms of Service
-    s1: 'p4', // Defender connector
-    s3: 'p5', // DSPM Purview
-    s5: 'p6', // Validar end-to-end
+    v1: 'm365',
+    v2: 'defender',
+    v3: 'purview',
+    v4: 'entra',
+    v5: 'm365',
   },
   justification:
-    'La activación tiene un orden estricto basado en dependencias. Sin verificar prerrequisitos, los siguientes pasos pueden fallar silenciosamente. Frontier toggle activa el modo preview (si la organización lo va a usar) y debe ser anterior a Terms of Service. Los Terms of Service son la puerta de entrada al workload: sin aceptarlos no se puede entrar al Overview ni configurar nada. Los conectores de Defender y Purview son dos pasos independientes entre sí, pero ambos requieren que el workload esté activo, por lo que van después de Terms of Service. La validación end-to-end es siempre el último paso: confirma que todo lo anterior funciona en cadena. Saltar el orden no rompe el sistema de inmediato pero deja huecos que aparecen como errores días después.',
+    'La validación end-to-end consiste en ver el mismo agente desde los cuatro admin centers. Si el agente aparece en los cuatro con datos coherentes (Type/Publisher, Risk score, DSPM exposure, identity object), el setup está operativo de extremo a extremo. Si falta en alguno, el conector correspondiente está mal configurado.',
 }
 
 /* ======================== Módulo 06 — 11 preguntas ======================== */
@@ -766,10 +913,10 @@ const Q_EX_08_005: MultipleChoiceQuestion = {
 
 const ALL_QUESTIONS: Question[] = [
   Q_PRACT_01_1, Q_PRACT_01_3, Q_PRACT_01_5,
-  Q_EX_02_001, Q_EX_02_002, Q_EX_02_003,
-  Q_EX_03_001,
-  Q_EX_04_001,
-  Q_EX_05_001,
+  Q_PRACT_02_1, Q_PRACT_02_3, Q_PRACT_02_5,
+  Q_PRACT_03_1, Q_PRACT_03_2, Q_PRACT_03_5,
+  Q_PRACT_04_1, Q_PRACT_04_2, Q_PRACT_04_5,
+  Q_PRACT_05_1, Q_PRACT_05_2, Q_PRACT_05_5,
   Q_EX_06_001, Q_EX_06_002, Q_EX_06_003, Q_EX_06_004, Q_EX_06_005,
   Q_EX_06_006, Q_EX_06_007, Q_EX_06_008, Q_EX_06_009, Q_EX_06_010, Q_EX_06_011,
   Q_EX_07_001, Q_EX_07_002, Q_EX_07_003, Q_EX_07_004,

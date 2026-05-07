@@ -2,11 +2,11 @@ spec_version: '1.0'
 id: 2
 slug: modulo-02-arquitectura
 titulo: Arquitectura y componentes
-duracion_min: 75
+duracion_min: 90
 area_examen: 1
 estado: producido
 fase_produccion: 3
-ultima_actualizacion: 2026-05-06
+ultima_actualizacion: 2026-05-07
 prerrequisitos:
 - Módulo 01 — Fundamentos
 prerrequisitos_externos: []
@@ -47,12 +47,10 @@ glosario:
 secciones:
 - tipo: teoria
   archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
+- tipo: quiz-practica
+  archivo: quiz-practica.md
   umbral_aprobado_pct: 70
   intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
 - tipo: laboratorios
   archivo: laboratorios.md
   intentos_min_requeridos: 1
