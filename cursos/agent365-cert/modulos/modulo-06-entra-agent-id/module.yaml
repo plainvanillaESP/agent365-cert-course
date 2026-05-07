@@ -2,11 +2,11 @@ spec_version: '1.0'
 id: 6
 slug: modulo-06-entra-agent-id
 titulo: Microsoft Entra Agent ID e identidades
-duracion_min: 105
+duracion_min: 127
 area_examen: 2
 estado: producido
 fase_produccion: 4
-ultima_actualizacion: 2026-05-06
+ultima_actualizacion: 2026-05-07
 prerrequisitos:
 - Módulo 02 — Arquitectura y componentes
 - Módulo 04 — Roles administrativos y delegación
@@ -52,12 +52,10 @@ glosario:
 secciones:
 - tipo: teoria
   archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
+- tipo: quiz-practica
+  archivo: quiz-practica.md
   umbral_aprobado_pct: 70
   intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
 - tipo: laboratorios
   archivo: laboratorios.md
   intentos_min_requeridos: 1

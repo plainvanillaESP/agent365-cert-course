@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 9
+total_preguntas_actuales: 20
 ultima_actualizacion: 2026-05-07
 ---
 
@@ -24,7 +24,7 @@ ultima_actualizacion: 2026-05-07
 | M03 — Licenciamiento | 1 | Completo |
 | M04 — Roles administrativos | 1 | Completo |
 | M05 — Configuración inicial | 1 | Completo |
-| M06 — Entra Agent ID | 11 | Pendiente migración |
+| M06 — Entra Agent ID | 11 | Completo |
 | M07 — Agent Registry | 4 | Pendiente migración |
 | M08 — Ciclo de vida | 5 | Pendiente migración |
 | M09 — Permisos y CA | 7 | Pendiente producción |
@@ -367,4 +367,291 @@ variantes_cohorte:
   - "Aumentar a 8 pasos incluyendo: 'crear el primer template Custom para publishing' y 'configurar el primer blueprint Entra para sponsorship'."
   - "Convertir a multiple-choice con cuatro secuencias propuestas y pedir identificar la única correcta."
   - "Cambiar la pregunta a un escenario de troubleshooting: el admin se ha saltado un paso y aparece un error específico → identificar el paso saltado."
+:::
+
+## Área 2 — Manage agent identity, sponsorship and lifecycle
+
+### Módulo 06 — Microsoft Entra Agent ID
+
+::: pregunta
+id: EX-06-001
+modulo: 6
+oa: OA-06.1
+area: 2
+tipo: multiple-choice
+dificultad: facil
+bloom: Recordar
+enunciado: |
+  ¿Cuál de los siguientes objetos de Microsoft Entra Agent ID actúa como plantilla que define permisos heredables, restricciones y metadatos sin autenticar nada por sí solo?
+opciones:
+  - id: a
+    texto: "Agent identity"
+  - id: b
+    texto: "Agent identity blueprint"
+    correcta: true
+  - id: c
+    texto: "Agent identity blueprint principal"
+  - id: d
+    texto: "Agent user"
+justificacion: |
+  El agent identity blueprint es la plantilla. Define el catálogo de permisos heredables, restricciones (allowedAuthenticationFlows, maxAgentIdentities, tenantOnly), metadatos y políticas de lifecycle, pero no autentica nada por sí solo. Las agent identities son las instancias que sí autentican y heredan del blueprint. El blueprint principal es el service principal asociado al blueprint para admin consents. El agent user es una propiedad opcional de las agent identities autonomous.
+:::
+
+::: pregunta
+id: EX-06-002
+modulo: 6
+oa: OA-06.1
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Analizar
+enunciado: |
+  En Microsoft Teams, un usuario ve que «Agent-RRHH-FAQ» aparece en la lista de personas con foto, presencia online, y un mailbox al que pueden enviarle email. ¿Qué tipo de objeto representa esto en Microsoft Entra Agent ID?
+opciones:
+  - id: a
+    texto: "Agent identity blueprint"
+  - id: b
+    texto: "Agent identity blueprint principal"
+  - id: c
+    texto: "Agent identity (sin propiedad agent user)"
+  - id: d
+    texto: "Agent user"
+    correcta: true
+justificacion: |
+  La presencia humana-like en Teams (foto, presence, mailbox propio, aparición en organigrama) es lo que distingue a un agent user del resto de objetos. Es una propiedad opcional (userType: AgentUser) que se aplica a una agent identity para hacerla visible como si fuera un colaborador más. Los blueprints y blueprint principals no tienen presencia visible. Una agent identity sin la propiedad agent user sí autentica y opera, pero no aparece en Teams como una persona.
+:::
+
+::: pregunta
+id: EX-06-003
+modulo: 6
+oa: OA-06.1
+area: 2
+tipo: drag-and-drop
+dificultad: media
+bloom: Analizar
+enunciado: |
+  Empareja cada capacidad con el tipo de objeto al que pertenece en Microsoft Entra Agent ID.
+items:
+  - id: c1
+    texto: "Define los scopes de Microsoft Graph que las identities heredan."
+  - id: c2
+    texto: "Tiene un mailbox propio y aparece en organigrama."
+  - id: c3
+    texto: "Es la instancia que autentica contra Microsoft Graph."
+  - id: c4
+    texto: "Es el service principal vinculado al blueprint para admin consents."
+  - id: c5
+    texto: "Tiene custom security attributes asignados individualmente."
+  - id: c6
+    texto: "Define el límite duro de 10 resource apps × 40 scopes."
+targets:
+  - id: blueprint
+    label: "Agent identity blueprint"
+  - id: principal
+    label: "Agent identity blueprint principal"
+  - id: identity
+    label: "Agent identity"
+  - id: user
+    label: "Agent user"
+correct_map:
+  c1: blueprint
+  c2: user
+  c3: identity
+  c4: principal
+  c5: identity
+  c6: blueprint
+justificacion: |
+  Los scopes y restricciones se definen en el blueprint y se heredan. La instancia (agent identity) es lo que autentica y donde se asignan custom security attributes individualmente. El agent user es una propiedad opcional de la identity con presencia humana-like. El blueprint principal existe para que el blueprint pueda recibir admin consents.
+:::
+
+::: pregunta
+id: EX-06-004
+modulo: 6
+oa: OA-06.4
+area: 2
+tipo: scenario
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Una organización quiere desplegar un agente que monitorice 24/7 un buzón compartido (compliance@contoso.com) y publique en un canal de Teams cualquier mensaje que mencione palabras de la lista de cumplimiento normativo. NO hay usuario humano que invoque al agente. ¿Qué flujo de autenticación aplica y qué requisito de licenciamiento implica?
+opciones:
+  - id: a
+    texto: "OBO. Cualquier licencia Agent 365 cubre el caso."
+  - id: b
+    texto: "OBO. Requiere Microsoft 365 E7 obligatoriamente."
+  - id: c
+    texto: "Own identity. Disponible en GA con cualquier licencia Agent 365."
+  - id: d
+    texto: "Own identity. Solo disponible en Frontier preview en mayo de 2026."
+    correcta: true
+justificacion: |
+  El caso describe un agente autonomous (sin usuario humano que invoque). Esto requiere el flujo own identity con un access token obtenido vía client_credentials y permisos propios definidos en el blueprint. Los agentes own identity siguen en Frontier preview en mayo de 2026: no son GA todavía. Para desplegarlos a escala, la organización debe inscribirse en el programa Frontier preview.
+:::
+
+::: pregunta
+id: EX-06-005
+modulo: 6
+oa: OA-06.5
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  ¿Qué llamada a Microsoft Graph permite listar los agentes con riesgo detectado por Microsoft Entra Identity Protection?
+opciones:
+  - id: a
+    texto: "GET https://graph.microsoft.com/beta/agentRegistry/agents?$filter=riskState eq 'high'"
+  - id: b
+    texto: "GET https://graph.microsoft.com/beta/identityProtection/riskyAgents"
+    correcta: true
+  - id: c
+    texto: "GET https://graph.microsoft.com/v1.0/auditLogs/agentRiskDetections"
+  - id: d
+    texto: "GET https://graph.microsoft.com/beta/copilot/admin/agents/risks"
+justificacion: |
+  El endpoint correcto es /beta/identityProtection/riskyAgents, paralelo al /identityProtection/riskyUsers para usuarios. Devuelve los agentes con riskLevel y riskState calculado por Identity Protection. La opción A usa la ruta legacy del agent registry (que se retira con la convergencia de mayo de 2026) y un filter no soportado.
+:::
+
+::: pregunta
+id: EX-06-006
+modulo: 6
+oa: OA-06.2
+area: 2
+tipo: scenario
+dificultad: dificil
+bloom: Aplicar
+enunciado: |
+  Un desarrollador intenta crear un blueprint para agentes Foundry pero la CLI devuelve error «Too many scopes for resourceAppId 00000003-0000-0000-c000-000000000000». El blueprint declara 45 scopes para Microsoft Graph. ¿Cuál es la causa y cómo se corrige?
+opciones:
+  - id: a
+    texto: "Microsoft Graph no soporta más de 30 scopes en blueprints Agent 365. Hay que reducir a 30."
+  - id: b
+    texto: "El límite duro de Microsoft Entra Agent ID es de 40 scopes por resource app. El blueprint debe partirse o reducir scopes."
+    correcta: true
+  - id: c
+    texto: "El error es transitorio: reintentar tras 10 minutos."
+  - id: d
+    texto: "El blueprint tiene un campo inheritablePermissions mal formado: hay que validar el JSON con `a365 lint blueprint`."
+justificacion: |
+  Microsoft Entra Agent ID impone un límite duro de 10 resource apps × 40 scopes por blueprint. Es una restricción intencional para evitar blueprints monolíticos imposibles de auditar. 45 scopes para un mismo resourceAppId excede el límite, y la solución correcta es partir el blueprint en dos o reducir el alcance si los scopes incluyen permisos no necesarios.
+:::
+
+::: pregunta
+id: EX-06-007
+modulo: 6
+oa: OA-06.3
+area: 2
+tipo: scenario
+dificultad: dificil
+bloom: Aplicar
+enunciado: |
+  Un usuario sponsor de una agent identity es deshabilitado (accountEnabled = false) en Microsoft Entra. El blueprint asociado tiene transferOnLeaver = true y existe un lifecycle workflow para el trigger onSponsorLeaver con tasks por defecto. ¿Cuál es el comportamiento esperado?
+opciones:
+  - id: a
+    texto: "La agent identity se elimina automáticamente del directorio."
+  - id: b
+    texto: "El sponsorship se transfiere al manager del usuario, se notifica por email al manager y la agent identity queda marcada con requireReview = true."
+    correcta: true
+  - id: c
+    texto: "La agent identity continúa funcionando sin cambios; solo el audit log registra el evento."
+  - id: d
+    texto: "La agent identity se deshabilita inmediatamente y el manager debe re-habilitarla manualmente."
+justificacion: |
+  Con el lifecycle workflow onSponsorLeaver configurado y transferOnLeaver = true en la identity, el comportamiento por defecto es: (1) notifyManager envía email al manager indicando la transferencia, (2) transferAgentSponsorship reasigna sponsorship al manager, (3) markRequireReview marca la identity con requireReview = true y fecha objetivo de 30 días. La identity sigue activa durante esos 30 días para no interrumpir operaciones.
+:::
+
+::: pregunta
+id: EX-06-008
+modulo: 6
+oa: OA-06.2
+area: 2
+tipo: multiple-choice
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Una entidad financiera necesita desplegar agentes Foundry para 4 áreas distintas (Análisis de Crédito, Investigación de Fraude, Reporting Regulatorio, Tesorería), cada una con su responsable de área como sponsor. Los agentes deben acceder solo a datos de su área, deben tener requireSponsor = true y deben llevar custom security attributes para auditoría externa. ¿Cuál es el diseño de blueprints más apropiado?
+opciones:
+  - id: a
+    texto: "Un único blueprint global bp-finanzas-master con todos los scopes para las 4 áreas y custom security attributes que distinguen Department por instance."
+  - id: b
+    texto: "Cuatro blueprints separados (bp-finanzas-credito, bp-finanzas-fraude, bp-finanzas-reporting, bp-finanzas-tesoreria) cada uno con requireSponsor = true, scopes específicos del área y custom security attributes propios."
+    correcta: true
+  - id: c
+    texto: "Un blueprint por sponsor (4 blueprints), independientemente del área de negocio."
+  - id: d
+    texto: "No usar blueprints; crear las agent identities directamente sin plantilla."
+justificacion: |
+  Separation of duties y principio de least-privilege exigen blueprints separados por área de negocio, no por sponsor (los sponsors pueden cambiar; las áreas tienen scopes y compliance distintos). Cada blueprint declara los scopes mínimos para su área, requireSponsor = true para forzar asignación de sponsor antes de operar, y custom security attributes específicos para que la auditoría externa pueda filtrar agentes por área.
+:::
+
+::: pregunta
+id: EX-06-009
+modulo: 6
+oa: OA-06.6
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  ¿Cuál de las siguientes capacidades NO está incluida en un agent identity blueprint, sino que es una propiedad de cada agent identity individual?
+opciones:
+  - id: a
+    texto: "Inheritable permissions (lista de scopes Graph)."
+  - id: b
+    texto: "Restrictions (allowedAuthenticationFlows, maxAgentIdentities, tenantOnly)."
+  - id: c
+    texto: "Custom security attributes asignados a la instance concreta."
+    correcta: true
+  - id: d
+    texto: "Lifecycle metadata (expirationPolicy, auditLevel)."
+justificacion: |
+  Los custom security attributes son propiedades de cada agent identity individual, no del blueprint. Aunque el blueprint puede definir un conjunto de attributes por defecto, cada identity puede sobrescribir o añadir sus propios attributes (Department, ConfidentialityLevel, BusinessOwner, AgentPurpose). Las opciones A, B y D son propiedades del blueprint.
+:::
+
+::: pregunta
+id: EX-06-010
+modulo: 6
+oa: OA-06.3
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  ¿Qué trigger de lifecycle workflow se ejecuta cuando un usuario sponsor cambia de manager o de departamento, sin dejar la organización?
+opciones:
+  - id: a
+    texto: "onSponsorJoiner"
+  - id: b
+    texto: "onSponsorMover"
+    correcta: true
+  - id: c
+    texto: "onSponsorLeaver"
+  - id: d
+    texto: "onAgentInactivity"
+justificacion: |
+  onSponsorMover es el trigger que se ejecuta cuando un usuario sponsor cambia de manager, departamento o atributos clave que afectan a la lógica de sponsorship, sin dejar la organización. La task típica asociada es revisar si el agente sigue siendo apropiado para la nueva área del sponsor. onSponsorJoiner se ejecuta cuando un usuario es asignado por primera vez como sponsor. onSponsorLeaver se ejecuta cuando el sponsor deja la organización. onAgentInactivity se ejecuta cuando una agent identity no se usa durante un periodo configurable.
+:::
+
+::: pregunta
+id: EX-06-011
+modulo: 6
+oa: OA-06.7
+area: 2
+tipo: multiple-choice
+dificultad: dificil
+bloom: Recordar
+enunciado: |
+  Tras la convergencia M365 admin center ↔ Entra del 1 de mayo de 2026, las APIs antiguas /beta/agentRegistry/* quedan deprecated. ¿Cuál es el comportamiento exacto durante la ventana de retrocompatibilidad y cuándo dejan de funcionar definitivamente?
+opciones:
+  - id: a
+    texto: "Las APIs antiguas dejan de funcionar inmediatamente el 1 de mayo de 2026 con 404 Not Found."
+  - id: b
+    texto: "Las APIs antiguas siguen funcionando indefinidamente; la nueva ruta /beta/copilot/admin/* es solo opcional."
+  - id: c
+    texto: "Las APIs antiguas redireccionan a las nuevas con HTTP 301 hasta noviembre de 2026; a partir de esa fecha devuelven 410 Gone."
+    correcta: true
+  - id: d
+    texto: "Las APIs antiguas devuelven warnings en el header pero siguen funcionando. Sin fecha de fin anunciada."
+justificacion: |
+  La convergencia del 1 de mayo de 2026 inicia una ventana de retrocompatibilidad y soporte hasta noviembre de 2026. Durante ese periodo, las APIs /beta/agentRegistry/* redireccionan automáticamente a las nuevas /beta/copilot/admin/* con respuestas funcionales pero con Deprecation headers en cada respuesta. A partir de noviembre de 2026 devuelven 410 Gone y los clientes deben usar las nuevas rutas obligatoriamente.
 :::
