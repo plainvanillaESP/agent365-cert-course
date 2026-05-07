@@ -13,13 +13,13 @@ import { Resources } from '@/components/resources/Resources'
 import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
 
-const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'evaluacion', 'recursos']
+const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'quiz-practica', 'recursos']
 
 const SECTION_META = {
-  teoria:       { label: 'Teoría',       icon: BookOpenText  },
-  laboratorios: { label: 'Laboratorios', icon: FlaskConical  },
-  evaluacion:   { label: 'Evaluación',   icon: ClipboardCheck },
-  recursos:     { label: 'Recursos',     icon: Link2          },
+  teoria:          { label: 'Teoría',     icon: BookOpenText  },
+  laboratorios:    { label: 'Laboratorios', icon: FlaskConical },
+  'quiz-practica': { label: 'Práctica',   icon: ClipboardCheck },
+  recursos:        { label: 'Recursos',   icon: Link2          },
 } as const
 
 export function ModulePage() {
@@ -33,6 +33,11 @@ export function ModulePage() {
   }, [moduleId, section])
 
   if (!module) return <Navigate to="/" replace />
+  // Alias legacy: /modulo/X/evaluacion → /modulo/X/quiz-practica.
+  // Bookmarks o enlaces externos al path antiguo siguen funcionando.
+  if (section === 'evaluacion') {
+    return <Navigate to={`/modulo/${moduleId}/quiz-practica`} replace />
+  }
   if (!VALID_SECTIONS.includes(section as ContentType)) {
     return <Navigate to={`/modulo/${moduleId}/teoria`} replace />
   }
@@ -114,7 +119,7 @@ export function ModulePage() {
         )}
 
         {/* Contenido */}
-        {section === 'evaluacion' && getQuestionsForModule(module.id).length > 0 ? (
+        {section === 'quiz-practica' && getQuestionsForModule(module.id).length > 0 ? (
           <Quiz moduleId={module.id} />
         ) : section === 'laboratorios' && getLabForModule(module.id) ? (
           <Lab moduleId={module.id} />
@@ -171,7 +176,7 @@ export function ModulePage() {
       {/* TOC derecha — solo en teoría con markdown */}
       <aside className="hidden xl:block">
         {content &&
-          section !== 'evaluacion' &&
+          section !== 'quiz-practica' &&
           section !== 'laboratorios' &&
           section !== 'recursos' && <TableOfContents />}
       </aside>

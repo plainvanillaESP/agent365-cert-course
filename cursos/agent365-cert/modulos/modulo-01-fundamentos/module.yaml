@@ -2,11 +2,11 @@ spec_version: '1.0'
 id: 1
 slug: modulo-01-fundamentos
 titulo: 'Fundamentos: ¿Qué es Microsoft Agent 365?'
-duracion_min: 60
+duracion_min: 72
 area_examen: 1
 estado: producido
 fase_produccion: 2
-ultima_actualizacion: 2026-05-06
+ultima_actualizacion: 2026-05-07
 prerrequisitos: []
 prerrequisitos_externos: []
 objetivos_aprendizaje:
@@ -29,12 +29,10 @@ glosario: []
 secciones:
 - tipo: teoria
   archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
+- tipo: quiz-practica
+  archivo: quiz-practica.md
   umbral_aprobado_pct: 70
   intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
 - tipo: laboratorios
   archivo: laboratorios.md
   intentos_min_requeridos: 1
