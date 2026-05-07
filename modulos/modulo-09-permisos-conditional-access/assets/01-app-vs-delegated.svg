@@ -1,0 +1,104 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 13.5px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .lab    { font-size: 12.5px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11.5px; fill: #57534e; }
+      .item   { font-size: 11.5px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .url    { font-size: 11px; font-family: ui-monospace, 'SF Mono', monospace; fill: #44403c; }
+    </style>
+    <marker id="arr-app" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#C2410C"/>
+    </marker>
+    <marker id="arr-del" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0284C7"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">Application Permissions vs Delegated Permissions</text>
+  <text x="40" y="58" class="sub">Application: el agente con permisos propios · Delegated: el agente con permisos del usuario · intersección como permiso efectivo</text>
+
+  <!-- ==== Application (izquierda, naranja) ==== -->
+  <rect x="40" y="90" width="450" height="450" rx="12" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="40" y="90" width="450" height="38" rx="12" fill="#C2410C"/>
+  <rect x="40" y="116" width="450" height="12" fill="#C2410C"/>
+  <text x="60" y="115" class="h2">APPLICATION PERMISSIONS · OWN IDENTITY</text>
+
+  <!-- Diagrama de flujo Application -->
+  <rect x="60" y="150" width="120" height="50" rx="6" fill="white" stroke="#C2410C" stroke-width="1.5"/>
+  <text x="120" y="171" text-anchor="middle" class="lab" fill="#C2410C">Agent</text>
+  <text x="120" y="187" text-anchor="middle" class="desc">autonomous</text>
+
+  <line x1="180" y1="175" x2="240" y2="175" stroke="#C2410C" stroke-width="2" marker-end="url(#arr-app)"/>
+  <text x="210" y="167" text-anchor="middle" class="desc" fill="#C2410C">client_credentials</text>
+
+  <rect x="250" y="150" width="200" height="50" rx="6" fill="white" stroke="#C2410C" stroke-width="1.5"/>
+  <text x="350" y="171" text-anchor="middle" class="lab" fill="#C2410C">Microsoft Graph</text>
+  <text x="350" y="187" text-anchor="middle" class="desc">recibe llamada con permisos del agente</text>
+
+  <text x="60" y="232" class="lab">Características</text>
+  <text x="60" y="252" class="item">• El agente actúa con permisos propios definidos en el blueprint</text>
+  <text x="60" y="270" class="item">• Sin usuario humano en el flujo</text>
+  <text x="60" y="288" class="item">• Audit log atribuye la acción al agente</text>
+  <text x="60" y="306" class="item">• Funciona 24/7 sin invocación</text>
+
+  <text x="60" y="335" class="lab">Admin consent</text>
+  <rect x="60" y="345" width="270" height="22" rx="4" fill="#FED7AA" stroke="#C2410C"/>
+  <text x="195" y="360" text-anchor="middle" class="item" font-weight="600" fill="#9A3412">SIEMPRE OBLIGATORIO</text>
+
+  <text x="60" y="395" class="lab">Naming convention</text>
+  <text x="60" y="415" class="url">User.Read.All · Mail.Read · Files.Read.All</text>
+  <text x="60" y="433" class="url">Sites.Selected · TeamsActivity.Send</text>
+
+  <text x="60" y="465" class="lab">Casos de uso</text>
+  <text x="60" y="485" class="item">• Agente que monitoriza buzón compartido 24/7</text>
+  <text x="60" y="503" class="item">• Procesamiento batch nocturno</text>
+  <text x="60" y="521" class="item">• Notificaciones masivas a Teams sin invocación</text>
+
+  <!-- ==== Delegated (derecha, azul) ==== -->
+  <rect x="510" y="90" width="430" height="450" rx="12" fill="#EFF6FF" stroke="#0284C7" stroke-width="1.5"/>
+  <rect x="510" y="90" width="430" height="38" rx="12" fill="#0284C7"/>
+  <rect x="510" y="116" width="430" height="12" fill="#0284C7"/>
+  <text x="530" y="115" class="h2">DELEGATED PERMISSIONS · OBO</text>
+
+  <!-- Diagrama de flujo Delegated -->
+  <circle cx="555" cy="175" r="20" fill="white" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="555" y="180" text-anchor="middle" class="lab" fill="#0284C7" font-size="11">user</text>
+
+  <line x1="580" y1="175" x2="610" y2="175" stroke="#0284C7" stroke-width="2"/>
+
+  <rect x="615" y="155" width="100" height="40" rx="6" fill="white" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="665" y="170" text-anchor="middle" class="lab" fill="#0284C7" font-size="11">Agent</text>
+  <text x="665" y="186" text-anchor="middle" class="desc" font-size="10">conversational</text>
+
+  <line x1="715" y1="175" x2="745" y2="175" stroke="#0284C7" stroke-width="2" marker-end="url(#arr-del)"/>
+  <text x="730" y="165" text-anchor="middle" class="desc" font-size="10" fill="#0284C7">OBO token</text>
+
+  <rect x="750" y="155" width="170" height="40" rx="6" fill="white" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="835" y="170" text-anchor="middle" class="lab" fill="#0284C7" font-size="11">Microsoft Graph</text>
+  <text x="835" y="186" text-anchor="middle" class="desc" font-size="10">permisos efectivos</text>
+
+  <text x="530" y="232" class="lab">Características</text>
+  <text x="530" y="252" class="item">• Agente actúa con permisos del usuario invocador</text>
+  <text x="530" y="270" class="item">• Permiso efectivo = INTERSECCIÓN de usuario y agente</text>
+  <text x="530" y="288" class="item">• Audit log atribuye la acción al usuario</text>
+  <text x="530" y="306" class="item">• Sin usuario activo, agente no puede operar</text>
+
+  <text x="530" y="335" class="lab">Admin consent</text>
+  <rect x="530" y="345" width="270" height="22" rx="4" fill="#DBEAFE" stroke="#0284C7"/>
+  <text x="665" y="360" text-anchor="middle" class="item" font-weight="600" fill="#0369A1">DEPENDE DEL SCOPE</text>
+
+  <text x="530" y="395" class="lab">Naming convention</text>
+  <text x="530" y="415" class="url">User.Read · User.ReadBasic.All · Mail.Read</text>
+  <text x="530" y="433" class="url">Files.Read · Calendars.ReadWrite</text>
+
+  <text x="530" y="465" class="lab">Casos de uso</text>
+  <text x="530" y="485" class="item">• Asistente conversacional (RRHH, ventas, soporte)</text>
+  <text x="530" y="503" class="item">• Agente que resume documentos del usuario</text>
+  <text x="530" y="521" class="item">• Agente que escribe a nombre del usuario</text>
+
+  <text x="490" y="568" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 09 · Fig. 9.1</text>
+</svg>

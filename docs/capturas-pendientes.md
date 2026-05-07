@@ -623,6 +623,129 @@ Siete capturas críticas: el menú contextual con las 11 acciones, dos del wizar
 
 ---
 
+### Módulo 09 — Permisos, accesos y Conditional Access
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M09). Cierra Fase 4 con la capa de control de acceso. Las capturas reales son críticas para el wizard de Conditional Access (4 pantallas), Risky Agents report (4 acciones) y Workload identity sign-ins.
+
+#### M09-CAP-01 · Wizard de creación CA policy: scope `All agent identities`
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.3 + Lab 09.1 Parte B paso 3.
+- **URL del admin center:** `https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies` → New policy → Assignments → Users or workload identities.
+- **Vista exacta:** panel Assignments con el switch a `Workload identities` y el selector mostrando las opciones `All agent identities`, `All agent users`, `Specific agents by attribute`.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Toggle Users vs Workload identities.
+  2. Selector Workload identities con All agent identities marcado.
+  3. Sección Exclude (vacía en el lab).
+  4. Indicador de paso del wizard.
+  5. Texto explicativo lateral.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M09-CAP-01-ca-scope-agent-identities.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-01-ca-scope-agent-identities.png`
+
+#### M09-CAP-02 · Wizard de CA policy: condition `Agent risk: High`
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.3 + Lab 09.1 Parte B paso 5.
+- **URL del admin center:** wizard CA → Conditions → Agent risk.
+- **Vista exacta:** panel Agent risk con Configure: Yes y los 3 niveles disponibles (Low / Medium / High); solo High marcado.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Toggle Configure Yes/No.
+  2. Checkbox Low (sin marcar).
+  3. Checkbox Medium (sin marcar).
+  4. Checkbox High (marcado).
+  5. Texto explicativo del nivel High.
+- **Anonimización:** ninguna.
+- **Filename:** `M09-CAP-02-ca-condition-agent-risk.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-02-ca-condition-agent-risk.png`
+
+#### M09-CAP-03 · Wizard de CA policy: state Report-only
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.4 + Lab 09.1 Parte B paso 7.
+- **URL del admin center:** wizard CA → Enable policy.
+- **Vista exacta:** sección final del wizard con los tres estados (Report-only / On / Off) y Report-only seleccionado.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Toggle de tres posiciones (Report-only / On / Off).
+  2. Posición Report-only resaltada.
+  3. Texto explicativo del comportamiento Report-only.
+  4. Botón Create.
+- **Anonimización:** ninguna.
+- **Filename:** `M09-CAP-03-ca-state-report-only.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-03-ca-state-report-only.png`
+
+#### M09-CAP-04 · Sign-in logs > Workload identity sign-ins con CA evaluada
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.4 + Lab 09.1 Parte D + Lab 09.2 Parte C.
+- **URL del admin center:** `Entra admin center → Identity → Sign-in logs` → pestaña `Workload identity sign-ins`.
+- **Vista exacta:** lista de sign-ins de la agent identity con uno seleccionado y la pestaña Conditional Access abierta mostrando la policy evaluada como `Reported: would have been blocked` (caso Report-only) o `Failure: blocked by policy` (caso enforcement).
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Pestaña Workload identity sign-ins (no User sign-ins).
+  2. Filtro por Application name del agente.
+  3. Sign-in row seleccionado.
+  4. Pestaña Conditional Access abierta.
+  5. Policy `Block agent identities at high risk (lab)` con su Result.
+  6. Status del sign-in (Success/Failure).
+- **Anonimización:** sustituir IPs reales por valores de ejemplo.
+- **Filename:** `M09-CAP-04-workload-signin-ca-tab.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-04-workload-signin-ca-tab.png`
+
+#### M09-CAP-05 · Risky Agents report con identidades listadas
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.5 + Lab 09.2 Parte B.
+- **URL del admin center:** `Entra admin center → Identity → Protection → Risky agents`.
+- **Vista exacta:** lista de agent identities con risk elevado, columnas Risk level, Detections, Last activity y la barra superior con las 4 acciones disponibles cuando hay una seleccionada.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Título Risky agents.
+  2. Filtros aplicados (Risk state, Risk level).
+  3. Columna Display name del agente seleccionado.
+  4. Columna Risk level (High).
+  5. Columna Detections con tipos disparados.
+  6. Barra de acciones: Confirm compromise, Confirm safe, Dismiss, Disable.
+- **Anonimización:** sustituir nombres reales de agentes y tenant.
+- **Filename:** `M09-CAP-05-risky-agents-report.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-05-risky-agents-report.png`
+
+#### M09-CAP-06 · Modal de Confirm compromise con justificación
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.6 + Lab 09.2 Parte B paso 4-5.
+- **URL del admin center:** Risky agents → seleccionar identity → Confirm compromise.
+- **Vista exacta:** modal de confirmación con campo de justificación, checkbox de impacto en CA y botones Confirm/Cancel.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Título Confirm compromise.
+  2. Texto de advertencia sobre la elevación a `High` y disparo de CA policies.
+  3. Campo de justificación (texto libre).
+  4. Botón Confirm.
+  5. Botón Cancel.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M09-CAP-06-confirm-compromise-modal.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-06-confirm-compromise-modal.png`
+
+#### M09-CAP-07 · Página de detalle del agente con permisos OAuth y admin consent
+
+- **Ubicación en el curso:** `modulos/modulo-09-permisos-conditional-access/teoria.md` § 9.2 (Cómo otorgar admin consent — opción 2).
+- **URL del admin center:** `Entra admin center → Identity → Agents → seleccionar agente → Permissions`.
+- **Vista exacta:** lista de permisos del agente con columna Type (Application/Delegated), columna Admin consent status (Granted/Pending) y botón Grant admin consent.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Pestaña Permissions del agente.
+  2. Permiso Application con admin consent Granted.
+  3. Permiso Delegated.
+  4. Permiso con estado Pending.
+  5. Botón Grant admin consent.
+- **Anonimización:** sustituir nombre del agente por uno ficticio.
+- **Filename:** `M09-CAP-07-agent-permissions-consent.png`
+- **Path final:** `modulos/modulo-09-permisos-conditional-access/assets/capturas/M09-CAP-07-agent-permissions-consent.png`
+
+#### Total M09: 7 capturas
+
+Siete capturas que cubren el ciclo completo del módulo: tres del wizard de Conditional Access (scope, condition, state Report-only), una de Workload identity sign-ins con la pestaña CA del sign-in evaluado, dos de Identity Protection (Risky Agents y modal Confirm compromise) y una de la página de permisos con admin consent. Coste estimado de captura: 60-75 minutos en un tenant operativo con la policy del Lab 09.1 desplegada y al menos un sign-in evaluado.
+
+---
+
 ### Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
 
 > Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M06). Es el módulo más denso del curso (105 min, 11 preguntas examen) y se beneficiaría especialmente de capturas reales del Entra admin center con datos de blueprints e identities reales.
