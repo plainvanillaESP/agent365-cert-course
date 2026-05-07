@@ -1296,6 +1296,190 @@ const M06_RESOURCES: ModuleResources = {
   ],
 }
 
+/* --------------------------------- M07 ----------------------------------- */
+
+const M07_RESOURCES: ModuleResources = {
+  moduleId: 7,
+  intro:
+    'Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y verificado a la fecha de última actualización.',
+  categories: [
+    {
+      id: 'docs-registry-map',
+      title: 'Documentación oficial — Agent Registry y Agent Map',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Microsoft Agent 365 admin center overview',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/admin-center-overview',
+          description: 'La página Overview con hero metrics y Top actions.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Agent Registry — manage your agent inventory',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/registry',
+          description: 'Anatomía completa del Registry.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Agent Map — visualize agent relationships',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/map',
+          description: 'Map view con clusters y conexiones agent-to-agent.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Customize Registry columns and filters',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/registry-customization',
+          description: 'Personalización de la tabla.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-metrics-analytics',
+      title: 'Documentación oficial — Métricas y analytics',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Agent analytics in Microsoft 365 admin center',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/analytics',
+          description: 'Analíticas agregadas por categoría y plataforma.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Hero metrics and Top actions for you',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/overview-page',
+          description: 'Interpretación de los KPIs y categorías de acciones.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Agent V2 vs V1 in Foundry',
+          url: 'https://learn.microsoft.com/azure/ai-foundry/agent-v1-v2-comparison',
+          description: 'Diferencias y limitaciones de analytics para V1 históricos.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-risks-column',
+      title: 'Documentación oficial — Risks column',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Risks column in Agent Registry',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/risks-column',
+          description: 'Qué muestra y cómo se calcula.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Risk score calculation methodology',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/risk-score-method',
+          description: 'Señales contribuyentes y pesos.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Required licenses for Risks column',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/license-requirements#risks-column',
+          description: 'E7 y conectores Defender + Purview.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-registry-sync',
+      title: 'Documentación oficial — Registry sync multicloud',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Connect AWS Bedrock to Agent Registry (Preview)',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/registry-sync-aws-bedrock',
+          description: 'Sincronización con AWS Bedrock.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Connect Google Gemini Enterprise to Agent Registry (Preview)',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/registry-sync-gemini',
+          description: 'Sincronización con Gemini Enterprise.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Registry sync limitations and roadmap',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/registry-sync-limitations',
+          description: 'Limitaciones actuales y plataformas en roadmap.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'docs-export-integration',
+      title: 'Documentación oficial — Exportación e integración',
+      resources: [
+        {
+          type: 'docs',
+          title: 'Export agent inventory to Excel/CSV',
+          url: 'https://learn.microsoft.com/microsoft-agent-365/admin/export-inventory',
+          description: 'Formatos y limitaciones.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Agent inventory via Microsoft Graph',
+          url: 'https://learn.microsoft.com/graph/api/copilot-admin-list-agents',
+          description: 'Consulta del inventario por API para automatización.',
+          lang: 'en',
+        },
+        {
+          type: 'docs',
+          title: 'Power Automate — automate agent inventory exports',
+          url: 'https://learn.microsoft.com/power-automate/agent-365-integration#export-inventory',
+          description: 'Flow para exportación automática trimestral.',
+          lang: 'en',
+        },
+      ],
+    },
+    {
+      id: 'best-practices',
+      title: 'Buenas prácticas',
+      resources: [
+        {
+          type: 'blog',
+          title: 'Daily admin routine for Agent 365',
+          url: 'https://techcommunity.microsoft.com/blog/agent-365-daily-routine',
+          description: 'Rutina recomendada por el equipo de Microsoft.',
+          lang: 'en',
+        },
+        {
+          type: 'blog',
+          title: 'Identifying ownerless agents and remediation',
+          url: 'https://techcommunity.microsoft.com/blog/agent-ownerless-cleanup',
+          description: 'Patrón de limpieza de agentes huérfanos.',
+          lang: 'en',
+        },
+        {
+          type: 'blog',
+          title: 'Quarterly Agent 365 governance review template',
+          url: 'https://techcommunity.microsoft.com/blog/agent-365-governance-review-template',
+          description: 'Plantilla para reportes trimestrales.',
+          lang: 'en',
+        },
+      ],
+    },
+  ],
+  crossReferences: [
+    { topic: 'Acciones sobre el inventario',         moduleId: 8,  moduleTitle: 'Despliegue, distribución y ciclo de vida' },
+    { topic: 'Excepciones de Conditional Access',    moduleId: 9,  moduleTitle: 'Permisos, accesos y Conditional Access' },
+    { topic: 'Explotación avanzada de la Risks column', moduleId: 12, moduleTitle: 'Monitorización, auditoría y reporting' },
+  ],
+}
+
 /* ------------------------------ API pública ------------------------------ */
 
 const ALL_RESOURCES: Record<number, ModuleResources> = {
@@ -1305,6 +1489,7 @@ const ALL_RESOURCES: Record<number, ModuleResources> = {
   4: M04_RESOURCES,
   5: M05_RESOURCES,
   6: M06_RESOURCES,
+  7: M07_RESOURCES,
 }
 
 export function getResourcesForModule(moduleId: number): ModuleResources | null {

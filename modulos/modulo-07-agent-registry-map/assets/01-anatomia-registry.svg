@@ -1,0 +1,145 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 12.5px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .col    { font-size: 11px; fill: #1c1917; font-weight: 600; }
+      .desc   { font-size: 10.5px; fill: #57534e; }
+      .row    { font-size: 11px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .pill   { font-size: 9.5px; font-weight: 600; }
+      .label  { font-size: 11px; font-weight: 600; fill: #1c1917; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Anatomía del Agent Registry</text>
+  <text x="40" y="58" class="sub">Tabla maestra del Agent workload · filtros laterales · exportación a Excel · vista de detalle</text>
+
+  <!-- ===== Filtros laterales (izquierda) ===== -->
+  <rect x="40" y="100" width="200" height="430" rx="10" fill="#FAFAF9" stroke="#7B2FBE" stroke-width="1.5"/>
+  <rect x="40" y="100" width="200" height="32" rx="10" fill="#7B2FBE"/>
+  <rect x="40" y="124" width="200" height="8" fill="#7B2FBE"/>
+  <text x="60" y="121" class="h2">FILTROS</text>
+
+  <text x="60" y="155" class="label">Publisher</text>
+  <text x="60" y="172" class="desc">☐ Microsoft</text>
+  <text x="60" y="186" class="desc">☑ Third Party</text>
+  <text x="60" y="200" class="desc">☐ Organization</text>
+
+  <text x="60" y="226" class="label">Platform</text>
+  <text x="60" y="243" class="desc">☑ Copilot Studio</text>
+  <text x="60" y="257" class="desc">☐ Foundry</text>
+  <text x="60" y="271" class="desc">☐ Bedrock (preview)</text>
+  <text x="60" y="285" class="desc">☐ Gemini (preview)</text>
+
+  <text x="60" y="311" class="label">Status</text>
+  <text x="60" y="328" class="desc">☑ Active</text>
+  <text x="60" y="342" class="desc">☐ Pending approval</text>
+  <text x="60" y="356" class="desc">☐ Disabled</text>
+
+  <text x="60" y="382" class="label">Risk · E7</text>
+  <text x="60" y="399" class="desc">☐ Low</text>
+  <text x="60" y="413" class="desc">☑ Medium</text>
+  <text x="60" y="427" class="desc">☑ High</text>
+  <text x="60" y="441" class="desc">☑ Critical</text>
+
+  <text x="60" y="467" class="label">Date</text>
+  <text x="60" y="484" class="desc">Created last 30d</text>
+
+  <!-- Botón Export -->
+  <rect x="60" y="500" width="160" height="22" rx="4" fill="#9A44E5"/>
+  <text x="140" y="514" text-anchor="middle" font-size="10.5" fill="white" font-weight="600">⬇ EXPORT TO EXCEL</text>
+
+  <!-- ===== Tabla del Registry (derecha) ===== -->
+  <rect x="260" y="100" width="680" height="430" rx="10" fill="white" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="260" y="100" width="680" height="32" rx="10" fill="#9A44E5"/>
+  <rect x="260" y="124" width="680" height="8" fill="#9A44E5"/>
+  <text x="280" y="121" class="h2">AGENT REGISTRY · 247 AGENTES · FILTROS APLICADOS: 89</text>
+
+  <!-- Header de columnas -->
+  <rect x="260" y="140" width="680" height="28" fill="#FAF5FF"/>
+  <text x="278" y="158" class="col">Display name</text>
+  <text x="430" y="158" class="col">Publisher</text>
+  <text x="510" y="158" class="col">Platform</text>
+  <text x="610" y="158" class="col">Owner</text>
+  <text x="720" y="158" class="col">Status</text>
+  <text x="790" y="158" class="col">Last activity</text>
+  <text x="892" y="158" class="col">Risks</text>
+
+  <!-- Fila 1 -->
+  <rect x="260" y="170" width="680" height="36" fill="white"/>
+  <text x="278" y="190" class="row">RRHH-FAQ-Nóminas</text>
+  <rect x="430" y="178" width="60" height="18" rx="9" fill="#FFF7ED"/>
+  <text x="460" y="190" text-anchor="middle" class="pill" fill="#9A3412">3rd Party</text>
+  <text x="510" y="190" class="row">Copilot Studio</text>
+  <text x="610" y="190" class="row">Luis Ortega</text>
+  <rect x="715" y="178" width="48" height="18" rx="9" fill="#F0FDF4"/>
+  <text x="739" y="190" text-anchor="middle" class="pill" fill="#166534">Active</text>
+  <text x="790" y="190" class="row">hace 2h</text>
+  <rect x="887" y="178" width="44" height="18" rx="9" fill="#FFFBEB"/>
+  <text x="909" y="190" text-anchor="middle" class="pill" fill="#854D0E">Medium</text>
+
+  <!-- Fila 2 -->
+  <rect x="260" y="206" width="680" height="36" fill="#FAFAF9"/>
+  <text x="278" y="226" class="row">Foundry-Finanzas-01</text>
+  <rect x="430" y="214" width="80" height="18" rx="9" fill="#FAF5FF"/>
+  <text x="470" y="226" text-anchor="middle" class="pill" fill="#7B2FBE">Organization</text>
+  <text x="510" y="226" class="row">Foundry</text>
+  <text x="610" y="226" class="row">Pablo García</text>
+  <rect x="715" y="214" width="48" height="18" rx="9" fill="#F0FDF4"/>
+  <text x="739" y="226" text-anchor="middle" class="pill" fill="#166534">Active</text>
+  <text x="790" y="226" class="row">hace 30 min</text>
+  <rect x="887" y="214" width="44" height="18" rx="9" fill="#FEF2F2"/>
+  <text x="909" y="226" text-anchor="middle" class="pill" fill="#B91C1C">High</text>
+
+  <!-- Fila 3 -->
+  <rect x="260" y="242" width="680" height="36" fill="white"/>
+  <text x="278" y="262" class="row">Tienda-Ops-Iberia</text>
+  <rect x="430" y="250" width="80" height="18" rx="9" fill="#FAF5FF"/>
+  <text x="470" y="262" text-anchor="middle" class="pill" fill="#7B2FBE">Organization</text>
+  <text x="510" y="262" class="row">Copilot Studio</text>
+  <text x="610" y="262" class="row" font-style="italic" fill="#9A3412">— ownerless</text>
+  <rect x="715" y="250" width="48" height="18" rx="9" fill="#F0FDF4"/>
+  <text x="739" y="262" text-anchor="middle" class="pill" fill="#166534">Active</text>
+  <text x="790" y="262" class="row">ayer</text>
+  <rect x="887" y="250" width="44" height="18" rx="9" fill="#FEF2F2"/>
+  <text x="909" y="262" text-anchor="middle" class="pill" fill="#B91C1C">High</text>
+
+  <!-- Fila 4 -->
+  <rect x="260" y="278" width="680" height="36" fill="#FAFAF9"/>
+  <text x="278" y="298" class="row">Agent-Ventas-LATAM</text>
+  <rect x="430" y="286" width="60" height="18" rx="9" fill="#FFF7ED"/>
+  <text x="460" y="298" text-anchor="middle" class="pill" fill="#9A3412">3rd Party</text>
+  <text x="510" y="298" class="row">Copilot Studio</text>
+  <text x="610" y="298" class="row">Sara Vidal</text>
+  <rect x="715" y="286" width="68" height="18" rx="9" fill="#FFFBEB"/>
+  <text x="749" y="298" text-anchor="middle" class="pill" fill="#854D0E">Pending</text>
+  <text x="790" y="298" class="row">—</text>
+  <text x="909" y="298" text-anchor="middle" class="row" fill="#a8a29e">—</text>
+
+  <!-- Fila 5 -->
+  <rect x="260" y="314" width="680" height="36" fill="white"/>
+  <text x="278" y="334" class="row">RRHH-Onboarding</text>
+  <rect x="430" y="322" width="80" height="18" rx="9" fill="#FAF5FF"/>
+  <text x="470" y="334" text-anchor="middle" class="pill" fill="#7B2FBE">Organization</text>
+  <text x="510" y="334" class="row">Copilot Studio</text>
+  <text x="610" y="334" class="row">Marta Núñez</text>
+  <rect x="715" y="322" width="48" height="18" rx="9" fill="#F0FDF4"/>
+  <text x="739" y="334" text-anchor="middle" class="pill" fill="#166534">Active</text>
+  <text x="790" y="334" class="row">hace 5 min</text>
+  <rect x="887" y="322" width="44" height="18" rx="9" fill="#FFFBEB"/>
+  <text x="909" y="334" text-anchor="middle" class="pill" fill="#854D0E">Medium</text>
+
+  <!-- Resto -->
+  <text x="600" y="400" text-anchor="middle" class="row" fill="#a8a29e" font-style="italic">... 84 agentes más coinciden con los filtros activos</text>
+
+  <!-- Vista de detalle (panel inferior derecho) -->
+  <rect x="260" y="430" width="680" height="90" rx="6" fill="#FAFAF9" stroke="#D6D3D1"/>
+  <text x="278" y="453" class="label">Click en una fila → Vista de detalle</text>
+  <text x="278" y="473" class="desc">Identidad y propietario · Plataforma y configuración · Permisos · Risk panel (E7)</text>
+  <text x="278" y="491" class="desc">Actividad últimos 30 días · Capabilities (datasources, plugins, canales)</text>
+  <text x="278" y="509" class="desc" font-style="italic">Las acciones del panel de detalle se cubren en M07.6 · M08 · M12</text>
+
+  <text x="490" y="568" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 07 · Fig. 7.1</text>
+</svg>
