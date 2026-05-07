@@ -1,0 +1,102 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 12px; font-weight: 700; fill: white; letter-spacing: 0.02em; }
+      .label  { font-size: 12px; fill: #1c1917; font-weight: 600; }
+      .desc   { font-size: 11px; fill: #57534e; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .step-h { font-size: 11.5px; font-weight: 600; fill: #1c1917; }
+      .step   { font-size: 10.5px; fill: #57534e; }
+    </style>
+    <marker id="arr-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">Sponsorship y lifecycle workflows</text>
+  <text x="40" y="58" class="sub">Cuando el sponsor deja la organización · el agente se transfiere automáticamente al manager</text>
+
+  <!-- ===== ESTADO 1: Sponsor activo ===== -->
+  <rect x="40" y="100" width="280" height="380" rx="10" fill="#F0FDF4" stroke="#15803D" stroke-width="1.5"/>
+  <rect x="40" y="100" width="280" height="34" rx="10" fill="#15803D"/>
+  <rect x="40" y="124" width="280" height="10" fill="#15803D"/>
+  <text x="60" y="122" class="h2">ESTADO 1 · SPONSOR ACTIVO</text>
+
+  <!-- Sponsor Luis -->
+  <circle cx="180" cy="180" r="32" fill="white" stroke="#15803D" stroke-width="2"/>
+  <text x="180" y="187" text-anchor="middle" font-size="22" fill="#15803D" font-weight="700">L</text>
+  <text x="180" y="232" text-anchor="middle" class="label">Luis Ortega</text>
+  <text x="180" y="248" text-anchor="middle" class="desc">Admin M365 lead</text>
+  <text x="180" y="262" text-anchor="middle" class="desc">accountEnabled = true</text>
+
+  <!-- Sponsor link -->
+  <line x1="180" y1="280" x2="180" y2="310" stroke="#15803D" stroke-width="2"/>
+  <text x="190" y="298" font-size="10" fill="#15803D" font-weight="600">sponsor</text>
+
+  <!-- Agente -->
+  <rect x="100" y="320" width="160" height="80" rx="8" fill="white" stroke="#7B2FBE" stroke-width="2"/>
+  <text x="180" y="345" text-anchor="middle" class="label" fill="#7B2FBE">Agent-RRHH-FAQ</text>
+  <text x="180" y="365" text-anchor="middle" class="desc">agent identity</text>
+  <text x="180" y="382" text-anchor="middle" class="desc">transferOnLeaver: true</text>
+
+  <text x="180" y="430" text-anchor="middle" class="step" font-style="italic">Operación normal · sin eventos</text>
+
+  <!-- Flecha estado 1 → estado 2 -->
+  <line x1="320" y1="290" x2="380" y2="290" stroke="#7B2FBE" stroke-width="2.5" marker-end="url(#arr-flow)"/>
+  <text x="350" y="278" text-anchor="middle" font-size="11" fill="#7B2FBE" font-weight="600">Luis se va</text>
+
+  <!-- ===== ESTADO 2: Leaver event ===== -->
+  <rect x="390" y="100" width="280" height="380" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="390" y="100" width="280" height="34" rx="10" fill="#C2410C"/>
+  <rect x="390" y="124" width="280" height="10" fill="#C2410C"/>
+  <text x="410" y="122" class="h2">ESTADO 2 · LEAVER EVENT</text>
+
+  <!-- Sponsor disabled -->
+  <circle cx="530" cy="180" r="32" fill="white" stroke="#C2410C" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="530" y="187" text-anchor="middle" font-size="22" fill="#C2410C" font-weight="700">L</text>
+  <line x1="510" y1="180" x2="550" y2="180" stroke="#C2410C" stroke-width="3"/>
+  <text x="530" y="232" text-anchor="middle" class="label" fill="#9A3412">Luis Ortega</text>
+  <text x="530" y="248" text-anchor="middle" class="desc">accountEnabled = false</text>
+
+  <!-- Trigger event -->
+  <rect x="410" y="270" width="240" height="60" rx="8" fill="white" stroke="#C2410C" stroke-dasharray="3 2"/>
+  <text x="530" y="293" text-anchor="middle" class="step-h" fill="#9A3412">Lifecycle workflow detecta</text>
+  <text x="530" y="312" text-anchor="middle" class="step" fill="#9A3412">trigger: onLeaver · scope: all users</text>
+
+  <text x="530" y="360" text-anchor="middle" class="step" font-style="italic">Workflow ejecuta tasks</text>
+  <text x="530" y="378" text-anchor="middle" class="step">1. Notificar al manager</text>
+  <text x="530" y="395" text-anchor="middle" class="step">2. Transferir sponsorship</text>
+  <text x="530" y="412" text-anchor="middle" class="step">3. Marcar requireReview</text>
+
+  <!-- Flecha estado 2 → estado 3 -->
+  <line x1="670" y1="290" x2="730" y2="290" stroke="#7B2FBE" stroke-width="2.5" marker-end="url(#arr-flow)"/>
+  <text x="700" y="278" text-anchor="middle" font-size="11" fill="#7B2FBE" font-weight="600">auto</text>
+
+  <!-- ===== ESTADO 3: Sponsorship transferido ===== -->
+  <rect x="740" y="100" width="200" height="380" rx="10" fill="#EFF6FF" stroke="#0284C7" stroke-width="1.5"/>
+  <rect x="740" y="100" width="200" height="34" rx="10" fill="#0284C7"/>
+  <rect x="740" y="124" width="200" height="10" fill="#0284C7"/>
+  <text x="840" y="122" text-anchor="middle" class="h2">ESTADO 3 · TRANSFERIDO</text>
+
+  <!-- New sponsor: Marta -->
+  <circle cx="840" cy="180" r="32" fill="white" stroke="#0284C7" stroke-width="2"/>
+  <text x="840" y="187" text-anchor="middle" font-size="22" fill="#0284C7" font-weight="700">M</text>
+  <text x="840" y="232" text-anchor="middle" class="label">Marta Núñez</text>
+  <text x="840" y="248" text-anchor="middle" class="desc">manager de Luis</text>
+
+  <!-- Sponsor link -->
+  <line x1="840" y1="280" x2="840" y2="310" stroke="#0284C7" stroke-width="2"/>
+  <text x="850" y="298" font-size="10" fill="#0284C7" font-weight="600">sponsor</text>
+
+  <rect x="780" y="320" width="120" height="80" rx="8" fill="white" stroke="#7B2FBE" stroke-width="2"/>
+  <text x="840" y="345" text-anchor="middle" class="step-h" fill="#7B2FBE">Agent-RRHH-FAQ</text>
+  <text x="840" y="365" text-anchor="middle" class="desc" fill="#9A3412" font-weight="600">requireReview</text>
+  <text x="840" y="380" text-anchor="middle" class="desc">en 30 días</text>
+
+  <text x="840" y="430" text-anchor="middle" class="step" font-style="italic">Marta debe revisar</text>
+  <text x="840" y="446" text-anchor="middle" class="step" font-style="italic">si sigue siendo necesario</text>
+
+  <text x="490" y="525" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 06 · Fig. 6.4</text>
+</svg>

@@ -1,0 +1,105 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 14px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .step   { font-size: 11.5px; fill: #44403c; }
+      .step-h { font-size: 12px; font-weight: 600; fill: #1c1917; }
+      .url    { font-size: 11px; font-family: ui-monospace, 'SF Mono', monospace; fill: #57534e; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .num    { font-size: 12px; font-weight: 700; fill: white; }
+    </style>
+    <marker id="arr-purple-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE"/>
+    </marker>
+    <marker id="arr-orange-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#C2410C"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">Flujos de autenticación: OBO vs own identity</text>
+  <text x="40" y="58" class="sub">Dos modos de operación · OBO usa el token del usuario · own identity usa el token propio del agente</text>
+
+  <!-- ===== OBO box (izquierda) ===== -->
+  <rect x="40" y="90" width="450" height="450" rx="12" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40" y="90" width="450" height="38" rx="12" fill="#9A44E5"/>
+  <rect x="40" y="116" width="450" height="12" fill="#9A44E5"/>
+  <text x="60" y="115" class="h2">FLUJO OBO · ON-BEHALF-OF · DELEGADO</text>
+
+  <!-- Step 1 -->
+  <circle cx="80" cy="170" r="14" fill="#9A44E5"/>
+  <text x="80" y="174" text-anchor="middle" class="num">1</text>
+  <text x="105" y="166" class="step-h">El usuario invoca al agente</text>
+  <text x="105" y="183" class="step">Desde Microsoft 365 Copilot, Teams, app custom</text>
+
+  <!-- Step 2 -->
+  <circle cx="80" cy="225" r="14" fill="#9A44E5"/>
+  <text x="80" y="229" text-anchor="middle" class="num">2</text>
+  <text x="105" y="221" class="step-h">La app cliente obtiene token del usuario</text>
+  <text x="105" y="238" class="url">grant_type=authorization_code</text>
+
+  <!-- Step 3 -->
+  <circle cx="80" cy="285" r="14" fill="#9A44E5"/>
+  <text x="80" y="289" text-anchor="middle" class="num">3</text>
+  <text x="105" y="281" class="step-h">Intercambia el token por uno OBO</text>
+  <text x="105" y="298" class="url">requested_token_use=on_behalf_of</text>
+  <text x="105" y="312" class="step" font-style="italic">Cliente del intercambio: la agent identity</text>
+
+  <!-- Step 4 -->
+  <circle cx="80" cy="345" r="14" fill="#9A44E5"/>
+  <text x="80" y="349" text-anchor="middle" class="num">4</text>
+  <text x="105" y="341" class="step-h">El agente llama a Graph con ese token</text>
+  <text x="105" y="358" class="step">Permisos del usuario · contexto de la agent identity</text>
+
+  <!-- Implicaciones -->
+  <rect x="60" y="385" width="410" height="135" rx="8" fill="white" stroke="#E9D8FF"/>
+  <text x="80" y="408" class="step-h">Implicaciones</text>
+  <text x="80" y="427" class="step">• Si el usuario tiene acceso, el agente lo tiene.</text>
+  <text x="80" y="445" class="step">• Si NO tiene acceso, NO lo tiene (aunque el blueprint diga sí).</text>
+  <text x="80" y="463" class="step">• Audit log atribuye la acción al usuario.</text>
+  <text x="80" y="481" class="step">• Sin usuario activo, el agente no puede operar.</text>
+  <text x="80" y="499" class="step" font-weight="600" fill="#7B2FBE">Para asistentes conversacionales · GA</text>
+
+  <!-- ===== Own identity box (derecha) ===== -->
+  <rect x="510" y="90" width="430" height="450" rx="12" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="510" y="90" width="430" height="38" rx="12" fill="#C2410C"/>
+  <rect x="510" y="116" width="430" height="12" fill="#C2410C"/>
+  <text x="530" y="115" class="h2">FLUJO OWN IDENTITY · AUTONOMOUS</text>
+
+  <!-- Step 1 -->
+  <circle cx="550" cy="170" r="14" fill="#C2410C"/>
+  <text x="550" y="174" text-anchor="middle" class="num">1</text>
+  <text x="575" y="166" class="step-h">El agente solicita un token con sus credenciales</text>
+  <text x="575" y="183" class="url">grant_type=client_credentials</text>
+
+  <!-- Step 2 -->
+  <circle cx="550" cy="225" r="14" fill="#C2410C"/>
+  <text x="550" y="229" text-anchor="middle" class="num">2</text>
+  <text x="575" y="221" class="step-h">Entra valida el certificado o secret</text>
+  <text x="575" y="238" class="step">Devuelve un token con los permisos del blueprint</text>
+
+  <!-- Step 3 -->
+  <circle cx="550" cy="285" r="14" fill="#C2410C"/>
+  <text x="550" y="289" text-anchor="middle" class="num">3</text>
+  <text x="575" y="281" class="step-h">El agente llama a Graph con ese token</text>
+  <text x="575" y="298" class="step">Permisos propios definidos en el blueprint</text>
+  <text x="575" y="312" class="step">No hay usuario humano en el flujo</text>
+
+  <!-- Step 4 -->
+  <circle cx="550" cy="345" r="14" fill="#C2410C"/>
+  <text x="550" y="349" text-anchor="middle" class="num">4</text>
+  <text x="575" y="341" class="step-h">Audit log atribuye la acción al agente</text>
+  <text x="575" y="358" class="step">No al usuario, porque no hay usuario invocador</text>
+
+  <!-- Implicaciones -->
+  <rect x="530" y="385" width="390" height="135" rx="8" fill="white" stroke="#FED7AA"/>
+  <text x="550" y="408" class="step-h">Implicaciones</text>
+  <text x="550" y="427" class="step">• Permisos independientes de cualquier usuario.</text>
+  <text x="550" y="445" class="step">• Funciona 24/7 sin necesidad de usuario presente.</text>
+  <text x="550" y="463" class="step">• Audit log atribuye la acción a la agent identity.</text>
+  <text x="550" y="481" class="step">• Sobreasigna si se usa donde un OBO bastaría.</text>
+  <text x="550" y="499" class="step" font-weight="600" fill="#9A3412">Para autonomous · Frontier preview</text>
+
+  <text x="490" y="568" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 06 · Fig. 6.2</text>
+</svg>
