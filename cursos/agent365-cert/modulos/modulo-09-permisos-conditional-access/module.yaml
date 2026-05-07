@@ -1,0 +1,30 @@
+spec_version: '1.0'
+id: 9
+slug: modulo-09-permisos-conditional-access
+titulo: Permisos, accesos y Conditional Access
+duracion_min: 75
+area_examen: 2
+estado: pendiente
+fase_produccion: 4
+ultima_actualizacion: '2026-05-06'
+prerrequisitos: []
+prerrequisitos_externos: []
+objetivos_aprendizaje: []
+glosario: []
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios: []
+preguntas_aporta_examen_final: 7

@@ -1,0 +1,75 @@
+spec_version: '1.0'
+id: 5
+slug: modulo-05-configuracion-inicial
+titulo: Configuración inicial del tenant
+duracion_min: 75
+area_examen: 1
+estado: producido
+fase_produccion: 3
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 03 — Licenciamiento, prerrequisitos y planificación
+- Módulo 04 — Roles administrativos y delegación
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-05.1
+  texto: Validar los prerrequisitos de un tenant antes de activar Agent 365.
+  bloom: Aplicar
+- id: OA-05.2
+  texto: Activar Agent 365 (modo Frontier preview o GA) siguiendo el orden correcto.
+  bloom: Aplicar
+- id: OA-05.3
+  texto: Configurar el Microsoft 365 connector en Defender for Cloud Apps.
+  bloom: Aplicar
+- id: OA-05.4
+  texto: Habilitar DSPM y AI observability en Microsoft Purview.
+  bloom: Aplicar
+- id: OA-05.5
+  texto: Verificar end-to-end que el setup está operativo (capturando un evento de
+    prueba).
+  bloom: Evaluar
+glosario:
+- Frontier toggle
+- Terms of Service
+- Audit log
+- Microsoft 365 connector
+- DSPM (Data Security Posture Management)
+- AI observability
+- Power Platform connector
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '05.1'
+  titulo: Activación inicial del tenant
+  duracion_min: 30
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365 (standalone o E7) en al menos 1 usuario
+  - Microsoft 365 E5 o equivalente como base
+  roles_requeridos:
+  - Global Administrator o AI Administrator
+- id: '05.2'
+  titulo: Configuración cross-admin center y validación end-to-end
+  duracion_min: 25
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Lab 05.1 completado
+  roles_requeridos:
+  - Global Administrator o (AI Administrator + Security Administrator + Compliance
+    Administrator)
+preguntas_aporta_examen_final: 1

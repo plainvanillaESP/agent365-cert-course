@@ -4,6 +4,19 @@ Este archivo proporciona contexto a Claude (en cualquier interfaz: claude.ai, Cl
 
 ---
 
+## Qué es este repositorio
+
+**PV-Learn** es una plataforma de e-learning de Plain Vanilla Solutions SL. El repositorio contiene dos partes claramente separadas:
+
+- **`platform/`** — Motor genérico (Vite + React + TS) que renderiza paquetes de curso conformes a la spec. No sabe nada de ningún curso concreto.
+- **`cursos/{slug}/`** — Paquetes de curso autocontenidos. Cada uno con su `course.yaml`, módulos en markdown y assets.
+
+El primer curso producido es **Microsoft Agent 365 — Certificación para administradores IT** (`cursos/agent365-cert/`). Está en producción activa.
+
+La especificación canónica del paquete vive en [`docs/course-package-spec.md`](./docs/course-package-spec.md). Cualquier nuevo curso que la cumpla es ejecutable por la plataforma sin tocar código.
+
+---
+
 ## Qué es este proyecto
 
 Curso de certificación profesional para Administradores IT sobre **Microsoft Agent 365** y la gobernanza de agentes de IA en Microsoft 365. Producido por Plain Vanilla Solutions SL.
@@ -62,7 +75,7 @@ Cuando el usuario te pida producir contenido para un módulo:
 2. Lee [`docs/arquitectura-curso.md`](./docs/arquitectura-curso.md) para ver objetivos del módulo y duración planificada
 3. Consulta [`investigacion/deep-research-mayo-2026.md`](./investigacion/deep-research-mayo-2026.md) para datos técnicos verificados
 4. Si necesitas información adicional, busca en `learn.microsoft.com` (preferentemente versión en español, fallback a inglés)
-5. Produce el archivo en la ruta correspondiente (`modulos/modulo-XX/teoria.md` o el archivo que corresponda)
+5. Produce el archivo en la ruta correspondiente (`cursos/agent365-cert/modulos/modulo-XX/teoria.md` o el archivo que corresponda)
 6. Si produces un cambio relevante, actualiza [`docs/changelog.md`](./docs/changelog.md) con una entrada nueva
 
 ## Lo que NO debes hacer

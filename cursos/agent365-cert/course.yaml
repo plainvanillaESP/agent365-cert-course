@@ -1,0 +1,115 @@
+spec_version: "1.0"
+
+# Identidad del curso
+id: agent365-cert
+slug: agent365-cert
+nombre: "Microsoft Agent 365 — Certificación profesional para administradores IT"
+nombre_corto: "Agent 365 IT Admin"
+descripcion_corta: "Curso de certificación profesional para administradores IT sobre Microsoft Agent 365 y la gobernanza de agentes de IA en Microsoft 365."
+idioma: es-ES
+duracion_total_min: 1080
+audiencia: "Administradores M365/Entra/Purview/Defender con experiencia previa"
+editor: "Plain Vanilla Solutions SL"
+version_curso: "1.0.0"
+fecha_publicacion: "2026-05-07"
+
+# Modalidad
+modalidad_predominante: markdown   # markdown | video | mixto
+
+# Branding del curso (sobreescribe el branding de PV-Learn)
+branding:
+  color_primario: "#9A44E5"
+  color_acento: "#F68DAC"
+  gradiente: ["#9A44E5", "#F68DAC"]
+  logo_claro: "assets/agent365-logo.png"
+  logo_oscuro: "assets/agent365-logo.png"
+  favicon: "assets/agent365-logo-64.png"
+  apple_touch_icon: "assets/apple-touch-icon.png"
+  fuente_titulares: "Bricolage Grotesque"
+  fuente_cuerpo: "Instrument Sans"
+
+# Estructura pedagógica: áreas de competencia y peso en el examen final
+areas_examen:
+  - id: 1
+    nombre_es: "Planificación y configuración"
+    nombre_en: "Plan and configure Microsoft Agent 365"
+    peso_pct: 15
+    modulos: [1, 2, 3, 4, 5]
+
+  - id: 2
+    nombre_es: "Identidades de agentes con Entra Agent ID"
+    nombre_en: "Manage agent identities with Microsoft Entra Agent ID"
+    peso_pct: 30
+    modulos: [6, 9]
+
+  - id: 3
+    nombre_es: "Registry y ciclo de vida"
+    nombre_en: "Manage the agent registry and lifecycle"
+    peso_pct: 15
+    modulos: [7, 8]
+
+  - id: 4
+    nombre_es: "Protección de datos con Purview"
+    nombre_en: "Implement data protection with Microsoft Purview"
+    peso_pct: 20
+    modulos: [10, 11]
+
+  - id: 5
+    nombre_es: "Monitorización, investigación y gobernanza"
+    nombre_en: "Monitor, investigate and govern"
+    peso_pct: 20
+    modulos: [12, 13, 14, 15, 16]
+
+# Reglas de avance del alumno
+criterios_finalizacion_modulo:
+  teoria_scroll_pct_min: 80
+  quiz_practica_pct_min: 70
+  labs_intentados_min: 1
+  video_visto_pct_min: 80
+  audio_escuchado_pct_min: 80
+
+modo_navegacion: "secuencial-con-override"   # secuencial-con-override | secuencial-estricto | libre
+
+# Examen final del curso
+examen_final:
+  archivo: "banco-examen.md"
+  duracion_min: 90
+  numero_preguntas: 60
+  puntaje_aprobado_pct: 70
+  intentos_max: 3
+  espera_tras_max_intentos_dias: 7
+  desbloqueado_cuando: "todos-los-modulos-completados"
+
+# Constancia / certificado
+certificado:
+  habilitado: true
+  nombre_otorgado: "Microsoft Agent 365 IT Administrator — Plain Vanilla"
+  plantilla: "assets/certificado-template.svg"
+  campos_dinamicos: ["nombre_alumno", "fecha_emision", "id_verificacion"]
+  url_verificacion: "/verify/{id}"
+
+# Prerrequisitos formales del curso (informativo)
+prerrequisitos_formales:
+  - "Conocimientos administrativos de Microsoft 365 a nivel MS-102 o equivalente"
+  - "Familiaridad con Microsoft Entra ID (usuarios, grupos, roles, Conditional Access básico)"
+  - "Conceptos básicos de protección de datos (DLP, sensitivity labels) y de detección de amenazas (alertas, advanced hunting con KQL)"
+  - "Capacidad de leer y ejecutar comandos PowerShell y peticiones a Microsoft Graph"
+
+# Orden de los módulos. M17 es el examen final, no es un módulo de contenido.
+modulos:
+  - modulo-01-fundamentos
+  - modulo-02-arquitectura
+  - modulo-03-licenciamiento
+  - modulo-04-roles-administrativos
+  - modulo-05-configuracion-inicial
+  - modulo-06-entra-agent-id
+  - modulo-07-agent-registry-map
+  - modulo-08-ciclo-vida-agentes
+  - modulo-09-permisos-conditional-access
+  - modulo-10-purview-proteccion-datos
+  - modulo-11-dlp-sensitivity-compliance
+  - modulo-12-monitorizacion-defender
+  - modulo-13-copilot-control-system
+  - modulo-14-gobernanza-avanzada
+  - modulo-15-troubleshooting
+  - modulo-16-costes-optimizacion

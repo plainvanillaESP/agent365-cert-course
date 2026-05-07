@@ -1,0 +1,80 @@
+spec_version: '1.0'
+id: 2
+slug: modulo-02-arquitectura
+titulo: Arquitectura y componentes
+duracion_min: 75
+area_examen: 1
+estado: producido
+fase_produccion: 3
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 01 — Fundamentos
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-02.1
+  texto: Dibujar el diagrama de arquitectura de Agent 365 nombrando cada componente
+    y su responsabilidad.
+  bloom: Aplicar
+- id: OA-02.2
+  texto: Identificar los 8 tipos de agentes gestionables en M365 admin center y diferenciarlos.
+  bloom: Analizar
+- id: OA-02.3
+  texto: Distinguir las tres categorías de publisher (Your organization, Third Party,
+    Microsoft) y sus implicaciones de gobernanza.
+  bloom: Comprender
+- id: OA-02.4
+  texto: Mapear cada hero metric del Overview a su fuente de datos.
+  bloom: Aplicar
+- id: OA-02.5
+  texto: Ubicar Work IQ MCP servers dentro de la arquitectura y explicar su rol en
+    runtime.
+  bloom: Comprender
+glosario:
+- Agent workload
+- Agent Registry
+- Agent Map
+- Hero metric
+- Agent instance
+- MCS
+- Foundry
+- Agent Builder
+- SharePoint agent
+- Agent Toolkit
+- Work IQ MCP
+- OBO
+- Service principal
+- Blueprint
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria:
+- '2.1 Diagrama macro: Agent 365 como plano de control'
+- '2.2 Microsoft 365 admin center: Agent workload'
+- 2.3 Tipos de agentes gestionables
+- 2.4 Categorías por publisher
+- 2.5 Work IQ MCP servers
+- 2.6 Microsoft 365 Agents SDK vs Agent 365 SDK
+- 2.7 Resumen y mapa mental
+laboratorios:
+- id: '02.1'
+  titulo: Recorrido guiado por la arquitectura
+  duracion_min: 30
+  dificultad: basico
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365 (standalone o E7)
+  roles_requeridos:
+  - Global Reader
+  - AI Reader
+preguntas_aporta_examen_final: 3

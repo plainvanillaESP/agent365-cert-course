@@ -1,0 +1,98 @@
+spec_version: '1.0'
+id: 6
+slug: modulo-06-entra-agent-id
+titulo: Microsoft Entra Agent ID e identidades
+duracion_min: 105
+area_examen: 2
+estado: producido
+fase_produccion: 4
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 02 — Arquitectura y componentes
+- Módulo 04 — Roles administrativos y delegación
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-06.1
+  texto: Distinguir los cuatro tipos de objetos nuevos en Entra Agent ID y la relación
+    entre ellos.
+  bloom: Analizar
+- id: OA-06.2
+  texto: Diseñar un agent identity blueprint con permisos heredables ajustados a un
+    caso de uso.
+  bloom: Crear
+- id: OA-06.3
+  texto: Configurar agent sponsorship con transferencia automática al manager.
+  bloom: Aplicar
+- id: OA-06.4
+  texto: Distinguir flujos OBO vs own identity y aplicar la elección correcta.
+  bloom: Analizar
+- id: OA-06.5
+  texto: Listar y filtrar agent identities desde Entra admin center y desde Microsoft
+    Graph.
+  bloom: Aplicar
+- id: OA-06.6
+  texto: Aplicar custom security attributes para segmentar agentes.
+  bloom: Aplicar
+- id: OA-06.7
+  texto: Deshabilitar identidades en bulk y diagnosticar el impacto.
+  bloom: Aplicar
+glosario:
+- Agent identity blueprint
+- Agent identity blueprint principal
+- Agent identity
+- Agent user
+- OBO (On-Behalf-Of)
+- Own identity
+- Sponsor
+- Inheritable permission
+- Custom security attribute
+- Lifecycle workflow
+- Access package
+- Multi-select disable
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '06.1'
+  titulo: Crear un blueprint con la CLI a365
+  duracion_min: 30
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365
+  roles_requeridos:
+  - AI Administrator
+  - Agent ID Administrator
+- id: '06.2'
+  titulo: Crear y desplegar una agent identity desde el blueprint
+  duracion_min: 30
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Lab 06.1 completado
+  roles_requeridos:
+  - Agent ID Administrator
+- id: '06.3'
+  titulo: Configurar sponsorship + lifecycle workflow
+  duracion_min: 30
+  dificultad: avanzado
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Entra ID P1 (incluido en E5)
+  - Lab 06.1 y 06.2 completados
+  roles_requeridos:
+  - Lifecycle Workflows Administrator
+  - Agent ID Administrator
+preguntas_aporta_examen_final: 11

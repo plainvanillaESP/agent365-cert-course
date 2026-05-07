@@ -1,0 +1,93 @@
+spec_version: '1.0'
+id: 8
+slug: modulo-08-ciclo-vida-agentes
+titulo: Despliegue, distribución y ciclo de vida
+duracion_min: 90
+area_examen: 3
+estado: producido
+fase_produccion: 4
+ultima_actualizacion: 2026-05-06
+prerrequisitos:
+- Módulo 07 — Agent Registry y Agent Map
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+- id: OA-08.1
+  texto: Distinguir las 11 acciones de gobernanza y sus efectos.
+  bloom: Analizar
+- id: OA-08.2
+  texto: Ejecutar el wizard de publishing aplicando una plantilla (Default o Custom).
+  bloom: Aplicar
+- id: OA-08.3
+  texto: 'Aplicar Pin (3 slots: Microsoft, Administrator, User) a un grupo de usuarios.'
+  bloom: Aplicar
+- id: OA-08.4
+  texto: Diferenciar Remove (reversible) de Delete (irreversible, 24h propagación).
+  bloom: Recordar
+- id: OA-08.5
+  texto: Reasignar ownership de un agente Agent Builder cuando el owner sale.
+  bloom: Aplicar
+- id: OA-08.6
+  texto: Diseñar un ciclo de vida completo para una organización.
+  bloom: Crear
+glosario:
+- Publish
+- Activate
+- Deploy
+- Pin
+- Block
+- Remove
+- Delete
+- Approve Update
+- Ownerless
+- Reassign Ownership
+- Default Template
+- Custom Template
+- SharePoint Embedded container
+secciones:
+- tipo: teoria
+  archivo: teoria.md
+- tipo: evaluacion-legacy
+  archivo: evaluacion.md
+  umbral_aprobado_pct: 70
+  intentos_max: null
+  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
+    final.
+- tipo: laboratorios
+  archivo: laboratorios.md
+  intentos_min_requeridos: 1
+- tipo: recursos
+  archivo: recursos.md
+sub_secciones_teoria: []
+laboratorios:
+- id: '08.1'
+  titulo: Publish + Deploy de un agente con plantilla Custom
+  duracion_min: 30
+  dificultad: intermedio
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365
+  - Microsoft 365 Copilot Studio (para crear agente de prueba)
+  roles_requeridos:
+  - AI Administrator
+  - Cloud Application Administrator (para admin consents)
+- id: '08.2'
+  titulo: Pin, Block, Unblock secuencial
+  duracion_min: 20
+  dificultad: basico
+  requiere_tenant: true
+  licencias_requeridas:
+  - Lab 08.1 completado
+  roles_requeridos:
+  - AI Administrator
+- id: '08.3'
+  titulo: Reassign ownership tras hard delete del owner
+  duracion_min: 25
+  dificultad: avanzado
+  requiere_tenant: true
+  licencias_requeridas:
+  - Microsoft Agent 365
+  - Acceso a Agent Builder
+  roles_requeridos:
+  - AI Administrator
+  - User Administrator (para hard-delete del usuario de prueba)
+preguntas_aporta_examen_final: 5

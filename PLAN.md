@@ -111,8 +111,8 @@ Output mergeado en `main` vía PR #2.
 **Estructura del repo tras esta fase:**
 
 ```
-agent365-cert-course/
-├── shell/                    ← NUEVO: app React
+pv-learn/
+├── platform/                    ← NUEVO: app React (era shell/, renombrado en Fase A)
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
@@ -125,7 +125,10 @@ agent365-cert-course/
 │   ├── vite.config.ts
 │   ├── tailwind.config.js
 │   └── tsconfig.json
-├── modulos/                  ← contenido fuente (sigue siendo single source of truth)
+├── cursos/                  ← paquetes de curso (Fase A)
+│   └── agent365-cert/
+│       ├── course.yaml
+│       └── modulos/         ← contenido fuente (single source of truth)
 ├── docs/
 └── ...
 ```
@@ -133,6 +136,54 @@ agent365-cert-course/
 **Criterio de salida de fase:** validación visual del shell con M01 desplegado en URL pública. Si hay feedback estructural se itera antes de pasar a Fase 3.
 
 **Output esperado:** prototipo desplegado en URL Vercel + PR mergeado al repo con la app shell.
+
+---
+
+### Fase A — Reestructuración a plataforma multi-curso (en curso)
+
+**Contexto.** A medida que se consolida la decisión de convertir el primer curso (Microsoft Agent 365) en el primero de una serie ampliable de cursos, se introduce esta fase de reestructuración. Su objetivo es separar el **motor genérico** (lo que será PV-Learn como plataforma) del **paquete de curso** concreto (Agent 365), de forma que cualquier curso futuro que cumpla la spec sea ejecutable sin tocar código del motor.
+
+**Objetivo.** Que la arquitectura del repositorio refleje claramente la separación motor/paquete, con un course-package format formal documentado, y que el primer curso siga funcionando idéntico tras la migración.
+
+**Alcance:**
+
+1. Renombrar `shell/` → `platform/` (motor genérico).
+2. Mover `modulos/` → `cursos/agent365-cert/modulos/` (primer paquete de curso).
+3. Generar `cursos/agent365-cert/course.yaml` con metadatos canónicos del curso.
+4. Generar `cursos/agent365-cert/modulos/{slug}/module.yaml` para cada módulo extraído de los frontmatters actuales.
+5. Definir el course-package format en `docs/course-package-spec.md` v1.0.
+6. Adaptar `platform/src/lib/content.ts` para cargar contenido desde `cursos/{slug}/modulos/...` (preparado para multi-curso).
+7. Validador `scripts/validate-course.py` que comprueba conformidad de un paquete contra la spec.
+8. Renombrar repo a `pv-learn` en GitHub (manual, lo hace el editor).
+9. Smoke test: `npm run build` desde `platform/` produce el mismo bundle funcional que antes.
+
+**Reglas pedagógicas adicionales que se documentan en esta fase** (a propagar en Bloques siguientes):
+
+- **Quiz de práctica del módulo ≠ banco del examen final.** Identificadores `Q-NN-M` (quiz) y `EX-NN-MMM` (banco). Mínimo 3 preguntas de práctica por módulo, distintas a las del banco final.
+- **Banco final consolidado** en `cursos/{slug}/banco-examen.md`.
+- **Criterios de finalización de módulo.** AND lógico de los criterios aplicables: teoría leída ≥ 80% scroll + quiz aprobado ≥ 70% + labs intentados ≥ 1 + (si hay vídeo) ≥ 80% visto. Se omite cualquier criterio cuya sección no exista.
+- **Modo de navegación por defecto:** secuencial con override (toggle "Modo exploración libre" en perfil del alumno).
+
+**Bloques de trabajo de la Fase A:**
+
+- **A.1 (este PR):** estructura nueva + manifests + spec + validador + smoke test. **No produce contenido nuevo** ni refactoriza módulos existentes.
+- **A.2:** refactor de M01 al formato nuevo (separar `evaluacion.md` legacy en `quiz-practica.md` con preguntas Q-01-N + mover EX-01-NNN al banco final).
+- **A.3:** validación contigo del refactor de M01 antes de propagar.
+
+**Entregables de A.1:**
+
+- `cursos/agent365-cert/` como paquete completo (course.yaml + 16 module.yaml).
+- `platform/` operativo cargando contenido desde la nueva ubicación.
+- `docs/course-package-spec.md` v1.0.
+- `scripts/validate-course.py` con 5 validaciones canónicas.
+- README raíz reescrito describiendo PV-Learn como plataforma.
+- Workflow de deploy renombrado a `deploy-platform.yml`.
+
+**Criterio de salida de la fase A.1:**
+
+- Validador pasa sin errores (warnings aceptables si M17 todavía no produce banco final).
+- `npm run build` desde `platform/` produce dist con todos los assets resueltos.
+- PR revisado y mergeado a `main`.
 
 ---
 
