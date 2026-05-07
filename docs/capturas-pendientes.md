@@ -499,6 +499,130 @@ Cinco capturas en M365 admin center (Overview, Registry filtrado, detalle de age
 
 ---
 
+### Módulo 08 — Despliegue, distribución y ciclo de vida
+
+> Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M08). Las 11 acciones se ejecutan desde la UI; las capturas reales son críticas para enseñar a operarlas con seguridad.
+
+#### M08-CAP-01 · Menú contextual con las 11 acciones de un agente
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.1.
+- **URL del admin center:** `https://admin.microsoft.com/Adminportal/Home#/agents/registry` → click sobre un agente → menú contextual `...`.
+- **Vista exacta:** menú contextual desplegado con todas las acciones disponibles para un agente en estado `Active deployed` con E7.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Botón `...` que abre el menú.
+  2. Acciones del bloque Distribución (Pin, Block).
+  3. Acciones del bloque Retirada (Remove, Delete).
+  4. Acción Reassign Ownership (si Agent Builder).
+  5. Estado del agente arriba (Active).
+- **Anonimización:** sustituir nombre real del agente.
+- **Filename:** `M08-CAP-01-context-menu-actions.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-01-context-menu-actions.png`
+
+#### M08-CAP-02 · Wizard de publishing paso 5 (Apply Template)
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.2 + Lab 08.1 Parte C.
+- **URL del admin center:** desde Pending requests → click en un agente → wizard paso 5.
+- **Vista exacta:** paso del wizard donde se elige plantilla. Mostrar dropdown con Default + Custom + None.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Indicador del paso 5 de 7.
+  2. Dropdown Apply Template con opciones.
+  3. Custom Template seleccionada.
+  4. Resumen de políticas que aplica esa template (panel lateral).
+  5. Botones Back / Next.
+- **Anonimización:** ninguna específica.
+- **Filename:** `M08-CAP-02-wizard-apply-template.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-02-wizard-apply-template.png`
+
+#### M08-CAP-03 · Crear Custom Template
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.3 + Lab 08.1 Parte B.
+- **URL del admin center:** `M365 admin → Agents → Settings → Templates → New`.
+- **Vista exacta:** formulario de creación de Custom Template con todas las políticas configurables.
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Campo Name (`Lab08-CustomTemplate` o similar).
+  2. Sección Sharing externo con toggle Disabled.
+  3. Sección Cross-site SharePoint con dropdown.
+  4. Sección Logging con dropdown Verbose.
+  5. Sección Conditional Access.
+  6. Sección Sensitivity label heredada.
+  7. Botón Save.
+- **Anonimización:** ninguna.
+- **Filename:** `M08-CAP-03-custom-template-form.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-03-custom-template-form.png`
+
+#### M08-CAP-04 · Pin con 3 slots disponibles
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.4 + Lab 08.2 Parte A.
+- **URL del admin center:** click sobre un agente Active deployed → ... → Pin.
+- **Vista exacta:** modal de Pin con los 3 slots (Microsoft, Administrator, User) y radio buttons.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Slot Microsoft (atenuado, no configurable).
+  2. Slot Administrator (seleccionable).
+  3. Slot User (seleccionable).
+  4. Texto explicativo de cada slot.
+  5. Botón Pin / Cancel.
+- **Anonimización:** ninguna.
+- **Filename:** `M08-CAP-04-pin-3-slots-modal.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-04-pin-3-slots-modal.png`
+
+#### M08-CAP-05 · Modal de confirmación Delete con timeline
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.5.
+- **URL del admin center:** click sobre un agente → ... → Delete.
+- **Vista exacta:** modal de confirmación de Delete con la advertencia de irreversibilidad y la timeline de 24 h.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Mensaje de advertencia destacado.
+  2. Timeline de propagación 24 h.
+  3. Mención del SharePoint Embedded container.
+  4. Campo de confirmación de tipeado (escribe `DELETE` o nombre del agente).
+  5. Botón Delete (rojo) y Cancel.
+- **Anonimización:** ninguna.
+- **Filename:** `M08-CAP-05-delete-confirmation-modal.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-05-delete-confirmation-modal.png`
+
+#### M08-CAP-06 · Manage Ownerless agents view
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.6 + Lab 08.3 Parte E.
+- **URL del admin center:** Overview → Top actions for you → Ownerless agents → Manage.
+- **Vista exacta:** lista filtrada de agentes ownerless con la columna del antiguo owner (UPN preservado para auditoría).
+- **Resolución:** 1920×1080
+- **Anotaciones (numeradas):**
+  1. Filtro Ownerless aplicado.
+  2. Columna Display name de los agentes.
+  3. Columna Previous owner UPN.
+  4. Columna Last activity.
+  5. Acción Reassign Ownership disponible para los Agent Builder.
+- **Anonimización:** sustituir UPN reales por ficticios.
+- **Filename:** `M08-CAP-06-manage-ownerless-list.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-06-manage-ownerless-list.png`
+
+#### M08-CAP-07 · Modal de Reassign Ownership
+
+- **Ubicación en el curso:** `modulos/modulo-08-ciclo-vida-agentes/teoria.md` § 8.6 + Lab 08.3 Parte E.
+- **URL del admin center:** desde la lista de ownerless → ... → Reassign Ownership.
+- **Vista exacta:** modal con typeahead de usuario o grupo nuevo owner.
+- **Resolución:** 1400×900
+- **Anotaciones (numeradas):**
+  1. Información del agente a reasignar.
+  2. Antiguo owner (deleted user UPN).
+  3. Typeahead de nuevo owner.
+  4. Toggle de notificación al nuevo owner.
+  5. Botón Reassign / Cancel.
+- **Anonimización:** sustituir UPN.
+- **Filename:** `M08-CAP-07-reassign-ownership-modal.png`
+- **Path final:** `modulos/modulo-08-ciclo-vida-agentes/assets/capturas/M08-CAP-07-reassign-ownership-modal.png`
+
+#### Total M08: 7 capturas
+
+Siete capturas críticas: el menú contextual con las 11 acciones, dos del wizard (paso 5 + crear template), Pin con 3 slots, Delete con timeline, Manage Ownerless, Reassign modal. Todas son acciones operativas que el alumno ejecutará en su rol. Coste estimado de captura: 75-90 minutos en un tenant operativo.
+
+---
+
 ### Módulo 06 — Microsoft Entra Agent ID e identidades de agentes
 
 > Estado del módulo: producido y publicado con SVGs conceptuales (PR Fase 4 M06). Es el módulo más denso del curso (105 min, 11 preguntas examen) y se beneficiaría especialmente de capturas reales del Entra admin center con datos de blueprints e identities reales.

@@ -619,6 +619,130 @@ const Q_EX_07_004: MultipleChoiceQuestion = {
     'La dirección de las flechas en el Agent Map representa invocación: A → B significa que A invoca a B. Si HUB tiene 6 conexiones entrantes, hay 6 agentes que lo invocan en algún punto de su lógica. Esto lo convierte en un agente hub: punto único de paso por el que circulan varios workflows. Si HUB falla, los 6 dependientes fallan. La A confunde dirección de flecha con orfandad. La C es falsa: 6 entrantes a 1 nodo NO es un ciclo. La D invierte el significado de la flecha.',
 }
 
+/* ================================ M08 ===================================== */
+
+const Q_EX_08_001: DragAndDropQuestion = {
+  id: 'EX-08-001',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-08.6',
+  area: 3,
+  bloom: 'Aplicar',
+  moduleId: 8,
+  prompt:
+    'Ordena las siguientes acciones del ciclo de vida de un agente desde la idea hasta la retirada definitiva. La posición 1 es la primera acción que se ejecuta; la posición 6 es la última.',
+  items: [
+    { id: 'a1', text: 'Delete (eliminación irreversible).' },
+    { id: 'a2', text: 'Activate (aprobar y dejar activo en el catálogo).' },
+    { id: 'a3', text: 'Publish (enviar a publish desde la plataforma de creación).' },
+    { id: 'a4', text: 'Deploy (distribuir a los usuarios destinatarios).' },
+    { id: 'a5', text: 'Pin (fijar al slot Administrator para visibilidad alta).' },
+    { id: 'a6', text: 'Remove (retirar del despliegue antes del Delete final).' },
+  ],
+  targets: [
+    { id: 'p1', label: 'Posición 1 — Primera acción' },
+    { id: 'p2', label: 'Posición 2' },
+    { id: 'p3', label: 'Posición 3' },
+    { id: 'p4', label: 'Posición 4' },
+    { id: 'p5', label: 'Posición 5' },
+    { id: 'p6', label: 'Posición 6 — Última acción' },
+  ],
+  correctMap: {
+    a3: 'p1', // Publish
+    a2: 'p2', // Activate
+    a4: 'p3', // Deploy
+    a5: 'p4', // Pin
+    a6: 'p5', // Remove
+    a1: 'p6', // Delete
+  },
+  justification:
+    'El ciclo es: Publish (developer envía) → Activate (admin aprueba) → Deploy (distribuir a usuarios) → Pin (visibilidad alta) → Remove (retirar del despliegue, reversible) → Delete (irreversible). Saltarse Remove e ir directo a Delete es legal pero un antipatrón: mejor hacer Remove, esperar 1-2 semanas y solo entonces Delete.',
+}
+
+const Q_EX_08_002: MultipleChoiceQuestion = {
+  id: 'EX-08-002',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-08.4',
+  area: 3,
+  bloom: 'Recordar',
+  moduleId: 8,
+  prompt:
+    'Tu equipo te pregunta si pueden recuperar un agente que acabas de eliminar (Delete) hace 2 horas. ¿Qué les respondes?',
+  options: [
+    { id: 'A', text: 'No, Delete es irreversible inmediatamente; el agente ya no existe en el directorio.' },
+    { id: 'B', text: 'Sí, durante las primeras 24 horas un Global Administrator puede ejecutar Restore-Agent365Agent -Id <agent-id> para cancelar la eliminación. Pasadas las 24 h y el SharePoint Embedded container se borrará y la operación devolverá 404 Not Found.' },
+    { id: 'C', text: 'Sí, pero solo si el agente tenía requireReview: true; en ese caso se puede restaurar en cualquier momento dentro del período de review.' },
+    { id: 'D', text: 'Sí, los agentes Delete pasan a una papelera de Entra que los conserva 30 días, igual que los usuarios deshabilitados.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'Delete tiene una ventana de 24 horas durante la cual un Global Administrator puede ejecutar Restore-Agent365Agent. Tras las 24 h, el SharePoint Embedded container se marca para borrarse físicamente. La A es falsa: durante las 24 h sí hay rescate. La C confunde flags de M06 con la ventana de Delete. La D es falsa: no existe papelera equivalente para agentes.',
+}
+
+const Q_EX_08_003: MultipleChoiceQuestion = {
+  id: 'EX-08-003',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-08.5',
+  area: 3,
+  bloom: 'Recordar',
+  moduleId: 8,
+  prompt:
+    'La acción Reassign Ownership desde el M365 admin center está disponible para…',
+  options: [
+    { id: 'A', text: 'Cualquier agente del Registry independientemente de su plataforma origen.' },
+    { id: 'B', text: 'Solo agentes creados con Agent Builder. Para Copilot Studio se reasigna desde Power Platform admin center y para Foundry desde Azure portal.' },
+    { id: 'C', text: 'Solo agentes con transferOnLeaver: true en su sponsor configuration.' },
+    { id: 'D', text: 'Solo agentes que están en estado Pending approval; una vez activos, la propiedad es inmutable.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'Una de las limitaciones más confundidas del módulo. Reassign Ownership desde M365 admin center solo aplica a agentes Agent Builder. Los agentes Copilot Studio se reasignan desde Power Platform admin center → Environments → Apps. Los Foundry desde Azure portal → AI Foundry resource → Access control (IAM). La A es falsa por esa limitación. La C confunde sponsor con ownership técnico. La D es falsa.',
+}
+
+const Q_EX_08_004: MultipleChoiceQuestion = {
+  id: 'EX-08-004',
+  type: 'scenario',
+  difficulty: 'dificil',
+  oa: 'OA-08.2',
+  area: 3,
+  bloom: 'Aplicar',
+  moduleId: 8,
+  prompt:
+    'El equipo de Compliance te pide aplicar 6 restricciones específicas (sharing externo bloqueado, cross-site SharePoint bloqueado, sensitivity Confidential mínimo, DLP Block on Confidential, CA con MFA + dispositivo compliant, logging verbose) a TODOS los agentes nuevos del departamento Finanzas. ¿Cuál es la mejor forma de implementarlo?',
+  options: [
+    { id: 'A', text: 'Aplicar manualmente cada política a cada agente nuevo durante el wizard de publishing, en el paso 6 «Permissions review».' },
+    { id: 'B', text: 'Crear una Custom Template llamada HighlySensitiveDataTemplate con esas 6 políticas y aplicarla en el paso 5 «Apply Template» del wizard a cada agente nuevo de Finanzas.' },
+    { id: 'C', text: 'Modificar la Default Template del tenant para incluir esas políticas; afectará a todos los agentes nuevos del tenant entero.' },
+    { id: 'D', text: 'Crear una Conditional Access policy específica para Finanzas; las otras políticas no son configurables centralmente.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'El patrón correcto para un conjunto de restricciones específicas que aplican a una categoría de agentes (Finanzas) es crear una Custom Template una vez y aplicarla en el paso 5 del wizard cada vez que se publica un agente de Finanzas. La A es manual y propenso a errores. La C aplicaría a TODOS los agentes del tenant, sobrerestringiendo. La D solo cubre Conditional Access; las otras 5 políticas no son cubiertas por CA.',
+}
+
+const Q_EX_08_005: MultipleChoiceQuestion = {
+  id: 'EX-08-005',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-08.3',
+  area: 3,
+  bloom: 'Recordar',
+  moduleId: 8,
+  prompt:
+    '¿Cuál de las siguientes afirmaciones describe correctamente el comportamiento de Pin en Microsoft Agent 365?',
+  options: [
+    { id: 'A', text: 'Pin requiere que el agente esté en estado Pending approval; una vez activo, no se puede pinear.' },
+    { id: 'B', text: 'Pin tiene 3 slots (Microsoft, Administrator, User) y la propagación a la UI cliente puede tardar hasta 6 horas. Solo se puede pinear un agente al slot Administrator a la vez; pinear otro despinea automáticamente al anterior.' },
+    { id: 'C', text: 'Pin es irreversible: una vez pineado, la única forma de quitarlo es mediante Delete del agente.' },
+    { id: 'D', text: 'Pin se puede aplicar a cualquier agente del Registry, esté deployed o no.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'Los tres elementos de la B son correctos: 3 slots Pin, propagación cliente hasta 6 h por caching, y solo un agente puede ocupar el slot Administrator a la vez. La A invierte: Pin requiere agente activo y deployed. La C es falsa: Pin es reversible vía Unpin. La D es falsa: Pin solo aplica a agentes deployed.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
@@ -630,6 +754,7 @@ const ALL_QUESTIONS: Question[] = [
   Q_EX_06_001, Q_EX_06_002, Q_EX_06_003, Q_EX_06_004, Q_EX_06_005,
   Q_EX_06_006, Q_EX_06_007, Q_EX_06_008, Q_EX_06_009, Q_EX_06_010, Q_EX_06_011,
   Q_EX_07_001, Q_EX_07_002, Q_EX_07_003, Q_EX_07_004,
+  Q_EX_08_001, Q_EX_08_002, Q_EX_08_003, Q_EX_08_004, Q_EX_08_005,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {

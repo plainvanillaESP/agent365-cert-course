@@ -1,0 +1,105 @@
+<svg viewBox="0 0 980 600" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 13px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .action { font-size: 13px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11px; fill: #57534e; }
+      .rev    { font-size: 10px; font-weight: 600; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Las 11 acciones de gobernanza · agrupadas en 4 bloques</text>
+  <text x="40" y="58" class="sub">Cada acción tiene un efecto y un nivel de reversibilidad · Delete es la única irreversible</text>
+
+  <!-- ========== Bloque 1: Aprobación y catálogo ========== -->
+  <rect x="40" y="90" width="450" height="220" rx="10" fill="#FAF5FF" stroke="#9A44E5" stroke-width="1.5"/>
+  <rect x="40" y="90" width="450" height="32" rx="10" fill="#9A44E5"/>
+  <rect x="40" y="114" width="450" height="8" fill="#9A44E5"/>
+  <text x="60" y="111" class="h2">BLOQUE 1 · APROBACIÓN Y CATÁLOGO</text>
+
+  <text x="60" y="148" class="action">Publish</text>
+  <text x="60" y="164" class="desc">Hace al agente visible al admin como Pending approval</text>
+  <rect x="380" y="138" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="425" y="150" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="60" y="195" class="action">Activate</text>
+  <text x="60" y="211" class="desc">Aprueba el agente · pasa a Active y disponible</text>
+  <rect x="380" y="185" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="425" y="197" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="60" y="242" class="action">Approve Update</text>
+  <text x="60" y="258" class="desc">Aprueba la nueva versión de un agente activo</text>
+  <rect x="380" y="232" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="425" y="244" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="60" y="293" class="desc" font-style="italic">Owner técnico: AI Administrator + Cloud Application Admin</text>
+
+  <!-- ========== Bloque 2: Distribución ========== -->
+  <rect x="510" y="90" width="430" height="220" rx="10" fill="#EFF6FF" stroke="#0284C7" stroke-width="1.5"/>
+  <rect x="510" y="90" width="430" height="32" rx="10" fill="#0284C7"/>
+  <rect x="510" y="114" width="430" height="8" fill="#0284C7"/>
+  <text x="530" y="111" class="h2">BLOQUE 2 · DISTRIBUCIÓN</text>
+
+  <text x="530" y="148" class="action">Deploy</text>
+  <text x="530" y="164" class="desc">Distribuye el agente a usuarios o grupos</text>
+  <rect x="830" y="138" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="875" y="150" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="530" y="190" class="action">Pin</text>
+  <text x="530" y="206" class="desc">Fija el agente en uno de 3 slots fijos · 6h propagación</text>
+  <rect x="830" y="180" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="875" y="192" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="530" y="232" class="action">Block</text>
+  <text x="530" y="248" class="desc">Impide invocación sin desinstalar el agente</text>
+  <rect x="830" y="222" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="875" y="234" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="530" y="274" class="action">Unblock</text>
+  <text x="530" y="290" class="desc">Restaura la operación de un agente bloqueado</text>
+  <rect x="830" y="264" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="875" y="276" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <!-- ========== Bloque 3: Retirada y limpieza ========== -->
+  <rect x="40" y="330" width="450" height="220" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="40" y="330" width="450" height="32" rx="10" fill="#C2410C"/>
+  <rect x="40" y="354" width="450" height="8" fill="#C2410C"/>
+  <text x="60" y="351" class="h2">BLOQUE 3 · RETIRADA Y LIMPIEZA</text>
+
+  <text x="60" y="388" class="action">Remove</text>
+  <text x="60" y="404" class="desc">Retira del despliegue · sigue en Registry · sin pérdida</text>
+  <rect x="380" y="378" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="425" y="390" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="60" y="438" class="action" fill="#B91C1C">Delete</text>
+  <text x="60" y="454" class="desc">Elimina · 24h propagación · borra SP Embedded container</text>
+  <rect x="380" y="428" width="90" height="16" rx="8" fill="#FEF2F2" stroke="#DC2626"/>
+  <text x="425" y="440" text-anchor="middle" class="rev" fill="#B91C1C">IRREVERSIBLE</text>
+
+  <text x="60" y="500" class="desc" font-style="italic" fill="#9A3412">⚠ La acción más peligrosa del sistema</text>
+  <text x="60" y="516" class="desc" font-style="italic" fill="#9A3412">Aplicar Remove primero ante la duda · siempre se puede Delete después</text>
+
+  <!-- ========== Bloque 4: Governance avanzado ========== -->
+  <rect x="510" y="330" width="430" height="220" rx="10" fill="#FAFAF9" stroke="#57534E" stroke-width="1.5"/>
+  <rect x="510" y="330" width="430" height="32" rx="10" fill="#57534E"/>
+  <rect x="510" y="354" width="430" height="8" fill="#57534E"/>
+  <text x="530" y="351" class="h2">BLOQUE 4 · GOVERNANCE AVANZADO</text>
+
+  <text x="530" y="388" class="action">Manage Ownerless</text>
+  <text x="530" y="404" class="desc">Abre vista filtrada de agentes huérfanos</text>
+  <rect x="830" y="378" width="90" height="16" rx="8" fill="#FAFAF9" stroke="#A8A29E"/>
+  <text x="875" y="390" text-anchor="middle" class="rev" fill="#57534E">Navegación</text>
+
+  <text x="530" y="438" class="action">Reassign Ownership</text>
+  <text x="530" y="454" class="desc">Transfiere propiedad técnica a otro usuario</text>
+  <rect x="830" y="428" width="90" height="16" rx="8" fill="#F0FDF4"/>
+  <text x="875" y="440" text-anchor="middle" class="rev" fill="#166534">Reversible</text>
+
+  <text x="530" y="500" class="desc" font-style="italic" fill="#9A3412">⚠ Solo aplica a agentes Agent Builder</text>
+  <text x="530" y="516" class="desc" font-style="italic" fill="#9A3412">Copilot Studio → Power Platform admin · Foundry → Azure portal</text>
+
+  <text x="490" y="585" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 08 · Fig. 8.1</text>
+</svg>

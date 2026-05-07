@@ -1,0 +1,98 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 14px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .lab    { font-size: 12.5px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11px; fill: #57534e; }
+      .time   { font-size: 11px; font-weight: 600; fill: white; }
+      .item   { font-size: 11px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Remove vs Delete · la distinción más importante del módulo</text>
+  <text x="40" y="58" class="sub">Remove es retirada reversible · Delete es eliminación irreversible tras 24h de propagación</text>
+
+  <!-- ===== Remove (izquierda) ===== -->
+  <rect x="40" y="90" width="450" height="380" rx="12" fill="#F0FDF4" stroke="#15803D" stroke-width="1.5"/>
+  <rect x="40" y="90" width="450" height="38" rx="12" fill="#15803D"/>
+  <rect x="40" y="116" width="450" height="12" fill="#15803D"/>
+  <text x="60" y="115" class="h2">REMOVE · REVERSIBLE</text>
+
+  <text x="60" y="160" class="lab">Efecto inmediato</text>
+  <text x="60" y="180" class="item">El agente deja de estar deployed para los usuarios</text>
+  <text x="60" y="196" class="item">Sigue en Registry como Active</text>
+  <text x="60" y="212" class="item">Sin asignaciones a usuarios</text>
+
+  <text x="60" y="245" class="lab">Datos asociados</text>
+  <text x="60" y="265" class="item">SharePoint Embedded container intacto</text>
+  <text x="60" y="281" class="item">Logs preservados</text>
+  <text x="60" y="297" class="item">Custom security attributes preservados</text>
+
+  <text x="60" y="330" class="lab">Reversibilidad</text>
+  <text x="60" y="350" class="item">Hacer Deploy de nuevo restaura todo</text>
+  <text x="60" y="366" class="item">Las asignaciones se pueden recrear igual</text>
+
+  <text x="60" y="400" class="lab" fill="#15803D">Uso típico</text>
+  <text x="60" y="420" class="item">Retirar un agente que ya no es útil</text>
+  <text x="60" y="436" class="item">pero que podría volver a serlo</text>
+
+  <rect x="60" y="450" width="410" height="2" fill="#15803D"/>
+
+  <!-- ===== Delete (derecha) con timeline ===== -->
+  <rect x="510" y="90" width="430" height="380" rx="12" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <rect x="510" y="90" width="430" height="38" rx="12" fill="#DC2626"/>
+  <rect x="510" y="116" width="430" height="12" fill="#DC2626"/>
+  <text x="530" y="115" class="h2">DELETE · IRREVERSIBLE TRAS 24H</text>
+
+  <!-- Timeline horizontal -->
+  <line x1="540" y1="180" x2="910" y2="180" stroke="#DC2626" stroke-width="2"/>
+
+  <!-- T0 -->
+  <rect x="538" y="172" width="50" height="16" rx="2" fill="#DC2626"/>
+  <text x="563" y="184" text-anchor="middle" class="time">0 min</text>
+  <text x="563" y="208" text-anchor="middle" class="item" font-size="10">Marcado para</text>
+  <text x="563" y="222" text-anchor="middle" class="item" font-size="10">deletion</text>
+
+  <!-- T 60 min -->
+  <rect x="608" y="172" width="60" height="16" rx="2" fill="#DC2626"/>
+  <text x="638" y="184" text-anchor="middle" class="time">60 min</text>
+  <text x="638" y="208" text-anchor="middle" class="item" font-size="10">Asignaciones</text>
+  <text x="638" y="222" text-anchor="middle" class="item" font-size="10">removidas</text>
+
+  <!-- T 2-12h -->
+  <rect x="688" y="172" width="60" height="16" rx="2" fill="#DC2626"/>
+  <text x="718" y="184" text-anchor="middle" class="time">2-12 h</text>
+  <text x="718" y="208" text-anchor="middle" class="item" font-size="10">Propagación</text>
+  <text x="718" y="222" text-anchor="middle" class="item" font-size="10">cliente</text>
+
+  <!-- T 24h -->
+  <rect x="768" y="172" width="60" height="16" rx="2" fill="#DC2626"/>
+  <text x="798" y="184" text-anchor="middle" class="time">24 h</text>
+  <text x="798" y="208" text-anchor="middle" class="item" font-size="10">SP container</text>
+  <text x="798" y="222" text-anchor="middle" class="item" font-size="10">marked delete</text>
+
+  <!-- T 24-72h -->
+  <rect x="848" y="172" width="60" height="16" rx="2" fill="#7F1D1D"/>
+  <text x="878" y="184" text-anchor="middle" class="time">24-72 h</text>
+  <text x="878" y="208" text-anchor="middle" class="item" font-size="10" fill="#7F1D1D" font-weight="600">Container</text>
+  <text x="878" y="222" text-anchor="middle" class="item" font-size="10" fill="#7F1D1D" font-weight="600">eliminado</text>
+
+  <text x="725" y="265" text-anchor="middle" class="lab" fill="#B91C1C">⚠ Punto de no retorno</text>
+
+  <text x="530" y="305" class="lab">Datos asociados</text>
+  <text x="530" y="325" class="item">SharePoint Embedded container se borra</text>
+  <text x="530" y="341" class="item">Cualquier archivo allí almacenado se pierde</text>
+  <text x="530" y="357" class="item">Audit log se conserva (compliance)</text>
+
+  <text x="530" y="390" class="lab">Cancelación durante las 24h</text>
+  <text x="530" y="410" class="item">Restore-Agent365Agent -Id &lt;id&gt;</text>
+  <text x="530" y="426" class="item">Solo Global Administrator puede ejecutar</text>
+
+  <text x="530" y="455" class="lab" fill="#B91C1C">Uso típico</text>
+  <text x="530" y="475" class="item">Agente experimental descartado · empleado que se va</text>
+
+  <text x="490" y="525" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 08 · Fig. 8.3</text>
+</svg>
