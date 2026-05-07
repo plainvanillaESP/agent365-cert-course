@@ -1,0 +1,83 @@
+<svg viewBox="0 0 980 580" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 13px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .lab    { font-size: 13px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11px; fill: #57534e; }
+      .item   { font-size: 11px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+      .num    { font-size: 16px; font-weight: 700; fill: white; }
+    </style>
+  </defs>
+
+  <text x="40" y="38" class="title">Anatomía de una Conditional Access policy para agentes</text>
+  <text x="40" y="58" class="sub">Cuatro componentes · scope (a quién) · target (qué proteger) · conditions (cuándo) · grant (qué hacer)</text>
+
+  <!-- Outer wrapper -->
+  <rect x="40" y="90" width="900" height="430" rx="12" fill="#FAFAF9" stroke="#7B2FBE" stroke-width="2"/>
+  <rect x="40" y="90" width="900" height="36" rx="12" fill="#7B2FBE"/>
+  <rect x="40" y="116" width="900" height="10" fill="#7B2FBE"/>
+  <text x="60" y="115" class="h2">CONDITIONAL ACCESS POLICY · &quot;Block agent identities at high risk&quot;</text>
+
+  <!-- Componente 1: Scope -->
+  <circle cx="80" cy="170" r="20" fill="#9A44E5"/>
+  <text x="80" y="176" text-anchor="middle" class="num">1</text>
+  <rect x="115" y="148" width="380" height="44" rx="6" fill="white" stroke="#9A44E5" stroke-width="1.5"/>
+  <text x="125" y="166" class="lab">SCOPE · ¿A quién aplica?</text>
+  <text x="125" y="183" class="item">All agent identities · All agent users · Specific by attribute</text>
+
+  <!-- Componente 2: Target -->
+  <circle cx="80" cy="220" r="20" fill="#0284C7"/>
+  <text x="80" y="226" text-anchor="middle" class="num">2</text>
+  <rect x="115" y="198" width="380" height="44" rx="6" fill="white" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="125" y="216" class="lab">TARGET · ¿Qué proteger?</text>
+  <text x="125" y="233" class="item">All resources · Specific applications · Specific Graph scopes</text>
+
+  <!-- Componente 3: Conditions -->
+  <circle cx="80" cy="270" r="20" fill="#15803D"/>
+  <text x="80" y="276" text-anchor="middle" class="num">3</text>
+  <rect x="115" y="248" width="380" height="44" rx="6" fill="white" stroke="#15803D" stroke-width="1.5"/>
+  <text x="125" y="266" class="lab">CONDITIONS · ¿Cuándo evaluar?</text>
+  <text x="125" y="283" class="item">Agent risk · Location · Sign-in risk · User risk</text>
+
+  <!-- Componente 4: Grant -->
+  <circle cx="80" cy="320" r="20" fill="#DC2626"/>
+  <text x="80" y="326" text-anchor="middle" class="num">4</text>
+  <rect x="115" y="298" width="380" height="44" rx="6" fill="white" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="125" y="316" class="lab">GRANT · ¿Qué hacer?</text>
+  <text x="125" y="333" class="item">Block · Require MFA · Require compliant device · Custom controls</text>
+
+  <!-- Diagrama de flujo Sign-in evaluation -->
+  <text x="540" y="155" class="lab">Flujo de evaluación</text>
+
+  <rect x="540" y="170" width="380" height="40" rx="6" fill="white" stroke="#9A44E5"/>
+  <text x="730" y="195" text-anchor="middle" class="item">Sign-in del agente entra en SCOPE</text>
+
+  <rect x="540" y="220" width="380" height="40" rx="6" fill="white" stroke="#0284C7"/>
+  <text x="730" y="245" text-anchor="middle" class="item">Apunta al recurso del TARGET</text>
+
+  <rect x="540" y="270" width="380" height="40" rx="6" fill="white" stroke="#15803D"/>
+  <text x="730" y="289" text-anchor="middle" class="item">CONDITIONS evaluadas</text>
+  <text x="730" y="303" text-anchor="middle" class="desc" font-style="italic">Si todas se cumplen, aplicar grant</text>
+
+  <rect x="540" y="320" width="380" height="40" rx="6" fill="#FEF2F2" stroke="#DC2626"/>
+  <text x="730" y="340" text-anchor="middle" class="item" fill="#B91C1C" font-weight="600">GRANT aplicado</text>
+  <text x="730" y="354" text-anchor="middle" class="desc" font-style="italic">Block / MFA / Compliant device</text>
+
+  <!-- Casos típicos al pie -->
+  <rect x="60" y="375" width="860" height="120" rx="8" fill="white" stroke="#D6D3D1"/>
+  <text x="80" y="397" class="lab">3 casos típicos para agent identities</text>
+
+  <text x="80" y="420" class="item" font-weight="600" fill="#9A44E5">Caso A — Block en High risk</text>
+  <text x="80" y="435" class="desc">Scope: All agent identities · Target: All resources · Conditions: agentRisk=[High] · Grant: Block</text>
+
+  <text x="80" y="455" class="item" font-weight="600" fill="#0284C7">Caso B — Block desde geografías inesperadas</text>
+  <text x="80" y="470" class="desc">Scope: All agent identities · Conditions: locations exclude trusted · Grant: Block</text>
+
+  <text x="80" y="488" class="item" font-weight="600" fill="#15803D">Caso C — MFA en agentes con datos sensibles</text>
+  <text x="80" y="503" class="desc">Scope filter: customSecurityAttributes.Department=Finance · Conditions: signInRisk=Medium,High · Grant: MFA</text>
+
+  <text x="490" y="568" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 09 · Fig. 9.2</text>
+</svg>

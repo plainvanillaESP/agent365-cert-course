@@ -8,6 +8,20 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-07
+
+- `[Contenido]` **Módulo 09 producido al 100% — Permisos, accesos y Conditional Access** (Fase 4, área 2):
+  - `teoria.md` (465 líneas, 75 min, 7 secciones): Application vs Delegated con tabla comparativa y antipatrón de Application amplias; admin consent (cuándo, tres caminos, casos pending); Conditional Access [GA] con anatomía completa (scope, target, conditions, grants), tres casos en YAML y la diferencia de enforcement OBO vs own identity; Report-only mode con patrón de promoción 0→7→14 días; Identity Protection [Frontier preview · P2] con las 6 detecciones offline; las 4 acciones del Risky Agents report con tabla de decisión.
+  - `laboratorios.md` (2 labs, 50 min total): **Lab 09.1** «Crear CA policy de bloqueo por high agent risk en Report-only» (30 min, avanzado) con 4 partes (verificación P2, creación de policy, generación de tráfico, validación en Workload identity sign-ins). **Lab 09.2** «Confirm compromise sobre un agente y observar enforcement» (20 min, avanzado) con cascade completo y limpieza obligatoria.
+  - `evaluacion.md` (7 preguntas oficiales EX-09-001 a EX-09-007): mc Application en agente sin invocador, mc intersección OBO, scenario diseño de CA con filtro CSA y Report-only, mc enforcement OBO vs own identity, mc Confirm compromise como reacción a incidente, drag-and-drop secuencia de despliegue con cascade, mc Identity Protection (preview + P2 + offline + 90 días). + Caso de estudio extenso de Plain Coffee SL con dos policies para los agentes financieros, plan de cutover sin romper cierre mensual y reacción al compromiso de `BotPedidos-Externos`.
+  - `recursos.md` — 5 categorías de docs Microsoft Learn (permisos y admin consent, Conditional Access para agentes, Report-only, Identity Protection, PowerShell) y cross-references a M10, M12 y M14.
+  - `README.md` del módulo con resumen, estructura, reparto al examen, decisiones de diseño y nota anti-IA.
+  - 4 SVGs en `assets/`: Application vs Delegated, anatomía de CA policy, Report-only mode y las 4 acciones sobre Risky Agents.
+- `[Docs]` Sección «Módulo 09» añadida a `docs/capturas-pendientes.md` con 7 capturas para iteración 2 (3 del wizard CA, 1 de Workload identity sign-ins con CA tab, 2 de Identity Protection y 1 de la página de permisos con admin consent).
+- `[Decisión]` Multiple-response del blueprint reformulada como mc compuesto (EX-09-007). Mantiene cobertura del área. Decisión heredada de M08 por limitación del shell.
+
+---
+
 ## 2026-05-06
 
 - `[Setup]` Repositorio inicializado con estructura completa de 17 módulos

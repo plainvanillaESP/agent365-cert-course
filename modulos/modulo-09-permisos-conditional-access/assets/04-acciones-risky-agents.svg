@@ -1,0 +1,113 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #1c1917; }
+      .sub    { font-size: 13px; font-style: italic; fill: #57534e; }
+      .h2     { font-size: 12.5px; font-weight: 700; fill: white; letter-spacing: 0.04em; }
+      .lab    { font-size: 13px; font-weight: 700; fill: #1c1917; }
+      .desc   { font-size: 11px; fill: #57534e; }
+      .item   { font-size: 10.5px; fill: #44403c; }
+      .footer { font-size: 11px; fill: #a8a29e; }
+    </style>
+    <marker id="arr-cas" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B2FBE"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="38" class="title">4 acciones sobre Risky Agents · efectos cascada en CA</text>
+  <text x="40" y="58" class="sub">Confirm compromise eleva risk · Confirm safe baja risk · Dismiss preserva · Disable deshabilita inmediatamente</text>
+
+  <!-- Risky Agent (top center) -->
+  <rect x="380" y="85" width="220" height="60" rx="10" fill="white" stroke="#9A44E5" stroke-width="2"/>
+  <text x="490" y="108" text-anchor="middle" class="lab" fill="#7B2FBE">Risky Agent detectado</text>
+  <text x="490" y="125" text-anchor="middle" class="desc">Risk: Medium · 3 detecciones</text>
+  <text x="490" y="140" text-anchor="middle" class="desc" font-style="italic">Admin debe decidir acción</text>
+
+  <!-- Líneas a las 4 acciones -->
+  <line x1="430" y1="145" x2="170" y2="195" stroke="#7B2FBE" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <line x1="465" y1="145" x2="395" y2="195" stroke="#7B2FBE" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <line x1="510" y1="145" x2="600" y2="195" stroke="#7B2FBE" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <line x1="555" y1="145" x2="820" y2="195" stroke="#7B2FBE" stroke-width="1.5" stroke-dasharray="3 2"/>
+
+  <!-- ===== Acción 1: Confirm compromise ===== -->
+  <rect x="40" y="195" width="260" height="290" rx="10" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+  <rect x="40" y="195" width="260" height="32" rx="10" fill="#DC2626"/>
+  <rect x="40" y="219" width="260" height="8" fill="#DC2626"/>
+  <text x="60" y="216" class="h2">CONFIRM COMPROMISE</text>
+
+  <text x="60" y="250" class="lab">Efecto inmediato</text>
+  <text x="60" y="270" class="item">Risk eleva a HIGH inmediatamente</text>
+  <text x="60" y="286" class="item">Sin esperar al recalculo horario</text>
+
+  <text x="60" y="315" class="lab">Cascade en CA</text>
+  <text x="60" y="335" class="item">Si hay policy con agentRisk=High</text>
+  <text x="60" y="351" class="item">y grant Block, el siguiente sign-in</text>
+  <text x="60" y="367" class="item" font-weight="600" fill="#B91C1C">→ Agente bloqueado</text>
+
+  <text x="60" y="395" class="lab" fill="#B91C1C">Cuándo usar</text>
+  <text x="60" y="415" class="item">Evidencia razonable de compromiso</text>
+  <text x="60" y="431" class="item">Acceso anómalo confirmado</text>
+  <text x="60" y="447" class="item">Credenciales filtradas validadas</text>
+  <text x="60" y="463" class="item">Comportamiento claramente malicioso</text>
+
+  <!-- ===== Acción 2: Confirm safe ===== -->
+  <rect x="320" y="195" width="170" height="290" rx="10" fill="#F0FDF4" stroke="#15803D" stroke-width="1.5"/>
+  <rect x="320" y="195" width="170" height="32" rx="10" fill="#15803D"/>
+  <rect x="320" y="219" width="170" height="8" fill="#15803D"/>
+  <text x="340" y="216" class="h2">CONFIRM SAFE</text>
+
+  <text x="340" y="250" class="lab">Efecto</text>
+  <text x="340" y="270" class="item">Risk baja a LOW</text>
+  <text x="340" y="286" class="item">Modelo aprende</text>
+
+  <text x="340" y="315" class="lab">Cascade</text>
+  <text x="340" y="335" class="item">Policies con agentRisk</text>
+  <text x="340" y="351" class="item">dejan de aplicar</text>
+
+  <text x="340" y="395" class="lab" fill="#166534">Cuándo</text>
+  <text x="340" y="415" class="item">Falso positivo</text>
+  <text x="340" y="431" class="item">confirmado tras</text>
+  <text x="340" y="447" class="item">investigación</text>
+
+  <!-- ===== Acción 3: Dismiss ===== -->
+  <rect x="510" y="195" width="170" height="290" rx="10" fill="#FAFAF9" stroke="#57534E" stroke-width="1.5"/>
+  <rect x="510" y="195" width="170" height="32" rx="10" fill="#57534E"/>
+  <rect x="510" y="219" width="170" height="8" fill="#57534E"/>
+  <text x="530" y="216" class="h2">DISMISS</text>
+
+  <text x="530" y="250" class="lab">Efecto</text>
+  <text x="530" y="270" class="item">Oculta la alerta</text>
+  <text x="530" y="286" class="item">Risk no cambia</text>
+
+  <text x="530" y="315" class="lab">Cascade</text>
+  <text x="530" y="335" class="item">Ninguna · score</text>
+  <text x="530" y="351" class="item">se mantiene igual</text>
+
+  <text x="530" y="395" class="lab" fill="#57534E">Cuándo</text>
+  <text x="530" y="415" class="item">Investigación</text>
+  <text x="530" y="431" class="item">abierta · no quieres</text>
+  <text x="530" y="447" class="item">contaminar el modelo</text>
+
+  <!-- ===== Acción 4: Disable ===== -->
+  <rect x="700" y="195" width="240" height="290" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="1.5"/>
+  <rect x="700" y="195" width="240" height="32" rx="10" fill="#C2410C"/>
+  <rect x="700" y="219" width="240" height="8" fill="#C2410C"/>
+  <text x="720" y="216" class="h2">DISABLE · EMERGENCIA</text>
+
+  <text x="720" y="250" class="lab">Efecto inmediato</text>
+  <text x="720" y="270" class="item">Agent identity deshabilitada</text>
+  <text x="720" y="286" class="item">No puede autenticarse</text>
+
+  <text x="720" y="315" class="lab">Cascade</text>
+  <text x="720" y="335" class="item">Agente deja de operar</text>
+  <text x="720" y="351" class="item">inmediatamente · sin esperar</text>
+  <text x="720" y="367" class="item" font-weight="600" fill="#9A3412">a CA enforcement</text>
+
+  <text x="720" y="395" class="lab" fill="#9A3412">Cuándo usar</text>
+  <text x="720" y="415" class="item">Emergencia · necesitas parar HOY</text>
+  <text x="720" y="431" class="item">CA + risk levels van a tardar</text>
+  <text x="720" y="447" class="item">60 min recalculo + 5-15 min propagación</text>
+  <text x="720" y="463" class="item" font-style="italic">Investigar después con calma</text>
+
+  <text x="490" y="528" class="footer" text-anchor="middle">Plain Vanilla Solutions — Curso Microsoft Agent 365 IT Admin · Módulo 09 · Fig. 9.4</text>
+</svg>
