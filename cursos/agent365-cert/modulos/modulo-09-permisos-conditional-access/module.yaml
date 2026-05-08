@@ -2,9 +2,9 @@ spec_version: '1.0'
 id: 9
 slug: modulo-09-permisos-conditional-access
 titulo: "Permisos, accesos y Conditional Access para agentes"
-duracion_min: 75
+duracion_min: 183
 area_examen: 2
-estado: produciendo
+estado: producido
 fase_produccion: 2
 ultima_actualizacion: 2026-05-07
 prerrequisitos:
@@ -68,6 +68,13 @@ glosario:
 secciones:
   - tipo: teoria
     archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
   - tipo: recursos
     archivo: recursos.md
 sub_secciones_teoria:
@@ -77,5 +84,17 @@ sub_secciones_teoria:
   - "9.4 Trazabilidad: OBO vs own identity en sign-in logs"
   - "9.5 Composición de defensas: blueprint + CA + ID Protection"
   - "9.6 Operaciones del día a día"
-laboratorios: []
+laboratorios:
+  - id: LAB-09-1
+    titulo: "Crear una CA policy que bloquee agentes con risk High"
+    duracion_min: 20
+  - id: LAB-09-2
+    titulo: "Configurar las seis detecciones de Identity Protection para agentes"
+    duracion_min: 25
+  - id: LAB-09-3
+    titulo: "Auditar permisos efectivos de un agente OBO"
+    duracion_min: 20
+  - id: LAB-09-4
+    titulo: "Diseño end-to-end: agente Foundry de Tesorería"
+    duracion_min: 25
 preguntas_aporta_examen_final: 7

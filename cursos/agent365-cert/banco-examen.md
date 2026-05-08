@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 29
+total_preguntas_actuales: 36
 ultima_actualizacion: 2026-05-07
 ---
 
@@ -27,7 +27,7 @@ ultima_actualizacion: 2026-05-07
 | M06 — Entra Agent ID | 11 | Completo |
 | M07 — Agent Registry | 4 | Completo |
 | M08 — Ciclo de vida | 5 | Completo |
-| M09 — Permisos y CA | 7 | Pendiente producción |
+| M09 — Permisos y CA | 7 | Completo |
 | M10 — Purview | 5 | Pendiente producción |
 | M11 — DLP y compliance | 7 | Pendiente producción |
 | M12 — Defender | 7 | Pendiente producción |
@@ -899,4 +899,197 @@ opciones:
     texto: "Pin se puede aplicar a cualquier agente del Registry, esté deployed o no."
 justificacion: |
   Los tres elementos de la B son correctos: 3 slots Pin, propagación cliente hasta 6 h por caching, y solo un agente puede ocupar el slot Administrator a la vez. La A invierte: Pin requiere agente activo y deployed. La C es falsa: Pin es reversible vía Unpin. La D es falsa: Pin solo aplica a agentes deployed.
+:::
+
+### Módulo 09 — Permisos, accesos y Conditional Access
+
+::: pregunta
+id: EX-09-001
+modulo: 9
+oa: OA-09.1
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Comprender
+enunciado: |
+  Un agente OBO opera en runtime con permisos calculados como…
+opciones:
+  - id: a
+    texto: "La unión entre los scopes del blueprint heredado y los del usuario invocador."
+  - id: b
+    texto: "La intersección triple entre scopes del blueprint heredado, scopes incluidos en la licencia del usuario invocador y scopes consentidos por el usuario."
+    correcta: true
+  - id: c
+    texto: "Solo los scopes del blueprint, independientemente del usuario invocador."
+  - id: d
+    texto: "Solo los scopes que el usuario invocador tiene en su licencia, sin importar lo que herede el blueprint."
+justificacion: |
+  La regla operativa más importante del módulo es la intersección triple en OBO: blueprint AND licencia AND consent. Las tres listas deben coincidir para que el scope esté efectivamente disponible en runtime. La opción A (unión) es el opuesto y produce sobrelicenciamiento conceptual. La C ignora la licencia y consent. La D ignora blueprint y consent.
+:::
+
+::: pregunta
+id: EX-09-002
+modulo: 9
+oa: OA-09.2
+area: 2
+tipo: scenario
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Tu organización quiere bloquear toda invocación a agentes con `customSecurityAttributes.Department = Finanzas` cuando el agente esté en `riskScore` Medium o High. La policy debe estar permanente (no Report-only) tras 7 días de validación. ¿Qué configuración aplica?
+opciones:
+  - id: a
+    texto: "Assignments Workload identities con filter Department = Finanzas. Conditions Workload identity risk = Medium, High. Grants Block. Enable Report-only durante 7d, luego On."
+    correcta: true
+  - id: b
+    texto: "Assignments All workload identities. Conditions Sign-in risk = Medium, High. Grants Require MFA. Enable On."
+  - id: c
+    texto: "Assignments Users in group Finanzas. Conditions User risk = Medium, High. Grants Block. Enable On."
+  - id: d
+    texto: "No es posible: las CA workload identities no soportan combinar custom attributes con risk score."
+justificacion: |
+  La opción A combina los dos signals (custom attribute Department + workload identity risk) y aplica grant Block como dicta el escenario. La progresión Report-only → On es la práctica recomendada para validar policies sin causar fallos en producción. La B aplica MFA (no tiene sentido para workload identities) y no filtra por Department. La C confunde users con workload identities. La D es falsa: combinar attributes con risk sí está soportado en workload identity CA.
+:::
+
+::: pregunta
+id: EX-09-003
+modulo: 9
+oa: OA-09.4
+area: 2
+tipo: drag-and-drop
+dificultad: media
+bloom: Recordar
+enunciado: |
+  Empareja cada **detección de Identity Protection para agentes** con la señal que dispara su disparo principal.
+items:
+  - id: d1
+    texto: "Anomalous token use"
+  - id: d2
+    texto: "Atypical agent travel"
+  - id: d3
+    texto: "Token issuer anomaly"
+  - id: d4
+    texto: "Suspicious agent application activity"
+  - id: d5
+    texto: "Verified threat actor signals"
+  - id: d6
+    texto: "Adversary-in-the-middle (AiTM)"
+targets:
+  - id: t1
+    label: "Patrones de uso de token fuera del baseline aprendido"
+  - id: t2
+    label: "Token aparece en regiones imposibles de cubrir físicamente"
+  - id: t3
+    label: "Token con issuer no esperado o firma inválida"
+  - id: t4
+    label: "Agente intenta operaciones fuera de lo que su blueprint hereda"
+  - id: t5
+    label: "IP/ASN marcados por Microsoft Threat Intelligence"
+  - id: t6
+    label: "Patrones consistentes con proxy malicioso interceptando el flow OBO"
+correct_map:
+  d1: t1
+  d2: t2
+  d3: t3
+  d4: t4
+  d5: t5
+  d6: t6
+justificacion: |
+  La memorización de las seis detecciones es exigible para el examen final. Cada una responde a una clase de ataque distinta: comportamiento anómalo del token, manipulación geográfica, token forgery, escalada de privilegios, threat intelligence externo, y proxy interceptor. La suma de las seis cubre el espectro de ataques sobre workload identities documentado por Microsoft Defender for Cloud Apps en su threat model de mayo de 2026.
+:::
+
+::: pregunta
+id: EX-09-004
+modulo: 9
+oa: OA-09.5
+area: 2
+tipo: scenario
+dificultad: dificil
+bloom: Analizar
+enunciado: |
+  Necesitas distinguir en un sign-in log si una invocación a un agente fue OBO o own identity. ¿Qué campo del log debes inspeccionar primero y qué valor distingue uno del otro?
+opciones:
+  - id: a
+    texto: "El campo `userPrincipalName`: si está poblado, fue OBO; si está vacío, fue own identity."
+    correcta: true
+  - id: b
+    texto: "El campo `appId`: si coincide con un agent identity es OBO; si coincide con un service principal es own identity."
+  - id: c
+    texto: "El campo `correlationId`: los OBO tienen valor numérico, los own identity tienen GUID."
+  - id: d
+    texto: "El campo `tokenIssuerType`: el valor `AzureAD` indica OBO, `WorkloadIdentity` indica own identity."
+justificacion: |
+  El distintivo canónico es `userPrincipalName`: en OBO la entrada del log tiene el UPN del usuario invocador (porque es ese usuario quien arranca el flow); en own identity la entrada está poblada con la identidad del agente y `userPrincipalName` aparece vacío. La opción B confunde appId (siempre poblado en ambos modos con el agente como recurso). La C inventa una distinción entre correlation IDs. La D inventa un campo `tokenIssuerType`.
+:::
+
+::: pregunta
+id: EX-09-005
+modulo: 9
+oa: OA-09.6
+area: 2
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Diseñas el control de acceso para un agente Foundry de RRHH que opera **autonomous** (batch nocturno) leyendo datos de empleados (`Files.Read.All` sobre site RRHH) con `ConfidentialityLevel = HighlyConfidential`. ¿Cuál es la composición correcta de las tres capas de defensa?
+opciones:
+  - id: a
+    texto: "Solo blueprint con scopes mínimos: las otras dos capas no son necesarias en agentes RRHH porque RRHH ya es área restringida."
+  - id: b
+    texto: "Blueprint con scopes mínimos + requireSponsor + Conditional Access que bloquee invocaciones fuera de la ventana batch (00:00-06:00) + Identity Protection con las 6 detecciones activas + risk policy block en Medium/High."
+    correcta: true
+  - id: c
+    texto: "Solo Conditional Access bloqueando todas las invocaciones excepto desde la IP del scheduler. Las otras dos capas son redundantes."
+  - id: d
+    texto: "Solo Identity Protection en modo paranoid (umbral Low). Las otras dos capas son innecesarias si las detecciones son agresivas."
+justificacion: |
+  El principio de defensa en profundidad exige las tres capas. Cada una contiene un tipo de ataque distinto: el blueprint mantiene scopes mínimos (previene escalada por configuración), la CA bloquea invocaciones en condiciones no autorizadas (ventana horaria, atributos), y Identity Protection detecta comportamiento anómalo en runtime. Confiar en una sola capa deja huecos. La opción A subestima los riesgos. La C deja huecos en risk score. La D deja huecos en patrón estático (un agente con un scope que no debería tener pasa Identity Protection si su comportamiento parece normal).
+:::
+
+::: pregunta
+id: EX-09-006
+modulo: 9
+oa: OA-09.3
+area: 2
+tipo: scenario
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  El equipo de Seguridad ve en Risky Agents que el agente «Comercial-Crm-Sync» pasa a Risk High a las 11:30 con detección anomalous token use. La investigación revela que un partner externo está conectándose a la API custom del agente con tokens del propio tenant tras un onboarding técnico de la víspera. Es comportamiento legítimo. ¿Cuál es la respuesta operativa correcta?
+opciones:
+  - id: a
+    texto: "Bloquear permanentemente el agente con Block desde el M365 admin center."
+  - id: b
+    texto: "Eliminar el agente y recrearlo con la nueva configuración."
+  - id: c
+    texto: "Hacer dismissal del riesgo en Identity Protection con justificación auditable («onboarding partner — comportamiento esperado tras integración del 2026-10-14») y monitorizar la reincidencia. Si vuelve a High, escalar a investigación profunda."
+    correcta: true
+  - id: d
+    texto: "Esperar pasivamente: Identity Protection reevaluará al agente automáticamente y si el comportamiento se mantiene, dejará de marcarlo."
+justificacion: |
+  La respuesta operativa correcta para un falso positivo identificado es el **risk dismissal con justificación auditable**: queda en audit log, no bloquea operación legítima, y si la reincidencia ocurre se investiga. La opción A sobreasigna severidad y rompe operación legítima. La B elimina trabajo legítimo de meses. La D ignora la responsabilidad: Identity Protection no «aprende» automáticamente que algo es legítimo sin dismissal explícito; mantendría el agente en High indefinidamente.
+:::
+
+::: pregunta
+id: EX-09-007
+modulo: 9
+oa: OA-09.2
+area: 2
+tipo: multiple-choice
+dificultad: media
+bloom: Recordar
+enunciado: |
+  ¿Qué licencia es **estrictamente necesaria** para crear Conditional Access policies que apliquen a workload identities de agentes?
+opciones:
+  - id: a
+    texto: "Microsoft Entra ID P1 (incluida en E3)."
+  - id: b
+    texto: "Microsoft Entra ID P2 (incluida en E5)."
+  - id: c
+    texto: "Microsoft Entra Workload Identities Premium (vendida standalone o incluida en E7)."
+    correcta: true
+  - id: d
+    texto: "Microsoft 365 E5 Compliance."
+justificacion: |
+  Microsoft Entra Workload Identities Premium es la licencia que habilita CA policies sobre workload identities (service principals + agent identities). Está incluida en E7 y se vende standalone para organizaciones que quieren CA para agentes sin migrar a E7. Sin esta licencia, las CA solo aplican a usuarios humanos. La opción A (P1) cubre CA para usuarios pero no para workload identities. La B (P2) habilita Identity Protection con risk scores avanzados pero no la aplicación de CA a workload identities. La D es de Compliance (Purview), sin relación con CA.
 :::

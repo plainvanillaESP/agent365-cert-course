@@ -10,7 +10,15 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-07
 
-- `[Contenido]` Fase B.1 — Producción de M09 parte 1: teoría + recursos + manifest (PR #?). M09 estaba en placeholder absoluto desde el inicio del repo. Se produce de cero con el formato del paquete.
+- `[Contenido]` Fase B.2 — M09 cerrado: laboratorios + quiz + 7 preguntas al banco + sync lib/quiz.ts (PR #?). Cierra la **Fase 4** del curso (M01-M09 todos producidos).
+  - **`laboratorios.md`** con 4 labs prácticos (90 min total): LAB-09-1 (CA policy bloquea agentes High Risk con flujo Report-only → On), LAB-09-2 (configurar las 6 detecciones de Identity Protection y validar con tráfico de prueba), LAB-09-3 (auditar permisos efectivos de un agente OBO calculando intersección triple blueprint/licencia/consent), LAB-09-4 (diseño end-to-end blueprint + 2 CA policies + ID Protection alerts para agente Foundry de Tesorería autonomous).
+  - **`quiz-practica.md`** con 8 preguntas Q-09-1..Q-09-8 cubriendo los 6 OAs en cuatro tipos (multiple-choice, multiple-response, scenario, drag-and-drop). Caso de estudio TextilNova (diseñar dashboard operativo diario del equipo de Seguridad de IA).
+  - **7 preguntas EX-09-001..007** acumuladas en `cursos/agent365-cert/banco-examen.md`. Banco pasa de 29 a **36 preguntas oficiales**.
+  - **`module.yaml`** actualizado: `estado: producido`, secciones completas (teoria + quiz-practica + laboratorios + recursos), `duracion_min: 183` (75 teoría + 18 quiz + 90 labs), 4 labs declarados.
+  - **`platform/src/lib/quiz.ts`** sincronizado: 3 nuevas `Q_PRACT_09_*` (1 multiple-choice OA-09.1, 1 scenario OA-09.5, 1 drag-and-drop OA-09.6).
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. Build OK 2.24s.
+
+ M09 estaba en placeholder absoluto desde el inicio del repo. Se produce de cero con el formato del paquete.
   - **`teoria.md`** completa (~530 líneas, 6 secciones, 75 min lectura): permisos en cuatro capas (blueprint heredado, delegated OBO, application own identity, custom security attributes), Conditional Access para workload identities con grants disponibles y patrones canónicos, Identity Protection con las seis detecciones específicas para agentes (anomalous token use, atypical agent travel, token issuer anomaly, suspicious agent application activity, verified threat actor signals, AiTM), trazabilidad OBO vs own identity en sign-in logs y CloudAppEvents, composición de defensas en tres capas, operaciones del día a día (triaje diario de Risky Agents, revisión semanal de CA, revisión trimestral de blueprints).
   - **`recursos.md`** con URLs canónicas de Microsoft Learn (CA workload identities, riskyAgents endpoint, sign-in logs schema), blogs oficiales (Entra blog, Security blog, anuncio GA Agent 365), lecturas adicionales (Zero Trust, RFC 8693 OAuth OBO, NIST SP 800-207) y herramientas (Graph PowerShell SDK, az ad sp, Graph Explorer).
   - **`module.yaml`** con los 6 OAs definidos (cubriendo Comprender, Aplicar, Analizar, Crear), 16 términos de glosario, prerrequisitos M01+M04+M06, secciones teoría + recursos (quiz-practica y laboratorios se añadirán en B.2), `estado: produciendo`, `fase_produccion: 2`, `preguntas_aporta_examen_final: 7`.
