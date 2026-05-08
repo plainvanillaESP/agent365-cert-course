@@ -674,6 +674,83 @@ const Q_PRACT_08_5: DragAndDropQuestion = {
     'Las 11 acciones se agrupan en cuatro categorías: Activación / Despliegue (Activate, Deploy), Visibilidad y promoción (Pin, Unpin), Mantenimiento (Approve update, Reassign Ownership, Edit metadata) y Retirada / Bloqueo (Remove, Block, Delete, Restore). Conocer la categoría te permite anticipar el impacto de la acción.',
 }
 
+/* ============================ Módulo 09 — quiz práctica ===================== */
+
+const Q_PRACT_09_1: MultipleChoiceQuestion = {
+  id: 'Q-09-1',
+  type: 'multiple-choice',
+  difficulty: 'media',
+  oa: 'OA-09.1',
+  area: 2,
+  bloom: 'Aplicar',
+  moduleId: 9,
+  prompt:
+    'Un usuario invoca a un agente OBO «Comercial-Pricing» que tiene en su blueprint heredado los scopes User.Read, Mail.Read, Files.Read.All, Crm.Account.Read. El usuario tiene licencia M365 E3 (sin Exchange Online) y consintió todos los scopes la primera vez que invocó al agente. ¿Qué scopes serán efectivos durante la invocación?',
+  options: [
+    { id: 'A', text: 'Los cuatro: blueprint heredado + consent → efectivos.' },
+    { id: 'B', text: 'Solo User.Read, Files.Read.All y Crm.Account.Read. Mail.Read falla porque el usuario NO tiene Exchange Online en su licencia E3, así que la intersección lo descarta.' },
+    { id: 'C', text: 'Solo User.Read. El resto requieren licencia E5 mínima.' },
+    { id: 'D', text: 'Solo los scopes Microsoft Graph estándar. Los scopes de resource apps custom como Crm.Account.Read no aplican en OBO.' },
+  ],
+  correctOptionId: 'B',
+  justification:
+    'Los permisos efectivos en OBO son la intersección triple entre blueprint heredado, licencia del usuario y consent. Los tres deben coincidir. En este caso el usuario ha consentido los cuatro y el blueprint los hereda, pero la licencia E3 no incluye Exchange Online, así que Mail.Read falla en runtime con 403 Forbidden. Los otros tres pasan.',
+}
+
+const Q_PRACT_09_5: MultipleChoiceQuestion = {
+  id: 'Q-09-5',
+  type: 'scenario',
+  difficulty: 'dificil',
+  oa: 'OA-09.5',
+  area: 2,
+  bloom: 'Analizar',
+  moduleId: 9,
+  prompt:
+    'Un auditor regulatorio pregunta: «¿Qué usuario humano accedió al documento tesoreria-Q3-cierre.xlsx el día 15 de octubre a las 23:47?». Tu equipo investiga y descubre que el acceso lo hizo el agente Foundry «Tesoreria-Reconcile» en modo own identity. ¿Cómo respondes al auditor con trazabilidad operacional?',
+  options: [
+    { id: 'A', text: 'Fue el agente Tesoreria-Reconcile, así que no podemos identificar un usuario humano: own identity opera con identidad propia sin contexto de usuario invocador. Para auditoría regulatoria correlacionamos el agentId con el BusinessOwner del agente vía custom security attribute, que es la persona responsable de la decisión de qué hace el agente.' },
+    { id: 'B', text: 'Fue el último usuario que invocó el agente antes de las 23:47. Lo extraemos del sign-in log más reciente.' },
+    { id: 'C', text: 'No podemos responder: own identity no genera logs auditables.' },
+    { id: 'D', text: 'Ningún humano accedió: own identity no permite acceso a documentos sensibles por diseño.' },
+  ],
+  correctOptionId: 'A',
+  justification:
+    'Own identity no tiene usuario invocador: el agente actúa con su propia identidad y los sign-in logs reflejan eso (userPrincipalName vacío, appId del agente). Para auditoría regulatoria la trazabilidad pasa por el BusinessOwner del agente (custom security attribute) que documenta quién es el responsable humano de la decisión.',
+}
+
+const Q_PRACT_09_6: DragAndDropQuestion = {
+  id: 'Q-09-6',
+  type: 'drag-and-drop',
+  difficulty: 'media',
+  oa: 'OA-09.6',
+  area: 2,
+  bloom: 'Aplicar',
+  moduleId: 9,
+  prompt:
+    'Empareja cada capa de defensa del control de acceso a agentes con la pieza de Microsoft Entra / Microsoft Graph donde se configura.',
+  items: [
+    { id: 'c1', text: 'Limitar el conjunto de scopes Graph que cualquier agente derivado puede heredar.' },
+    { id: 'c2', text: 'Bloquear invocaciones de un agente cuando su risk score pasa a High.' },
+    { id: 'c3', text: 'Detectar que un agente intenta operaciones fuera del baseline aprendido.' },
+    { id: 'c4', text: 'Marcar al agente como requireSponsor = true para que no opere sin sponsor activo.' },
+    { id: 'c5', text: 'Bloquear invocaciones desde IPs marcadas como threat actor verificado por Microsoft Threat Intelligence.' },
+  ],
+  targets: [
+    { id: 'blueprint', label: 'Blueprint (preventiva, estática)' },
+    { id: 'ca',        label: 'Conditional Access (preventiva, dinámica)' },
+    { id: 'ip',        label: 'Identity Protection (detectiva, dinámica)' },
+  ],
+  correctMap: {
+    c1: 'blueprint',
+    c2: 'ca',
+    c3: 'ip',
+    c4: 'blueprint',
+    c5: 'ca',
+  },
+  justification:
+    'Blueprint (preventiva, estática): define qué scopes hereda el agente y restricciones operativas como requireSponsor. Conditional Access (preventiva, dinámica): condiciona la invocación según signals (risk score, location, custom attributes). Identity Protection (detectiva, dinámica): detecta comportamiento anómalo y produce risk scores que la CA lee.',
+}
+
 /* --------------------------- API pública del banco -------------------------- */
 
 const ALL_QUESTIONS: Question[] = [
@@ -685,6 +762,7 @@ const ALL_QUESTIONS: Question[] = [
   Q_PRACT_06_1, Q_PRACT_06_3, Q_PRACT_06_4,
   Q_PRACT_07_1, Q_PRACT_07_2, Q_PRACT_07_5,
   Q_PRACT_08_2, Q_PRACT_08_3, Q_PRACT_08_5,
+  Q_PRACT_09_1, Q_PRACT_09_5, Q_PRACT_09_6,
 ]
 
 export function getQuestionsForModule(moduleId: number): Question[] {
