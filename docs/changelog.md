@@ -8,9 +8,19 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
-## 2026-05-07
+## 2026-05-08
 
-- `[Contenido]` Fase B.2 — M09 cerrado: laboratorios + quiz + 7 preguntas al banco + sync lib/quiz.ts (PR #?). Cierra la **Fase 4** del curso (M01-M09 todos producidos).
+- `[Plataforma]` Fase D.1 — Parser real de markdown para quizzes (PR #?). Cierra la deuda técnica de la sincronía manual TS↔markdown que arrastrábamos desde Hito B.
+  - **Nuevo `platform/src/lib/quiz-parser.ts`** (~170 líneas): parsea bloques `::: pregunta ... :::` de los `quiz-practica.md` extrayendo el YAML interno con js-yaml (browser-safe) y construyendo objetos `Question` validados. Soporta los 5 tipos canónicos: multiple-choice, multiple-response, scenario, drag-and-drop, ordering.
+  - **`platform/src/lib/quiz.ts` reescrito** (de 835 a ~245 líneas): elimina las 27 `Q_PRACT_NN_M` hardcoded. `getQuestionsForModule` ahora usa `import.meta.glob` eager sobre los `quiz-practica.md` del paquete y los pasa por `parseQuizMarkdown`. **Pasamos de 27 preguntas hardcoded a 60 preguntas leídas del paquete** (8 M01 + 6 M02 + 6 M03 + 5 M04 + 5 M05 + 11 M06 + 5 M07 + 6 M08 + 8 M09).
+  - **Tipos extendidos**: añadidos `MultipleResponseQuestion` con `correctOptionIds: string[]` y `OrderingQuestion` con `correctOrder: string[]`. `Answer` union extendida con `MRAnswer` y `OrderingAnswer`. Helpers `isMultipleResponse`, `isOrdering`, y `emptyAnswerFor` / `isAnswerComplete` / `isAnswerCorrect` actualizados para los 4 tipos.
+  - **Componentes nuevos**: `QuestionMultipleResponse.tsx` (checkboxes para varias correctas; feedback diferenciando «correcta marcada bien», «correcta no marcada», «incorrecta marcada»), `QuestionOrdering.tsx` (lista reordenable con botones up/down accesibles, indicador de posición, feedback con orden esperado por elemento mal colocado).
+  - **`Quiz.tsx`** adaptado: 4 ramas de render (MC + MR + DnD + Ordering). `answeredCount` ahora usa `isAnswerComplete` para soportar todos los tipos.
+  - **`QuestionFeedback.tsx`** ampliado con paneles para respuestas MR (lista de correctas marcadas) y Ordering (orden numerado correcto).
+  - **Dependencias**: añadido `js-yaml` y `@types/js-yaml`.
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.23s.
+
+ Cierra la **Fase 4** del curso (M01-M09 todos producidos).
   - **`laboratorios.md`** con 4 labs prácticos (90 min total): LAB-09-1 (CA policy bloquea agentes High Risk con flujo Report-only → On), LAB-09-2 (configurar las 6 detecciones de Identity Protection y validar con tráfico de prueba), LAB-09-3 (auditar permisos efectivos de un agente OBO calculando intersección triple blueprint/licencia/consent), LAB-09-4 (diseño end-to-end blueprint + 2 CA policies + ID Protection alerts para agente Foundry de Tesorería autonomous).
   - **`quiz-practica.md`** con 8 preguntas Q-09-1..Q-09-8 cubriendo los 6 OAs en cuatro tipos (multiple-choice, multiple-response, scenario, drag-and-drop). Caso de estudio TextilNova (diseñar dashboard operativo diario del equipo de Seguridad de IA).
   - **7 preguntas EX-09-001..007** acumuladas en `cursos/agent365-cert/banco-examen.md`. Banco pasa de 29 a **36 preguntas oficiales**.

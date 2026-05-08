@@ -1,6 +1,17 @@
 import { Lightbulb } from 'lucide-react'
-import type { Question, MultipleChoiceQuestion, DragAndDropQuestion } from '@/lib/quiz'
-import { isMultipleChoice, isDragAndDrop } from '@/lib/quiz'
+import type {
+  Question,
+  MultipleChoiceQuestion,
+  MultipleResponseQuestion,
+  DragAndDropQuestion,
+  OrderingQuestion,
+} from '@/lib/quiz'
+import {
+  isMultipleChoice,
+  isMultipleResponse,
+  isDragAndDrop,
+  isOrdering,
+} from '@/lib/quiz'
 
 interface Props {
   question: Question
@@ -20,7 +31,9 @@ export function QuestionFeedback({ question }: Props) {
       </header>
       <div className="p-4 space-y-3">
         {isMultipleChoice(question) && <MCAnswer question={question} />}
+        {isMultipleResponse(question) && <MRAnswer question={question} />}
         {isDragAndDrop(question) && <DnDAnswer question={question} />}
+        {isOrdering(question) && <OrderingAnswer question={question} />}
         <p className="text-[13.5px] leading-relaxed text-[var(--text-secondary)]">
           {question.justification}
         </p>
@@ -39,6 +52,29 @@ function MCAnswer({ question }: { question: MultipleChoiceQuestion }) {
         {correct.id}
       </span>
       <span className="text-[var(--text-primary)]">— {correct.text}</span>
+    </div>
+  )
+}
+
+function MRAnswer({ question }: { question: MultipleResponseQuestion }) {
+  const correctSet = new Set(question.correctOptionIds)
+  const correctOpts = question.options.filter(o => correctSet.has(o.id))
+  if (correctOpts.length === 0) return null
+  return (
+    <div>
+      <div className="text-[12.5px] text-[var(--text-muted)] mb-2">
+        Respuestas correctas ({correctOpts.length}):
+      </div>
+      <ul className="space-y-1.5">
+        {correctOpts.map(opt => (
+          <li key={opt.id} className="flex items-baseline gap-2 text-[13px]">
+            <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 shrink-0">
+              {opt.id}
+            </span>
+            <span className="text-[var(--text-primary)]">{opt.text}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -64,6 +100,31 @@ function DnDAnswer({ question }: { question: DragAndDropQuestion }) {
           )
         })}
       </ul>
+    </div>
+  )
+}
+
+function OrderingAnswer({ question }: { question: OrderingQuestion }) {
+  const itemById = Object.fromEntries(question.items.map(i => [i.id, i]))
+  return (
+    <div>
+      <div className="text-[12.5px] text-[var(--text-muted)] mb-2">
+        Orden correcto:
+      </div>
+      <ol className="space-y-1.5 list-none p-0 m-0">
+        {question.correctOrder.map((itemId, idx) => {
+          const item = itemById[itemId]
+          if (!item) return null
+          return (
+            <li key={itemId} className="flex items-baseline gap-2 text-[13px]">
+              <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 shrink-0">
+                {idx + 1}.
+              </span>
+              <span className="text-[var(--text-primary)]">{item.text}</span>
+            </li>
+          )
+        })}
+      </ol>
     </div>
   )
 }
