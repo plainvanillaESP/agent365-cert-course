@@ -3,16 +3,23 @@ import { CheckCircle2, RotateCcw, History, Trash2 } from 'lucide-react'
 import { useQuizState } from '@/hooks/useQuizState'
 import {
   isMultipleChoice,
+  isMultipleResponse,
   isDragAndDrop,
+  isOrdering,
   isAnswerCorrect,
+  isAnswerComplete,
   type Answer,
   type MCAnswer,
+  type MRAnswer,
   type DnDAnswer,
+  type OrderingAnswer,
 } from '@/lib/quiz'
 import { Button } from '@/components/Button'
 import { QuestionCard } from './QuestionCard'
 import { QuestionMultipleChoice } from './QuestionMultipleChoice'
+import { QuestionMultipleResponse } from './QuestionMultipleResponse'
 import { QuestionDragAndDrop } from './QuestionDragAndDrop'
+import { QuestionOrdering } from './QuestionOrdering'
 import { QuestionFeedback } from './QuestionFeedback'
 import { QuizHeader, QuizResult } from './QuizFeedback'
 
@@ -53,9 +60,7 @@ export function Quiz({ moduleId }: QuizProps) {
   }
 
   const answeredCount = questions.filter(q =>
-    isMultipleChoice(q)
-      ? (currentAnswers[q.id] as MCAnswer).selectedOptionId !== null
-      : Object.keys((currentAnswers[q.id] as DnDAnswer).placements).length === q.items.length,
+    isAnswerComplete(q, currentAnswers[q.id]),
   ).length
 
   return (
@@ -84,16 +89,32 @@ export function Quiz({ moduleId }: QuizProps) {
                 {isMultipleChoice(q) && ans.type === 'mc' && (
                   <QuestionMultipleChoice
                     question={q}
-                    answer={ans}
+                    answer={ans as MCAnswer}
                     submission={submittedAns?.type === 'mc' ? submittedAns : null}
+                    onChange={a => setAnswer(q.id, a)}
+                  />
+                )}
+                {isMultipleResponse(q) && ans.type === 'mr' && (
+                  <QuestionMultipleResponse
+                    question={q}
+                    answer={ans as MRAnswer}
+                    submission={submittedAns?.type === 'mr' ? submittedAns : null}
                     onChange={a => setAnswer(q.id, a)}
                   />
                 )}
                 {isDragAndDrop(q) && ans.type === 'dnd' && (
                   <QuestionDragAndDrop
                     question={q}
-                    answer={ans}
+                    answer={ans as DnDAnswer}
                     submission={submittedAns?.type === 'dnd' ? submittedAns : null}
+                    onChange={a => setAnswer(q.id, a)}
+                  />
+                )}
+                {isOrdering(q) && ans.type === 'order' && (
+                  <QuestionOrdering
+                    question={q}
+                    answer={ans as OrderingAnswer}
+                    submission={submittedAns?.type === 'order' ? submittedAns : null}
                     onChange={a => setAnswer(q.id, a)}
                   />
                 )}
