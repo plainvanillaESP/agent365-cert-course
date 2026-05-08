@@ -111,6 +111,8 @@ export function useQuizState(moduleId: number): QuizState {
 
     try {
       localStorage.setItem(historyKey, JSON.stringify(newHistory))
+      // Notificar al motor de progreso (Bloque D.2)
+      window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
     } catch {
       /* fallar silenciosamente si localStorage está bloqueado */
     }
@@ -125,6 +127,7 @@ export function useQuizState(moduleId: number): QuizState {
     setHistory([])
     try {
       localStorage.removeItem(historyKey)
+      window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
     } catch {
       /* ignorar */
     }
