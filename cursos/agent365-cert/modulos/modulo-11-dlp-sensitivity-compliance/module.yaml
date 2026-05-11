@@ -2,9 +2,9 @@ spec_version: '1.0'
 id: 11
 slug: modulo-11-dlp-sensitivity-compliance
 titulo: "DLP, sensitivity labels avanzadas y Communication Compliance"
-duracion_min: 90
+duracion_min: 210
 area_examen: 4
-estado: produciendo
+estado: producido
 fase_produccion: 3
 ultima_actualizacion: 2026-05-11
 prerrequisitos:
@@ -70,6 +70,13 @@ glosario:
 secciones:
   - tipo: teoria
     archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
   - tipo: recursos
     archivo: recursos.md
 sub_secciones_teoria:
@@ -80,5 +87,17 @@ sub_secciones_teoria:
   - "11.5 Integración con Microsoft Defender for Cloud Apps"
   - "11.6 Communication Compliance: el agente como participante regulado"
   - "11.7 Operación del día a día"
-laboratorios: []
+laboratorios:
+  - id: LAB-11-1
+    titulo: "Configurar DLP policy con location 'Microsoft Agent 365 outputs'"
+    duracion_min: 25
+  - id: LAB-11-2
+    titulo: "Entrenar custom trainable classifier y validar precision/recall"
+    duracion_min: 30
+  - id: LAB-11-3
+    titulo: "Conectar Microsoft Defender for Cloud Apps a Salesforce y aplicar DLP cross-SaaS"
+    duracion_min: 25
+  - id: LAB-11-4
+    titulo: "Configurar Communication Compliance para detectar lenguaje regulado en outputs"
+    duracion_min: 20
 preguntas_aporta_examen_final: 7
