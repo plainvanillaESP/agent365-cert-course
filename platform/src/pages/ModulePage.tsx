@@ -13,7 +13,7 @@ import { Resources } from '@/components/resources/Resources'
 import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
 import { markSectionVisited, type TrackedSection } from '@/lib/progress'
-import { useModuleProgress } from '@/hooks/useModuleProgress'
+import { useModuleProgress, useUnlockState } from '@/hooks/useModuleProgress'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'quiz-practica', 'recursos']
 
@@ -47,6 +47,7 @@ export function ModulePage() {
   // Hook al motor de progreso. Antes del render para mantener el orden
   // de hooks estable (no condicional).
   const progress = useModuleProgress(isNaN(moduleId) ? -1 : moduleId)
+  const { isUnlocked } = useUnlockState()
 
   if (!module) return <Navigate to="/" replace />
   // Alias legacy: /modulo/X/evaluacion → /modulo/X/quiz-practica.
@@ -56,6 +57,14 @@ export function ModulePage() {
   }
   if (!VALID_SECTIONS.includes(section as ContentType)) {
     return <Navigate to={`/modulo/${moduleId}/teoria`} replace />
+  }
+  // Gate de acceso (Bloque D.4): si el módulo está bloqueado en modo
+  // secuencial, redirigir a /progreso con un querystring para que la
+  // página pueda mostrar un mensaje explicativo en lugar de un toast
+  // efímero. La URL queda guardable en bookmarks; al desbloquear, el
+  // mensaje desaparece naturalmente.
+  if (!isUnlocked(moduleId)) {
+    return <Navigate to={`/progreso?locked=${moduleId}`} replace />
   }
 
   const content = loadContent(module.slug, section as ContentType)

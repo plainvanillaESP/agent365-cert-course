@@ -1,7 +1,8 @@
 import { NavLink, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2 } from 'lucide-react'
+import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Lock } from 'lucide-react'
 import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
+import { useUnlockState } from '@/hooks/useModuleProgress'
 
 const SECTIONS = [
   { slug: 'teoria',       label: 'Teoría',       icon: BookOpenText  },
@@ -18,6 +19,7 @@ interface NavSidebarProps {
 export function NavSidebar({ open, onClose }: NavSidebarProps) {
   const { id } = useParams<{ id: string }>()
   const currentModuleId = id ? parseInt(id, 10) : null
+  const { isUnlocked } = useUnlockState()
 
   return (
     <>
@@ -69,6 +71,7 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
                 area={area}
                 currentModuleId={currentModuleId}
                 onItemClick={onClose}
+                isUnlocked={isUnlocked}
               />
             ))}
           </div>
@@ -89,9 +92,10 @@ interface AreaGroupProps {
   area: CourseArea
   currentModuleId: number | null
   onItemClick?: () => void
+  isUnlocked: (moduleId: number) => boolean
 }
 
-function AreaGroup({ area, currentModuleId, onItemClick }: AreaGroupProps) {
+function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroupProps) {
   const modules = MODULES.filter(m => area.modulos.includes(m.id))
   const containsCurrent = currentModuleId != null && area.modulos.includes(currentModuleId)
   const [expanded, setExpanded] = useState(containsCurrent)
@@ -139,6 +143,7 @@ function AreaGroup({ area, currentModuleId, onItemClick }: AreaGroupProps) {
               module={m}
               isCurrent={m.id === currentModuleId}
               onItemClick={onItemClick}
+              unlocked={isUnlocked(m.id)}
             />
           ))}
         </ul>
@@ -151,9 +156,10 @@ interface ModuleItemProps {
   module: CourseModule
   isCurrent: boolean
   onItemClick?: () => void
+  unlocked: boolean
 }
 
-function ModuleItem({ module, isCurrent, onItemClick }: ModuleItemProps) {
+function ModuleItem({ module, isCurrent, onItemClick, unlocked }: ModuleItemProps) {
   const isProduced = module.estado === 'producido'
   const moduleNum = String(module.id).padStart(2, '0')
 
@@ -165,6 +171,24 @@ function ModuleItem({ module, isCurrent, onItemClick }: ModuleItemProps) {
             {moduleNum}
           </span>
           <span className="break-words">{module.titulo}</span>
+        </div>
+      </li>
+    )
+  }
+
+  // Producido pero bloqueado por orden secuencial: visible pero sin enlace
+  if (!unlocked) {
+    return (
+      <li>
+        <div
+          className="flex items-start gap-2 px-2.5 py-[5px] rounded-md text-[var(--text-faint)] cursor-not-allowed text-[13px] leading-snug"
+          title="Completa los módulos anteriores para desbloquear este, o activa el modo acceso libre desde /progreso"
+        >
+          <span className="font-mono text-[11px] tabular-nums shrink-0 mt-px opacity-70">
+            {moduleNum}
+          </span>
+          <span className="break-words flex-1">{module.titulo}</span>
+          <Lock className="size-[11px] shrink-0 mt-[3px] opacity-70 stroke-[1.75]" aria-hidden />
         </div>
       </li>
     )

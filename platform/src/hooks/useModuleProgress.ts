@@ -3,7 +3,11 @@ import { MODULES } from '@/lib/course'
 import {
   readModuleProgress,
   subscribeProgressChanges,
+  getAccessMode,
+  setAccessMode as setAccessModeRaw,
+  isModuleUnlocked,
   type ModuleProgressSnapshot,
+  type AccessMode,
 } from '@/lib/progress'
 
 /**
@@ -56,4 +60,54 @@ export function useCourseProgress(): ModuleProgressSnapshot[] {
   }, [])
 
   return snapshots
+}
+
+/**
+ * Devuelve el modo de acceso actual y un setter que dispara el evento
+ * de progress-changed para refrescar a otros consumidores.
+ */
+export function useAccessMode(): [AccessMode, (mode: AccessMode) => void] {
+  const [mode, setMode] = useState<AccessMode>(() => getAccessMode())
+
+  useEffect(() => {
+    const unsubscribe = subscribeProgressChanges(() => {
+      setMode(getAccessMode())
+    })
+    return unsubscribe
+  }, [])
+
+  const update = (next: AccessMode) => {
+    setAccessModeRaw(next)
+    // Optimismo: actualizar el estado local sin esperar al evento de retorno
+    setMode(next)
+  }
+
+  return [mode, update]
+}
+
+/**
+ * Devuelve, para todos los módulos producidos del curso, si están o no
+ * desbloqueados según el modo de acceso actual y el progreso vigente.
+ *
+ * El componente que renderiza módulos (sidebar, home, etc.) puede
+ * leer este mapa para mostrar el estado de candado de un solo vistazo.
+ */
+export function useUnlockState(): {
+  mode: AccessMode
+  isUnlocked: (moduleId: number) => boolean
+} {
+  const [mode] = useAccessMode()
+  const snapshots = useCourseProgress()
+
+  const producedModuleIds = MODULES
+    .filter(m => m.estado === 'producido')
+    .map(m => m.id)
+  const completedIds = new Set(
+    snapshots.filter(s => s.isModuleComplete).map(s => s.moduleId),
+  )
+
+  const isUnlocked = (moduleId: number) =>
+    isModuleUnlocked(moduleId, mode, producedModuleIds, completedIds)
+
+  return { mode, isUnlocked }
 }

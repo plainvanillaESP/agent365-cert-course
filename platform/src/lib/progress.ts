@@ -35,6 +35,41 @@ import type { ContentType } from './content'
 export const THEORY_THRESHOLD_PCT = 80
 export const QUIZ_PASS_RATIO = 0.7
 
+/* ------------------------------ Modo de acceso ------------------------------ */
+
+/**
+ * El alumno puede elegir entre dos modos de avance:
+ *   - 'sequential' (recomendado, por defecto): cada módulo se desbloquea
+ *     cuando todos los módulos anteriores producidos están completos.
+ *     M01 está siempre desbloqueado.
+ *   - 'free' (override): todos los módulos producidos son accesibles
+ *     desde el primer día, sin requerir progreso previo.
+ *
+ * El desbloqueo se aplica a nivel de MÓDULO, no de sección: dentro de
+ * un módulo accesible, todas sus secciones (teoría, quiz, labs,
+ * recursos) son siempre libres. Saltar entre secciones del mismo
+ * módulo es parte del estilo natural de aprendizaje.
+ */
+export type AccessMode = 'sequential' | 'free'
+
+const ACCESS_MODE_KEY = 'agent365-access-mode'
+
+export function getAccessMode(): AccessMode {
+  if (typeof localStorage === 'undefined') return 'sequential'
+  const raw = localStorage.getItem(ACCESS_MODE_KEY)
+  return raw === 'free' ? 'free' : 'sequential'
+}
+
+export function setAccessMode(mode: AccessMode): void {
+  if (typeof localStorage === 'undefined') return
+  try {
+    localStorage.setItem(ACCESS_MODE_KEY, mode)
+    notifyProgressChanged()
+  } catch {
+    /* localStorage bloqueado, ignore */
+  }
+}
+
 /* ------------------------------ Tipos públicos ------------------------------ */
 
 export type SectionStatus = 'not-started' | 'in-progress' | 'completed'
@@ -160,6 +195,42 @@ export function markSectionVisited(moduleId: number, section: TrackedSection): v
 }
 
 /**
+ * Determina si un módulo está accesible según el modo de acceso y el
+ * progreso de los módulos producidos anteriores.
+ *
+ * Regla:
+ *   - Modo 'free' → siempre desbloqueado.
+ *   - Modo 'sequential' → M01 siempre desbloqueado; cualquier otro
+ *     módulo `N` desbloqueado solo si TODOS los módulos producidos
+ *     con id < N están en estado `isModuleComplete`. Los módulos no
+ *     producidos se ignoran en el cálculo (no pueden bloquear a los
+ *     posteriores).
+ *
+ * Función PURA: recibe el estado y devuelve la respuesta. Los hooks
+ * son responsables de pasarle el modo y los snapshots actualizados.
+ *
+ * @param moduleId  id del módulo cuyo desbloqueo queremos comprobar
+ * @param mode      modo de acceso actual
+ * @param producedModuleIds  ids de los módulos producidos del curso,
+ *                           en orden creciente
+ * @param completedModuleIds set con los ids de los módulos completos
+ */
+export function isModuleUnlocked(
+  moduleId: number,
+  mode: AccessMode,
+  producedModuleIds: number[],
+  completedModuleIds: Set<number>,
+): boolean {
+  if (mode === 'free') return true
+  if (moduleId === 1) return true
+  for (const id of producedModuleIds) {
+    if (id >= moduleId) break
+    if (!completedModuleIds.has(id)) return false
+  }
+  return true
+}
+
+/**
  * Borra todo el progreso del alumno (todas las claves del motor).
  * Útil para un futuro botón "Reiniciar progreso" en settings.
  */
@@ -169,7 +240,12 @@ export function clearAllProgress(): void {
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i)
     if (!k) continue
-    if (k.startsWith('agent365-reading-m') || k.startsWith('agent365-quiz-m') || k === SECTION_VISITS_KEY) {
+    if (
+      k.startsWith('agent365-reading-m') ||
+      k.startsWith('agent365-quiz-m') ||
+      k === SECTION_VISITS_KEY ||
+      k === ACCESS_MODE_KEY
+    ) {
       keys.push(k)
     }
   }
@@ -256,7 +332,8 @@ export function subscribeProgressChanges(handler: () => void): () => void {
       !e.key ||
       e.key.startsWith('agent365-reading-m') ||
       e.key.startsWith('agent365-quiz-m') ||
-      e.key === SECTION_VISITS_KEY
+      e.key === SECTION_VISITS_KEY ||
+      e.key === ACCESS_MODE_KEY
     ) {
       handler()
     }
