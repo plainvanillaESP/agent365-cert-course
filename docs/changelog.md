@@ -10,7 +10,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.2 — M10 cerrado: labs + quiz + 5 preguntas al banco (PR #?). M10 (Microsoft Purview y protección de datos en Agent 365) queda **producido**. El alumno puede recorrer el módulo completo (teoría 75 min + quiz 15 min + 4 labs 90 min) y las 5 preguntas EX-10 quedan disponibles para el examen final.
+- `[Contenido]` Fase E.3 — Producción de M11 parte 1: teoría + recursos + manifest (PR #?). M11 (DLP, sensitivity labels avanzadas y Communication Compliance) es el módulo más voluminoso del Área 4 del examen (7 preguntas al banco oficial, frente a 5 de M10). Mismo patrón B.1 / E.1: contenido pedagógico voluminoso en este PR; labs + quiz + 7 preguntas EX llegan en E.4.
+  - **`teoria.md`** completa (~600 líneas, 7 secciones, 90 min lectura):
+    - 11.1 DLP vs Information Protection: dónde está la frontera (las dos preguntas que se reparten, complementariedad en una invocación, capacidades exclusivas de DLP).
+    - 11.2 Anatomía de una DLP policy para agentes (locations soportadas incluyendo la nueva `Microsoft Agent 365 outputs`, conditions con SITs + classifiers + labels + keywords + fingerprinting + context, actions con tabla operativa audit/block/justify/override, user experience con policy tip + block message + justification reasons).
+    - 11.3 Trainable classifiers: classifiers built-in (`OffensiveLanguage`, `Harassment`, `Threats`, `ContractDocuments`, `FinancialReports`, etc.), flujo de entrenamiento custom de 6 pasos con métricas precision/recall, combinaciones AND/OR en policies.
+    - 11.4 DLP en runtime para outputs (diagrama de flujo técnico, latencia añadida 200-800 ms para outputs típicos, flujo de override con justificación documentado paso a paso, cobertura input-side / mid-flight / output-side).
+    - 11.5 Integración con Microsoft Defender for Cloud Apps (catálogo de 30+ conectores, DLP cross-SaaS con ejemplo YAML, Cloud Discovery para shadow IT, session policies en modo reverse proxy).
+    - 11.6 Communication Compliance: el agente como participante regulado (por qué los agentes están en scope, configuración de policy completa, workflow de revisión de 5 pasos, ejemplos por industria — banca, sanidad, defensa, HR).
+    - 11.7 Operación del día a día (triaje semanal con 5 puntos, exclusiones temporales con expiración automática, reporte mensual al CISO con las 4 preguntas clave, 3 errores operacionales comunes a evitar).
+    - Glosario inline de 16 términos clave.
+  - **`recursos.md`** con URLs de Microsoft Learn (DLP overview, plan, policy reference, integración con Agent 365; trainable classifiers definitions + custom guide + best practices; CC overview + plan + integración con agentes; MDA overview + connectors + session policies + Cloud Discovery + integración con Purview DLP), blogs oficiales, lecturas adicionales (CIS Controls v8 Control 3, NIST SP 800-53 AC/SC, MITRE ATT&CK TA0010 Exfiltration) y herramientas (Purview Compliance PowerShell, Graph PowerShell Compliance, MDA REST API).
+  - **`module.yaml`** con los 7 OAs cubriendo Bloom Comprender, Aplicar, Crear, Analizar; 16 términos de glosario; prerrequisitos M01 + M09 + M10 (cadena de M09 → M10 → M11); `estado: produciendo`, `fase_produccion: 3`, `preguntas_aporta_examen_final: 7`.
+  - **`README.md`** del directorio actualizado.
+  - Borrado: placeholders `evaluacion.md`, `laboratorios.md` originales.
+- `[Build]` Validador `scripts/validate-course.py` reporta 269 checks OK · 0 warnings · 0 errors. Build Vite OK 1.85s.
+
+ M10 (Microsoft Purview y protección de datos en Agent 365) queda **producido**. El alumno puede recorrer el módulo completo (teoría 75 min + quiz 15 min + 4 labs 90 min) y las 5 preguntas EX-10 quedan disponibles para el examen final.
   - **`laboratorios.md`** completos (~310 líneas, 4 labs, 90 min total):
     - LAB-10-1 (20 min) — Aplicar sensitivity label `Confidential` a un blueprint y verificar empíricamente la herencia automática en outputs (cifrado, watermark, audit event `AgentSensitivityLabelInherited`).
     - LAB-10-2 (25 min) — Activar DSPM for AI por primera vez en el tenant, configurar los cuatro paneles principales, definir una alerta operativa con destinatarios y documentar 3+3 hallazgos prioritarios.
