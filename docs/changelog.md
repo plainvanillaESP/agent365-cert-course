@@ -10,7 +10,22 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.1 — Producción de M10 parte 1: teoría + recursos + manifest (PR #?). M10 (Microsoft Purview y protección de datos en Agent 365) abre el **Área 4** del examen. Mismo patrón que B.1: contenido pedagógico voluminoso (teoría 75 min + glosario + recursos) en este PR; labs + quiz + 5 preguntas al banco llegan en E.2.
+- `[Contenido]` Fase E.2 — M10 cerrado: labs + quiz + 5 preguntas al banco (PR #?). M10 (Microsoft Purview y protección de datos en Agent 365) queda **producido**. El alumno puede recorrer el módulo completo (teoría 75 min + quiz 15 min + 4 labs 90 min) y las 5 preguntas EX-10 quedan disponibles para el examen final.
+  - **`laboratorios.md`** completos (~310 líneas, 4 labs, 90 min total):
+    - LAB-10-1 (20 min) — Aplicar sensitivity label `Confidential` a un blueprint y verificar empíricamente la herencia automática en outputs (cifrado, watermark, audit event `AgentSensitivityLabelInherited`).
+    - LAB-10-2 (25 min) — Activar DSPM for AI por primera vez en el tenant, configurar los cuatro paneles principales, definir una alerta operativa con destinatarios y documentar 3+3 hallazgos prioritarios.
+    - LAB-10-3 (20 min) — Búsqueda forense en eDiscovery Premium filtrada por `agentId`: simular solicitud regulatoria, añadir custodian, búsqueda con filtros sensitivityLabel, custodian hold, export forense.
+    - LAB-10-4 (25 min) — Diseño end-to-end coherente Purview + Conditional Access para agente de Tesorería autonomous: seis capas en serie (blueprint con label → CA → Identity Protection → Information Protection → DSPM → eDiscovery) con plan de validación.
+  - **`quiz-practica.md`** con 6 preguntas Q-10-1..Q-10-6 cubriendo los 6 OAs del módulo en los 5 tipos canónicos del parser (multiple-choice, scenario, multiple-response, drag-and-drop, ordering). Caso de estudio de refuerzo: **Pernod Ricard** (Tasting-Notes-Assistant — diseño de dashboard CISO semanal con KPIs, endpoints de Graph, thresholds operativos y SLAs).
+  - **`banco-examen.md`**: añadidas 5 preguntas EX-10-001..005 cubriendo los OAs 10.1, 10.2, 10.3, 10.4 y 10.5. Banco oficial pasa de **36 a 41** preguntas (68 % completo). Nueva **Área 4 «Implement data protection with Microsoft Purview»** inaugurada en el banco. Tabla de distribución actualiza M10 a `Completo`.
+  - **`module.yaml`** de M10 cerrado: `estado: producido`, `duracion_min: 183` (75 teoría + 18 quiz + 90 labs), secciones completas (teoria + quiz-practica + laboratorios + recursos), lista `laboratorios:` poblada con los 4 IDs.
+  - **`platform/src/lib/course.ts`**: M10 cambia a `estado: 'producido'` con `duracionMin: 183`.
+  - **`lib/quiz.ts` no requiere cambios**: el parser markdown introducido en D.1 captura las 6 preguntas Q-10 automáticamente. Verificado con `parseQuizMarkdown` → 6 preguntas en los 5 tipos correctos.
+- `[Build]` Validador `scripts/validate-course.py` reporta 271 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.64s.
+
+**Hito alcanzado — M10 completo.** Área 4 del examen abierta (peso 20 %). Con M01-M09 + M10 producidos, **10 de 16 módulos del temario están listos** (62 %). El alumno puede recorrer la mayor parte del curso aplicando ya el motor de progreso (D.4 con desbloqueo secuencial). Próximo módulo en cola: M11 (DLP y compliance, 7 preguntas EX al banco — el más voluminoso del Área 4).
+
+ Mismo patrón que B.1: contenido pedagógico voluminoso (teoría 75 min + glosario + recursos) en este PR; labs + quiz + 5 preguntas al banco llegan en E.2.
   - **`teoria.md`** completa (~530 líneas, 6 secciones, 75 min lectura):
     - 10.1 Por qué Purview con Agent 365 (gap que cubre respecto a CA, las tres preguntas que Purview responde, componentes que aplican a agentes).
     - 10.2 DSPM for AI (cuatro paneles del dashboard, comportamiento típico post-GA, detección automática vía SITs y labels existentes, acciones desde el dashboard).

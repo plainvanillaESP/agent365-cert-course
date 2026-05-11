@@ -2,9 +2,9 @@ spec_version: '1.0'
 id: 10
 slug: modulo-10-purview-proteccion-datos
 titulo: "Microsoft Purview y protección de datos en Agent 365"
-duracion_min: 75
+duracion_min: 183
 area_examen: 4
-estado: produciendo
+estado: producido
 fase_produccion: 2
 ultima_actualizacion: 2026-05-11
 prerrequisitos:
@@ -64,6 +64,13 @@ glosario:
 secciones:
   - tipo: teoria
     archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
   - tipo: recursos
     archivo: recursos.md
 sub_secciones_teoria:
@@ -73,5 +80,17 @@ sub_secciones_teoria:
   - "10.4 Trazabilidad: qué datos toca cada agente"
   - "10.5 Information protection en outputs de agentes"
   - "10.6 Operaciones del día a día con Purview + Agent 365"
-laboratorios: []
+laboratorios:
+  - id: LAB-10-1
+    titulo: "Aplicar sensitivity label a un blueprint y verificar herencia en outputs"
+    duracion_min: 20
+  - id: LAB-10-2
+    titulo: "Configurar DSPM for AI: activar dashboard y alertas"
+    duracion_min: 25
+  - id: LAB-10-3
+    titulo: "Búsqueda forense en eDiscovery Premium filtrada por agentId"
+    duracion_min: 20
+  - id: LAB-10-4
+    titulo: "Diseño end-to-end: política coherente Purview + Conditional Access"
+    duracion_min: 25
 preguntas_aporta_examen_final: 5
