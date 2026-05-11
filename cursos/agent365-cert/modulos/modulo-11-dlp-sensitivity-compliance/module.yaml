@@ -1,30 +1,84 @@
 spec_version: '1.0'
 id: 11
 slug: modulo-11-dlp-sensitivity-compliance
-titulo: DLP, sensitivity labels y compliance
-duracion_min: 75
+titulo: "DLP, sensitivity labels avanzadas y Communication Compliance"
+duracion_min: 90
 area_examen: 4
-estado: pendiente
-fase_produccion: 5
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+estado: produciendo
+fase_produccion: 3
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 1
+  - 9
+  - 10
+prerrequisitos_externos:
+  - "Familiaridad con sensitivity labels en M365 (cubierto parcialmente en M10)"
+  - "Conocimiento básico de Purview Information Protection (M10)"
+objetivos_aprendizaje:
+  - id: OA-11.1
+    texto: "Diferenciar Data Loss Prevention (DLP) de Information Protection (M10): qué cubre cada uno, dónde se solapan, dónde son complementarios para outputs de agentes."
+    bloom: Comprender
+  - id: OA-11.2
+    texto: "Diseñar la anatomía completa de una DLP policy aplicada a outputs de agentes: locations, conditions (SITs + trainable classifiers), actions (block, audit, justify, override)."
+    bloom: Aplicar
+  - id: OA-11.3
+    texto: "Configurar trainable classifiers para detectar patrones específicos del negocio (contratos, conversaciones reguladas, lenguaje propietario) que las SITs estáticas no capturan."
+    bloom: Aplicar
+  - id: OA-11.4
+    texto: "Configurar DLP runtime policies que bloqueen o auditen outputs de agente según contenido detectado, con flujo de justificación al usuario invocador y registro forense."
+    bloom: Crear
+  - id: OA-11.5
+    texto: "Integrar DLP con Microsoft Defender for Cloud Apps (MDA) para cubrir aplicaciones SaaS de terceros conectadas al agente vía conectores."
+    bloom: Aplicar
+  - id: OA-11.6
+    texto: "Aplicar Communication Compliance a conversaciones con participación de agentes para detectar acoso, divulgación regulada y lenguaje sensible."
+    bloom: Aplicar
+  - id: OA-11.7
+    texto: "Operacionalizar el conjunto DLP + Communication Compliance + Insider Risk: triaje semanal, exclusiones temporales con justificación, reporting al CISO."
+    bloom: Analizar
+glosario:
+  - termino: "Data Loss Prevention (DLP)"
+    definicion: "Disciplina y conjunto de policies de Purview que evalúa acciones sobre datos y aplica decisiones runtime: allow, audit, block, justify-and-allow."
+  - termino: "DLP policy"
+    definicion: "Conjunto formado por locations, conditions, actions y user experience. Define dónde, cuándo y cómo se aplica la prevención."
+  - termino: "Block with override"
+    definicion: "Action DLP que bloquea por defecto pero permite al usuario justificar y proceder. La justificación queda auditada."
+  - termino: "Audit only"
+    definicion: "Action DLP que solo registra el evento sin interferir. Modo de simulación recomendado al inicio para validar precision."
+  - termino: "SIT (Sensitive Information Type)"
+    definicion: "Patrón estático (tarjetas, DNI, IBAN) detectable por regex + diccionarios. Más de 200 SITs built-in en Purview."
+  - termino: "Trainable classifier"
+    definicion: "Modelo ML entrenado para detectar tipos de contenido específicos (contratos, código, documentos financieros)."
+  - termino: "Custom trainable classifier"
+    definicion: "Classifier entrenado con muestras propias de la organización para detectar contenido único."
+  - termino: "Microsoft Agent 365 outputs (location)"
+    definicion: "Location DLP específica que evalúa outputs generados por agentes Agent 365 en runtime antes de entregarlos al usuario."
+  - termino: "Microsoft Defender for Cloud Apps (MDA)"
+    definicion: "Broker que extiende Purview a SaaS de terceros vía conectores. Permite aplicar DLP cross-SaaS."
+  - termino: "Cloud Discovery"
+    definicion: "Módulo de MDA que detecta SaaS y aplicaciones de IA usadas en la red corporativa pero no oficialmente aprovisionadas (shadow IT)."
+  - termino: "Session policy (MDA)"
+    definicion: "Modo reverse proxy de MDA: cada interacción del agente con una app pasa por MDA en tiempo real."
+  - termino: "Communication Compliance (CC)"
+    definicion: "Componente de Purview que monitoriza conversaciones (incluyendo aquellas con participación de agentes) buscando acoso, divulgación regulada, lenguaje sensible."
+  - termino: "Policy override event"
+    definicion: "Evento de audit que registra cuando un usuario justifica y procede a pesar de un bloqueo DLP."
+  - termino: "Precision / Recall"
+    definicion: "Métricas de evaluación de un trainable classifier. Precision: % de detecciones correctas. Recall: % de casos reales detectados."
+  - termino: "Temporary exclusion"
+    definicion: "Excepción documentada y aprobada con start/end datetime para desactivar una policy DLP en una ventana específica."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "11.1 DLP vs Information Protection: dónde está la frontera"
+  - "11.2 Anatomía de una DLP policy para agentes"
+  - "11.3 Trainable classifiers: detección más allá de SITs"
+  - "11.4 DLP en runtime para outputs de agentes"
+  - "11.5 Integración con Microsoft Defender for Cloud Apps"
+  - "11.6 Communication Compliance: el agente como participante regulado"
+  - "11.7 Operación del día a día"
 laboratorios: []
 preguntas_aporta_examen_final: 7
