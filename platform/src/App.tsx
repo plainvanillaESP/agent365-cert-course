@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { NavSidebar } from '@/components/NavSidebar'
 import { HomePage } from '@/pages/HomePage'
 import { ModulePage } from '@/pages/ModulePage'
+import { ProgressPage } from '@/pages/ProgressPage'
 
 const basename = import.meta.env.PROD ? '/agent365-cert-course' : ''
 
@@ -19,6 +20,7 @@ export function App() {
           <main className="flex-1 min-w-0 px-5 sm:px-8 lg:px-12 py-8 lg:py-10">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/progreso" element={<ProgressPage />} />
               <Route path="/modulo/:id" element={<ModulePage />} />
               <Route path="/modulo/:id/:section" element={<ModulePage />} />
               <Route path="*" element={<HomePage />} />

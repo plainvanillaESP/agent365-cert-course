@@ -8,9 +8,22 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
-## 2026-05-08
+## 2026-05-11
 
-- `[Plataforma]` Fase D.2 — Motor de progreso del alumno (PR #?). Segundo de cuatro entregas del Bloque D. Empieza a tracker el avance del alumno por sección y módulo, sin desbloqueo (eso llega en D.4).
+- `[Plataforma]` Fase D.3 — Vista `/progreso` con dashboard global (PR #?). Tercer de cuatro entregas del Bloque D. Aterriza el motor de progreso de D.2 en una página visible: el alumno ve su avance por módulo y por área, y un card destacado «Próximo paso» que apunta a la primera sección pendiente.
+  - **Nueva `platform/src/pages/ProgressPage.tsx`** (~290 líneas):
+    - Hero con barra de progreso global y conteo `X / N módulos completos · pct%`.
+    - **Card «Tu próximo paso»**: identifica el primer módulo producido no completo y dentro de él la primera sección pendiente (orden `teoria → quiz-practica → laboratorios → recursos`). Se oculta cuando todo está completo.
+    - **Progreso por área del examen**: agrupación de módulos por área con peso del examen (15/30/15/20/20 %), conteo de completados por área y porcentaje.
+    - **Mini-badges por módulo**: fila de 4 iconos (uno por sección) con tres estados visuales (`completed` verde con check, `in-progress` ámbar con icono, `not-started` neutral con icono). Tooltip nativo con el estado en texto.
+    - **Módulos pendientes de producción**: aparecen en gris con badge «Pendiente» y candado, sin enlace.
+    - **Zona de reinicio**: botón discreto al pie con confirmación inline destructiva. Llama a `clearAllProgress` del motor.
+  - **`App.tsx`**: ruta nueva `/progreso`.
+  - **`Header.tsx`**: enlace «Progreso» en la barra superior con icono `Activity`, visible en todas las páginas. Label oculto en móvil para ahorrar espacio.
+  - **Bonus**: corregido `course.ts` con `estado: 'producido'` para M09 (estaba como `pendiente` aunque B.2 lo cerró) y `duracionMin: 183` (era `75` antes de añadir labs+quiz).
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.20s.
+
+ Empieza a tracker el avance del alumno por sección y módulo, sin desbloqueo (eso llega en D.4).
   - **Nuevo `platform/src/lib/progress.ts`** (~270 líneas): tipos `SectionStatus` (`not-started` / `in-progress` / `completed`), `SectionState`, `ModuleProgressSnapshot`. Funciones puras `readModuleProgress`, `markSectionVisited`, `clearAllProgress`, `subscribeProgressChanges`. Constantes públicas `THEORY_THRESHOLD_PCT = 80` y `QUIZ_PASS_RATIO = 0.7`.
   - **Criterios de finalización por sección**: teoría completa cuando el scroll máximo alcanza ≥80 % (lectura del `agent365-reading-m{N}-teoria` que ya escribe `ScrollProgress`); quiz completo cuando hay un intento con score ≥70 % (lectura del `agent365-quiz-m{N}-history` que ya escribe `useQuizState`); laboratorios y recursos completos al visitar la sección al menos una vez (nuevo store `agent365-section-visits`).
   - **Diseño sin duplicación**: el motor lee directamente de las claves que ya escriben otros componentes en lugar de mantener un mirror separado, evitando inconsistencias.
