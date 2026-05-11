@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 48
+total_preguntas_actuales: 55
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -30,7 +30,7 @@ ultima_actualizacion: 2026-05-11
 | M09 — Permisos y CA | 7 | Completo |
 | M10 — Purview | 5 | Completo |
 | M11 — DLP y compliance | 7 | Completo |
-| M12 — Defender | 7 | Pendiente producción |
+| M12 — Defender | 7 | Completo |
 | M13 — CCS | 1 | Pendiente producción |
 | M14 — Gobernanza avanzada | 2 | Pendiente producción |
 | M15 — Troubleshooting | 1 | Pendiente producción |
@@ -1445,4 +1445,222 @@ correct_order:
   - o6
 justificacion: |
   El orden es el ciclo operativo recomendado para DLP en organizaciones maduras. Saltarse fases es la fuente principal de incidentes operacionales documentados: lanzar directo a `Block with override` (saltarse O1-O3) provoca falsos positivos masivos en producción que disparan presión política para revertir la policy entera; saltarse O5 (operación día a día) deja la policy en piloto automático y los falsos positivos se acumulan; saltarse O6 (reporting al CISO) deja a Compliance sin defensa cuando el negocio pregunta «¿para qué sirve esto que nos frena?». Cada fase tiene un output medible y cada output alimenta la fase siguiente.
+:::
+
+---
+
+## Área 5 — Monitor, troubleshoot and improve Microsoft Agent 365
+
+### Módulo 12 — Monitorización, auditoría y reporting con Defender XDR
+
+::: pregunta
+id: EX-12-001
+modulo: 12
+oa: OA-12.1
+area: 5
+tipo: multiple-choice
+dificultad: media
+bloom: Comprender
+enunciado: |
+  Una organización argumenta que «con Conditional Access, Information Protection y DLP correctamente desplegados no necesitamos Defender XDR». ¿Cuál es la respuesta técnicamente correcta?
+opciones:
+  - id: a
+    texto: "Tienen razón: las capas preventivas son suficientes si están bien configuradas."
+  - id: b
+    texto: "Defender XDR es la capa **detectiva y reactiva**, no redundante con las preventivas. Cubre tres casos por diseño imposibles para las preventivas: falsos negativos inherentes a los detectores estadísticos, comportamiento legítimo aisladamente pero anómalo agregado, y compromiso de la propia identidad del agente (donde el tráfico es técnicamente legítimo pero malicioso)."
+    correcta: true
+  - id: c
+    texto: "Defender XDR solo añade reportes visuales, técnicamente es redundante."
+  - id: d
+    texto: "Defender XDR sustituye a las capas preventivas, no las complementa."
+justificacion: |
+  La opción B captura el posicionamiento correcto. Las capas preventivas operan por reglas y modelos estadísticos: ningún modelo tiene 100 % de precision/recall y los falsos negativos son inevitables. El comportamiento que es legítimo evento a evento puede ser anómalo agregado (timing, volumen, distribución geográfica), y solo la detección por desviación de patrón lo identifica. El compromiso de identidad del agente genera tráfico formalmente legítimo (autenticado, autorizado) pero malicioso en intención: solo XDR con hunting basado en comportamiento puede detectarlo.
+:::
+
+::: pregunta
+id: EX-12-002
+modulo: 12
+oa: OA-12.2
+area: 5
+tipo: multiple-response
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Sobre el workflow operativo del SOC con Defender XDR aplicado a Agent 365, ¿cuáles de las siguientes afirmaciones son correctas? Selecciona todas las que apliquen.
+opciones:
+  - id: a
+    texto: "La **unidad de trabajo del SOC son los incidents, no las alertas individuales**: Defender XDR agrupa automáticamente alertas relacionadas correlacionando por tiempo, identidad, recurso y MITRE ATT&CK."
+    correcta: true
+  - id: b
+    texto: "Advanced hunting es la consola KQL principal donde el SOC tier 2/3 investiga y construye custom detection rules."
+    correcta: true
+  - id: c
+    texto: "Los incidents se cierran después de resolverlos, sin necesidad de post-mortem documentado."
+  - id: d
+    texto: "Threat analytics son reports de Microsoft Threat Intelligence con campañas conocidas y guías de mitigación; el SOC los revisa al inicio de cada turno."
+    correcta: true
+  - id: e
+    texto: "Custom detection rules son queries KQL programadas que generan alerts cuando coinciden, formalizando hunting con valor demostrado."
+    correcta: true
+  - id: f
+    texto: "Las 5 superficies operativas del portal son Incidents, Alerts, Advanced hunting, Custom detection rules y Threat analytics."
+    correcta: true
+justificacion: |
+  Las opciones A, B, D, E y F son correctas y reflejan el workflow canónico documentado. La C es falsa: los incidents Critical/High siempre se cierran con post-mortem firmado que incluye timeline, causa raíz, impacto, acciones ejecutadas, lecciones aprendidas y mejoras propuestas con owner y fecha. Cerrar sin post-mortem es la fuente principal de incidentes recurrentes porque las lecciones nunca se documentan ni se accionan.
+:::
+
+::: pregunta
+id: EX-12-003
+modulo: 12
+oa: OA-12.3
+area: 5
+tipo: drag-and-drop
+dificultad: media
+bloom: Recordar
+enunciado: |
+  Empareja cada **campo de la tabla `CloudAppEvents`** con la información principal que registra.
+items:
+  - id: f1
+    texto: "AgentId"
+  - id: f2
+    texto: "AgentBlueprintId"
+  - id: f3
+    texto: "AccountUpn"
+  - id: f4
+    texto: "CorrelationId"
+  - id: f5
+    texto: "InputDataSensitivity"
+  - id: f6
+    texto: "OutputDataSensitivity"
+targets:
+  - id: t1
+    label: "Identificador único del agente que generó el evento"
+  - id: t2
+    label: "Blueprint del que deriva el agente (clase, no instancia)"
+  - id: t3
+    label: "UPN del usuario invocador (campo vacío si autonomous own identity)"
+  - id: t4
+    label: "ID para correlacionar invocación + accesos + output de la misma operación end-to-end"
+  - id: t5
+    label: "Sensitivity label del dato accedido por el agente durante el evento"
+  - id: t6
+    label: "Sensitivity label del output generado por el agente"
+correct_map:
+  f1: t1
+  f2: t2
+  f3: t3
+  f4: t4
+  f5: t5
+  f6: t6
+justificacion: |
+  Los seis campos son los más usados en queries operativas y representan los ejes principales de análisis. `AgentId` identifica la instancia; `AgentBlueprintId` permite agrupar por tipo de agente; `AccountUpn` distingue invocaciones OBO (con UPN) de autonomous (sin UPN); `CorrelationId` permite reconstruir la cadena temporal de una invocación end-to-end; los dos `Sensitivity` permiten razonar sobre el flujo de información sensible a través del agente. Dominar la lectura de estos seis campos es lo primero que aprende un analista del SOC al subirse a investigar Agent 365.
+:::
+
+::: pregunta
+id: EX-12-004
+modulo: 12
+oa: OA-12.4
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Necesitas escribir una query KQL en Advanced Hunting que devuelva «los 10 agentes con más invocaciones en los últimos 7 días, agrupados por su blueprint». ¿Cuál de las siguientes es la query correcta?
+opciones:
+  - id: a
+    texto: "`CloudAppEvents | where Application == \"Microsoft Agent 365\" | where ActionType == \"AgentInvoke\" | where Timestamp >= ago(7d) | summarize Invocations = count() by AgentId, AgentBlueprintId | order by Invocations desc | take 10`"
+    correcta: true
+  - id: b
+    texto: "`CloudAppEvents | summarize Invocations = count() by AgentId | take 10`"
+  - id: c
+    texto: "`CloudAppEvents | where Timestamp >= ago(7d) | project AgentId, Timestamp | order by Timestamp desc`"
+  - id: d
+    texto: "`CloudAppEvents | where Application == \"Microsoft Agent 365\" | summarize count() by AccountUpn`"
+justificacion: |
+  La opción A es la respuesta correcta y refleja la sintaxis canónica de KQL: filtros por aplicación y tipo de acción (`where`), ventana temporal (`Timestamp >= ago(7d)`), agregación (`summarize ... by ...`), ordenación (`order by`), y limitación (`take 10`). La B no filtra por aplicación ni por tipo de acción y no incluye el blueprint; cuenta todo. La C no agrega: solo proyecta y ordena, no devuelve un top N agregado. La D agrega por usuario invocador, no por agente, e ignora el filtro temporal.
+:::
+
+::: pregunta
+id: EX-12-005
+modulo: 12
+oa: OA-12.5
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Diseñas una custom detection rule para detectar «agentes invocados desde países en la lista de alto riesgo (Corea del Norte, Irán, Siria) en los últimos 30 minutos». ¿Cuál es la combinación correcta de severity + actions automatizadas para producción de día 1?
+opciones:
+  - id: a
+    texto: "Severity: Critical. Action: deshabilitar agente automáticamente vía playbook + deshabilitar cuenta del usuario invocador + notificar CISO."
+  - id: b
+    texto: "Severity: **Critical**. Action automatizada en día 1: **solo notificar SOC tier 1 + crear ticket P1**. No automatizar acciones disruptivas (disable agent, disable user) hasta validar la rule durante 2-3 meses con FP < 1 %. Mientras tanto, las acciones disruptivas las ejecuta manualmente el SOC tras validación."
+    correcta: true
+  - id: c
+    texto: "Severity: Informational. Action: solo registrar."
+  - id: d
+    texto: "Severity: Critical. Action: ningún playbook, solo aparece en el dashboard."
+justificacion: |
+  La opción B es la calibración operativa correcta. Severity Critical es apropiada para el escenario (acceso desde país de alto riesgo regulatorio es prima facie compromiso casi seguro). Pero **las acciones disruptivas automatizadas requieren 2-3 meses de validación con FP < 1 % antes de activarse**: en día 1, deshabilitar agentes y cuentas automáticamente con una rule recién creada puede romper operación legítima (VPN nueva, viaje no comunicado, sandbox de testing) y se traduce en pérdida de confianza inmediata en el programa. La A activa contención disruptiva sin validación. La C subestima el riesgo. La D no genera el ticket P1 necesario para que el SOC actúe en SLA.
+:::
+
+::: pregunta
+id: EX-12-006
+modulo: 12
+oa: OA-12.6
+area: 5
+tipo: ordering
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Ordena los pasos correctos para **integrar Microsoft Defender XDR con Microsoft Sentinel** y operar el primer playbook automatizado, desde el provisioning hasta el primer test funcional.
+items:
+  - id: o1
+    texto: "Provisionar workspace Sentinel sobre Log Analytics workspace en la misma región que Defender XDR"
+  - id: o2
+    texto: "Instalar solution «Microsoft Defender XDR» desde Sentinel Content hub"
+  - id: o3
+    texto: "Configurar data connector con activación de Incidents/Alerts, CloudAppEvents y IdentityLogonEvents"
+  - id: o4
+    texto: "Configurar Long-Term Retention (workspace 90d + LTR 7 años para tablas críticas)"
+  - id: o5
+    texto: "Crear el playbook como Logic App con trigger «When Sentinel incident is triggered» y los steps de contención"
+  - id: o6
+    texto: "Crear automation rule que conecte el trigger (rule específica) con el playbook a ejecutar"
+  - id: o7
+    texto: "Test funcional disparando manualmente la rule analítica con un evento simulado y verificando ejecución end-to-end"
+correct_order:
+  - o1
+  - o2
+  - o3
+  - o4
+  - o5
+  - o6
+  - o7
+justificacion: |
+  El orden refleja las dependencias técnicas reales: no puedes instalar la solution sin workspace (O1→O2), no puedes configurar el connector sin la solution (O2→O3), la retención se configura una vez ingiriendo datos (O3→O4), el playbook necesita el data connector activo para que los triggers funcionen (O4→O5), la automation rule conecta detecciones con respuestas (O5→O6), y el test funcional valida el flujo completo end-to-end (O6→O7). Saltarse pasos genera errores: instalar el playbook antes de la solution falla por dependencias; saltarse la automation rule produce un playbook que existe pero nunca se dispara.
+:::
+
+::: pregunta
+id: EX-12-007
+modulo: 12
+oa: OA-12.7
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Analizar
+enunciado: |
+  Investigas un incident con compromiso de agente confirmado. El SOC tier 2 te entrega esto al cabo de 30 min: «Detectamos el patrón a las 10:23, el playbook automatizado deshabilitó el agente y revocó tokens, el owner está notificado. La cuenta del usuario invocador parece tener risk events recientes en Identity Protection. Hipótesis principal: credential stuffing exitoso. Cerramos el incident». ¿Qué le falta hacer al SOC antes de cerrar?
+opciones:
+  - id: a
+    texto: "Nada, la investigación está completa: identificaron compromiso, lo contuvieron y formularon hipótesis."
+  - id: b
+    texto: "Faltan elementos críticos: (1) construir timeline detallado con la query KQL por `correlationId` para reconstruir la cadena completa; (2) validar la hipótesis con evidencia (Identity Protection risk events, sign-in logs, ¿el dispositivo del usuario muestra señales adicionales?); (3) coordinarse con HR/Legal si hay posibilidad de exfiltración intencional; (4) producir post-mortem formal con causa raíz, impacto, acciones ejecutadas, lecciones aprendidas y mejoras con owner y fecha objetivo. Cerrar el incident sin post-mortem es no aprender; el mismo patrón volverá a ocurrir."
+    correcta: true
+  - id: c
+    texto: "Falta solo notificar a la prensa para mantener transparencia."
+  - id: d
+    texto: "Falta solo restaurar el agente para que la operación normal continúe."
+justificacion: |
+  La opción B describe los elementos críticos del flujo de investigación canónica alineado con NIST SP 800-61 Rev. 2. La contención inicial (paso ejecutado por el playbook) es solo eso: contención inicial. La investigación completa requiere reconstrucción de timeline, validación de hipótesis con evidencia adicional, coordinación cross-funcional cuando aplica, y post-mortem formal. Sin post-mortem, las lecciones se pierden y los incidents reaparecen. La A subestima la profundidad requerida. La C es operacionalmente errónea (la prensa no se notifica por defecto, solo si lo requiere regulación o crisis comunicacional). La D restaura un agente potencialmente todavía vulnerable; la decisión de restaurar requiere validar hipótesis primero.
 :::

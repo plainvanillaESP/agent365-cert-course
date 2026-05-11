@@ -76,7 +76,7 @@ export const MODULES: CourseModule[] = [
   { id: 9,  slug: 'modulo-09-permisos-conditional-access',   titulo: 'Permisos, accesos y Conditional Access',            duracionMin: 183, areaExamen: 2, estado: 'producido', faseProduccion: 4, preguntas: 7  },
   { id: 10, slug: 'modulo-10-purview-proteccion-datos',      titulo: 'Microsoft Purview y protección de datos',           duracionMin: 183, areaExamen: 4, estado: 'producido', faseProduccion: 5, preguntas: 5  },
   { id: 11, slug: 'modulo-11-dlp-sensitivity-compliance',    titulo: 'DLP, sensitivity labels y compliance',              duracionMin: 210, areaExamen: 4, estado: 'producido', faseProduccion: 5, preguntas: 7  },
-  { id: 12, slug: 'modulo-12-monitorizacion-defender',       titulo: 'Monitorización, auditoría y reporting con Defender', duracionMin: 75,  areaExamen: 5, estado: 'pendiente', faseProduccion: 5, preguntas: 7  },
+  { id: 12, slug: 'modulo-12-monitorizacion-defender',       titulo: 'Monitorización, auditoría y reporting con Defender', duracionMin: 220, areaExamen: 5, estado: 'producido', faseProduccion: 5, preguntas: 7  },
   { id: 13, slug: 'modulo-13-copilot-control-system',        titulo: 'Copilot Control System integrado con Agent 365',     duracionMin: 45,  areaExamen: 5, estado: 'pendiente', faseProduccion: 5, preguntas: 1  },
   { id: 14, slug: 'modulo-14-gobernanza-avanzada',           titulo: 'Gobernanza avanzada y multi-tenant',                duracionMin: 60,  areaExamen: 5, estado: 'pendiente', faseProduccion: 6, preguntas: 2  },
   { id: 15, slug: 'modulo-15-troubleshooting',               titulo: 'Troubleshooting y operación',                       duracionMin: 45,  areaExamen: 5, estado: 'pendiente', faseProduccion: 6, preguntas: 1  },
