@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 55
+total_preguntas_actuales: 56
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -31,7 +31,7 @@ ultima_actualizacion: 2026-05-11
 | M10 — Purview | 5 | Completo |
 | M11 — DLP y compliance | 7 | Completo |
 | M12 — Defender | 7 | Completo |
-| M13 — CCS | 1 | Pendiente producción |
+| M13 — CCS | 1 | Completo |
 | M14 — Gobernanza avanzada | 2 | Pendiente producción |
 | M15 — Troubleshooting | 1 | Pendiente producción |
 | M16 — Costes | 1 | Pendiente producción |
@@ -1663,4 +1663,38 @@ opciones:
     texto: "Falta solo restaurar el agente para que la operación normal continúe."
 justificacion: |
   La opción B describe los elementos críticos del flujo de investigación canónica alineado con NIST SP 800-61 Rev. 2. La contención inicial (paso ejecutado por el playbook) es solo eso: contención inicial. La investigación completa requiere reconstrucción de timeline, validación de hipótesis con evidencia adicional, coordinación cross-funcional cuando aplica, y post-mortem formal. Sin post-mortem, las lecciones se pierden y los incidents reaparecen. La A subestima la profundidad requerida. La C es operacionalmente errónea (la prensa no se notifica por defecto, solo si lo requiere regulación o crisis comunicacional). La D restaura un agente potencialmente todavía vulnerable; la decisión de restaurar requiere validar hipótesis primero.
+:::
+
+---
+
+### Módulo 13 — Copilot Control System integrado con Agent 365
+
+::: pregunta
+id: EX-13-001
+modulo: 13
+oa: OA-13.4
+area: 5
+tipo: scenario
+dificultad: media
+bloom: Analizar
+enunciado: |
+  Tu organización tiene desplegados Microsoft Defender XDR, Microsoft Purview y Copilot Control System. Surgen tres situaciones operativas en paralelo:
+
+  **(1)** El CIO necesita reasignar 150 licencias Copilot infrautilizadas a otros departamentos.
+  **(2)** El SOC tier 2 está investigando un incident donde un agente accedió a 80 archivos `HighlyConfidential` en una hora.
+  **(3)** Compliance necesita extraer evidencia forense de los accesos de ese agente para una solicitud regulatoria.
+
+  ¿Cuál es la asignación correcta de portal primario para cada situación?
+opciones:
+  - id: a
+    texto: "(1) Defender XDR, (2) CCS, (3) Purview."
+  - id: b
+    texto: "(1) **CCS** (License management), (2) **Defender XDR** (incident investigation, KQL hunting, timeline), (3) **Purview** (eDiscovery Premium con custodian hold)."
+    correcta: true
+  - id: c
+    texto: "(1) CCS, (2) CCS, (3) CCS — CCS unifica todas las funciones."
+  - id: d
+    texto: "(1) Microsoft 365 admin center, (2) Defender for Cloud Apps standalone, (3) Microsoft Entra admin center."
+justificacion: |
+  La opción B aplica la regla mnemotécnica correcta: **CCS controla** (licencias, policies, telemetría agregada), **Defender XDR detecta** (incidents, hunting, timeline forense con KQL), **Purview protege el dato** (sensitivity labels, DLP, eDiscovery Premium para evidencia regulatoria con cadena de custodia). La A invierte CCS y Defender XDR. La C es el anti-patrón canónico «hacer todo desde CCS»: CCS es panel ejecutivo, no consola forense ni de hunting técnico; pretender que CCS sustituya a los otros productos produce limitaciones funcionales y resultados incompletos. La D usa portales que no son los primarios para estas funciones (admin center es para licencias M365 generales pero CCS es el específico para Copilot; Defender for Cloud Apps standalone es solo un componente de Defender XDR; Entra admin center gestiona identidades pero no investiga incidents).
 :::
