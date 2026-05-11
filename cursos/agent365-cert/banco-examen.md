@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 58
+total_preguntas_actuales: 59
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -33,7 +33,7 @@ ultima_actualizacion: 2026-05-11
 | M12 — Defender | 7 | Completo |
 | M13 — CCS | 1 | Completo |
 | M14 — Gobernanza avanzada | 2 | Completo |
-| M15 — Troubleshooting | 1 | Pendiente producción |
+| M15 — Troubleshooting | 1 | Completo |
 | M16 — Costes | 1 | Pendiente producción |
 | **Total** | **60** | |
 
@@ -1756,4 +1756,32 @@ opciones:
     texto: "Cada caso decide su modelo según moneda local: euro = centralizado, libra = federado, peso/real = híbrido."
 justificacion: |
   La opción C es la respuesta canónica para este escenario: 4 jurisdicciones bancarias distintas (no armonizadas — UE no tiene un regulador bancario único, Reino Unido fuera de UE tras Brexit, México con regulación específica, Brasil con regulación específica) que requieren adaptación local; matriz que necesita KPIs agregables al Consejo. Centralizado (A) ignora la complejidad regulatoria y crea conflictos con cumplimiento local. Federado puro (B) sacrifica coherencia y KPIs comparables, problemático para reporting agregado. La D es absurda operacionalmente: el modelo de federación se decide por estructura de gobernanza, no por moneda. Hub-and-spoke equilibra los tres ejes (ético, operacional, tecnológico) y converge naturalmente tras 1-2 ciclos de revisión.
+:::
+
+---
+
+### Módulo 15 — Troubleshooting y operación cotidiana
+
+::: pregunta
+id: EX-15-001
+modulo: 15
+oa: OA-15.2
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Analizar
+enunciado: |
+  Un agente productivo se deshabilita súbitamente. Investigando los eventos en `CloudAppEvents`, encuentras un evento `AgentDisabled` con `automationName = "pb-Agent365-Compromise-Containment"` ejecutado por una custom detection rule de Defender XDR. Un director de negocio presiona para re-habilitar el agente inmediatamente porque está bloqueando 200 usuarios y hay una campaña activa. ¿Cuál es la respuesta operativamente correcta?
+opciones:
+  - id: a
+    texto: "Re-habilitar inmediatamente el agente y comunicar la rapidez de respuesta al director. La presión del negocio justifica la velocidad."
+  - id: b
+    texto: "**NO re-habilitar inmediatamente**. Una automation deshabilitó el agente porque una hipótesis de seguridad razonable se cumplió. Confirmar con SOC tier 2 **antes de re-habilitar** si el evento que disparó la automation es falso positivo o real. Si es FP, re-enable manual + ajustar threshold/excepciones de la rule. Si es real, mantener disabled + investigar incident con SOC + comunicar al director el motivo del retraso con datos. Re-habilitar agentes deshabilitados por automation sin investigar es el patrón más peligroso del módulo y puede dejar a un atacante operando."
+    correcta: true
+  - id: c
+    texto: "Eliminar la custom detection rule que disparó la automation y re-habilitar el agente. La rule probablemente está mal calibrada."
+  - id: d
+    texto: "Reportar al CISO y esperar instrucciones antes de tomar cualquier acción técnica."
+justificacion: |
+  La opción B es la disciplina operativa correcta, alineada con la sección 15.3.4 del módulo. Una security automation se disparó porque la query de detección coincidió: hay datos que merecen investigación antes de revertir la acción. Re-habilitar sin investigar (A) deja al atacante operando si el evento era real, y elimina la capacidad de aprender del FP si era falso. La C destruye un sistema de detección probablemente funcional sin diagnóstico — el escenario correcto es ajustar, no eliminar. La D abdica de la responsabilidad operativa: el SOC tier 2 tiene autoridad para resolver casos así sin esperar al CISO; escalar al CISO retrasa la respuesta y satura la atención ejecutiva. La regla canónica: validar primero, revertir después. La comunicación al director se gestiona con datos: «estamos investigando el evento que disparó la contención; te informo en X minutos con confirmación o resolución».
 :::

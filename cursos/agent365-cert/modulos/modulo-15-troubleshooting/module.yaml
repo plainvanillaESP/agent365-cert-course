@@ -1,30 +1,89 @@
 spec_version: '1.0'
 id: 15
 slug: modulo-15-troubleshooting
-titulo: Troubleshooting y operación
-duracion_min: 45
+titulo: "Troubleshooting y operación cotidiana"
+duracion_min: 117
 area_examen: 5
-estado: pendiente
+estado: producido
 fase_produccion: 6
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 1
+  - 6
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+prerrequisitos_externos:
+  - "Familiaridad básica con KQL y Defender XDR Advanced Hunting"
+  - "Conocimiento de Microsoft Entra ID sign-in logs y Conditional Access"
+objetivos_aprendizaje:
+  - id: OA-15.1
+    texto: "Diagnosticar problemas de acceso a agentes (usuario que no puede invocar, agente que falla en ejecución) siguiendo un árbol de decisión estructurado de 4 niveles."
+    bloom: Aplicar
+  - id: OA-15.2
+    texto: "Resolver casos de agentes deshabilitados inesperadamente identificando las cuatro causas más comunes (CA policy nueva, secret expirado, blueprint deprecated, security automation)."
+    bloom: Aplicar
+  - id: OA-15.3
+    texto: "Operar el flujo de cierre de incidents en Defender XDR cuando hay obstáculos (entities unresolved, evidence missing, automation failures)."
+    bloom: Aplicar
+  - id: OA-15.4
+    texto: "Detectar y remediar gaps en audit logs con técnicas de reconciliación cruzada CloudAppEvents + Purview audit + CCS telemetry."
+    bloom: Analizar
+  - id: OA-15.5
+    texto: "Aplicar el protocolo canónico OBDED de troubleshooting: observar → diagnosticar → ejecutar → validar → documentar."
+    bloom: Aplicar
+glosario:
+  - termino: "OBDED"
+    definicion: "Protocolo canónico de troubleshooting: Observe, Diagnose, Execute, Validate, Document."
+  - termino: "Causa raíz"
+    definicion: "El origen real del problema, distinguible del síntoma reportado por el usuario."
+  - termino: "Síntoma"
+    definicion: "Lo que el usuario reporta, típicamente la manifestación visible del problema."
+  - termino: "Tier 1 / Tier 2 / Tier 3"
+    definicion: "Niveles de escalado del SOC. T1 primer contacto y casos comunes; T2 casos complejos; T3 arquitectura y bugs de plataforma."
+  - termino: "Árbol de decisión"
+    definicion: "Estructura de preguntas binarias o categóricas que diagnóstica la causa raíz paso a paso."
+  - termino: "CA bloqueando (Conditional Access)"
+    definicion: "Una de las 4 causas comunes: una policy de CA impide la sesión del usuario."
+  - termino: "Secret expirado"
+    definicion: "Una de las 4 causas comunes: el client secret de la app registration del agente caducó."
+  - termino: "Blueprint deprecated"
+    definicion: "Una de las 4 causas comunes: Microsoft marca un blueprint como obsoleto y deja de funcionar."
+  - termino: "Security automation disable"
+    definicion: "Una de las 4 causas comunes: una custom detection rule deshabilitó el agente automáticamente."
+  - termino: "Entity unresolved"
+    definicion: "Estado de un incident donde una entidad referenciada no se puede resolver (agente eliminado, usuario salido, etc.)."
+  - termino: "Evidence missing"
+    definicion: "Situación donde los logs necesarios para confirmar una hipótesis no aparecen pese a estar dentro de la retención esperada."
+  - termino: "Reconciliación cruzada"
+    definicion: "Técnica de validar el audit log comparando 3 fuentes (CCS, Purview, Defender XDR) que deben coincidir en ±0.1 %."
+  - termino: "Audit log gap"
+    definicion: "Discrepancia > 1 % entre las 3 fuentes de audit; material de reporting al comité central."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
-laboratorios: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "15.1 El protocolo canónico OBDED"
+  - "15.2 Problemas de acceso a agentes"
+  - "15.3 Agentes deshabilitados inesperadamente"
+  - "15.4 Incidents de Defender XDR que no se cierran"
+  - "15.5 Audit log gaps"
+laboratorios:
+  - id: LAB-15-1
+    titulo: "Resolver un caso simulado de usuario que no puede invocar agente aplicando OBDED"
+    duracion_min: 30
+  - id: LAB-15-2
+    titulo: "Detectar y remediar un audit log gap con reconciliación cruzada"
+    duracion_min: 30
 preguntas_aporta_examen_final: 1
