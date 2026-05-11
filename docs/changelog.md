@@ -10,7 +10,22 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Plataforma]` Fase D.4 — Desbloqueo secuencial con override (PR #?). **Cierra el Bloque D**. El alumno avanza por defecto módulo a módulo (M02 desbloqueado al completar M01, etc.) y puede activar un override «modo acceso libre» desde `/progreso` si prefiere saltarse el orden.
+- `[Contenido]` Fase E.1 — Producción de M10 parte 1: teoría + recursos + manifest (PR #?). M10 (Microsoft Purview y protección de datos en Agent 365) abre el **Área 4** del examen. Mismo patrón que B.1: contenido pedagógico voluminoso (teoría 75 min + glosario + recursos) en este PR; labs + quiz + 5 preguntas al banco llegan en E.2.
+  - **`teoria.md`** completa (~530 líneas, 6 secciones, 75 min lectura):
+    - 10.1 Por qué Purview con Agent 365 (gap que cubre respecto a CA, las tres preguntas que Purview responde, componentes que aplican a agentes).
+    - 10.2 DSPM for AI (cuatro paneles del dashboard, comportamiento típico post-GA, detección automática vía SITs y labels existentes, acciones desde el dashboard).
+    - 10.3 Sensitivity labels y archivos `.agent` (aplicación a archivos, herencia automática en outputs, labels sobre blueprints, auto-labeling).
+    - 10.4 Trazabilidad por agente (eventos `AgentInvoke`, `AgentDataAccess`, `AgentOutputGenerated` con campos enriquecidos; retención hasta 10 años con Audit Premium; búsquedas en eDiscovery Premium con KQL filtrable por `agentId`).
+    - 10.5 Information protection en outputs (cifrado AES-256 automático, watermark con UPN, restricciones de compartición, Endpoint DLP en la última milla).
+    - 10.6 Operaciones del día a día (triaje semanal DSPM, auditoría mensual de outputs, respuesta a solicitud regulatoria, revisión trimestral de policies).
+    - Glosario inline de 14 términos clave.
+  - **`recursos.md`** con URLs de Microsoft Learn (Purview overview, DSPM for AI, Audit Premium, eDiscovery Premium, SITs reference, Endpoint DLP), blogs oficiales (Purview Tech Community, anuncio de integración con Agent 365), lecturas adicionales (NIST AI RMF, ISO/IEC 42001, GDPR Art. 22) y herramientas (Graph PowerShell, IPP module, Compliance portal).
+  - **`module.yaml`** con los 6 OAs cubriendo Comprender, Aplicar, Analizar, Crear; 14 términos de glosario; prerrequisitos M01+M06+M09; `estado: produciendo`, `fase_produccion: 2`, `preguntas_aporta_examen_final: 5`.
+  - **`README.md`** del directorio actualizado.
+  - Borrado: placeholders `evaluacion.md`, `laboratorios.md` originales.
+- `[Build]` Validador `scripts/validate-course.py` reporta 268 checks OK · 0 warnings · 0 errors. Build Vite OK 3.13s.
+
+ **Cierra el Bloque D**. El alumno avanza por defecto módulo a módulo (M02 desbloqueado al completar M01, etc.) y puede activar un override «modo acceso libre» desde `/progreso` si prefiere saltarse el orden.
   - **`lib/progress.ts`** extendido:
     - Nuevo tipo `AccessMode = 'sequential' | 'free'` con default `'sequential'`.
     - Nuevas funciones `getAccessMode()` y `setAccessMode(mode)` que persisten en `agent365-access-mode` y disparan el evento de progreso.
