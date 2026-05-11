@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 59
+total_preguntas_actuales: 60
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -34,7 +34,7 @@ ultima_actualizacion: 2026-05-11
 | M13 — CCS | 1 | Completo |
 | M14 — Gobernanza avanzada | 2 | Completo |
 | M15 — Troubleshooting | 1 | Completo |
-| M16 — Costes | 1 | Pendiente producción |
+| M16 — Costes | 1 | Completo |
 | **Total** | **60** | |
 
 ---
@@ -1784,4 +1784,32 @@ opciones:
     texto: "Reportar al CISO y esperar instrucciones antes de tomar cualquier acción técnica."
 justificacion: |
   La opción B es la disciplina operativa correcta, alineada con la sección 15.3.4 del módulo. Una security automation se disparó porque la query de detección coincidió: hay datos que merecen investigación antes de revertir la acción. Re-habilitar sin investigar (A) deja al atacante operando si el evento era real, y elimina la capacidad de aprender del FP si era falso. La C destruye un sistema de detección probablemente funcional sin diagnóstico — el escenario correcto es ajustar, no eliminar. La D abdica de la responsabilidad operativa: el SOC tier 2 tiene autoridad para resolver casos así sin esperar al CISO; escalar al CISO retrasa la respuesta y satura la atención ejecutiva. La regla canónica: validar primero, revertir después. La comunicación al director se gestiona con datos: «estamos investigando el evento que disparó la contención; te informo en X minutos con confirmación o resolución».
+:::
+
+---
+
+### Módulo 16 — Costes, optimización y mejores prácticas
+
+::: pregunta
+id: EX-16-001
+modulo: 16
+oa: OA-16.4
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Analizar
+enunciado: |
+  La factura mensual de Microsoft Sentinel sube un 70 por ciento en tres meses sin que el volumen de invocaciones de agentes haya cambiado significativamente. Un SRE propone aplicar un filtro de ingestión al data connector de Defender XDR para descartar aproximadamente un tercio de los eventos `AgentInvoke` con menor riqueza de metadata, argumentando que «son rutinarios y no aportan valor». El responsable de gobernanza de IA debe decidir antes del comité de mejora continua del lunes. ¿Cuál es la respuesta operativamente correcta?
+opciones:
+  - id: a
+    texto: "Aprobar el filtro: el SRE es responsable de coste y su análisis técnico debe prevalecer; una reducción del 30 por ciento es ahorro relevante en el contexto presupuestario."
+  - id: b
+    texto: "**Rechazar el filtro y diagnosticar la causa raíz del incremento de coste**. Los eventos `AgentInvoke` son material de audit y trazabilidad regulatoria; filtrarlos es prohibido por la regla operativa de filtros seguros del módulo 16.4.2 (filtros que eliminan eventos de invocación, eventos de cambio de configuración o eventos de seguridad están prohibidos). La causa raíz probable está en otra dimensión: retención uniforme en tier caliente sin tiering aplicado, custom tables sobredimensionadas, ausencia de capacidad reservada, o subida real del volumen no capturada por el dashboard. Aplicar tiering canónico (30 días caliente, hasta 7 años en archive LTR) reduce L3 entre 5 y 20 veces sin sacrificar trazabilidad. Cualquier filtro de ingestión que llegue a aplicarse requiere aprobación documentada del comité central."
+    correcta: true
+  - id: c
+    texto: "Aprobar el filtro condicionado a una revisión a 3 meses: si no se detectan incidentes durante ese periodo, el filtro se mantiene definitivamente como medida de ahorro."
+  - id: d
+    texto: "Escalar al CISO para que decida sobre el filtro y delegar la responsabilidad del análisis técnico."
+justificacion: |
+  La opción B aplica la disciplina operativa del módulo 16.4. Los filtros que eliminan eventos de invocación están prohibidos porque comprometen la trazabilidad regulatoria. La A confunde autoridad técnica con criterio de gobernanza: el SRE puede tener razón en el ahorro inmediato, pero el riesgo regulatorio supera el beneficio económico. La C es la trampa del «filtro permanente con revisión cosmética»: «si no se detectan incidentes» es muy difícil de comprobar en ausencia de los datos filtrados, ya que el problema puede detectarse meses después en auditoría externa, no en monitorización rutinaria. La D abdica la responsabilidad operativa del responsable de gobernanza y no aporta diagnóstico. El procedimiento correcto es investigar la causa raíz real (en la práctica casi siempre falta de tiering o de capacidad reservada), aplicar el tiering canónico que preserva trazabilidad completa, y reservar capacidad si el volumen está estabilizado. Este escenario reproduce exactamente el antipatrón del LAB-15-2 (audit log gap por filtro de ingestión aplicado sin documentación) y enlaza con la disciplina financiera del comité trimestral.
 :::
