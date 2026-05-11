@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { Sun, Moon, Menu } from 'lucide-react'
+import { Link, NavLink } from 'react-router-dom'
+import { Sun, Moon, Menu, Activity } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
@@ -63,6 +63,20 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
         {/* Acciones */}
         <div className="flex items-center gap-1">
+          <NavLink
+            to="/progreso"
+            className={({ isActive }) =>
+              [
+                'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
+                isActive
+                  ? 'text-[var(--text-active)] bg-[var(--bg-active)]'
+                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
+              ].join(' ')
+            }
+          >
+            <Activity className="size-[15px] stroke-[1.75]" aria-hidden />
+            <span className="hidden sm:inline">Progreso</span>
+          </NavLink>
           <a
             href="https://github.com/plainvanillaESP/agent365-cert-course"
             target="_blank"
