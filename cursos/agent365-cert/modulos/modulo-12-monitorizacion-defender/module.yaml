@@ -2,9 +2,9 @@ spec_version: '1.0'
 id: 12
 slug: modulo-12-monitorizacion-defender
 titulo: "Monitorización, auditoría y reporting con Microsoft Defender XDR"
-duracion_min: 90
+duracion_min: 220
 area_examen: 5
-estado: produciendo
+estado: producido
 fase_produccion: 3
 ultima_actualizacion: 2026-05-11
 prerrequisitos:
@@ -72,6 +72,13 @@ glosario:
 secciones:
   - tipo: teoria
     archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
   - tipo: recursos
     archivo: recursos.md
 sub_secciones_teoria:
@@ -82,5 +89,17 @@ sub_secciones_teoria:
   - "12.5 Tres patrones problemáticos canónicos"
   - "12.6 Custom detection rules: formalizar el hunting"
   - "12.7 Integración con Microsoft Sentinel"
-laboratorios: []
+laboratorios:
+  - id: LAB-12-1
+    titulo: "Escribir y validar las 3 queries KQL canónicas en Advanced Hunting"
+    duracion_min: 30
+  - id: LAB-12-2
+    titulo: "Configurar custom detection rule con severidad calibrada"
+    duracion_min: 25
+  - id: LAB-12-3
+    titulo: "Conectar Defender XDR con Sentinel y crear playbook AgentCompromise-Containment"
+    duracion_min: 25
+  - id: LAB-12-4
+    titulo: "Investigar incidente simulado end-to-end: timeline + contención + post-mortem"
+    duracion_min: 30
 preguntas_aporta_examen_final: 7
