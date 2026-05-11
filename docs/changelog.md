@@ -10,7 +10,29 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.7 — M13 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco (PR #?). M13 (Copilot Control System integrado con Agent 365) queda **producido**. **Banco oficial alcanza el 93 %** (56/60 preguntas). Módulo compacto producido en un solo PR (no necesita división E.7 + E.8 como módulos previos por su menor volumen: 1 sola pregunta al banco, 5 OAs, 2 labs).
+- `[Contenido]` Fase E.8 — M14 cerrado en un único PR: teoría + labs + quiz + manifest + 2 preguntas al banco (PR #?). M14 (Gobernanza avanzada y multi-tenant) queda **producido**. **Banco oficial alcanza el 97 %** (58/60 preguntas). Módulo intermedio producido en un único PR (mismo patrón que E.7 con M13).
+  - **`teoria.md`** (~440 líneas, 5 secciones, 60 min lectura):
+    - 14.1 Topologías multi-tenant comunes (las 4 topologías canónicas: parent/subsidiary, M&A en curso, MSP/MSSP, joint venture; implicaciones específicas para Agent 365 en cada una).
+    - 14.2 Delegated administration cross-tenant (Microsoft Entra B2B, GDAP con scope + duración + audit + customer consent, Customer Lockbox, patrón recomendado de doble pertenencia controlada).
+    - 14.3 Políticas cross-tenant (el reto regulatorio multi-jurisdiccional, el modelo de policy framework distribuido, 3 ejes de alineación: ético/operacional/tecnológico).
+    - 14.4 Federation models (centralizado, federado, hub-and-spoke con tabla de decisión completa; hub-and-spoke como modelo más común en organizaciones modernas).
+    - 14.5 Operación del ciclo de gobernanza distribuida (comité central + comités locales, reporting agregado en 3 vistas, integración con auditoría externa anual con 4-6 semanas de preparación).
+    - Glosario inline de 16 términos clave.
+  - **`laboratorios.md`** completos (~420 líneas, 2 labs, 60 min total):
+    - LAB-14-1 (30 min) — Configurar delegated administration cross-tenant con GDAP + Customer Lockbox: crear GDAP relationship entre HQ y Subsidiary-EU con roles `Security Reader` + `Compliance Administrator` + `Copilot Administrator` (NO Global Admin), 180 días, activar Customer Lockbox con aprobadores designados, test funcional completo del flow B2B + GDAP + Lockbox, validación del audit log con cadena completa de acciones cross-tenant.
+    - LAB-14-2 (30 min) — Diseñar policy framework distribuido para 3 tenants regulatorios distintos (InternationalManufacturing-Corp en Alemania + US + Brasil): framework global con 5 principios mínimos + KPIs canónicos + vocabulario común, adaptaciones por tenant respetando GDPR/AI Act/BetrVG/CCPA/SOX/HIPAA/LGPD, ciclo de gobernanza con comités, plan de rollout 16 semanas, validación cruzada con regulación.
+  - **`quiz-practica.md`** con 5 preguntas Q-14-1..Q-14-5 cubriendo los 5 OAs en los 5 tipos del parser (drag-and-drop, multiple-response, scenario, multiple-choice, ordering). Caso de estudio de refuerzo: **Iberdrola-Avangrid** (grupo energético global con 40K empleados, operación en 5 países con reguladores propios) — diseño del modelo operativo cross-tenant 12 meses con federation model hub-and-spoke, framework global con 6 principios + 7 KPIs canónicos, calendario de 7 auditorías a lo largo del año, dashboard mensual al Consejo con 3 vistas.
+  - **`recursos.md`** con URLs de Microsoft Learn (multi-tenant overview, cross-tenant access, GDAP completo con roles y migración desde DAP, Customer Lockbox, Agent 365 multi-tenant), referencia regulatoria (EU AI Act, GDPR, LGPD, CCPA/CPRA, NIST AI RMF), frameworks (COBIT 2019, ITIL 4, ISO/IEC 42001:2023), lecturas adicionales (Microsoft Trust Center, Gartner Magic Quadrant, MIT Sloan).
+  - **`module.yaml`** completo: `estado: producido`, `duracion_min: 132` (60 teoría + 12 quiz + 60 labs), 5 OAs cubriendo Comprender, Aplicar, Crear, Analizar; 16 términos glosario; prerrequisitos M01 + M06 + M09 + M12 + M13; secciones completas; lista `laboratorios:` con los 2 IDs; `preguntas_aporta_examen_final: 2`.
+  - **`banco-examen.md`**: añadidas 2 preguntas EX-14-001..002 cubriendo OA-14.2 (configuración MSP correcta) y OA-14.4 (federation model para grupo bancario multi-país). Banco oficial pasa de **56 a 58** preguntas (**97 %** completo). Tabla de distribución actualiza M14 a `Completo`.
+  - **`README.md`** del directorio actualizado con estado producido.
+  - **`platform/src/lib/course.ts`**: M14 cambia a `estado: 'producido'` con `duracionMin: 132`.
+  - **`lib/quiz.ts` no requiere cambios** — beneficio operativo continuado del Bloque D.1. Verificado con `parseQuizMarkdown` → 5 preguntas Q-14 en los 5 tipos correctos.
+- `[Build]` Validador `scripts/validate-course.py` reporta 275 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 1.65s.
+
+**Hito alcanzado — M14 completo. Banco al 97 %.** Con M01-M14 producidos, **14 de 16 módulos del temario están listos (87.5 %)** y el banco oficial alcanza 58/60 preguntas. Solo faltan **2 preguntas** para completar el banco (M15 aporta 1, M16 aporta 1). Próximo módulo: M15 (Troubleshooting y operación).
+
+ M13 (Copilot Control System integrado con Agent 365) queda **producido**. **Banco oficial alcanza el 93 %** (56/60 preguntas). Módulo compacto producido en un solo PR (no necesita división E.7 + E.8 como módulos previos por su menor volumen: 1 sola pregunta al banco, 5 OAs, 2 labs).
   - **`teoria.md`** (~310 líneas, 5 secciones, 45 min lectura):
     - 13.1 ¿Qué es y dónde encaja CCS? (el problema que resuelve, posicionamiento con tres reglas mnemotécnicas «CCS controla / Defender XDR detecta / Purview protege el dato», por qué tiene su propio portal con público objetivo distinto).
     - 13.2 Las cuatro superficies operativas (License management, Agent governance, Data governance integration, Telemetry — cada una con la pregunta de negocio que responde y sus capacidades concretas).
