@@ -10,7 +10,29 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.6 — M12 cerrado: labs + quiz + 7 preguntas al banco (PR #?). M12 (Monitorización, auditoría y reporting con Microsoft Defender XDR) queda **producido**. El alumno puede recorrer el módulo completo (teoría 90 min + quiz 20 min + 4 labs 110 min). **Banco oficial alcanza el 92 %** (55/60 preguntas).
+- `[Contenido]` Fase E.7 — M13 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco (PR #?). M13 (Copilot Control System integrado con Agent 365) queda **producido**. **Banco oficial alcanza el 93 %** (56/60 preguntas). Módulo compacto producido en un solo PR (no necesita división E.7 + E.8 como módulos previos por su menor volumen: 1 sola pregunta al banco, 5 OAs, 2 labs).
+  - **`teoria.md`** (~310 líneas, 5 secciones, 45 min lectura):
+    - 13.1 ¿Qué es y dónde encaja CCS? (el problema que resuelve, posicionamiento con tres reglas mnemotécnicas «CCS controla / Defender XDR detecta / Purview protege el dato», por qué tiene su propio portal con público objetivo distinto).
+    - 13.2 Las cuatro superficies operativas (License management, Agent governance, Data governance integration, Telemetry — cada una con la pregunta de negocio que responde y sus capacidades concretas).
+    - 13.3 Configurar políticas centralizadas de adopción (los tres modelos canónicos Open / Curated / Approval-based, configuración paso a paso del Curated catalog, telemetría de políticas con compliance rate + friction + coverage).
+    - 13.4 CCS, Defender XDR y Purview: diferenciación operativa (tabla de decisión rápida con 8 situaciones canónicas + tres anti-patrones a evitar).
+    - 13.5 Operación del día a día (ritual semanal de 30-45 min los lunes con 5 actividades, reporte mensual al comité de gobernanza con 4 secciones, integración con el ciclo de gobernanza corporativa).
+    - Glosario inline de 12 términos clave.
+  - **`laboratorios.md`** completos (~250 líneas, 2 labs, 60 min total):
+    - LAB-13-1 (30 min) — Configurar política Curated catalog y validar compliance rate: política `Marketing-Europe-Curated-2026Q2` con allowlist de 5 agentes, validación empírica de bloqueos, medición de compliance rate + friction + coverage después de 24-48h, ajustes iniciales según KPIs.
+    - LAB-13-2 (30 min) — Generar el reporte mensual al comité de gobernanza desde CCS: flujo completo (definir periodo y audiencia → generar reporte automático → añadir narrativa ejecutiva a cada sección → validación cruzada con Defender XDR + Purview → exportar PDF + PPTX para distribución → documentar decisiones post-comité).
+  - **`quiz-practica.md`** con 5 preguntas Q-13-1..Q-13-5 cubriendo los 5 OAs en los 5 tipos del parser (multiple-choice, drag-and-drop, scenario, multiple-response, ordering). Caso de estudio de refuerzo: **Telefónica** (97K empleados, 12 países) — calendario operativo anual de gobernanza de IA con rituales semanal/mensual/trimestral/anual, 3 KPIs ejecutivos al Consejo de Administración, plan de evolución del modelo de política Approval-based → Curated → Open con criterios objetivos para cada transición.
+  - **`recursos.md`** con URLs de Microsoft Learn (CCS overview + License management + Agent governance + Data governance + Telemetry + Monthly governance report), documentación de diferenciación con Defender XDR y Purview, blogs oficiales, lecturas adicionales (Gartner Magic Quadrant AI Governance, MIT Sloan), herramientas (Graph PowerShell Copilot module, Power BI Copilot Reports template).
+  - **`module.yaml`** completo: `estado: producido`, `duracion_min: 117` (45 teoría + 12 quiz + 60 labs), 5 OAs cubriendo Bloom Comprender, Aplicar, Analizar; 12 términos glosario; prerrequisitos M01 + M06 + M09 + M12; secciones completas; lista `laboratorios:` con los 2 IDs; `preguntas_aporta_examen_final: 1`.
+  - **`banco-examen.md`**: añadida 1 pregunta EX-13-001 cubriendo OA-13.4 (diferenciación operativa CCS vs Defender XDR vs Purview en escenario compuesto con 3 situaciones simultáneas). Banco oficial pasa de **55 a 56** preguntas (**93 %** completo). Tabla de distribución actualiza M13 a `Completo`.
+  - **`README.md`** del directorio actualizado con estado producido y enlace a archivos.
+  - **`platform/src/lib/course.ts`**: M13 cambia a `estado: 'producido'` con `duracionMin: 117`.
+  - **`lib/quiz.ts` no requiere cambios** — beneficio operativo continuado del Bloque D.1. Verificado con `parseQuizMarkdown` → 5 preguntas Q-13 en los 5 tipos correctos.
+- `[Build]` Validador `scripts/validate-course.py` reporta 274 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.55s.
+
+**Hito alcanzado — M13 completo. Banco al 93 %.** Con M01-M13 producidos, **13 de 16 módulos del temario están listos (81 %)** y el banco oficial alcanza 56/60 preguntas. Solo faltan **4 preguntas** para completar el banco (M14 aporta 2, M15 aporta 1, M16 aporta 1). Próximo módulo: M14 (Gobernanza avanzada y multi-tenant).
+
+ M12 (Monitorización, auditoría y reporting con Microsoft Defender XDR) queda **producido**. El alumno puede recorrer el módulo completo (teoría 90 min + quiz 20 min + 4 labs 110 min). **Banco oficial alcanza el 92 %** (55/60 preguntas).
   - **`laboratorios.md`** completos (~485 líneas, 4 labs, 110 min total):
     - LAB-12-1 (30 min) — Escribir y validar las 3 queries KQL canónicas en Advanced Hunting (volumen anómalo 5x baseline, exfiltración > 30 docs + > 5 outputs, compromiso de identidad > 2 IPs nuevas + > 3 useragents). Documentar thresholds, FP rate, next-review date.
     - LAB-12-2 (25 min) — Promover query 2 a custom detection rule operativa con severidad calibrada (High), entity extraction (AgentId, AccountUpn), MITRE ATT&CK mapping (T1567, T1078.004), acciones automatizadas medidas (solo notify en día 1, disable agente tras 2-3 meses con FP < 1 %).

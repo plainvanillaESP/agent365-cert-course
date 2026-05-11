@@ -1,30 +1,84 @@
 spec_version: '1.0'
 id: 13
 slug: modulo-13-copilot-control-system
-titulo: Copilot Control System integrado con Agent 365
-duracion_min: 45
+titulo: "Copilot Control System integrado con Agent 365"
+duracion_min: 117
 area_examen: 5
-estado: pendiente
-fase_produccion: 5
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+estado: producido
+fase_produccion: 4
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 1
+  - 6
+  - 9
+  - 12
+prerrequisitos_externos:
+  - "Familiaridad básica con Microsoft 365 admin center"
+  - "Conocimiento del rol de las disciplinas Defender XDR (M12) y Purview (M10-M11)"
+objetivos_aprendizaje:
+  - id: OA-13.1
+    texto: "Posicionar Copilot Control System (CCS) como panel unificado de gobernanza para Copilot 365 y agentes Agent 365 en el ecosistema Microsoft."
+    bloom: Comprender
+  - id: OA-13.2
+    texto: "Identificar las cuatro superficies operativas de CCS: License management, Agent governance, Data governance integration y Telemetry."
+    bloom: Aplicar
+  - id: OA-13.3
+    texto: "Configurar políticas centralizadas de adopción y restricción de agentes desde CCS (allowlist/blocklist por blueprint, por departamento, por usuario)."
+    bloom: Aplicar
+  - id: OA-13.4
+    texto: "Diferenciar las responsabilidades de CCS (panel de control y gobernanza centralizada) respecto a Defender XDR (detección e investigación) y Purview (gobernanza del dato)."
+    bloom: Analizar
+  - id: OA-13.5
+    texto: "Operacionalizar CCS en el día a día: reporting semanal a stakeholders, ajustes trimestrales, integración con el comité de gobernanza."
+    bloom: Aplicar
+glosario:
+  - termino: "Copilot Control System (CCS)"
+    definicion: "Panel unificado de Microsoft para gobernanza operativa de Copilot 365 y agentes Agent 365. Agrega vistas críticas de M365 admin center, Entra, Defender XDR y Purview."
+  - termino: "License management"
+    definicion: "Una de las 4 superficies de CCS. Vista agregada de licencias con asignación masiva, reasignación basada en uso, proyección de coste."
+  - termino: "Agent governance"
+    definicion: "Una de las 4 superficies de CCS. Catálogo de agentes con allowlist/blocklist por blueprint, departamento o usuario."
+  - termino: "Data governance integration"
+    definicion: "Una de las 4 superficies de CCS. Vista agregada de policies de Purview con redirección al portal nativo para edición fina."
+  - termino: "Telemetry"
+    definicion: "Una de las 4 superficies de CCS. Métricas de adopción con drill-down anonimizado."
+  - termino: "Open catalog"
+    definicion: "Modelo de política donde todos los agentes son disponibles para todos los usuarios con licencia."
+  - termino: "Curated catalog"
+    definicion: "Modelo de política donde solo agentes explícitamente permitidos están disponibles, por departamento. Caso operativo más común."
+  - termino: "Approval-based"
+    definicion: "Modelo de política donde cualquier acceso a un agente nuevo requiere ticket de aprobación. Para organizaciones reguladas o fases iniciales."
+  - termino: "Compliance rate (CCS)"
+    definicion: "KPI: % de invocaciones dentro de la política vs intentos bloqueados."
+  - termino: "DAU / MAU"
+    definicion: "Daily Active Users / Monthly Active Users. KPIs canónicos de adopción reportados en Telemetry."
+  - termino: "Pending approvals"
+    definicion: "Tickets de aprobación de acceso a agentes pendientes de resolución. Threshold operativo: < 72h."
+  - termino: "Anti-patrón 'hacer todo desde CCS'"
+    definicion: "Error operacional: pretender que CCS sustituya a Defender XDR/Purview para acciones forenses o configuración fina."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
-laboratorios: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "13.1 ¿Qué es y dónde encaja Copilot Control System?"
+  - "13.2 Las cuatro superficies operativas"
+  - "13.3 Configurar políticas centralizadas de adopción"
+  - "13.4 CCS, Defender XDR y Purview: diferenciación operativa"
+  - "13.5 Operación del día a día"
+laboratorios:
+  - id: LAB-13-1
+    titulo: "Configurar política Curated catalog y validar compliance rate"
+    duracion_min: 30
+  - id: LAB-13-2
+    titulo: "Generar el reporte mensual al comité de gobernanza desde CCS"
+    duracion_min: 30
 preguntas_aporta_examen_final: 1
