@@ -10,7 +10,19 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-08
 
-- `[Plataforma]` Fase D.1 — Parser real de markdown para quizzes (PR #?). Cierra la deuda técnica de la sincronía manual TS↔markdown que arrastrábamos desde Hito B.
+- `[Plataforma]` Fase D.2 — Motor de progreso del alumno (PR #?). Segundo de cuatro entregas del Bloque D. Empieza a tracker el avance del alumno por sección y módulo, sin desbloqueo (eso llega en D.4).
+  - **Nuevo `platform/src/lib/progress.ts`** (~270 líneas): tipos `SectionStatus` (`not-started` / `in-progress` / `completed`), `SectionState`, `ModuleProgressSnapshot`. Funciones puras `readModuleProgress`, `markSectionVisited`, `clearAllProgress`, `subscribeProgressChanges`. Constantes públicas `THEORY_THRESHOLD_PCT = 80` y `QUIZ_PASS_RATIO = 0.7`.
+  - **Criterios de finalización por sección**: teoría completa cuando el scroll máximo alcanza ≥80 % (lectura del `agent365-reading-m{N}-teoria` que ya escribe `ScrollProgress`); quiz completo cuando hay un intento con score ≥70 % (lectura del `agent365-quiz-m{N}-history` que ya escribe `useQuizState`); laboratorios y recursos completos al visitar la sección al menos una vez (nuevo store `agent365-section-visits`).
+  - **Diseño sin duplicación**: el motor lee directamente de las claves que ya escriben otros componentes en lugar de mantener un mirror separado, evitando inconsistencias.
+  - **Nuevo hook `useModuleProgress(moduleId)`**: snapshot reactivo que se recalcula al recibir eventos `agent365-progress-changed` (mismo tab, vía `CustomEvent`) o `storage` nativo (cross-tab).
+  - **Nuevo hook `useCourseProgress()`**: snapshot agregado de todos los módulos producidos. Pensado para la vista global `/progreso` (D.3) y badges en la home.
+  - **Integraciones**:
+    - `ScrollProgress.tsx` ahora dispara el evento custom tras persistir `maxPct`.
+    - `useQuizState.ts` dispara el evento custom tras persistir `history` y al `clearHistory`.
+    - `ModulePage.tsx` llama a `markSectionVisited` al navegar a `laboratorios` o `recursos`, y muestra un check verde en la pestaña de cada sección completada.
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.45s.
+
+ Cierra la deuda técnica de la sincronía manual TS↔markdown que arrastrábamos desde Hito B.
   - **Nuevo `platform/src/lib/quiz-parser.ts`** (~170 líneas): parsea bloques `::: pregunta ... :::` de los `quiz-practica.md` extrayendo el YAML interno con js-yaml (browser-safe) y construyendo objetos `Question` validados. Soporta los 5 tipos canónicos: multiple-choice, multiple-response, scenario, drag-and-drop, ordering.
   - **`platform/src/lib/quiz.ts` reescrito** (de 835 a ~245 líneas): elimina las 27 `Q_PRACT_NN_M` hardcoded. `getQuestionsForModule` ahora usa `import.meta.glob` eager sobre los `quiz-practica.md` del paquete y los pasa por `parseQuizMarkdown`. **Pasamos de 27 preguntas hardcoded a 60 preguntas leídas del paquete** (8 M01 + 6 M02 + 6 M03 + 5 M04 + 5 M05 + 11 M06 + 5 M07 + 6 M08 + 8 M09).
   - **Tipos extendidos**: añadidos `MultipleResponseQuestion` con `correctOptionIds: string[]` y `OrderingQuestion` con `correctOrder: string[]`. `Answer` union extendida con `MRAnswer` y `OrderingAnswer`. Helpers `isMultipleResponse`, `isOrdering`, y `emptyAnswerFor` / `isAnswerComplete` / `isAnswerCorrect` actualizados para los 4 tipos.

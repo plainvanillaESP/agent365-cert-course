@@ -1,6 +1,6 @@
 import { useParams, Navigate, NavLink, Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { ChevronRight, BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight } from 'lucide-react'
+import { ChevronRight, BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight, Check } from 'lucide-react'
 import { findModule, getAreaForModule, formatDuration } from '@/lib/course'
 import { loadContent, type ContentType } from '@/lib/content'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
@@ -12,6 +12,8 @@ import { getLabForModule } from '@/lib/labs'
 import { Resources } from '@/components/resources/Resources'
 import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
+import { markSectionVisited, type TrackedSection } from '@/lib/progress'
+import { useModuleProgress } from '@/hooks/useModuleProgress'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'quiz-practica', 'recursos']
 
@@ -31,6 +33,20 @@ export function ModulePage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
   }, [moduleId, section])
+
+  // Marcar como visitada al entrar en laboratorios o recursos.
+  // Las otras secciones (teoria, quiz-practica) registran progreso por
+  // sus propios componentes (ScrollProgress, useQuizState).
+  useEffect(() => {
+    if (isNaN(moduleId)) return
+    if (section === 'laboratorios' || section === 'recursos') {
+      markSectionVisited(moduleId, section)
+    }
+  }, [moduleId, section])
+
+  // Hook al motor de progreso. Antes del render para mantener el orden
+  // de hooks estable (no condicional).
+  const progress = useModuleProgress(isNaN(moduleId) ? -1 : moduleId)
 
   if (!module) return <Navigate to="/" replace />
   // Alias legacy: /modulo/X/evaluacion → /modulo/X/quiz-practica.
@@ -91,6 +107,7 @@ export function ModulePage() {
           <div className="mt-5 flex flex-wrap gap-1 -mb-[1px] border-b border-transparent">
             {Object.entries(SECTION_META).map(([slug, meta]) => {
               const Icon = meta.icon
+              const isCompleted = progress.sections[slug as TrackedSection]?.status === 'completed'
               return (
                 <NavLink
                   key={slug}
@@ -107,6 +124,12 @@ export function ModulePage() {
                 >
                   <Icon className="size-[14px] stroke-[1.75]" aria-hidden />
                   <span>{meta.label}</span>
+                  {isCompleted && (
+                    <Check
+                      className="size-[13px] stroke-[2.5] text-emerald-600 dark:text-emerald-400"
+                      aria-label="Sección completada"
+                    />
+                  )}
                 </NavLink>
               )
             })}
