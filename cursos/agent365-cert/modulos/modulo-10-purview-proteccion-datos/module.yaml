@@ -1,30 +1,77 @@
 spec_version: '1.0'
 id: 10
 slug: modulo-10-purview-proteccion-datos
-titulo: Microsoft Purview y protección de datos
+titulo: "Microsoft Purview y protección de datos en Agent 365"
 duracion_min: 75
 area_examen: 4
-estado: pendiente
-fase_produccion: 5
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+estado: produciendo
+fase_produccion: 2
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 1
+  - 6
+  - 9
+prerrequisitos_externos:
+  - "Familiaridad básica con Microsoft Purview Information Protection (sensitivity labels en archivos M365)"
+objetivos_aprendizaje:
+  - id: OA-10.1
+    texto: "Explicar qué problemas de gobernanza de datos resuelve Microsoft Purview en el contexto de Agent 365 y por qué es complementario al gating de Conditional Access del M09."
+    bloom: Comprender
+  - id: OA-10.2
+    texto: "Navegar el dashboard de DSPM for AI e interpretar sus métricas principales (top sensitive interactions, risky users, top apps) para detectar patrones de uso problemáticos."
+    bloom: Aplicar
+  - id: OA-10.3
+    texto: "Aplicar sensitivity labels (Public, Internal, Confidential, Highly Confidential) a archivos `.agent` y entender la herencia de etiquetas hacia los outputs."
+    bloom: Aplicar
+  - id: OA-10.4
+    texto: "Configurar la trazabilidad de qué datos accede cada agente: audit logs filtrables por agentId, búsquedas en eDiscovery, retención de evidencias."
+    bloom: Aplicar
+  - id: OA-10.5
+    texto: "Diseñar Information Protection policies que apliquen a outputs generados por agentes (watermarking, encryption, bloqueo en exfiltración)."
+    bloom: Crear
+  - id: OA-10.6
+    texto: "Combinar las capas Purview (M10) y Conditional Access (M09) en una estrategia coherente de protección end-to-end del dato accedido por agentes."
+    bloom: Analizar
+glosario:
+  - termino: "Microsoft Purview"
+    definicion: "Suite de gobernanza, riesgo y cumplimiento de Microsoft que cubre Information Protection, DLP, eDiscovery, Audit, Communication Compliance, Insider Risk y DSPM for AI."
+  - termino: "Information Protection"
+    definicion: "Capacidad de Purview que aplica sensitivity labels a archivos y mensajes con acciones asociadas (cifrado, watermark, bloqueos)."
+  - termino: "Sensitivity label"
+    definicion: "Etiqueta clasificatoria (Public, Internal, Confidential, Highly Confidential) que dispara protecciones. Aplicable a archivos .agent, blueprints y outputs."
+  - termino: "DSPM for AI"
+    definicion: "Data Security Posture Management for AI: dashboard de Purview específico para interacciones con IA generativa y agentes."
+  - termino: "Sensitive Information Types (SITs)"
+    definicion: "Patrones reconocibles automáticamente (tarjetas, DNI, IBAN, etc.) que Purview usa para detectar datos sensibles sin label manual."
+  - termino: "Auto-labeling"
+    definicion: "Policy de Purview que aplica una sensitivity label a un archivo o output basándose en SITs detectados, sin intervención humana."
+  - termino: "Herencia de label"
+    definicion: "Mecanismo por el que un output generado por un agente recibe la label más restrictiva de las fuentes consultadas."
+  - termino: "Audit (Premium)"
+    definicion: "Tier de auditoría de Microsoft 365 con retención extendida y campos enriquecidos para Agent 365. Requiere E5 Compliance."
+  - termino: "eDiscovery (Premium)"
+    definicion: "Capacidad de búsqueda y holds sobre el audit log y el contenido del tenant. Soporta filtros por agentId."
+  - termino: "Communication Compliance"
+    definicion: "Capacidad de Purview que monitoriza conversaciones, incluyendo aquellas con participación de agentes."
+  - termino: "Endpoint DLP"
+    definicion: "DLP aplicada en el dispositivo del usuario: bloquea o registra cuando el usuario intenta exfiltrar dato sensible a aplicaciones no aprobadas."
+  - termino: "Insider Risk Management"
+    definicion: "Capacidad de Purview que correlaciona patrones de comportamiento del usuario (incluyendo uso de agentes) para detectar riesgo de exfiltración."
+  - termino: "CloudAppEvents"
+    definicion: "Tabla de Defender XDR que registra invocaciones de agentes con campos enriquecidos (InputDataSensitivity, OutputDataSensitivity)."
+  - termino: "Custodian hold"
+    definicion: "Mecanismo de eDiscovery para preservar contenido relacionado con un agente o usuario bajo investigación, bloqueando borrado durante el periodo del hold."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "10.1 Por qué Purview en el contexto de Agent 365"
+  - "10.2 DSPM for AI: el dashboard de gobernanza"
+  - "10.3 Sensitivity labels y archivos .agent"
+  - "10.4 Trazabilidad: qué datos toca cada agente"
+  - "10.5 Information protection en outputs de agentes"
+  - "10.6 Operaciones del día a día con Purview + Agent 365"
 laboratorios: []
 preguntas_aporta_examen_final: 5
