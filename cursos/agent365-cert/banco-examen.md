@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 56
+total_preguntas_actuales: 58
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -32,7 +32,7 @@ ultima_actualizacion: 2026-05-11
 | M11 — DLP y compliance | 7 | Completo |
 | M12 — Defender | 7 | Completo |
 | M13 — CCS | 1 | Completo |
-| M14 — Gobernanza avanzada | 2 | Pendiente producción |
+| M14 — Gobernanza avanzada | 2 | Completo |
 | M15 — Troubleshooting | 1 | Pendiente producción |
 | M16 — Costes | 1 | Pendiente producción |
 | **Total** | **60** | |
@@ -1697,4 +1697,63 @@ opciones:
     texto: "(1) Microsoft 365 admin center, (2) Defender for Cloud Apps standalone, (3) Microsoft Entra admin center."
 justificacion: |
   La opción B aplica la regla mnemotécnica correcta: **CCS controla** (licencias, policies, telemetría agregada), **Defender XDR detecta** (incidents, hunting, timeline forense con KQL), **Purview protege el dato** (sensitivity labels, DLP, eDiscovery Premium para evidencia regulatoria con cadena de custodia). La A invierte CCS y Defender XDR. La C es el anti-patrón canónico «hacer todo desde CCS»: CCS es panel ejecutivo, no consola forense ni de hunting técnico; pretender que CCS sustituya a los otros productos produce limitaciones funcionales y resultados incompletos. La D usa portales que no son los primarios para estas funciones (admin center es para licencias M365 generales pero CCS es el específico para Copilot; Defender for Cloud Apps standalone es solo un componente de Defender XDR; Entra admin center gestiona identidades pero no investiga incidents).
+:::
+
+---
+
+### Módulo 14 — Gobernanza avanzada y multi-tenant
+
+::: pregunta
+id: EX-14-001
+modulo: 14
+oa: OA-14.2
+area: 5
+tipo: multiple-response
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Un MSP profesional debe operar Agent 365 sobre el tenant de un cliente regulado (sector financiero). ¿Cuáles de las siguientes son configuraciones correctas para esta operación? Selecciona todas las que apliquen.
+opciones:
+  - id: a
+    texto: "Solicitar al cliente el rol `Global Administrator` permanente en su tenant para máxima flexibilidad operativa."
+  - id: b
+    texto: "**Configurar una relación GDAP** con los roles mínimos necesarios (`Security Reader`, `Compliance Administrator`, `Copilot Administrator`), duración 180 días renovable y customer consent explícito."
+    correcta: true
+  - id: c
+    texto: "**Activar Customer Lockbox** en el tenant del cliente para que toda acción del MSP sobre contenido empresarial requiera aprobación explícita del cliente."
+    correcta: true
+  - id: d
+    texto: "**Asegurar que el audit log de las acciones del MSP queda registrado en el tenant del cliente**, no del MSP, para que el cliente pueda auditar al proveedor."
+    correcta: true
+  - id: e
+    texto: "El MSP debe operar mediante invitaciones B2B individuales a usuarios específicos del MSP en lugar de cuentas compartidas."
+    correcta: true
+  - id: f
+    texto: "El cliente debe transferir su tenant a la cuenta de Microsoft del MSP para simplificar la gestión."
+justificacion: |
+  Las opciones B, C, D y E describen la configuración canónica recomendada por Microsoft para operación MSP sobre tenants de clientes en sectores regulados: scope limitado (GDAP), consentimiento explícito (Customer Lockbox), accountability (audit log en el cliente) e identidad individual (B2B). La A viola el principio de least privilege y es el antipatrón canónico que GDAP resuelve. La F propone una operación legalmente inviable: el tenant pertenece al cliente y no es transferible al MSP; el MSP opera sobre el tenant del cliente vía delegación, nunca sustituyéndole en titularidad.
+:::
+
+::: pregunta
+id: EX-14-002
+modulo: 14
+oa: OA-14.4
+area: 5
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Un grupo bancario internacional con tenants en 4 países (España, Reino Unido, México, Brasil) debe decidir su federation model para Agent 365. Cada subsidiaria tiene regulador propio (BdE, FCA, CNBV, BACEN) con requisitos específicos. La matriz necesita KPIs agregables al Consejo. ¿Cuál es el modelo correcto y por qué?
+opciones:
+  - id: a
+    texto: "**Centralizado**: la matriz toma todas las decisiones, las subsidiarias aplican sin desviación. La consistencia regulatoria justifica la rigidez."
+  - id: b
+    texto: "**Federado puro**: cada subsidiaria opera totalmente independiente; la matriz solo agrega KPIs trimestralmente."
+  - id: c
+    texto: "**Hub-and-spoke**: matriz como hub define principios mínimos no negociables (uso ético, privacidad, transparencia) + infraestructura central (CCS, Defender XDR, Purview templates). Subsidiarias como spokes operan con autonomía dentro del framework, adaptan políticas locales a regulación nacional (BdE/FCA/CNBV/BACEN), y reportan mensualmente con KPIs canónicos comparables. Es el modelo más común en grupos multi-país modernos por equilibrio coherencia + adaptación + KPIs agregables."
+    correcta: true
+  - id: d
+    texto: "Cada caso decide su modelo según moneda local: euro = centralizado, libra = federado, peso/real = híbrido."
+justificacion: |
+  La opción C es la respuesta canónica para este escenario: 4 jurisdicciones bancarias distintas (no armonizadas — UE no tiene un regulador bancario único, Reino Unido fuera de UE tras Brexit, México con regulación específica, Brasil con regulación específica) que requieren adaptación local; matriz que necesita KPIs agregables al Consejo. Centralizado (A) ignora la complejidad regulatoria y crea conflictos con cumplimiento local. Federado puro (B) sacrifica coherencia y KPIs comparables, problemático para reporting agregado. La D es absurda operacionalmente: el modelo de federación se decide por estructura de gobernanza, no por moneda. Hub-and-spoke equilibra los tres ejes (ético, operacional, tecnológico) y converge naturalmente tras 1-2 ciclos de revisión.
 :::
