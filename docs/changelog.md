@@ -10,7 +10,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.4 — M11 cerrado: labs + quiz + 7 preguntas al banco (PR #?). M11 (DLP, sensitivity labels avanzadas y Communication Compliance) queda **producido**. El alumno puede recorrer el módulo completo (teoría 90 min + quiz 20 min + 4 labs 100 min). **Banco oficial alcanza el 80 %** (48/60 preguntas).
+- `[Contenido]` Fase E.5 — Producción de M12 parte 1: teoría + recursos + manifest (PR #?). M12 (Monitorización, auditoría y reporting con Microsoft Defender XDR) **abre el Área 5 del examen** (Monitor, troubleshoot and improve, peso 25 %). Aporta 7 preguntas al banco oficial — el módulo de Área 5 con más peso. Mismo patrón B.1 / E.1 / E.3: contenido pedagógico voluminoso (teoría + recursos + manifest) en este PR; labs + quiz + 7 preguntas EX llegan en E.6.
+  - **`teoria.md`** completa (~660 líneas, 7 secciones, 90 min lectura):
+    - 12.1 Posicionamiento: Defender XDR como red de seguridad (las cinco capas en serie M09-M11-M12; por qué la prevención no basta; componentes de Defender XDR relevantes para Agent 365).
+    - 12.2 El portal Defender XDR para agentes (Incidents como unidad de trabajo, Alerts comunes, Advanced hunting, Custom detection rules, Threat analytics).
+    - 12.3 La tabla `CloudAppEvents` y campos enriquecidos (esquema completo, query base, latencia de ingestión 2-10 min, retención por defecto y con Sentinel LTR hasta 12 años).
+    - 12.4 Hunting con KQL: 5 queries fundamentales (top N invocaciones, accesos por usuario y sensitivity, nuevas geografías, outputs con sensitivity alta, correlación por `correlationId`).
+    - 12.5 Tres patrones problemáticos canónicos con queries KQL completas (volumen anómalo con threshold 5x baseline, exfiltración con > 30 archivos sensibles + > 5 outputs en 2h, compromiso de identidad con > 2 IPs nuevas + > 3 useragents distintos).
+    - 12.6 Custom detection rules: anatomía completa, calibración de severidad (no todo es High), acciones automatizadas y umbrales operativos (2-3 meses con FP < 1 % antes de automatizar acciones disruptivas).
+    - 12.7 Integración con Microsoft Sentinel (conector nativo, workspace operativo + LTR, tres playbooks canónicos `AgentCompromise-Containment` / `DLPMassOverride-Investigation` / `AgentMassDownload-Forensic`, correlación cross-tenant).
+    - Glosario inline de 15 términos clave.
+  - **`recursos.md`** con URLs de Microsoft Learn (Defender XDR overview + portal + integración con Agent 365; CloudAppEvents reference + Advanced hunting + límites + biblioteca de queries oficiales; KQL quick reference + tutorial + best practices; Custom detection rules + entity extraction; Sentinel completo con conector + playbooks + LTR + cross-tenant; Defender for Identity alerts para Agent ID), repositorios públicos (Azure-Sentinel GitHub, Sentinel Content Hub, comunitario M365 Defender Hunting Queries), blogs oficiales, lecturas adicionales (MITRE ATT&CK, NIST SP 800-61 Rev. 2, CISA Threat Intelligence Lifecycle) y herramientas (Defender PowerShell, Graph PowerShell Security, Azure CLI Sentinel extension, KQL Magic for Jupyter, VS Code Kusto extension).
+  - **`module.yaml`** con los 7 OAs cubriendo Bloom Comprender, Aplicar, Crear, Analizar; 15 términos de glosario; prerrequisitos M01 + M06 + M09 + M10 + M11 (toda la cadena previa de Áreas 1, 2 y 4); `estado: produciendo`, `fase_produccion: 3`, `preguntas_aporta_examen_final: 7`.
+  - **`README.md`** del directorio actualizado con nota sobre KQL como prerrequisito de facto.
+  - Borrado: placeholders `evaluacion.md`, `laboratorios.md` originales.
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. Build Vite OK 2.47s.
+
+ M11 (DLP, sensitivity labels avanzadas y Communication Compliance) queda **producido**. El alumno puede recorrer el módulo completo (teoría 90 min + quiz 20 min + 4 labs 100 min). **Banco oficial alcanza el 80 %** (48/60 preguntas).
   - **`laboratorios.md`** completos (~390 líneas, 4 labs, 100 min total):
     - LAB-11-1 (25 min) — Configurar DLP policy con location `Microsoft Agent 365 outputs` para bloquear con override outputs con SITs financieras, modo Test → producción, audit log validado.
     - LAB-11-2 (30 min) — Entrenar custom trainable classifier `Custom-MA-Conversations` con dataset balanceado, calibrar precision/recall ≥ 80/70 %, promover a producción en DLP policy en audit only.

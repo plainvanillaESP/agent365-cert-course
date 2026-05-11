@@ -1,30 +1,86 @@
 spec_version: '1.0'
 id: 12
 slug: modulo-12-monitorizacion-defender
-titulo: Monitorización, auditoría y reporting con Defender
-duracion_min: 75
+titulo: "Monitorización, auditoría y reporting con Microsoft Defender XDR"
+duracion_min: 90
 area_examen: 5
-estado: pendiente
-fase_produccion: 5
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+estado: produciendo
+fase_produccion: 3
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 1
+  - 6
+  - 9
+  - 10
+  - 11
+prerrequisitos_externos:
+  - "Familiaridad básica con Microsoft Defender XDR (Defender for Cloud Apps, Defender for Identity)"
+  - "Conocimiento básico de KQL (Kusto Query Language) — recomendado aunque no estrictamente obligatorio"
+objetivos_aprendizaje:
+  - id: OA-12.1
+    texto: "Posicionar Microsoft Defender XDR como capa de detección e investigación en el ecosistema Agent 365, diferenciándolo de las capas preventivas (M09 Conditional Access, M10 Information Protection, M11 DLP y Communication Compliance)."
+    bloom: Comprender
+  - id: OA-12.2
+    texto: "Navegar el Microsoft Defender XDR portal e identificar las superficies relevantes para Agent 365: Incidents, Alerts, Advanced hunting, Threat analytics, Custom detection rules."
+    bloom: Aplicar
+  - id: OA-12.3
+    texto: "Consultar la tabla CloudAppEvents con KQL para identificar invocaciones de agentes, accesos a datos sensibles y patrones de uso característicos."
+    bloom: Aplicar
+  - id: OA-12.4
+    texto: "Construir queries KQL para detectar tres patrones problemáticos canónicos: volumen anómalo de invocaciones, exfiltración de datos vía agente, compromiso de identidad de agente."
+    bloom: Crear
+  - id: OA-12.5
+    texto: "Configurar custom detection rules en Defender XDR aplicadas a Agent 365 con severidad calibrada, enriquecimiento de contexto y acciones automatizadas."
+    bloom: Crear
+  - id: OA-12.6
+    texto: "Integrar Defender XDR con Microsoft Sentinel para SOCs maduros: workflow incidente → playbook → contención, retención extendida y correlación cross-tenant."
+    bloom: Aplicar
+  - id: OA-12.7
+    texto: "Investigar un incidente real con participación de agente: construir timeline, correlacionar señales de múltiples productos, ejecutar contención y producir post-mortem."
+    bloom: Analizar
+glosario:
+  - termino: "Microsoft Defender XDR"
+    definicion: "Plataforma extended detection and response unificada que integra Defender for Cloud Apps, Defender for Identity, Defender for Endpoint, Defender for Office 365 y Entra ID Protection en un único portal."
+  - termino: "Microsoft Defender for Cloud Apps"
+    definicion: "Componente que origina los eventos de Agent 365 en CloudAppEvents. Actúa como CASB (Cloud Access Security Broker)."
+  - termino: "CloudAppEvents"
+    definicion: "Tabla central de Defender XDR para investigación de Agent 365. Esquema enriquecido con AgentId, AgentBlueprintId, InputDataSensitivity, OutputDataSensitivity y CorrelationId."
+  - termino: "Advanced hunting"
+    definicion: "Consola KQL del portal Defender XDR. Permite queries libres sobre todas las tablas y es el punto de operación del SOC tier 2/3."
+  - termino: "KQL (Kusto Query Language)"
+    definicion: "Lenguaje de consulta de Microsoft para datos telemétricos. Sintaxis basada en pipes y operadores funcionales. Estándar en Defender, Sentinel, Log Analytics."
+  - termino: "Incident"
+    definicion: "Agrupación automática de alertas relacionadas que Defender correlaciona por tiempo, identidad, recurso y técnica MITRE ATT&CK. Es la unidad de trabajo del SOC."
+  - termino: "Custom detection rule"
+    definicion: "Regla KQL que Defender ejecuta periódicamente y genera alertas automáticas cuando coincide. Formaliza patrones de hunting con valor demostrado."
+  - termino: "MITRE ATT&CK"
+    definicion: "Framework de tácticas y técnicas adversarias mantenido por MITRE. Estándar de la industria para categorizar amenazas."
+  - termino: "Threat analytics"
+    definicion: "Reports prepared by Microsoft Threat Intelligence con campañas conocidas, técnicas activas y guías de mitigación. Para Agent 365 hay un report dedicado."
+  - termino: "Microsoft Sentinel"
+    definicion: "SIEM/SOAR de Microsoft. Extiende Defender XDR con retención larga, playbooks automatizados, correlación cross-tenant y dashboards ejecutivos."
+  - termino: "Playbook (Sentinel)"
+    definicion: "Logic App que se ejecuta cuando se dispara una alerta o incidente. Cubre la parte automatizable de la respuesta."
+  - termino: "Long-Term Retention (LTR)"
+    definicion: "Tier de retención de archivo en Sentinel: queries más lentas, coste reducido, retención hasta 12 años. Requerido para auditorías regulatorias largas."
+  - termino: "Correlation ID"
+    definicion: "Identificador único en CloudAppEvents que correlaciona toda la cadena de una invocación: invoke, data accesses, output generated. Clave para reconstruir la historia completa."
+  - termino: "AgentCompromise-Containment"
+    definicion: "Playbook canónico de Sentinel para Agent 365: detecta compromiso, deshabilita agente, revoca tokens, notifica owner, crea ticket."
+  - termino: "Defender for Identity"
+    definicion: "Componente que detecta compromiso de identidad, incluyendo identidad de agentes Entra Agent ID."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "12.1 Posicionamiento: Defender XDR como red de seguridad"
+  - "12.2 El portal Defender XDR para agentes"
+  - "12.3 La tabla CloudAppEvents y campos enriquecidos"
+  - "12.4 Hunting con KQL: queries fundamentales"
+  - "12.5 Tres patrones problemáticos canónicos"
+  - "12.6 Custom detection rules: formalizar el hunting"
+  - "12.7 Integración con Microsoft Sentinel"
 laboratorios: []
 preguntas_aporta_examen_final: 7
