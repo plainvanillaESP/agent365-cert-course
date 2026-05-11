@@ -10,7 +10,29 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.8 — M14 cerrado en un único PR: teoría + labs + quiz + manifest + 2 preguntas al banco (PR #?). M14 (Gobernanza avanzada y multi-tenant) queda **producido**. **Banco oficial alcanza el 97 %** (58/60 preguntas). Módulo intermedio producido en un único PR (mismo patrón que E.7 con M13).
+- `[Contenido]` Fase E.9 — M15 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco (PR #?). M15 (Troubleshooting y operación cotidiana) queda **producido**. **Banco oficial alcanza el 98 %** (59/60 preguntas). Módulo ligero producido en un único PR (mismo patrón que E.7 con M13).
+  - **`teoria.md`** (~340 líneas, 5 secciones, 45 min lectura):
+    - 15.1 El protocolo canónico OBDED (las 5 fases Observe → Diagnose → Execute → Validate → Document, regla 80/20 del troubleshooting, escalado tier 1/2/3).
+    - 15.2 Problemas de acceso a agentes (árbol de decisión de 4 niveles: licencia → catalog policy → agente activo → CA; diagnóstico con KQL unificado; casos específicos frecuentes con causa raíz + síntoma + resolución).
+    - 15.3 Agentes deshabilitados inesperadamente (las 4 causas comunes: CA policy nueva, secret expirado, blueprint deprecated, security automation; diagnóstico paso a paso; resolución por caso; disciplina de NO re-habilitar agentes deshabilitados por automation sin investigar).
+    - 15.4 Incidents de Defender XDR que no se cierran (3 obstáculos típicos: entities unresolved, evidence missing, automation failures; resolución específica para cada).
+    - 15.5 Audit log gaps (síntomas, técnica de reconciliación cruzada con CCS + Purview + Defender XDR, causas frecuentes, reporting al comité central).
+    - Glosario inline de 13 términos clave.
+  - **`laboratorios.md`** completos (~320 líneas, 2 labs, 60 min total):
+    - LAB-15-1 (30 min) — Resolver caso simulado de usuario que no puede invocar agente aplicando OBDED completo: ticket de María López, árbol de decisión hasta confirmar agente deshabilitado por automation, diagnóstico con KQL del evento `AgentDisabled`, validación de FP con SOC tier 2, re-enable + ajuste de threshold + retirada temporal de acción automática, post-mortem con causa raíz y acciones preventivas.
+    - LAB-15-2 (30 min) — Detectar y remediar audit log gap con reconciliación cruzada: discrepancia 11 % entre CCS (38.420) y Defender XDR (34.108), tercera fuente Purview audit log confirma 38.420, causa raíz en filtro de ingestión del data connector aplicado hace 2 meses, resolución (filtro retirado) + reporting al comité central + plan preventivo con reconciliación automatizada semanal.
+  - **`quiz-practica.md`** con 5 preguntas Q-15-1..Q-15-5 cubriendo los 5 OAs en los 5 tipos del parser (ordering, ordering, scenario, multiple-response, scenario). Caso de estudio de refuerzo: **Repsol** (24K empleados, sector energético regulado por CNMC) — diagnóstico de acumulación inusual de 47 tickets en 2 semanas con 3 hipótesis principales, queries KQL por hipótesis, plan de respuesta de 2 semanas con owners y fechas, dashboard SOC con alertas tempranas que habría detectado el patrón antes.
+  - **`recursos.md`** con URLs de Microsoft Learn (troubleshooting Agent 365, error codes, CloudAppEvents diagnostics, Conditional Access debugging, Purview audit reconciliation, Sentinel playbook debugging), frameworks (ITIL 4 Service Operation, NIST SP 800-61 Rev. 2), lecturas adicionales (Google SRE Book sobre postmortem culture, The Phoenix Project).
+  - **`module.yaml`** completo: `estado: producido`, `duracion_min: 117` (45 teoría + 12 quiz + 60 labs), 5 OAs cubriendo Bloom Aplicar y Analizar; 13 términos glosario; prerrequisitos M01 + M06 + M09 + M10 + M11 + M12 + M13 (toda la cadena previa); secciones completas; lista `laboratorios:` con los 2 IDs; `preguntas_aporta_examen_final: 1`.
+  - **`banco-examen.md`**: añadida 1 pregunta EX-15-001 cubriendo OA-15.2 (disciplina de NO re-habilitar agentes deshabilitados por automation sin investigar). Banco oficial pasa de **58 a 59** preguntas (**98 %** completo). Tabla de distribución actualiza M15 a `Completo`.
+  - **`README.md`** del directorio actualizado con estado producido.
+  - **`platform/src/lib/course.ts`**: M15 cambia a `estado: 'producido'` con `duracionMin: 117`.
+  - **`lib/quiz.ts` no requiere cambios** — beneficio operativo continuado del Bloque D.1. Verificado con `parseQuizMarkdown` → 5 preguntas Q-15 en los tipos correctos.
+- `[Build]` Validador `scripts/validate-course.py` reporta 276 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 1.93s.
+
+**Hito alcanzado — M15 completo. Banco al 98 %.** Con M01-M15 producidos, **15 de 16 módulos del temario están listos (94 %)** y el banco oficial alcanza 59/60 preguntas. Solo falta **1 pregunta** para completar el banco oficial (M16 aporta 1). Próximo módulo: M16 (Costes, optimización y mejores prácticas) — el último de contenido, después solo M17 (examen final cronometrado).
+
+ M14 (Gobernanza avanzada y multi-tenant) queda **producido**. **Banco oficial alcanza el 97 %** (58/60 preguntas). Módulo intermedio producido en un único PR (mismo patrón que E.7 con M13).
   - **`teoria.md`** (~440 líneas, 5 secciones, 60 min lectura):
     - 14.1 Topologías multi-tenant comunes (las 4 topologías canónicas: parent/subsidiary, M&A en curso, MSP/MSSP, joint venture; implicaciones específicas para Agent 365 en cada una).
     - 14.2 Delegated administration cross-tenant (Microsoft Entra B2B, GDAP con scope + duración + audit + customer consent, Customer Lockbox, patrón recomendado de doble pertenencia controlada).
