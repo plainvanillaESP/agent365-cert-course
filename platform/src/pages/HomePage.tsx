@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Clock, BookOpen, GraduationCap, FileText, CheckCircle2, Circle, Lock } from 'lucide-react'
 import { ButtonLink } from '@/components/Button'
 import { AREAS, MODULES, COURSE_TOTAL_MIN, COURSE_EXAM_MIN, formatDuration, type CourseModule } from '@/lib/course'
+import { useUnlockState } from '@/hooks/useModuleProgress'
 
 type PhaseStatus = 'done' | 'current' | 'todo'
 
@@ -27,6 +28,8 @@ const PHASES: Phase[] = [
 ]
 
 export function HomePage() {
+  const { isUnlocked } = useUnlockState()
+
   return (
     <div className="max-w-[var(--layout-content-max)] mx-auto">
       <Hero />
@@ -67,13 +70,13 @@ export function HomePage() {
         <Card>
           <ul className="divide-y divide-[var(--border-subtle)]">
             {MODULES.filter(m => m.id <= 16).map(m => (
-              <ModuleRow key={m.id} module={m} />
+              <ModuleRow key={m.id} module={m} unlocked={isUnlocked(m.id)} />
             ))}
           </ul>
         </Card>
         <div className="mt-3">
           <Card>
-            <ModuleRow module={MODULES[16]} isExam />
+            <ModuleRow module={MODULES[16]} isExam unlocked={isUnlocked(MODULES[16].id)} />
           </Card>
         </div>
       </Section>
@@ -303,21 +306,37 @@ function AreaCard({ area }: { area: typeof AREAS[number] }) {
 
 /* --------------------------- Temario (ModuleRow) --------------------------- */
 
-function ModuleRow({ module: m, isExam = false }: { module: CourseModule; isExam?: boolean }) {
+function ModuleRow({
+  module: m,
+  isExam = false,
+  unlocked = true,
+}: {
+  module: CourseModule
+  isExam?: boolean
+  unlocked?: boolean
+}) {
   const isProduced = m.estado === 'producido'
+  const isAccessible = isProduced && unlocked
+  const isLocked = isProduced && !unlocked
   const moduleNum = String(m.id).padStart(2, '0')
 
   const inner = (
     <div className="flex items-center gap-3 sm:gap-4 px-4 py-3 group">
       {/* Estado icono */}
       <div className="shrink-0">
-        {isProduced ? (
+        {isAccessible ? (
           <CheckCircle2
             className="size-[16px] stroke-[2] text-emerald-600 dark:text-emerald-400"
             aria-hidden
           />
         ) : (
-          <Lock className="size-[14px] stroke-[1.75] text-[var(--text-faint)]" aria-hidden />
+          <Lock
+            className={[
+              'stroke-[1.75]',
+              isLocked ? 'size-[14px] text-amber-600 dark:text-amber-400' : 'size-[14px] text-[var(--text-faint)]',
+            ].join(' ')}
+            aria-hidden
+          />
         )}
       </div>
       {/* Número */}
@@ -329,7 +348,7 @@ function ModuleRow({ module: m, isExam = false }: { module: CourseModule; isExam
         <div
           className={[
             'text-[14px] leading-snug',
-            isProduced ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]',
+            isAccessible ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]',
             isExam && 'font-semibold',
           ]
             .filter(Boolean)
@@ -344,14 +363,16 @@ function ModuleRow({ module: m, isExam = false }: { module: CourseModule; isExam
       </div>
       {/* Estado texto */}
       <div className="text-[12px] shrink-0 hidden md:block whitespace-nowrap text-right min-w-[80px]">
-        {isProduced ? (
+        {isAccessible ? (
           <span className="text-emerald-700 dark:text-emerald-300 font-medium">Disponible</span>
+        ) : isLocked ? (
+          <span className="text-amber-700 dark:text-amber-400 font-medium">Bloqueado</span>
         ) : (
           <span className="text-[var(--text-muted)]">Fase {m.faseProduccion}</span>
         )}
       </div>
       {/* Flecha */}
-      {isProduced && (
+      {isAccessible && (
         <ArrowRight
           className="size-[14px] stroke-[1.75] text-[var(--text-muted)] shrink-0 group-hover:text-[var(--color-pv-purple-600)] dark:group-hover:text-[var(--color-pv-purple-300)] group-hover:translate-x-0.5 transition-all"
           aria-hidden
@@ -360,7 +381,7 @@ function ModuleRow({ module: m, isExam = false }: { module: CourseModule; isExam
     </div>
   )
 
-  if (isProduced) {
+  if (isAccessible) {
     return (
       <li>
         <Link
@@ -372,5 +393,12 @@ function ModuleRow({ module: m, isExam = false }: { module: CourseModule; isExam
       </li>
     )
   }
-  return <li className="opacity-75">{inner}</li>
+  return (
+    <li
+      className={isLocked ? 'opacity-75' : 'opacity-75'}
+      title={isLocked ? 'Completa los módulos anteriores o activa modo acceso libre' : undefined}
+    >
+      {inner}
+    </li>
+  )
 }

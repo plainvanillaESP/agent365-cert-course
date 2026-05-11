@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import {
   BookOpenText,
@@ -10,9 +10,11 @@ import {
   Trash2,
   Sparkles,
   Lock,
+  AlertCircle,
+  Unlock,
 } from 'lucide-react'
-import { AREAS, MODULES, formatDuration, type CourseModule, type CourseArea } from '@/lib/course'
-import { useCourseProgress } from '@/hooks/useModuleProgress'
+import { AREAS, MODULES, formatDuration, findModule, type CourseModule, type CourseArea } from '@/lib/course'
+import { useCourseProgress, useAccessMode, useUnlockState } from '@/hooks/useModuleProgress'
 import {
   clearAllProgress,
   type ModuleProgressSnapshot,
@@ -30,16 +32,26 @@ const SECTION_META: Record<TrackedSection, { label: string; short: string; icon:
 export function ProgressPage() {
   const courseProgress = useCourseProgress()
   const byModuleId = new Map(courseProgress.map(s => [s.moduleId, s]))
+  const { isUnlocked } = useUnlockState()
+  const [searchParams] = useSearchParams()
 
   const producedModules = MODULES.filter(m => m.estado === 'producido' && m.id !== 17)
   const totalModules = producedModules.length
   const completedModules = courseProgress.filter(s => s.isModuleComplete).length
   const completionPct = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0
 
-  const nextStep = findNextStep(producedModules, byModuleId)
+  const nextStep = findNextStep(producedModules, byModuleId, isUnlocked)
+
+  const lockedParam = searchParams.get('locked')
+  const lockedModule = lockedParam ? findModule(parseInt(lockedParam, 10)) : null
 
   return (
     <div className="max-w-[var(--layout-content-max)] mx-auto">
+      {/* Banner contextual: el alumno intentó acceder a un módulo bloqueado */}
+      {lockedModule && !isUnlocked(lockedModule.id) && (
+        <LockedBanner module={lockedModule} />
+      )}
+
       {/* Hero */}
       <section className="pb-8 mb-8 border-b border-[var(--border-default)]">
         <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-2.5">
@@ -81,14 +93,16 @@ export function ProgressPage() {
                 area={area}
                 modules={areaModules}
                 progressMap={byModuleId}
+                isUnlocked={isUnlocked}
               />
             )
           })}
         </div>
       </section>
 
-      {/* Zona de reinicio */}
-      <section className="mt-12 pt-6 border-t border-[var(--border-default)]">
+      {/* Modo de acceso + reinicio */}
+      <section className="mt-12 pt-6 border-t border-[var(--border-default)] space-y-6">
+        <AccessModeToggle />
         <ResetProgress />
       </section>
     </div>
@@ -96,6 +110,85 @@ export function ProgressPage() {
 }
 
 /* ----------------------------- Sub-componentes ----------------------------- */
+
+function LockedBanner({ module }: { module: CourseModule }) {
+  return (
+    <div className="mb-6 rounded-md border border-amber-500/40 bg-amber-500/[0.08] p-4">
+      <div className="flex items-start gap-3">
+        <AlertCircle
+          className="size-5 shrink-0 text-amber-600 dark:text-amber-400 stroke-[1.75] mt-0.5"
+          aria-hidden
+        />
+        <div className="text-[13.5px] leading-relaxed text-[var(--text-primary)]">
+          <span className="font-semibold">Módulo {String(module.id).padStart(2, '0')} aún no disponible:</span>{' '}
+          completa los módulos anteriores producidos del curso para desbloquearlo, o activa el{' '}
+          <span className="font-medium">modo acceso libre</span> al pie de esta página si prefieres saltarte el orden recomendado.
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AccessModeToggle() {
+  const [mode, setMode] = useAccessMode()
+  const isFree = mode === 'free'
+
+  return (
+    <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-5">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="flex-1 min-w-0 max-w-prose">
+          <div className="flex items-center gap-2 mb-1.5">
+            {isFree ? (
+              <Unlock className="size-4 stroke-[1.75] text-[var(--text-secondary)]" aria-hidden />
+            ) : (
+              <Lock className="size-4 stroke-[1.75] text-[var(--text-secondary)]" aria-hidden />
+            )}
+            <h3 className="font-display text-[15px] font-bold text-[var(--text-primary)]">
+              Modo de acceso
+            </h3>
+          </div>
+          <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed">
+            {isFree ? (
+              <>
+                Todos los módulos producidos son accesibles desde el primer día. Es el modo más cómodo si quieres consultar contenido fuera del orden recomendado.
+              </>
+            ) : (
+              <>
+                Cada módulo se desbloquea cuando completas todos los anteriores. Es el modo recomendado para preparar la certificación porque la progresión está diseñada acumulativamente.
+              </>
+            )}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setMode(isFree ? 'sequential' : 'free')}
+          role="switch"
+          aria-checked={isFree}
+          aria-label="Activar modo de acceso libre"
+          className={[
+            'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] focus-visible:ring-offset-2',
+            isFree
+              ? 'bg-[var(--color-pv-purple-500)] border-[var(--color-pv-purple-500)]'
+              : 'bg-[var(--bg-surface-2)] border-[var(--border-strong)]',
+          ].join(' ')}
+        >
+          <span
+            className={[
+              'inline-block size-4 rounded-full bg-white shadow transition-transform mt-0.5',
+              isFree ? 'translate-x-[22px]' : 'translate-x-0.5',
+            ].join(' ')}
+          />
+        </button>
+      </div>
+      <div className="mt-3 flex items-baseline gap-2 text-[12px]">
+        <span className="text-[var(--text-muted)]">Modo activo:</span>
+        <span className="font-mono font-semibold text-[var(--text-primary)]">
+          {isFree ? 'Acceso libre' : 'Secuencial (recomendado)'}
+        </span>
+      </div>
+    </div>
+  )
+}
 
 function ProgressBar({ pct, completed, total }: { pct: number; completed: number; total: number }) {
   return (
@@ -187,10 +280,12 @@ function AreaSection({
   area,
   modules,
   progressMap,
+  isUnlocked,
 }: {
   area: CourseArea
   modules: CourseModule[]
   progressMap: Map<number, ModuleProgressSnapshot>
+  isUnlocked: (moduleId: number) => boolean
 }) {
   const producedInArea = modules.filter(m => m.estado === 'producido')
   const completedInArea = producedInArea.filter(m => progressMap.get(m.id)?.isModuleComplete).length
@@ -222,7 +317,12 @@ function AreaSection({
       </header>
       <ul className="divide-y divide-[var(--border-subtle)]">
         {modules.map(m => (
-          <ModuleRow key={m.id} module={m} snapshot={progressMap.get(m.id)} />
+          <ModuleRow
+            key={m.id}
+            module={m}
+            snapshot={progressMap.get(m.id)}
+            unlocked={isUnlocked(m.id)}
+          />
         ))}
       </ul>
     </div>
@@ -232,14 +332,18 @@ function AreaSection({
 function ModuleRow({
   module,
   snapshot,
+  unlocked,
 }: {
   module: CourseModule
   snapshot: ModuleProgressSnapshot | undefined
+  unlocked: boolean
 }) {
   const isProduced = module.estado === 'producido'
   const isComplete = snapshot?.isModuleComplete ?? false
+  const isLocked = isProduced && !unlocked
+  const isAccessible = isProduced && unlocked
 
-  const Wrapper = isProduced
+  const Wrapper = isAccessible
     ? ({ children }: { children: React.ReactNode }) => (
         <Link
           to={`/modulo/${module.id}/teoria`}
@@ -249,7 +353,14 @@ function ModuleRow({
         </Link>
       )
     : ({ children }: { children: React.ReactNode }) => (
-        <div className="flex items-center gap-4 px-5 py-4 opacity-50">{children}</div>
+        <div
+          className={[
+            'flex items-center gap-4 px-5 py-4',
+            isProduced ? 'opacity-60' : 'opacity-50',
+          ].join(' ')}
+        >
+          {children}
+        </div>
       )
 
   return (
@@ -264,6 +375,12 @@ function ModuleRow({
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-[var(--bg-surface-2)] text-[var(--text-muted)]">
                 <Lock className="size-2.5 stroke-[2.5]" aria-hidden />
                 Pendiente
+              </span>
+            )}
+            {isLocked && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                <Lock className="size-2.5 stroke-[2.5]" aria-hidden />
+                Bloqueado
               </span>
             )}
             {isComplete && (
@@ -281,7 +398,7 @@ function ModuleRow({
           </div>
         </div>
 
-        {isProduced && snapshot && (
+        {isAccessible && snapshot && (
           <div className="hidden sm:flex items-center gap-1.5 shrink-0">
             {(Object.keys(SECTION_META) as TrackedSection[]).map(section => {
               const state = snapshot.sections[section]
@@ -316,7 +433,7 @@ function ModuleRow({
           </div>
         )}
 
-        {isProduced && (
+        {isAccessible && (
           <ArrowRight
             className="size-4 text-[var(--text-faint)] group-hover:text-[var(--text-primary)] shrink-0"
             aria-hidden
@@ -382,16 +499,23 @@ function labelForStatus(status: 'not-started' | 'in-progress' | 'completed'): st
 }
 
 /**
- * Calcula el próximo paso recomendado: el primer módulo producido que
- * no esté completo, y dentro de ese módulo la primera sección pendiente
- * según el orden natural (teoría → quiz → labs → recursos).
+ * Calcula el próximo paso recomendado: el primer módulo producido **y
+ * desbloqueado** que no esté completo, y dentro de ese módulo la primera
+ * sección pendiente según el orden natural (teoría → quiz → labs → recursos).
+ *
+ * Si todos los módulos desbloqueados están completos, devuelve null
+ * (lo que típicamente significa que el alumno tiene que esperar a que
+ * publiquemos M10+ o que activar acceso libre desbloquearía algo, pero
+ * eso es responsabilidad del banner contextual, no de esta función).
  */
 function findNextStep(
   modules: CourseModule[],
   progressMap: Map<number, ModuleProgressSnapshot>,
+  isUnlocked: (moduleId: number) => boolean,
 ): NextStep | null {
   const order: TrackedSection[] = ['teoria', 'quiz-practica', 'laboratorios', 'recursos']
   for (const m of modules) {
+    if (!isUnlocked(m.id)) continue
     const snap = progressMap.get(m.id)
     if (!snap || snap.isModuleComplete) continue
     const pending = order.find(s => snap.sections[s].status !== 'completed')

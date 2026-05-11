@@ -10,7 +10,28 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Plataforma]` Fase D.3 — Vista `/progreso` con dashboard global (PR #?). Tercer de cuatro entregas del Bloque D. Aterriza el motor de progreso de D.2 en una página visible: el alumno ve su avance por módulo y por área, y un card destacado «Próximo paso» que apunta a la primera sección pendiente.
+- `[Plataforma]` Fase D.4 — Desbloqueo secuencial con override (PR #?). **Cierra el Bloque D**. El alumno avanza por defecto módulo a módulo (M02 desbloqueado al completar M01, etc.) y puede activar un override «modo acceso libre» desde `/progreso` si prefiere saltarse el orden.
+  - **`lib/progress.ts`** extendido:
+    - Nuevo tipo `AccessMode = 'sequential' | 'free'` con default `'sequential'`.
+    - Nuevas funciones `getAccessMode()` y `setAccessMode(mode)` que persisten en `agent365-access-mode` y disparan el evento de progreso.
+    - Nueva función pura `isModuleUnlocked(moduleId, mode, producedIds, completedIds)`: M01 siempre desbloqueado; en modo `sequential`, un módulo se desbloquea cuando todos los módulos producidos con id menor están completos. En modo `free`, todos accesibles. Los módulos no producidos se ignoran en el cálculo.
+    - `clearAllProgress` ahora limpia también el modo de acceso (vuelve a secuencial).
+  - **`useModuleProgress.ts`** extendido con dos hooks:
+    - `useAccessMode()`: tupla `[mode, setMode]` reactiva.
+    - `useUnlockState()`: devuelve `{ mode, isUnlocked(moduleId) }` aplicando el cálculo a los snapshots actuales del curso. Una llamada por consumidor; el resultado es estable mientras no cambien progreso o modo.
+  - **`ModulePage.tsx`**: gate de acceso. Si el módulo está bloqueado, redirige a `/progreso?locked={N}` para que la página pueda mostrar un mensaje explicativo, en lugar de un toast efímero. La URL queda guardable en bookmarks: al desbloquear, el mensaje desaparece naturalmente.
+  - **`ProgressPage.tsx`** ampliada:
+    - **Banner contextual** en la parte superior cuando llega vía `?locked={N}`, identifica el módulo y explica cómo desbloquearlo.
+    - **Toggle «Modo de acceso»** al pie con switch accesible (`role="switch"`, `aria-checked`), copy diferenciado por modo, y badge con el modo activo.
+    - `findNextStep` respeta el desbloqueo: solo sugiere módulos accesibles. Si todos los desbloqueados están completos, no muestra próximo paso.
+    - Las filas de módulo distinguen tres estados: `pendiente` (no producido), `bloqueado` (producido pero locked en sequential), `disponible` (producido + unlocked). Cada estado tiene su badge.
+  - **`NavSidebar.tsx`**: módulos producidos pero bloqueados se renderizan en gris con icono de candado y tooltip explicativo, sin enlace.
+  - **`HomePage.tsx`**: misma diferenciación de estados en la tabla del temario: «Disponible» (verde), «Bloqueado» (ámbar), «Fase N» (gris).
+- `[Build]` Validador `scripts/validate-course.py` reporta 270 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 1.28s.
+
+**Hito alcanzado — Bloque D cerrado.** El motor de progreso del alumno es funcionalmente completo: tracking por sección, criterios de finalización, vista global de progreso, próximo paso recomendado y desbloqueo secuencial con override. Lo único pendiente para «modo curso real con persistencia cross-device» es Supabase + auth (Bloque F).
+
+ Tercer de cuatro entregas del Bloque D. Aterriza el motor de progreso de D.2 en una página visible: el alumno ve su avance por módulo y por área, y un card destacado «Próximo paso» que apunta a la primera sección pendiente.
   - **Nueva `platform/src/pages/ProgressPage.tsx`** (~290 líneas):
     - Hero con barra de progreso global y conteo `X / N módulos completos · pct%`.
     - **Card «Tu próximo paso»**: identifica el primer módulo producido no completo y dentro de él la primera sección pendiente (orden `teoria → quiz-practica → laboratorios → recursos`). Se oculta cuando todo está completo.
