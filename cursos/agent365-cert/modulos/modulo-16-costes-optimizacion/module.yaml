@@ -1,30 +1,86 @@
 spec_version: '1.0'
 id: 16
 slug: modulo-16-costes-optimizacion
-titulo: Costes, optimización y mejores prácticas
-duracion_min: 45
+titulo: "Costes, optimización y mejores prácticas"
+duracion_min: 117
 area_examen: 5
-estado: pendiente
+estado: producido
 fase_produccion: 6
-ultima_actualizacion: '2026-05-06'
-prerrequisitos: []
-prerrequisitos_externos: []
-objetivos_aprendizaje: []
-glosario: []
+ultima_actualizacion: 2026-05-11
+prerrequisitos:
+  - 3
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+prerrequisitos_externos:
+  - "Familiaridad con licenciamiento Microsoft 365 (E3/E5, Copilot 365) y reporting financiero básico"
+  - "Acceso a CCS Usage analytics y a Microsoft Cost Management para Sentinel"
+objetivos_aprendizaje:
+  - id: OA-16.1
+    texto: "Construir el modelo de coste total de propiedad (TCO) de un programa Agent 365 separando las cuatro líneas canónicas: licencias, ingestión de telemetría, almacenamiento de audit y operación interna."
+    bloom: Aplicar
+  - id: OA-16.2
+    texto: "Optimizar la asignación de licencias Copilot 365 reasignando inactivos detectados en CCS Usage analytics con la regla de cuarentena 30/30 antes de retirar la licencia."
+    bloom: Aplicar
+  - id: OA-16.3
+    texto: "Optimizar el catálogo de agentes aplicando el criterio de retirada por uso (agentes con menos de 5 invocaciones mensuales en dos trimestres consecutivos)."
+    bloom: Aplicar
+  - id: OA-16.4
+    texto: "Optimizar el coste de ingestión y retención de audit aplicando tiering CloudAppEvents en Defender XDR (30 días caliente) y archive a Sentinel LTR (hasta 12 años) sin sacrificar la trazabilidad regulatoria."
+    bloom: Analizar
+  - id: OA-16.5
+    texto: "Operar el ciclo de mejora continua trimestral del programa Agent 365 con cuatro inputs canónicos: KPIs financieros, lecciones aprendidas de incidents, evolución del catálogo y feedback de adopción."
+    bloom: Aplicar
+glosario:
+  - termino: "TCO (Total Cost of Ownership)"
+    definicion: "Coste agregado del programa Agent 365 sumando las cuatro líneas canónicas: licencias, ingestión, storage y operación interna."
+  - termino: "Coste marginal de invocación"
+    definicion: "Coste adicional por una invocación extra de agente. Suma licencia prorrateada, coste de ingestión del evento y coste de almacenamiento."
+  - termino: "Licencia infrautilizada"
+    definicion: "Licencia Copilot 365 asignada a un usuario con menos de 5 invocaciones de agente en los últimos 30 días según CCS Usage analytics."
+  - termino: "Regla de cuarentena 30/30"
+    definicion: "Procedimiento canónico de reasignación: 30 días de aviso al usuario y 30 días de monitorización antes de retirar la licencia definitivamente."
+  - termino: "Agente zombi"
+    definicion: "Agente desplegado en el catálogo con menos de 5 invocaciones mensuales durante dos trimestres consecutivos. Candidato a retirada."
+  - termino: "Tiering de audit"
+    definicion: "Estrategia de retención por capas: caliente en Defender XDR (30 días), frío en Sentinel LTR (hasta 12 años), opcional archivo externo blob."
+  - termino: "Coste de ingestión"
+    definicion: "Coste de absorber telemetría en el SIEM. En Sentinel se factura por GB ingerido. Para Agent 365 incluye CloudAppEvents y custom logs."
+  - termino: "Coste de retención"
+    definicion: "Coste mensual de mantener datos disponibles para consulta. En Sentinel cubre tier interactivo, archive y backup."
+  - termino: "Capacidad reservada vs pay-as-you-go"
+    definicion: "Dos modelos de compra para Sentinel y servicios Azure relacionados. La capacidad reservada da descuento (15-65%) a cambio de compromiso anual o trianual."
+  - termino: "Comité de mejora continua"
+    definicion: "Reunión trimestral del responsable de gobernanza de IA con finanzas, SOC y adopción para revisar TCO, retirar agentes zombi y planificar el siguiente trimestre."
+  - termino: "Ratio de productividad por licencia"
+    definicion: "KPI financiero canónico: horas estimadas ahorradas al mes dividido por coste mensual de la licencia. Útil para reportar al CFO."
+  - termino: "Punto de break-even del agente"
+    definicion: "Volumen mínimo de invocaciones mensuales que justifica el coste de desarrollo y mantenimiento del agente custom."
 secciones:
-- tipo: teoria
-  archivo: teoria.md
-- tipo: evaluacion-legacy
-  archivo: evaluacion.md
-  umbral_aprobado_pct: 70
-  intentos_max: null
-  _nota: Sección a refactorizar a quiz-practica + mover preguntas EX-NN-NNN al banco
-    final.
-- tipo: laboratorios
-  archivo: laboratorios.md
-  intentos_min_requeridos: 1
-- tipo: recursos
-  archivo: recursos.md
-sub_secciones_teoria: []
-laboratorios: []
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+    umbral_aprobado_pct: 70
+    intentos_max: null
+  - tipo: laboratorios
+    archivo: laboratorios.md
+    intentos_min_requeridos: 1
+  - tipo: recursos
+    archivo: recursos.md
+sub_secciones_teoria:
+  - "16.1 Modelo de coste total: las cuatro líneas canónicas"
+  - "16.2 Optimización de licencias Copilot 365"
+  - "16.3 Optimización del catálogo de agentes"
+  - "16.4 Optimización de ingestión y retención de audit"
+  - "16.5 Ciclo de mejora continua trimestral"
+laboratorios:
+  - id: LAB-16-1
+    titulo: "Construir el modelo TCO de un programa Agent 365 a 12 meses con cuatro líneas canónicas"
+    duracion_min: 30
+  - id: LAB-16-2
+    titulo: "Detectar licencias infrautilizadas y agentes zombi con la regla 30/30 y el criterio de uso trimestral"
+    duracion_min: 30
 preguntas_aporta_examen_final: 1

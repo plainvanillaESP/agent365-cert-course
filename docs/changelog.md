@@ -10,6 +10,31 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
+- `[Contenido]` Fase E.10 — M16 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco. M16 (Costes, optimización y mejores prácticas) queda **producido**. **Banco oficial alcanza el 100 %** (60/60 preguntas). Módulo ligero producido en un único PR (mismo patrón que E.7 con M13 y E.9 con M15). Con esto, **los 16 módulos de contenido están producidos** (94 %) y el banco oficial está completo. Solo queda M17 (examen final cronometrado) para cerrar el curso.
+  - **`teoria.md`** (~360 líneas, 5 secciones, 45 min lectura):
+    - 16.1 Modelo de coste total: las cuatro líneas canónicas (L1 licencias, L2 ingestión, L3 storage, L4 operación; proporciones típicas 55-65 / 10-15 / 5-10 / 15-25 por ciento; fórmula del coste marginal de invocación; 3 KPIs financieros canónicos: TCO por usuario activo, ratio de productividad por licencia, coste por agente productivo).
+    - 16.2 Optimización de licencias Copilot 365 (detección con CCS Usage analytics + query KQL canónica; regla de cuarentena 30/30 con coaching previo a retirada; criterio de priorización de waitlist; 3 antipatrones: retirada masiva, conservar por si acaso, reasignación sin coaching).
+    - 16.3 Optimización del catálogo de agentes (detección de agentes zombi con < 5 invocaciones mensuales en 2 trimestres consecutivos; punto de break-even del agente custom vs built-in; procedimiento de retirada con notificación al owner + 30 días aviso + retirada lógica + retirada definitiva; consolidación como alternativa a retirada).
+    - 16.4 Optimización de ingestión y retención de audit (tiering canónico: 30 días caliente + hasta 7 años frío + glacial opcional; reglas de filtros seguros vs prohibidos; capacidad reservada vs pay-as-you-go con descuentos 15-65 por ciento; KPI ratio de ingestión).
+    - 16.5 Ciclo de mejora continua trimestral (composición del comité de 5 personas con autoridad de decisión; 4 inputs canónicos: KPIs financieros, lecciones de incidents, evolución del catálogo, feedback de adopción; 3 outputs: decisiones, reporte ejecutivo, comunicación; 4 antipatrones del comité).
+    - Glosario inline de 12 términos clave.
+  - **`laboratorios.md`** completos (~230 líneas, 2 labs, 60 min total):
+    - LAB-16-1 (30 min) — Construir el modelo TCO completo a 12 meses con las cuatro líneas canónicas: recopilación de L1 desde CCS, L2 y L3 desde Microsoft Cost Management, estimación documentada de L4, hoja resumen con porcentajes y los 3 KPIs canónicos.
+    - LAB-16-2 (30 min) — Aplicar regla 30/30 sobre 280 licencias infrautilizadas (segmentación en 3 grupos para coaching escalado) y criterio trimestral sobre 8 agentes candidatos a zombi (clasificación en 4 categorías de decisión: retirada inmediata, mantener con argumento estacional, investigar, buscar nuevo owner).
+  - **`quiz-practica.md`** con 5 preguntas Q-16-1..Q-16-5 cubriendo los 5 OAs en tipos del parser (multiple-response, ordering, scenario, scenario, multiple-response). Caso de estudio de refuerzo: **Mapfre** (15K empleados, sector seguros regulado por DGSFP, 4.500 usuarios Copilot, 9 meses de programa) — diagnóstico de 3 oportunidades principales de optimización con ahorro estimado, plan a 4 trimestres con owners y fechas, KPIs trimestrales al comité de dirección, 4 riesgos del plan con mitigación.
+  - **`recursos.md`** con URLs de Microsoft Learn (licensing Copilot, licensing Agent 365, Sentinel pricing y billing, data tiering, reducción de costes de ingestión, Cost Management, medir impacto y ROI), frameworks (FinOps Foundation, TBM, ITIL 4 Continual Improvement), lecturas adicionales (Cloud FinOps, The Goal, Measure What Matters), bloque «Para la certificación» con los puntos memorizables.
+  - **`module.yaml`** completo: `estado: producido`, `duracion_min: 117` (45 teoría + 12 quiz + 60 labs), 5 OAs cubriendo Bloom Aplicar y Analizar; 12 términos glosario; prerrequisitos M03 + M10 + M11 + M12 + M13 + M14; secciones completas; lista `laboratorios:` con los 2 IDs; `preguntas_aporta_examen_final: 1`.
+  - **`banco-examen.md`**: añadida 1 pregunta EX-16-001 cubriendo OA-16.4 (rechazar filtro de ingestión sobre eventos `AgentInvoke` por motivos de trazabilidad regulatoria; aplicar tiering canónico como alternativa). Banco oficial pasa de **59 a 60** preguntas (**100 %** completo). Tabla de distribución actualiza M16 a `Completo`.
+  - **`README.md`** del directorio creado con estado producido.
+  - **`platform/src/lib/course.ts`**: M16 cambia a `estado: 'producido'` con `duracionMin: 117`.
+  - **`lib/quiz.ts` no requiere cambios** — beneficio operativo continuado del Bloque D.1. Verificado con `parseQuizMarkdown` → 5 preguntas Q-16 en los tipos correctos.
+  - **`evaluacion.md` heredado del placeholder eliminado** — alineación con el patrón consolidado M13/M15.
+- `[Build]` Validador `scripts/validate-course.py` reporta checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK.
+
+**Hito alcanzado — temario de contenido completo. Banco al 100 %.** Con M01-M16 producidos, **los 16 módulos del temario están listos (100 % del contenido)** y el banco oficial alcanza 60/60 preguntas. Próximo paso: **Fase F — M17 examen final cronometrado con UI específica** (cronómetro de 90 minutos, selección aleatoria del banco, scoring, certificate PDF).
+
+## 2026-05-11
+
 - `[Contenido]` Fase E.9 — M15 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco (PR #?). M15 (Troubleshooting y operación cotidiana) queda **producido**. **Banco oficial alcanza el 98 %** (59/60 preguntas). Módulo ligero producido en un único PR (mismo patrón que E.7 con M13).
   - **`teoria.md`** (~340 líneas, 5 secciones, 45 min lectura):
     - 15.1 El protocolo canónico OBDED (las 5 fases Observe → Diagnose → Execute → Validate → Document, regla 80/20 del troubleshooting, escalado tier 1/2/3).
