@@ -10,7 +10,22 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-11
 
-- `[Contenido]` Fase E.3 — Producción de M11 parte 1: teoría + recursos + manifest (PR #?). M11 (DLP, sensitivity labels avanzadas y Communication Compliance) es el módulo más voluminoso del Área 4 del examen (7 preguntas al banco oficial, frente a 5 de M10). Mismo patrón B.1 / E.1: contenido pedagógico voluminoso en este PR; labs + quiz + 7 preguntas EX llegan en E.4.
+- `[Contenido]` Fase E.4 — M11 cerrado: labs + quiz + 7 preguntas al banco (PR #?). M11 (DLP, sensitivity labels avanzadas y Communication Compliance) queda **producido**. El alumno puede recorrer el módulo completo (teoría 90 min + quiz 20 min + 4 labs 100 min). **Banco oficial alcanza el 80 %** (48/60 preguntas).
+  - **`laboratorios.md`** completos (~390 líneas, 4 labs, 100 min total):
+    - LAB-11-1 (25 min) — Configurar DLP policy con location `Microsoft Agent 365 outputs` para bloquear con override outputs con SITs financieras, modo Test → producción, audit log validado.
+    - LAB-11-2 (30 min) — Entrenar custom trainable classifier `Custom-MA-Conversations` con dataset balanceado, calibrar precision/recall ≥ 80/70 %, promover a producción en DLP policy en audit only.
+    - LAB-11-3 (25 min) — Conectar Microsoft Defender for Cloud Apps a Salesforce sandbox, configurar DLP cross-SaaS con location MDA, validar con evento simulado, Cloud Discovery de shadow IT, session policy opcional.
+    - LAB-11-4 (20 min) — Configurar Communication Compliance para detectar lenguaje regulado en outputs de agente de research, definir grupo reviewers, simular match, workflow Resolve/Escalate, reporte semanal.
+  - **`quiz-practica.md`** con 7 preguntas Q-11-1..Q-11-7 cubriendo los 7 OAs en los 5 tipos del parser (multiple-choice, scenario, multiple-response, drag-and-drop, ordering). Caso de estudio de refuerzo: **Banco Santander** (200K+ empleados, regulación CNMV/ESMA) — diseño completo de programa DLP + CC con 5 policies prioritarias, 3 classifiers custom y reporting CISO con KPI específico de banca.
+  - **`banco-examen.md`**: añadidas 7 preguntas EX-11-001..007 cubriendo los OAs 11.1, 11.2, 11.3, 11.4, 11.5, 11.6 y 11.7. Banco oficial pasa de **41 a 48** preguntas (**80 %** completo). Tabla de distribución actualiza M11 a `Completo`.
+  - **`module.yaml`** de M11 cerrado: `estado: producido`, `duracion_min: 210` (90 teoría + 20 quiz + 100 labs), secciones completas, lista `laboratorios:` poblada con 4 IDs.
+  - **`platform/src/lib/course.ts`**: M11 cambia a `estado: 'producido'` con `duracionMin: 210`.
+  - **`lib/quiz.ts` no requiere cambios** — el parser markdown introducido en D.1 captura las 7 preguntas Q-11 automáticamente. Verificado con `parseQuizMarkdown` → 7 preguntas en los 5 tipos correctos.
+- `[Build]` Validador `scripts/validate-course.py` reporta 272 checks OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.35s.
+
+**Hito alcanzado — M11 completo. Banco al 80 %.** Con M01-M11 producidos, **11 de 16 módulos del temario están listos (69 %)** y el banco oficial al 80 %. Faltan 12 preguntas para completar el banco (M12 aporta 7, M13-M16 aportan 5 más). Próximo módulo en cola: M12 (Microsoft Defender XDR aplicado a agentes — la pieza que cierra el Área 4 con detección e investigación cuando algo se cuela a pesar de la prevención).
+
+ M11 (DLP, sensitivity labels avanzadas y Communication Compliance) es el módulo más voluminoso del Área 4 del examen (7 preguntas al banco oficial, frente a 5 de M10). Mismo patrón B.1 / E.1: contenido pedagógico voluminoso en este PR; labs + quiz + 7 preguntas EX llegan en E.4.
   - **`teoria.md`** completa (~600 líneas, 7 secciones, 90 min lectura):
     - 11.1 DLP vs Information Protection: dónde está la frontera (las dos preguntas que se reparten, complementariedad en una invocación, capacidades exclusivas de DLP).
     - 11.2 Anatomía de una DLP policy para agentes (locations soportadas incluyendo la nueva `Microsoft Agent 365 outputs`, conditions con SITs + classifiers + labels + keywords + fingerprinting + context, actions con tabla operativa audit/block/justify/override, user experience con policy tip + block message + justification reasons).

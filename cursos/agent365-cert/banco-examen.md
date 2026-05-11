@@ -3,7 +3,7 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 41
+total_preguntas_actuales: 48
 ultima_actualizacion: 2026-05-11
 ---
 
@@ -29,7 +29,7 @@ ultima_actualizacion: 2026-05-11
 | M08 — Ciclo de vida | 5 | Completo |
 | M09 — Permisos y CA | 7 | Completo |
 | M10 — Purview | 5 | Completo |
-| M11 — DLP y compliance | 7 | Pendiente producción |
+| M11 — DLP y compliance | 7 | Completo |
 | M12 — Defender | 7 | Pendiente producción |
 | M13 — CCS | 1 | Pendiente producción |
 | M14 — Gobernanza avanzada | 2 | Pendiente producción |
@@ -1238,4 +1238,211 @@ opciones:
     texto: "Performance metrics: latencia promedio de respuesta por agente."
 justificacion: |
   DSPM for AI tiene exactamente cuatro paneles: Top sensitive interactions (A), Top apps (B), Risky users (C) y Data oversharing (D). Cada uno responde a una pregunta operativa distinta para el oficial de cumplimiento durante su triaje semanal. Las opciones E (costes) y F (performance) son metricas de uso operativo que se encuentran en otros dashboards (M365 admin center o Foundry usage), no en DSPM for AI, cuyo foco es exclusivamente la **postura de seguridad del dato**.
+:::
+
+---
+
+### Módulo 11 — DLP, sensitivity labels y compliance
+
+::: pregunta
+id: EX-11-001
+modulo: 11
+oa: OA-11.1
+area: 4
+tipo: multiple-choice
+dificultad: media
+bloom: Comprender
+enunciado: |
+  Una organización ha desplegado Microsoft Purview Information Protection con éxito (sensitivity labels, auto-labeling, herencia en outputs). El responsable de Seguridad sostiene que «con IP es suficiente, DLP es redundante». ¿Cuál es la respuesta técnicamente correcta?
+opciones:
+  - id: a
+    texto: "Tiene razón: una vez los datos están etiquetados y cifrados con IP, la protección es completa."
+  - id: b
+    texto: "DLP no es redundante. IP define qué protección viaja con el dato persistentemente; DLP evalúa en runtime acciones concretas (compartir, enviar, generar outputs) y aplica decisiones contextuales (allow / audit / block / justify-and-allow). Sin DLP, IP protege el dato pero no impide la acción problemática."
+    correcta: true
+  - id: c
+    texto: "DLP solo aplica a archivos sin label; cuando todo está etiquetado correctamente, DLP no se usa."
+  - id: d
+    texto: "IP y DLP son la misma disciplina con dos nombres comerciales distintos."
+justificacion: |
+  IP y DLP son complementarias, no redundantes. IP es persistente (etiqueta el dato; el cifrado, watermark y restricciones viajan con él). DLP es contextual (en cada acción decide allow / audit / block / justify-and-allow). Una IP sin DLP deja que un usuario invocador envíe un output `Confidential` a un externo: el output va cifrado, sí, pero solo el destinatario que tiene la key podrá leerlo; si lo lee y lo retransmite, la cadena se rompe. DLP añade la decisión en el momento del envío.
+:::
+
+::: pregunta
+id: EX-11-002
+modulo: 11
+oa: OA-11.2
+area: 4
+tipo: multiple-response
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Sobre la **location `Microsoft Agent 365 outputs`** específica para DLP en Agent 365, ¿cuáles de las siguientes afirmaciones son correctas? Selecciona todas las que apliquen.
+opciones:
+  - id: a
+    texto: "Permite evaluar el contenido del output **antes** de entregarlo al usuario invocador."
+    correcta: true
+  - id: b
+    texto: "Añade latencia de runtime al output (200-800 ms para outputs típicos, hasta 2-3 s para outputs muy largos)."
+    correcta: true
+  - id: c
+    texto: "Soporta acciones audit only, block, block with override y notify only."
+    correcta: true
+  - id: d
+    texto: "Aplica solo a agentes OBO; no cubre agentes autonomous."
+  - id: e
+    texto: "Los eventos generados quedan en audit log con campos enriquecidos: `agentId`, `userPrincipalName`, `matchedSits`, `policyName`, `actionTaken`."
+    correcta: true
+  - id: f
+    texto: "Es la única location DLP que se aplica a contenido generado en runtime; las otras locations cubren contenido en reposo."
+justificacion: |
+  Las opciones A, B, C y E son correctas y describen capacidades canónicas de la location. La D es falsa: la location aplica tanto a agentes OBO como autonomous (cualquier output que produzca un agente Agent 365). La F es **parcialmente incorrecta**: aunque es cierto que esta location es la única que evalúa runtime sobre output de agente, otras locations también evalúan acciones en runtime (Exchange evalúa envíos de email en runtime, SharePoint evalúa shared link creation en runtime). La distinción no es «runtime vs reposo» sino «cuál es el evento que dispara la evaluación».
+:::
+
+::: pregunta
+id: EX-11-003
+modulo: 11
+oa: OA-11.3
+area: 4
+tipo: drag-and-drop
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Empareja cada **trainable classifier built-in** de Microsoft Purview con el tipo de contenido que detecta primariamente.
+items:
+  - id: c1
+    texto: "OffensiveLanguage"
+  - id: c2
+    texto: "ContractDocuments"
+  - id: c3
+    texto: "Resumes"
+  - id: c4
+    texto: "SourceCode"
+  - id: c5
+    texto: "FinancialReports"
+targets:
+  - id: t1
+    label: "Lenguaje ofensivo, acoso, discriminación en mensajes"
+  - id: t2
+    label: "Lenguaje contractual genérico (NDAs, acuerdos, términos)"
+  - id: t3
+    label: "Currículos y datos de candidatos"
+  - id: t4
+    label: "Código fuente en lenguajes comunes (Python, Java, C#, etc.)"
+  - id: t5
+    label: "Informes financieros con estructura típica (P&L, balance, cashflow)"
+correct_map:
+  c1: t1
+  c2: t2
+  c3: t3
+  c4: t4
+  c5: t5
+justificacion: |
+  Los cinco trainable classifiers built-in son los que se usan más frecuentemente en DLP policies y auto-labeling: `OffensiveLanguage` para detectar acoso o discriminación; `ContractDocuments` para identificar texto con estructura contractual; `Resumes` para currículos de candidatos (relevante en RRHH y en agentes que procesan CVs); `SourceCode` para detectar fragmentos de código (relevante para evitar exfiltración de IP en outputs de agentes); `FinancialReports` para informes con estructura financiera estándar. Combinarlos en condiciones AND/OR genera detección contextual potente sin SITs estáticas.
+:::
+
+::: pregunta
+id: EX-11-004
+modulo: 11
+oa: OA-11.4
+area: 4
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  Tu organización tiene un agente que produce resúmenes ejecutivos para managers. El director de Compliance pide: «Cuando un output contenga datos PCI (tarjetas de crédito), debe bloquearse pero permitir excepción justificada para escenarios legítimos como reembolsos verificados; cada excepción debe quedar registrada con motivo escrito y notificar al equipo DLP en tiempo real». ¿Qué configuración de **action + user experience** cumple exactamente este requisito?
+opciones:
+  - id: a
+    texto: "Action: `Audit only`. UX: Policy tip informativo. Justification: opcional."
+  - id: b
+    texto: "Action: `Block with override`, justify required (mínimo 20 caracteres). UX: Block message + diálogo de justificación con 4-5 razones predefinidas (incluyendo «Reembolso verificado con número de caso») + campo libre. Configuración adicional: `notifyOnOverride: true` con destinatario grupo `dlp-admins@empresa.com`."
+    correcta: true
+  - id: c
+    texto: "Action: `Block` (sin override). El director de Compliance no entiende lo que pide."
+  - id: d
+    texto: "Action: `Notify only` con texto explicativo. El usuario decide libremente."
+justificacion: |
+  La opción B describe la configuración canónica del requisito: `block with override` (bloquea por defecto pero admite excepción), justify required con mínimo de caracteres (forza explicación real, no solo «ok»), razones predefinidas que capturan los casos legítimos esperables (reembolsos, asesoría externa, emergencia), campo libre para casos no contemplados, y `notifyOnOverride: true` para el equipo DLP en tiempo real. La A no bloquea (incumple la primera parte del requisito). La C bloquea sin escape hatch (incumple la segunda parte). La D no bloquea (incumple la primera parte).
+:::
+
+::: pregunta
+id: EX-11-005
+modulo: 11
+oa: OA-11.5
+area: 4
+tipo: multiple-choice
+dificultad: media
+bloom: Comprender
+enunciado: |
+  Tu organización tiene un agente que consulta registros de clientes en **ServiceNow** además de en SharePoint. ¿Cuál es el rol específico de **Microsoft Defender for Cloud Apps (MDA)** en la protección de este flujo?
+opciones:
+  - id: a
+    texto: "MDA reemplaza a Purview DLP para SaaS de terceros: Purview deja de operar cuando hay MDA conectado."
+  - id: b
+    texto: "MDA actúa como **broker** entre Purview DLP y SaaS de terceros (ServiceNow, Salesforce, GitHub, etc.). Una sola DLP policy de Purview puede definir locations que incluyan tanto M365 como `Microsoft Defender for Cloud Apps` con scope a ServiceNow. La misma policy aplica consistentemente cross-platform."
+    correcta: true
+  - id: c
+    texto: "MDA es solo una herramienta de descubrimiento de shadow IT; no participa en enforcement de policies."
+  - id: d
+    texto: "MDA requiere configurar policies independientes en cada SaaS; no se integra con Purview."
+justificacion: |
+  La opción B captura el rol exacto de MDA en el ecosistema Purview. MDA actúa como broker que extiende las DLP policies de Purview a SaaS de terceros via conectores y, opcionalmente, modo reverse proxy (session policy) para control en tiempo real. La consistencia operativa viene de poder definir una sola policy con múltiples locations incluyendo SaaS externos. La A es falsa: Purview es el plano de control, MDA el plano de datos para SaaS de terceros. La C es parcialmente cierta (Cloud Discovery sí detecta shadow IT) pero olvida que MDA también participa en enforcement. La D contradice el diseño completo de la integración.
+:::
+
+::: pregunta
+id: EX-11-006
+modulo: 11
+oa: OA-11.6
+area: 4
+tipo: scenario
+dificultad: dificil
+bloom: Aplicar
+enunciado: |
+  Una entidad sanitaria opera con un agente de soporte que ayuda al personal administrativo a redactar comunicaciones con pacientes. El regulador exige que cualquier «consejo médico» sea revisado por personal médico cualificado antes de enviarse. ¿Cuál es la implementación correcta con Microsoft Purview?
+opciones:
+  - id: a
+    texto: "Bloquear el agente con Conditional Access hasta que tenga personal médico de turno disponible. CC no aplica a agentes."
+  - id: b
+    texto: "Configurar Communication Compliance con scope que incluye el agente, classifier custom `Custom-MedicalAdvice` (entrenado con muestras representativas) + keyword dictionary de términos clínicos, 15-20 % review percentage, grupo `compliance-medical-reviewers` (personal médico cualificado) como reviewers. Action: Notify reviewer + Tag + Correlate IRM. Workflow: reviewer médico evalúa cada match antes de que se envíe la comunicación al paciente."
+    correcta: true
+  - id: c
+    texto: "Aplicar solo DLP con block sobre cualquier mensaje médico. La revisión humana no es necesaria si la herramienta bloquea automáticamente."
+  - id: d
+    texto: "Confiar en el entrenamiento del personal administrativo para detectar y evitar lenguaje médico problemático."
+justificacion: |
+  La opción B es la respuesta canónica para regulación sanitaria con agentes. Communication Compliance es la disciplina específicamente diseñada para vigilancia conversacional con revisión humana cualificada. La A confunde CA (acceso) con CC (vigilancia conversacional). La C aplica bloqueo automatizado donde la regulación exige revisión humana cualificada: bloquear con DLP no cumple el requisito regulatorio de «revisión por personal médico». La D delega la responsabilidad regulatoria en el factor humano sin sistema, inviable a escala y sin trazabilidad para auditorías.
+:::
+
+::: pregunta
+id: EX-11-007
+modulo: 11
+oa: OA-11.7
+area: 4
+tipo: ordering
+dificultad: dificil
+bloom: Analizar
+enunciado: |
+  Ordena las **fases del ciclo operativo recomendado** para desplegar una DLP policy nueva, desde la primera acción hasta la operación estabilizada con reporting al CISO.
+items:
+  - id: o1
+    texto: "Diseñar la policy y desplegarla en modo `Audit only` por 2-4 semanas"
+  - id: o2
+    texto: "Analizar audit log: rate de falsos positivos, agrupar por causa raíz, distribuir por agente y por usuario"
+  - id: o3
+    texto: "Calibrar threshold, añadir excepciones contextuales para FP comunes, refinar conditions"
+  - id: o4
+    texto: "Promover a `Block with override` con justification reasons predefinidas; activar `notifyOnOverride`"
+  - id: o5
+    texto: "Operar el día a día: triaje semanal de alertas, gestión de override events, exclusiones temporales con expiración automática"
+  - id: o6
+    texto: "Reporte mensual al CISO: blocks evitados, tasa de override, top agentes problemáticos, deuda CC"
+correct_order:
+  - o1
+  - o2
+  - o3
+  - o4
+  - o5
+  - o6
+justificacion: |
+  El orden es el ciclo operativo recomendado para DLP en organizaciones maduras. Saltarse fases es la fuente principal de incidentes operacionales documentados: lanzar directo a `Block with override` (saltarse O1-O3) provoca falsos positivos masivos en producción que disparan presión política para revertir la policy entera; saltarse O5 (operación día a día) deja la policy en piloto automático y los falsos positivos se acumulan; saltarse O6 (reporting al CISO) deja a Compliance sin defensa cuando el negocio pregunta «¿para qué sirve esto que nos frena?». Cada fase tiene un output medible y cada output alimenta la fase siguiente.
 :::
