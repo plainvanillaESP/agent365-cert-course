@@ -3,8 +3,8 @@ spec_version: "1.0"
 tipo: banco-examen
 curso: agent365-cert
 total_preguntas_objetivo: 60
-total_preguntas_actuales: 36
-ultima_actualizacion: 2026-05-07
+total_preguntas_actuales: 41
+ultima_actualizacion: 2026-05-11
 ---
 
 # Banco oficial del examen final — Agent 365 IT Admin
@@ -28,7 +28,7 @@ ultima_actualizacion: 2026-05-07
 | M07 — Agent Registry | 4 | Completo |
 | M08 — Ciclo de vida | 5 | Completo |
 | M09 — Permisos y CA | 7 | Completo |
-| M10 — Purview | 5 | Pendiente producción |
+| M10 — Purview | 5 | Completo |
 | M11 — DLP y compliance | 7 | Pendiente producción |
 | M12 — Defender | 7 | Pendiente producción |
 | M13 — CCS | 1 | Pendiente producción |
@@ -1092,4 +1092,150 @@ opciones:
     texto: "Microsoft 365 E5 Compliance."
 justificacion: |
   Microsoft Entra Workload Identities Premium es la licencia que habilita CA policies sobre workload identities (service principals + agent identities). Está incluida en E7 y se vende standalone para organizaciones que quieren CA para agentes sin migrar a E7. Sin esta licencia, las CA solo aplican a usuarios humanos. La opción A (P1) cubre CA para usuarios pero no para workload identities. La B (P2) habilita Identity Protection con risk scores avanzados pero no la aplicación de CA a workload identities. La D es de Compliance (Purview), sin relación con CA.
+:::
+
+---
+
+## Área 4 — Implement data protection with Microsoft Purview
+
+### Módulo 10 — Microsoft Purview y protección de datos
+
+::: pregunta
+id: EX-10-001
+modulo: 10
+oa: OA-10.1
+area: 4
+tipo: multiple-choice
+dificultad: media
+bloom: Comprender
+enunciado: |
+  Después de aplicar Conditional Access a todos los agentes del tenant, el responsable de Seguridad pregunta «¿qué problema concreto sigue sin estar resuelto y nos lleva a desplegar Microsoft Purview además de CA?». ¿Cuál es la respuesta más precisa?
+opciones:
+  - id: a
+    texto: "Permitir que los agentes accedan solo desde dispositivos compliant, ya que CA no cubre dispositivos."
+  - id: b
+    texto: "Aplicar protección al **dato** una vez accedido por el agente (herencia de sensitivity labels, cifrado de outputs, watermark, trazabilidad regulatoria), responsabilidades que están fuera del alcance de CA."
+    correcta: true
+  - id: c
+    texto: "Restringir scopes del agente, ya que el blueprint y CA no controlan permisos efectivos."
+  - id: d
+    texto: "Bloquear invocaciones cuando el risk score sube a High, lo cual CA no permite."
+justificacion: |
+  CA es una capa de **acceso**: decide si un agente puede invocar bajo ciertas condiciones. Purview es una capa de **dato**: decide qué pasa con el contenido una vez accedido. La opción B describe exactamente las cuatro funciones que CA no cubre (label, cifrado, watermark, trazabilidad). La opción A es falsa: CA sí controla device compliance. La C es falsa: blueprint controla scopes inheritables. La D es falsa: CA con Identity Protection sí bloquea por risk score.
+:::
+
+::: pregunta
+id: EX-10-002
+modulo: 10
+oa: OA-10.4
+area: 4
+tipo: scenario
+dificultad: dificil
+bloom: Aplicar
+enunciado: |
+  Un regulador financiero solicita por escrito el listado completo de accesos a archivos clasificados como `HighlyConfidential` realizados por el agente «Treasury-Reconcile-Bot» durante el trimestre Q1 2026. La organización tiene Microsoft 365 E5 Compliance. ¿Cuál es el flujo operativo correcto para producir la evidencia?
+opciones:
+  - id: a
+    texto: "Exportar el log de actividad del agente desde el portal de M365 admin center, filtrar el CSV en Excel por «Highly Confidential» y enviarlo al regulador."
+  - id: b
+    texto: "Abrir un caso en eDiscovery Premium, añadir al agente como custodian, definir una búsqueda con filtros `Activity = AgentDataAccess` y `SensitivityLabel ∈ (HighlyConfidential)` en el rango Q1, aplicar custodian hold preventivo, ejecutar la búsqueda y exportar resultados con timestamp, UPN del invocador, resourceUri, sensitivityLabel y correlationId."
+    correcta: true
+  - id: c
+    texto: "Pedir al equipo de IT que extraiga del SharePoint el listado de archivos `HighlyConfidential` y cruzarlo manualmente con los timestamps en los que el agente operó."
+  - id: d
+    texto: "Usar Microsoft Sentinel para buscar eventos del agente y exportarlos en CSV."
+justificacion: |
+  La respuesta correcta es B: eDiscovery Premium es la herramienta diseñada para respuestas regulatorias con cadena de custodia, filtros por agentId y campos forenses estandarizados. El custodian hold es crítico para que el regulador acepte la evidencia como íntegra. La opción A produce un export sin cadena de custodia y sin campos clave (UPN del invocador, correlationId), inaceptable para un regulador. La C es operativamente inviable a escala y propensa a errores. La D usa la herramienta incorrecta: Sentinel es SIEM operativo, no produce evidencia con la trazabilidad regulatoria que pide la solicitud.
+:::
+
+::: pregunta
+id: EX-10-003
+modulo: 10
+oa: OA-10.3
+area: 4
+tipo: drag-and-drop
+dificultad: media
+bloom: Aplicar
+enunciado: |
+  Empareja cada **sensitivity label** con el caso de uso típico en un archivo `.agent` o blueprint de Agent 365.
+items:
+  - id: l1
+    texto: "Public"
+  - id: l2
+    texto: "Internal"
+  - id: l3
+    texto: "Confidential"
+  - id: l4
+    texto: "Highly Confidential"
+targets:
+  - id: t1
+    label: "Agentes de plantilla, ejemplos, demos públicas para terceros"
+  - id: t2
+    label: "Agentes operativos estándar sin información confidencial en el prompt"
+  - id: t3
+    label: "Agentes que tocan resúmenes financieros, datos de RRHH u otros datos sensibles del negocio"
+  - id: t4
+    label: "Agentes con conexiones a APIs propietarias o prompts con know-how exclusivo (secreto industrial)"
+correct_map:
+  l1: t1
+  l2: t2
+  l3: t3
+  l4: t4
+justificacion: |
+  Las cuatro labels canónicas se aplican según el nivel de protección requerido por el contenido del archivo. Public para material distribuible libremente; Internal para operación estándar sin sensibilidad particular; Confidential cuando hay datos sensibles del negocio (financiero, RRHH); Highly Confidential cuando hay secreto industrial o know-how propietario que justifica las protecciones más estrictas (cifrado obligatorio, no exfiltrable, watermark visible, custodian hold permanente).
+:::
+
+::: pregunta
+id: EX-10-004
+modulo: 10
+oa: OA-10.5
+area: 4
+tipo: scenario
+dificultad: dificil
+bloom: Crear
+enunciado: |
+  El responsable de Compliance te pide que un agente de RRHH que produce resúmenes de evaluaciones de desempeño (datos personales sujetos a GDPR) tenga su output **siempre cifrado, identificable forensemente y restringido a no salir del tenant**. Los managers receptores no pueden compartir el resumen con externos ni con managers de otras divisiones. ¿Qué combinación de configuraciones de Purview implementa exactamente este requisito?
+opciones:
+  - id: a
+    texto: "Aplicar sensitivity label `Confidential` al blueprint con encryption AES-256, watermark visible con UPN + fecha, restricción dura «no compartir fuera del tenant», auto-labeling de SITs como backup y Endpoint DLP bloqueando copia a apps no aprobadas."
+    correcta: true
+  - id: b
+    texto: "Aplicar sensitivity label `Internal` al blueprint y confiar en que los managers no compartirán los resúmenes."
+  - id: c
+    texto: "Configurar Endpoint DLP en los dispositivos de los managers sin aplicar sensitivity labels al blueprint."
+  - id: d
+    texto: "Aplicar label `Highly Confidential` al blueprint sin restricciones de compartición específicas; basta con que el output se cifre."
+justificacion: |
+  La opción A combina las cinco piezas necesarias para GDPR: label con cifrado AES-256 (protección del dato en reposo y tránsito), watermark con UPN + fecha (trazabilidad forense si se filtra), restricción explícita de no salir del tenant (control de compartición), auto-labeling de SITs como red de seguridad (si un futuro output incluye DNI/IBAN no detectados manualmente, queda cubierto) y Endpoint DLP como última milla. La B subestima brutalmente el riesgo. La C deja huérfano el output cuando viaja fuera del endpoint (en un email, en un dispositivo no gestionado). La D protege el cifrado pero sin restricción de compartición, los managers podrían reenviar a externos sin que la label lo bloquee.
+:::
+
+::: pregunta
+id: EX-10-005
+modulo: 10
+oa: OA-10.2
+area: 4
+tipo: multiple-response
+dificultad: media
+bloom: Recordar
+enunciado: |
+  ¿Cuáles son los cuatro paneles principales que muestra el dashboard de **Data Security Posture Management for AI** (DSPM for AI) de Microsoft Purview? Selecciona los cuatro correctos.
+opciones:
+  - id: a
+    texto: "Top sensitive interactions: invocaciones que tocaron datos `Confidential+`, agrupadas por agente y por usuario invocador."
+    correcta: true
+  - id: b
+    texto: "Top apps: cuáles agentes y aplicaciones de IA generativa consumen más datos sensibles."
+    correcta: true
+  - id: c
+    texto: "Risky users: usuarios cuyo patrón de uso de agentes activa señales de Insider Risk Management."
+    correcta: true
+  - id: d
+    texto: "Data oversharing: archivos accedidos por agentes en contextos que el oficial considera arriesgados."
+    correcta: true
+  - id: e
+    texto: "Cost optimization: panel de gasto por agente y proyección presupuestaria."
+  - id: f
+    texto: "Performance metrics: latencia promedio de respuesta por agente."
+justificacion: |
+  DSPM for AI tiene exactamente cuatro paneles: Top sensitive interactions (A), Top apps (B), Risky users (C) y Data oversharing (D). Cada uno responde a una pregunta operativa distinta para el oficial de cumplimiento durante su triaje semanal. Las opciones E (costes) y F (performance) son metricas de uso operativo que se encuentran en otros dashboards (M365 admin center o Foundry usage), no en DSPM for AI, cuyo foco es exclusivamente la **postura de seguridad del dato**.
 :::
