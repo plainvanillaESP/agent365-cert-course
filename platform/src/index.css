@@ -578,3 +578,11 @@ html.dark .badge-status-deprecated {
     box-shadow: 0 0 0 8px rgba(154, 68, 229, 0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .exam-jump-highlight {
+    animation: none;
+    outline: 2px solid rgba(154, 68, 229, 0.6);
+    outline-offset: 4px;
+  }
+}
