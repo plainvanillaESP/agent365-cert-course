@@ -336,6 +336,44 @@ Helpers `KeyChip` (tecla individual) y `KeyCombo` (varias teclas con `+`) render
 
 ---
 
+## Búsqueda global
+
+### `SearchPalette` + `lib/search.ts`
+
+Paleta de búsqueda tipo `Cmd+K` sobre todo el contenido del curso. La UI vive en `components/SearchPalette.tsx` (modal con lista de resultados y navegación por teclado) y el motor de indexación/matching en `lib/search.ts`.
+
+```tsx
+import { lazy, Suspense, useState } from 'react'
+const SearchPalette = lazy(() =>
+  import('@/components/SearchPalette').then(m => ({ default: m.SearchPalette })),
+)
+
+const [open, setOpen] = useState(false)
+{open && (
+  <Suspense fallback={null}>
+    <SearchPalette open={open} onClose={() => setOpen(false)} />
+  </Suspense>
+)}
+```
+
+Fuentes indexadas: módulos (título + área), secciones de teoría (troceadas por H2/H3), enunciados de quiz, escenarios de labs, recursos. El índice se construye una vez en memoria al primer uso.
+
+```ts
+import { searchCourse, highlight } from '@/lib/search'
+
+const results = searchCourse('agent id', 20) // hasta 20 hits
+// → [{ type, moduleId, title, snippet, to, tag, score }]
+
+const segments = highlight('Microsoft Entra Agent ID', 'agent id')
+// → [{ text, match }] para renderizar con <mark>
+```
+
+Matching: AND de todos los tokens, normaliza tildes/case, scoring con peso por tipo (módulos > teoría > quiz > labs > recursos) + boost si el match cae en el título + bonus por frase contigua.
+
+**Code-splitting**: cargar `SearchPalette` con `React.lazy()` mantiene el bundle inicial pequeño; el chunk con el índice solo se descarga al abrir la paleta.
+
+---
+
 ## Botones y acciones
 
 ### `Button`

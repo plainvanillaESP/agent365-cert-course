@@ -7,6 +7,13 @@ import { ShortcutsModal } from '@/components/ShortcutsModal'
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts'
 import { CONTENT_MODULES } from '@/lib/course'
 
+// SearchPalette arrastra todo el contenido del curso (índice). Lazy-load
+// para que no entre en el bundle inicial; el chunk se descarga la primera
+// vez que el alumno abre la búsqueda con Cmd+K, / o el botón del header.
+const SearchPalette = lazy(() =>
+  import('@/components/SearchPalette').then(m => ({ default: m.SearchPalette })),
+)
+
 // Las páginas se cargan bajo demanda con React.lazy. Esto baja el
 // bundle inicial; Vite genera un chunk por página.
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })))
@@ -59,11 +66,15 @@ function AppShell({
   setNavOpen,
   shortcutsOpen,
   setShortcutsOpen,
+  searchOpen,
+  setSearchOpen,
 }: {
   navOpen: boolean
   setNavOpen: (v: boolean) => void
   shortcutsOpen: boolean
   setShortcutsOpen: (v: boolean) => void
+  searchOpen: boolean
+  setSearchOpen: (v: boolean) => void
 }) {
   const navigate = useNavigate()
   const location = useLocation()
@@ -97,6 +108,20 @@ function AppShell({
       description: 'Mostrar esta ayuda',
       group: 'Ayuda',
       handler: () => setShortcutsOpen(true),
+    },
+    {
+      key: 'k',
+      meta: true,
+      description: 'Buscar en el curso',
+      group: 'Ayuda',
+      enableInInputs: true,
+      handler: () => setSearchOpen(true),
+    },
+    {
+      key: '/',
+      description: 'Buscar en el curso',
+      group: 'Ayuda',
+      handler: () => setSearchOpen(true),
     },
     {
       key: 'g',
@@ -164,13 +189,14 @@ function AppShell({
       group: 'General',
       enableInInputs: true,
       handler: () => {
-        if (shortcutsOpen) setShortcutsOpen(false)
+        if (searchOpen) setSearchOpen(false)
+        else if (shortcutsOpen) setShortcutsOpen(false)
         else if (navOpen) setNavOpen(false)
       },
     },
   ]
 
-  useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen])
+  useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen, searchOpen])
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -186,7 +212,7 @@ function AppShell({
         Saltar al contenido
       </a>
 
-      <Header onMenuToggle={() => setNavOpen(!navOpen)} />
+      <Header onMenuToggle={() => setNavOpen(!navOpen)} onSearchClick={() => setSearchOpen(true)} />
       <div className="flex flex-1 min-h-0">
         <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />
         <main
@@ -214,6 +240,12 @@ function AppShell({
         onClose={() => setShortcutsOpen(false)}
         shortcuts={shortcuts.filter(s => s.key !== 'Escape')}
       />
+
+      {searchOpen && (
+        <Suspense fallback={null}>
+          <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
     </div>
   )
 }
@@ -221,6 +253,7 @@ function AppShell({
 export function App() {
   const [navOpen, setNavOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   return (
     <BrowserRouter basename={basename}>
@@ -229,6 +262,8 @@ export function App() {
         setNavOpen={setNavOpen}
         shortcutsOpen={shortcutsOpen}
         setShortcutsOpen={setShortcutsOpen}
+        searchOpen={searchOpen}
+        setSearchOpen={setSearchOpen}
       />
     </BrowserRouter>
   )

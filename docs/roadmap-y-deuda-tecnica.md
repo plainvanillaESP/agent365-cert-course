@@ -72,7 +72,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
-| **Búsqueda global** sobre todo el contenido del curso (teoría, quiz, labs, recursos) con `cmd+k`. Resultados con snippet + módulo y sección de origen | Alto | 8–12 h | Nuevo `SearchPalette`, `searchIndex.ts` con prebuild |
+| ~~**Búsqueda global** sobre todo el contenido del curso (teoría, quiz, labs, recursos) con `cmd+k`. Resultados con snippet + módulo y sección de origen~~ ✅ H.3 | Alto | 8–12 h | `components/SearchPalette.tsx`, `lib/search.ts` |
 | **Atajos de teclado** globales (`j`/`k` siguiente/anterior módulo, `t`/`q`/`l`/`r` cambio de sección, `?` para help, `/` para search) | Medio | 3–4 h | Nuevo `useKeyboardShortcuts`, `ShortcutsHelp` modal |
 | **Indicador de progreso permanente** en el header (no solo en `/progreso`): pildora con `% completado` | Medio | 1–2 h | Aprovecha Badge + Stat |
 | **Breadcrumbs estructurados** con esquema accesible (aria-current, schema.org BreadcrumbList) | Bajo | 2 h | Nuevo `Breadcrumbs` |
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase G.5.*
+*Última actualización: 2026-05-12 tras Fase H.3.*

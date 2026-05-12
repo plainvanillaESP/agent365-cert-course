@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { Sun, Moon, Menu, Activity } from 'lucide-react'
+import { Sun, Moon, Menu, Activity, Search } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { Logotipo } from '@/components/Logo'
@@ -8,7 +8,11 @@ import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
 
 interface HeaderProps {
   onMenuToggle?: () => void
+  onSearchClick?: () => void
 }
+
+const IS_MAC =
+  typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent)
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -18,7 +22,7 @@ function GithubIcon({ className }: { className?: string }) {
   )
 }
 
-export function Header({ onMenuToggle }: HeaderProps) {
+export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const { theme, toggle } = useTheme()
   const snapshots = useCourseProgress()
 
@@ -76,6 +80,35 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
         {/* Acciones */}
         <div className="flex items-center gap-1">
+          {onSearchClick && (
+            <>
+              {/* Botón compacto en mobile */}
+              <IconButton
+                onClick={onSearchClick}
+                label="Buscar en el curso"
+                size="md"
+                className="md:hidden"
+              >
+                <Search className="size-[17px]" />
+              </IconButton>
+              {/* Botón con atajo visible en desktop */}
+              <button
+                type="button"
+                onClick={onSearchClick}
+                aria-label="Buscar en el curso"
+                className="hidden md:inline-flex items-center gap-2 h-9 pl-2.5 pr-2 mr-1 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
+              >
+                <Search className="size-[14.5px] shrink-0" aria-hidden />
+                <span className="hidden lg:inline">Buscar</span>
+                <kbd
+                  className="inline-flex items-center justify-center h-5 min-w-[1.6rem] px-1 rounded border border-[var(--border-strong)] bg-[var(--bg-surface-2)] font-mono text-[10.5px] font-semibold text-[var(--text-muted)] tabular-nums"
+                  aria-hidden
+                >
+                  {IS_MAC ? '⌘K' : 'Ctrl+K'}
+                </kbd>
+              </button>
+            </>
+          )}
           <NavLink
             to="/progreso"
             className={({ isActive }) =>
