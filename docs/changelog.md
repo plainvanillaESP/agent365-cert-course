@@ -10,6 +10,13 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase L.2 — Transiciones de página/sección con CSS, sin framer-motion.
+  - **`components/Transitions.tsx` (nuevo)** — Helper `<Fade fadeKey="..." variant="fade|slide-right">` que envuelve el contenido y usa `key` para remontar al cambiar `fadeKey`, lo que dispara la animación CSS de entrada. Implementación deliberadamente ligera (sin librería) para no añadir ~30 kB de `framer-motion` por algo que se resuelve con `@keyframes`.
+  - **CSS** (en `index.css`) — Dos keyframes: `pv-fade-in` (opacidad + 4 px de slide vertical, 220 ms `cubic-bezier(.22,.61,.36,1)`) y `pv-slide-in-right` (opacidad + 12 px horizontal, 260 ms). Bajo `@media (prefers-reduced-motion: reduce)` ambas se anulan, así que en accesibilidad estricta no hay movimiento.
+  - **Integración en `ModulePage`** — El contenido principal de cada sección (teoría, quiz, labs, recursos) se envuelve en `<Fade fadeKey={`${moduleId}-${section}`}>`. Cambiar de pestaña dispara una animación de entrada suave; navegar entre módulos también porque `fadeKey` incluye el moduleId. El resto del shell (header, sidebar, navegación de módulos siguiente/anterior, TOC) permanece estático, solo el área central reanima.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[UX]` Fase L.1 — Highlighter del alumno: resaltar texto sobre la teoría y los labs con cuatro colores.
   - **`lib/highlights.ts` (nuevo, ~310 líneas)** — Motor sin dependencia de React, reutilizable desde cualquier shell. Tipos `Highlight`, `HighlightColor`, `PlainTextMap`. Funciones puras:
     - `buildPlainTextMap(container)` — Walker de `TreeWalker` que construye el texto plano del contenedor + un mapeo `Text → { start, end }` para reanchorrar offsets DOM ↔ texto.

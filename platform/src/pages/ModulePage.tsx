@@ -16,6 +16,7 @@ import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
 import { NotesPanel } from '@/components/NotesPanel'
 import { Highlighter } from '@/components/Highlighter'
+import { Fade } from '@/components/Transitions'
 import { markSectionVisited, type TrackedSection } from '@/lib/progress'
 import { useModuleProgress, useUnlockState } from '@/hooks/useModuleProgress'
 
@@ -187,22 +188,26 @@ export function ModulePage() {
           <ScrollProgress storageKey={`agent365-reading-m${module.id}-teoria`} />
         )}
 
-        {/* Contenido */}
-        {section === 'quiz-practica' && getQuestionsForModule(module.id).length > 0 ? (
-          <Quiz moduleId={module.id} />
-        ) : section === 'laboratorios' && getLabForModule(module.id) ? (
-          <Lab moduleId={module.id} />
-        ) : section === 'recursos' && getResourcesForModule(module.id) ? (
-          <Resources moduleId={module.id} />
-        ) : content ? (
-          <MarkdownRenderer
-            body={content.body}
-            moduleSlug={module.slug}
-            variant={section === 'laboratorios' ? 'lab' : 'default'}
-          />
-        ) : (
-          <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
-        )}
+        {/* Contenido — envuelto en Fade con key por sección para que el
+            cambio de tab dispare una animación de entrada suave. Respeta
+            prefers-reduced-motion en el CSS. */}
+        <Fade fadeKey={`${module.id}-${section}`}>
+          {section === 'quiz-practica' && getQuestionsForModule(module.id).length > 0 ? (
+            <Quiz moduleId={module.id} />
+          ) : section === 'laboratorios' && getLabForModule(module.id) ? (
+            <Lab moduleId={module.id} />
+          ) : section === 'recursos' && getResourcesForModule(module.id) ? (
+            <Resources moduleId={module.id} />
+          ) : content ? (
+            <MarkdownRenderer
+              body={content.body}
+              moduleSlug={module.slug}
+              variant={section === 'laboratorios' ? 'lab' : 'default'}
+            />
+          ) : (
+            <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
+          )}
+        </Fade>
 
         {/* Navegación entre módulos */}
         {(prevAvail || nextAvail) && (
