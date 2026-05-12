@@ -3,7 +3,49 @@
  *
  * Esta es la "tabla de contenidos" que el shell usa para construir la home
  * y la navegación. Sincronizada con docs/arquitectura-curso.md v1.2.
+ *
+ * Para reutilizar la plataforma con otro curso PV-Learn (ver
+ * docs/reusar-plataforma.md), basta con sustituir los metadatos
+ * (COURSE_*) y la lista de MODULES/AREAS. Los componentes de la home
+ * y la navegación leen de aquí.
  */
+
+/* --------------------------- Metadatos del curso -------------------------- */
+
+/** Título principal del curso, visible en la home y en los breadcrumbs. */
+export const COURSE_TITLE = 'Microsoft Agent 365 IT Admin'
+
+/** Eyebrow corto sobre el título en la home. */
+export const COURSE_EYEBROW = 'Plain Vanilla Solutions · Curso de certificación'
+
+/** Descripción del curso para la home y meta tags. */
+export const COURSE_DESCRIPTION =
+  'Curso de certificación para administradores IT sobre Microsoft Agent 365 y la gobernanza de agentes de IA en Microsoft 365. 17 módulos estructurados, evaluación final medible y constancia de finalización.'
+
+/** Logo cuadrado del curso, relativo a BASE_URL. */
+export const COURSE_LOGO = 'agent365-logo-256.png'
+
+/**
+ * Título que aparece en el certificado, debajo de "ha completado
+ * satisfactoriamente el examen de certificación". Suele ser una forma
+ * más formal del título del curso.
+ */
+export const COURSE_CERT_TITLE = 'Microsoft Agent 365 IT Administrator'
+
+/**
+ * Nombre del curso para la nota legal del certificado (después de
+ * "del curso"). Versión narrativa, en cursiva.
+ */
+export const COURSE_CERT_LEGAL_NAME = 'Microsoft Agent 365 — Certificación profesional para administradores IT'
+
+/** Título del bloque de examen en su pantalla previa. */
+export const COURSE_EXAM_TITLE = 'Examen de certificación'
+
+/** Descripción del examen en la pantalla previa. */
+export const COURSE_EXAM_INTRO =
+  'Pon a prueba lo aprendido en los módulos del curso. El examen está cronometrado y simula las condiciones de una certificación profesional.'
+
+/* --------------------------------------------------------------------------- */
 
 export type ModuleStatus = 'producido' | 'en_revision' | 'pendiente'
 
@@ -86,6 +128,18 @@ export const MODULES: CourseModule[] = [
 
 export const COURSE_TOTAL_MIN = MODULES.slice(0, 16).reduce((sum, m) => sum + m.duracionMin, 0)
 export const COURSE_EXAM_MIN = 90
+
+/** Módulos de contenido (excluye el examen final, que es el último). */
+export const CONTENT_MODULES = MODULES.filter(m => m.areaExamen !== 0)
+
+/** Módulo del examen final. */
+export const EXAM_MODULE = MODULES.find(m => m.areaExamen === 0) ?? MODULES[MODULES.length - 1]
+
+/** Total de preguntas declaradas (suma de la columna `preguntas`, sin el examen). */
+export const COURSE_TOTAL_QUESTIONS = CONTENT_MODULES.reduce((sum, m) => sum + m.preguntas, 0)
+
+/** Ruta del primer módulo de contenido. Útil como CTA inicial. */
+export const COURSE_START_PATH = `/modulo/${CONTENT_MODULES[0]?.id ?? 1}/teoria`
 
 export function findModule(id: number | string): CourseModule | undefined {
   const numId = typeof id === 'string' ? parseInt(id, 10) : id

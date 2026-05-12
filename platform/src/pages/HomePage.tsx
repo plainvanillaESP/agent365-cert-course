@@ -1,54 +1,34 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Clock, BookOpen, GraduationCap, FileText, CheckCircle2, Circle, Lock } from 'lucide-react'
+import { ArrowRight, Clock, BookOpen, GraduationCap, FileText, CheckCircle2, Lock } from 'lucide-react'
 import { ButtonLink } from '@/components/Button'
-import { AREAS, MODULES, COURSE_TOTAL_MIN, COURSE_EXAM_MIN, formatDuration, type CourseModule } from '@/lib/course'
+import {
+  AREAS,
+  MODULES,
+  CONTENT_MODULES,
+  EXAM_MODULE,
+  COURSE_TOTAL_MIN,
+  COURSE_EXAM_MIN,
+  COURSE_TOTAL_QUESTIONS,
+  COURSE_TITLE,
+  COURSE_EYEBROW,
+  COURSE_DESCRIPTION,
+  COURSE_LOGO,
+  COURSE_START_PATH,
+  formatDuration,
+  type CourseModule,
+} from '@/lib/course'
 import { useUnlockState } from '@/hooks/useModuleProgress'
-
-type PhaseStatus = 'done' | 'current' | 'todo'
-
-interface Phase {
-  id: string
-  desc: string
-  status: PhaseStatus
-}
-
-const PHASES: Phase[] = [
-  { id: '0',   desc: 'Investigación deep-research base',                 status: 'done'    },
-  { id: '1',   desc: 'Diseño maestro (blueprint, áreas, banco modelo)',  status: 'done'    },
-  { id: '2',   desc: 'Módulo 01 prototipo de contenido',                 status: 'done'    },
-  { id: '2.A', desc: 'Prototipo del shell de e-learning con M01',        status: 'done'    },
-  { id: '3',   desc: 'Módulos 02–05 (Fundamentos & Setup)',              status: 'done'    },
-  { id: '4',   desc: 'Módulos 06–09 (Identidad y ciclo de vida)',        status: 'current' },
-  { id: '5',   desc: 'Módulos 10–13 (Datos, monitorización, CCS)',       status: 'todo'    },
-  { id: '6',   desc: 'Módulos 14–16 (Avanzado)',                         status: 'todo'    },
-  { id: '7',   desc: 'Módulo 17 — Evaluación final',                     status: 'todo'    },
-  { id: '8',   desc: 'Plataforma multi-curso, autenticación y backend',   status: 'todo'    },
-  { id: '9',   desc: 'Panel admin de cursos, certificación y PDFs',       status: 'todo'    },
-]
 
 export function HomePage() {
   const { isUnlocked } = useUnlockState()
+  const numTotalModules = MODULES.length
 
   return (
     <div className="max-w-[var(--layout-content-max)] mx-auto">
       <Hero />
 
       <StatsGrid />
-
-      <Section
-        eyebrow="Roadmap"
-        title="Estado de producción"
-        description="Los módulos producidos están disponibles. El resto se publica progresivamente."
-      >
-        <Card>
-          <ul className="divide-y divide-[var(--border-subtle)]">
-            {PHASES.map(p => (
-              <PhaseRow key={p.id} phase={p} />
-            ))}
-          </ul>
-        </Card>
-      </Section>
 
       <Section
         eyebrow="Examen"
@@ -64,19 +44,19 @@ export function HomePage() {
 
       <Section
         eyebrow="Temario"
-        title="Los 17 módulos del curso"
+        title={`Los ${numTotalModules} módulos del curso`}
         description=""
       >
         <Card>
           <ul className="divide-y divide-[var(--border-subtle)]">
-            {MODULES.filter(m => m.id <= 16).map(m => (
+            {CONTENT_MODULES.map(m => (
               <ModuleRow key={m.id} module={m} unlocked={isUnlocked(m.id)} />
             ))}
           </ul>
         </Card>
         <div className="mt-3">
           <Card>
-            <ModuleRow module={MODULES[16]} isExam unlocked={isUnlocked(MODULES[16].id)} />
+            <ModuleRow module={EXAM_MODULE} isExam unlocked={isUnlocked(EXAM_MODULE.id)} />
           </Card>
         </div>
       </Section>
@@ -91,31 +71,29 @@ function Hero() {
     <header className="pt-2 pb-8">
       <div className="flex items-start gap-5 sm:gap-7">
         <img
-          src={`${import.meta.env.BASE_URL}agent365-logo-256.png`}
+          src={`${import.meta.env.BASE_URL}${COURSE_LOGO}`}
           alt=""
           className="size-[72px] sm:size-[96px] rounded-[18px] shrink-0 mt-1"
           aria-hidden
         />
         <div className="flex-1 min-w-0">
           <div className="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-3">
-            Plain Vanilla Solutions · Curso de certificación
+            {COURSE_EYEBROW}
           </div>
           <h1 className="font-display text-[34px] sm:text-[40px] leading-[1.1] tracking-[-0.025em] font-bold text-[var(--text-primary)] mb-4">
-            Microsoft Agent 365 IT Admin
+            {COURSE_TITLE}
           </h1>
           <p className="text-[16px] leading-relaxed text-[var(--text-secondary)] max-w-[640px]">
-            Curso de certificación para administradores IT sobre Microsoft Agent 365 y la
-            gobernanza de agentes de IA en Microsoft 365. 17 módulos estructurados, 18 horas
-            de teoría y laboratorios, evaluación final medible y constancia de finalización.
+            {COURSE_DESCRIPTION}
           </p>
           <div className="mt-7">
             <ButtonLink
-              to="/modulo/1/teoria"
+              to={COURSE_START_PATH}
               variant="primary"
               size="lg"
               iconRight={<ArrowRight className="size-4 stroke-[2.25]" aria-hidden />}
             >
-              Empezar por el Módulo 01
+              Empezar por el primer módulo
             </ButtonLink>
           </div>
         </div>
@@ -125,12 +103,13 @@ function Hero() {
 }
 
 function StatsGrid() {
+  const numContentModules = CONTENT_MODULES.length
   return (
     <section className="grid grid-cols-2 sm:grid-cols-4 rounded-lg overflow-hidden border border-[var(--border-default)] bg-[var(--border-subtle)] gap-px">
-      <Stat icon={<BookOpen className="size-[14px] stroke-[1.75]" />} label="Módulos" value="17" />
+      <Stat icon={<BookOpen className="size-[14px] stroke-[1.75]" />} label="Módulos" value={String(numContentModules)} />
       <Stat icon={<Clock className="size-[14px] stroke-[1.75]" />} label="Duración" value={formatDuration(COURSE_TOTAL_MIN)} />
       <Stat icon={<GraduationCap className="size-[14px] stroke-[1.75]" />} label="Examen" value={`${COURSE_EXAM_MIN} min`} />
-      <Stat icon={<FileText className="size-[14px] stroke-[1.75]" />} label="Preguntas" value="60" />
+      <Stat icon={<FileText className="size-[14px] stroke-[1.75]" />} label="Preguntas" value={String(COURSE_TOTAL_QUESTIONS)} />
     </section>
   )
 }
@@ -191,86 +170,6 @@ function Card({ children, className = '' }: { children: ReactNode; className?: s
       {children}
     </div>
   )
-}
-
-/* --------------------------- Roadmap (PhaseRow) --------------------------- */
-
-function PhaseRow({ phase }: { phase: Phase }) {
-  return (
-    <li
-      className={[
-        'flex items-center gap-3 sm:gap-4 px-4 py-3',
-        phase.status === 'current' && 'bg-[var(--bg-active)]',
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      <PhaseIcon status={phase.status} />
-      <span
-        className={[
-          'font-mono text-[12px] tabular-nums shrink-0 w-14 whitespace-nowrap',
-          phase.status === 'current'
-            ? 'text-[var(--text-active)] font-semibold'
-            : 'text-[var(--text-muted)]',
-        ].join(' ')}
-      >
-        Fase {phase.id}
-      </span>
-      <span
-        className={[
-          'flex-1 min-w-0 text-[14px] leading-snug',
-          phase.status === 'current'
-            ? 'text-[var(--text-active)] font-medium'
-            : phase.status === 'done'
-              ? 'text-[var(--text-primary)]'
-              : 'text-[var(--text-secondary)]',
-        ].join(' ')}
-      >
-        {phase.desc}
-      </span>
-      <PhaseBadge status={phase.status} />
-    </li>
-  )
-}
-
-function PhaseIcon({ status }: { status: PhaseStatus }) {
-  if (status === 'done') {
-    return (
-      <CheckCircle2
-        className="size-[16px] stroke-[2] shrink-0 text-emerald-600 dark:text-emerald-400"
-        aria-hidden
-      />
-    )
-  }
-  if (status === 'current') {
-    return (
-      <span className="size-[16px] shrink-0 inline-flex items-center justify-center" aria-hidden>
-        <span className="size-2.5 rounded-full bg-[var(--color-pv-purple-500)] ring-4 ring-[var(--color-pv-purple-500)]/20 animate-pulse" />
-      </span>
-    )
-  }
-  return <Circle className="size-[16px] stroke-[1.5] shrink-0 text-[var(--text-faint)]" aria-hidden />
-}
-
-function PhaseBadge({ status }: { status: PhaseStatus }) {
-  const cls = 'text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded shrink-0 whitespace-nowrap'
-  if (status === 'done') {
-    return (
-      <span className={`${cls} text-emerald-700 dark:text-emerald-300 bg-emerald-500/10`}>
-        Completada
-      </span>
-    )
-  }
-  if (status === 'current') {
-    return (
-      <span
-        className={`${cls} text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-200)] bg-[var(--bg-active-strong)]`}
-      >
-        En curso
-      </span>
-    )
-  }
-  return <span className={`${cls} text-[var(--text-muted)] bg-[var(--bg-surface-2)]`}>Pendiente</span>
 }
 
 /* --------------------------- Áreas (AreaCard) --------------------------- */

@@ -4,6 +4,7 @@ import { ButtonLink, Button } from '@/components/Button'
 import type { ExamAttempt } from '@/hooks/useExamState'
 import { CertificateSeal } from './CertificateSeal'
 import { CertificateBadge } from './CertificateBadge'
+import { COURSE_CERT_TITLE, COURSE_CERT_LEGAL_NAME } from '@/lib/course'
 
 const LOGO_POSITIVO = `${import.meta.env.BASE_URL}logotipo-positivo.svg`
 
@@ -175,7 +176,7 @@ export function Certificate({ attempt }: CertificateProps) {
               ha completado satisfactoriamente el examen de certificación
             </div>
             <div className="text-[22px] sm:text-[26px] font-semibold text-slate-900">
-              Microsoft Agent 365 IT Administrator
+              {COURSE_CERT_TITLE}
             </div>
             <div className="flex items-baseline gap-6 mt-4">
               <Stat label="Puntuación" value={`${attempt.scoring.pct} %`} />
@@ -219,7 +220,7 @@ export function Certificate({ attempt }: CertificateProps) {
 
             <p className="text-[10.5px] text-slate-500 leading-relaxed pt-4 mt-4 border-t border-slate-100">
               Este certificado acredita la superación del examen final del curso
-              <em> Microsoft Agent 365 — Certificación profesional para administradores IT </em>
+              <em> {COURSE_CERT_LEGAL_NAME} </em>
               impartido por Plain Vanilla Solutions SL. La autenticidad se verifica con el ID y la insignia visual de la esquina superior derecha.
             </p>
           </footer>

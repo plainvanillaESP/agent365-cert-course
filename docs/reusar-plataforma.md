@@ -103,22 +103,43 @@ Cada módulo aporta N preguntas al banco según los pesos del área a la que per
 
 ### 6. Actualizar `platform/src/lib/course.ts`
 
-Este archivo es la lista declarativa de módulos que consume la plataforma. Cambiar:
+Este archivo es la lista declarativa del curso que consume la plataforma. Los componentes (`HomePage`, `Header`, `Certificate`, `ExamPreStart`) leen siempre desde aquí, así que cambiar de curso no implica tocar componentes.
+
+**Metadatos del curso** (visibles en la portada, header, certificado y examen):
 
 ```ts
-export const COURSE_SLUG = '<nuevo-curso>'
+// Título principal en la home y el header
 export const COURSE_TITLE = 'Nombre completo del curso'
-export const COURSE_SHORT = 'Curso X'
 
-export const MODULES: ModuleEntry[] = [
-  { id: 1, slug: 'introduccion', title: 'Introducción a X', minutos: 110, estado: 'en_diseño' },
-  { id: 2, slug: 'fundamentos', title: 'Fundamentos de Y', minutos: 90, estado: 'en_diseño' },
-  ...
-  { id: 17, slug: 'examen-final', title: 'Examen de certificación', minutos: 90, estado: 'en_diseño' },
+// Eyebrow corto sobre el título
+export const COURSE_EYEBROW = 'Plain Vanilla Solutions · Curso de certificación'
+
+// Descripción del curso para la home
+export const COURSE_DESCRIPTION = '...'
+
+// Logo del curso (en public/)
+export const COURSE_LOGO = 'mi-curso-logo-256.png'
+
+// Texto del certificado al diplomarse
+export const COURSE_CERT_TITLE = 'Nombre de la certificación'
+export const COURSE_CERT_LEGAL_NAME = 'Versión legal del nombre del curso'
+
+// Pantalla previa al examen
+export const COURSE_EXAM_TITLE = 'Examen de certificación'
+export const COURSE_EXAM_INTRO = '...'
+```
+
+**Catálogo de módulos**:
+
+```ts
+export const MODULES: CourseModule[] = [
+  { id: 1, slug: 'modulo-01-introduccion', titulo: 'Introducción a X', duracionMin: 110, areaExamen: 1, estado: 'producido', faseProduccion: 1, preguntas: 5 },
+  // ...
+  { id: 17, slug: 'modulo-17-examen-certificacion', titulo: 'Examen de certificación', duracionMin: 90, areaExamen: 0, estado: 'producido', faseProduccion: 7, preguntas: 60 },
 ]
 ```
 
-Las constantes están centralizadas aquí intencionalmente para que cambiar de curso no implique tocar componentes.
+Convención: el módulo con `areaExamen: 0` se identifica como el examen final (no aparece en el conteo de módulos de contenido).
 
 ### 7. Actualizar `platform/src/lib/exam.ts`
 
