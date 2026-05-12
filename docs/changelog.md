@@ -10,6 +10,14 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[Build]` Fase L.4 — PWA con service worker (`vite-plugin-pwa`) — la plataforma es instalable y funciona offline tras la primera visita.
+  - **`vite-plugin-pwa` configurado en `vite.config.ts`** — `registerType: 'autoUpdate'` (el SW se actualiza solo sin pedir permiso al alumno), `injectRegister` por defecto registra el SW automáticamente al cargar (no hace falta tocar `main.tsx`). El plugin se omite cuando `VITE_OFFLINE=1` porque ahí el bundle se sirve desde `file://` o un USB y un SW no aporta nada.
+  - **Manifest** — nombre completo del curso, short_name "PV-Learn Agent 365", color brand `#9A44E5`, fondo claro `#FAFAF9`, idioma `es-ES`, scope y start_url alineados con el `base` de Vite (`/agent365-cert-course/` en producción), icono `agent365-logo-256.png` (con purpose `any` + `maskable`). Cuando lleguemos a multi-curso (fase 8) el manifest se generará por curso.
+  - **Workbox / cache** — `globPatterns` cachea JS/CSS/HTML/imágenes/iconos/manifest/fuentes. `maximumFileSizeToCacheInBytes: 4 MB` para permitir chunks lazy grandes como mermaid sin saltar warnings. `navigateFallback` apunta a `index.html` para que cualquier ruta SPA funcione offline tras la primera visita. `cleanupOutdatedCaches` purga versiones viejas tras la actualización.
+  - **Convivencia con el bundle offline** — `VITE_OFFLINE=1` sigue produciendo el bundle estático sin SW (mismo flujo que F.3 / pack-offline). Para el deploy normal a GitHub Pages, el SW se incluye automáticamente.
+- `[Build]` Validador 277 OK. tsc clean. Build OK (159 precache entries, ~5.5 MB). test:exam 34/34 OK.
+
+
 - `[a11y]` Fase L.3 — Alto contraste automático + revisión de soporte de teclado.
   - **`@media (prefers-contrast: more)`** en `index.css` — Cuando el SO/navegador lo solicita, sube los `--border-*` un escalón en la escala stone (subtle → 300, default → 400, strong → 600 en light; espejado en dark), acerca `--text-muted` a `text-secondary` para subir el contraste de texto fino, engorda el `outline` del `:focus-visible` a 3 px con offset 3 px, subraya todos los `a` dentro de `.markdown-body` (no solo on hover) y añade un outline a los `<mark>` del highlighter para que se distingan del fondo aunque el color sea sutil. Todo via CSS, sin código JS, sin intervención del alumno.
   - **DnD** (`QuestionDragAndDrop.tsx`) — Ya tenía `KeyboardSensor` configurado en `useSensors` (verificación post-revisión). Tab para entrar al ítem, Space para tomarlo, flechas para mover, Enter para soltar. La accesibilidad existía pero no estaba auditada formalmente; ahora queda documentada.
