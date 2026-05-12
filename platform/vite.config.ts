@@ -5,9 +5,17 @@ import { resolve } from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Base path: /agent365-cert-course/ en producción (GitHub Pages),
-  // / en desarrollo local
-  base: process.env.NODE_ENV === 'production' ? '/agent365-cert-course/' : '/',
+  // Base path:
+  //   - Modo offline (`VITE_OFFLINE=1`): rutas relativas para que el bundle
+  //     pueda servirse desde cualquier carpeta o file://
+  //   - Producción GitHub Pages: /agent365-cert-course/
+  //   - Desarrollo local: /
+  base:
+    process.env.VITE_OFFLINE === '1'
+      ? './'
+      : process.env.NODE_ENV === 'production'
+        ? '/agent365-cert-course/'
+        : '/',
 
   plugins: [
     react(),

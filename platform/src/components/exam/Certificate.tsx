@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Printer, ArrowLeft, Trash2 } from 'lucide-react'
 import { ButtonLink, Button } from '@/components/Button'
 import type { ExamAttempt } from '@/hooks/useExamState'
+import { CertificateSeal } from './CertificateSeal'
+import { CertificateBadge } from './CertificateBadge'
 
 const LOGO_POSITIVO = `${import.meta.env.BASE_URL}logotipo-positivo.svg`
 
@@ -186,17 +188,40 @@ export function Certificate({ attempt }: CertificateProps) {
           </div>
 
           {/* Pie */}
-          <footer className="flex items-end justify-between border-t border-slate-200 pt-5">
-            <div className="text-[11px] text-slate-500 leading-relaxed max-w-[60%]">
+          <footer className="border-t border-slate-200 pt-5 mt-2">
+            <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-end">
+              {/* Firma y emisor (izquierda) */}
+              <div className="space-y-1">
+                <div className="h-[34px] border-b border-slate-400" aria-hidden />
+                <div className="text-[10.5px] uppercase tracking-[0.12em] text-slate-500 font-semibold">
+                  Firma
+                </div>
+                <div className="text-[12px] text-slate-700">
+                  Director Gerente · Plain Vanilla Solutions SL
+                </div>
+              </div>
+
+              {/* Sello (centro) */}
+              <div className="flex justify-center">
+                <CertificateSeal size={120} />
+              </div>
+
+              {/* Insignia + emisor (derecha) */}
+              <div className="flex flex-col items-end gap-2">
+                <CertificateBadge verificationId={verificationId} size={84} />
+                <div className="text-right">
+                  <div className="text-[10.5px] text-slate-500 uppercase tracking-[0.08em]">Emitido por</div>
+                  <div className="text-[13px] font-semibold text-slate-900">Plain Vanilla Solutions SL</div>
+                  <div className="text-[10.5px] text-slate-500">B87644233 · Madrid</div>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-[10.5px] text-slate-500 leading-relaxed pt-4 mt-4 border-t border-slate-100">
               Este certificado acredita la superación del examen final del curso
               <em> Microsoft Agent 365 — Certificación profesional para administradores IT </em>
-              impartido por Plain Vanilla Solutions SL. La autenticidad se verifica con el ID indicado en la cabecera.
-            </div>
-            <div className="text-right">
-              <div className="text-[12px] text-slate-700">Emitido por</div>
-              <div className="text-[14px] font-semibold text-slate-900">Plain Vanilla Solutions SL</div>
-              <div className="text-[11px] text-slate-500">B87644233 · Madrid</div>
-            </div>
+              impartido por Plain Vanilla Solutions SL. La autenticidad se verifica con el ID y la insignia visual de la esquina superior derecha.
+            </p>
           </footer>
         </div>
       </article>
