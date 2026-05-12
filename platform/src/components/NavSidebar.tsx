@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Settings as SettingsIcon, Sparkles } from 'lucide-react'
 import { useFlashcards } from '@/hooks/useFlashcards'
 import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { useUnlockState } from '@/hooks/useModuleProgress'
 import { ModuleRow } from '@/components/ModuleRow'
 
@@ -22,6 +23,9 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
   const { id } = useParams<{ id: string }>()
   const currentModuleId = id ? parseInt(id, 10) : null
   const { isUnlocked } = useUnlockState()
+  const courseCtx = useCourseOptional()
+  const href = (path = '') =>
+    courseCtx ? courseCtx.href(path) : `/${path.replace(/^\/+/, '')}`
 
   return (
     <>
@@ -49,7 +53,7 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
         <div className="py-4 px-3 space-y-0.5">
           {/* Home */}
           <NavLink
-            to="/"
+            to={href('')}
             end
             onClick={onClose}
             className={({ isActive }) =>
@@ -123,6 +127,9 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
   const modules = MODULES.filter(m => area.modulos.includes(m.id))
   const containsCurrent = currentModuleId != null && area.modulos.includes(currentModuleId)
   const [expanded, setExpanded] = useState(containsCurrent)
+  const courseCtx = useCourseOptional()
+  const areaHref = (p = '') =>
+    courseCtx ? courseCtx.href(p) : `/${p.replace(/^\/+/, '')}`
 
   // Re-expandir si el módulo activo cambia y entra en esta área
   useEffect(() => {
@@ -177,7 +184,7 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
                     return (
                       <li key={s.slug}>
                         <NavLink
-                          to={`/modulo/${m.id}/${s.slug}`}
+                          to={areaHref(`modulo/${m.id}/${s.slug}`)}
                           onClick={onItemClick}
                           className={({ isActive }) =>
                             [
@@ -215,6 +222,8 @@ function ExamSection({
 }) {
   const isCurrent = module.id === currentModuleId
   const isProduced = module.estado === 'producido'
+  const courseCtx = useCourseOptional()
+  const examHref = courseCtx ? courseCtx.href('examen') : '/examen'
 
   return (
     <div className="pt-4 mt-3 border-t border-[var(--border-subtle)]">
@@ -223,7 +232,7 @@ function ExamSection({
       </div>
       {isProduced ? (
         <NavLink
-          to="/examen"
+          to={examHref}
           onClick={onItemClick}
           className={({ isActive }) =>
             [
@@ -253,9 +262,11 @@ function ExamSection({
  */
 function RepasoLink({ onItemClick }: { onItemClick?: () => void }) {
   const { dueCount } = useFlashcards()
+  const courseCtx = useCourseOptional()
+  const repasoHref = courseCtx ? courseCtx.href('repaso') : '/repaso'
   return (
     <NavLink
-      to="/repaso"
+      to={repasoHref}
       onClick={onItemClick}
       className={({ isActive }) =>
         [

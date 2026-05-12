@@ -7,6 +7,7 @@ import {
   isAnswerComplete,
   isAnswerCorrect,
 } from '@/lib/quiz'
+import { useCourseStorageKey } from '@/lib/storage'
 
 interface QuizAttempt {
   startedAt: number
@@ -67,8 +68,6 @@ interface QuizState {
   adaptivePendingCount: number
 }
 
-const HISTORY_KEY_PREFIX = 'agent365-quiz-m'
-const COOLDOWN_KEY_SUFFIX = '-cooldowns'
 
 /**
  * Cooldown tras acertar una pregunta en una ronda adaptativa: 30 min.
@@ -80,8 +79,8 @@ const ADAPTIVE_COOLDOWN_MS = 30 * 60 * 1000
 
 export function useQuizState(moduleId: number): QuizState {
   const allQuestions = useMemo(() => getQuestionsForModule(moduleId), [moduleId])
-  const historyKey = `${HISTORY_KEY_PREFIX}${moduleId}-history`
-  const cooldownsKey = `${HISTORY_KEY_PREFIX}${moduleId}${COOLDOWN_KEY_SUFFIX}`
+  const historyKey = useCourseStorageKey(`quiz-m${moduleId}-history`)
+  const cooldownsKey = useCourseStorageKey(`quiz-m${moduleId}-cooldowns`)
 
   const buildEmptyAnswers = useCallback(
     (questions: Question[]) => {
@@ -193,7 +192,7 @@ export function useQuizState(moduleId: number): QuizState {
       setHistory(newHistory)
       try {
         localStorage.setItem(historyKey, JSON.stringify(newHistory))
-        window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
+        window.dispatchEvent(new CustomEvent('pv-learn-progress-changed'))
       } catch {
         /* fallar silenciosamente si localStorage está bloqueado */
       }
@@ -266,7 +265,7 @@ export function useQuizState(moduleId: number): QuizState {
     try {
       localStorage.removeItem(historyKey)
       localStorage.removeItem(cooldownsKey)
-      window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
+      window.dispatchEvent(new CustomEvent('pv-learn-progress-changed'))
     } catch {
       /* ignorar */
     }

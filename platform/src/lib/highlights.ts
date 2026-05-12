@@ -47,11 +47,11 @@ export interface Highlight {
 
 /* ----------------------------- localStorage ----------------------------- */
 
-const KEY_PREFIX = 'agent365-highlights'
+import { activeCourseSlug } from './storage'
 
-/** Compone la storage key para un módulo + sección. */
+/** Compone la storage key para un módulo + sección, asociada al curso activo. */
 export function storageKey(moduleId: number, section: string): string {
-  return `${KEY_PREFIX}-m${moduleId}-${section}`
+  return `pv-learn-${activeCourseSlug()}-highlights-m${moduleId}-${section}`
 }
 
 export function loadHighlights(moduleId: number, section: string): Highlight[] {

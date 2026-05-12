@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Printer, ArrowLeft, Trash2 } from 'lucide-react'
 import { ButtonLink, Button } from '@/components/Button'
 import { ShareButtons } from '@/components/ShareButtons'
+import { useCourse } from '@/contexts/CourseContext'
 import type { ExamAttempt } from '@/hooks/useExamState'
 import { CertificateSeal } from './CertificateSeal'
 import { CertificateBadge } from './CertificateBadge'
@@ -9,7 +10,7 @@ import { COURSE_CERT_TITLE, COURSE_CERT_LEGAL_NAME } from '@/lib/course'
 
 const LOGO_POSITIVO = `${import.meta.env.BASE_URL}logotipo-positivo.svg`
 
-const LEARNER_NAME_KEY = 'agent365-learner-name'
+const LEARNER_NAME_KEY = 'pv-learn-learner-name'
 
 function loadStoredName(): string {
   if (typeof localStorage === 'undefined') return ''
@@ -53,6 +54,7 @@ interface CertificateProps {
 export function Certificate({ attempt }: CertificateProps) {
   const [name, setName] = useState(() => loadStoredName())
   const [consent, setConsent] = useState<boolean>(() => loadStoredName().length > 0)
+  const { href } = useCourse()
 
   // Si el alumno acepta el consentimiento, persistimos al teclear.
   // Si lo desactiva, eliminamos lo guardado previamente.
@@ -71,7 +73,7 @@ export function Certificate({ attempt }: CertificateProps) {
       <div className="print:hidden max-w-4xl mx-auto space-y-3">
         <div className="flex flex-wrap items-center gap-3 justify-between">
           <ButtonLink
-            to="/examen"
+            to={href('examen')}
             variant="ghost"
             size="md"
             iconLeft={<ArrowLeft className="size-[16px] stroke-[1.75]" aria-hidden />}

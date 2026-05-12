@@ -4,6 +4,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { useReadingMode } from '@/hooks/useReadingMode'
 import { useFocusMode } from '@/hooks/useFocusMode'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
@@ -30,6 +31,12 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const snapshots = useCourseProgress()
   const { enabled: readingMode, toggle: toggleReading } = useReadingMode()
   const focus = useFocusMode()
+  const courseCtx = useCourseOptional()
+  // En las páginas que viven dentro de un curso, los links del header
+  // resuelven a `/cursos/<slug>/…`. Fuera (ajustes globales, futuro
+  // login), apunta al curso por defecto.
+  const home = courseCtx ? courseCtx.href() : '/'
+  const progresoHref = courseCtx ? courseCtx.href('progreso') : '/progreso'
 
   // Progreso global del curso: media del % completado por módulo.
   // Para que la cifra crezca de forma estable usamos sections completas
@@ -60,7 +67,7 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
           )}
 
           <Link
-            to="/"
+            to={home}
             className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
           >
             <Logotipo className="h-7 w-auto shrink-0" />
@@ -115,7 +122,7 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
             </>
           )}
           <NavLink
-            to="/progreso"
+            to={progresoHref}
             className={({ isActive }) =>
               [
                 'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',

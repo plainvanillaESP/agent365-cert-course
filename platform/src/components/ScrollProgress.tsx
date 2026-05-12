@@ -101,7 +101,7 @@ export function ScrollProgress({ storageKey, rootSelector }: ScrollProgressProps
         // Notificar al motor de progreso (Bloque D.2). El evento `storage`
         // nativo solo dispara en otros tabs, así que usamos un custom event
         // para refrescar los hooks vivos en el mismo tab.
-        window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
+        window.dispatchEvent(new CustomEvent('pv-learn-progress-changed'))
       } catch {
         /* localStorage bloqueado, ignore */
       }

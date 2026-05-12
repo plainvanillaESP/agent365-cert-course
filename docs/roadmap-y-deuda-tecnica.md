@@ -138,9 +138,9 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 Del roadmap original (la home tenía las Fases 0–9 hasta G.2 que las quitamos). Las fases 0–7 están **completas** (curso terminado, plataforma desplegada, examen funcional). Lo que queda:
 
-### 3.1 Fase 8 — Plataforma multi-curso 🔴 Mayor
+### 3.1 Fase 8 — Plataforma multi-curso ✅ Resuelto (N.1)
 
-Hoy un deployment = un curso. Para servir varios cursos PV-Learn desde el mismo dominio:
+Refactor completado en N.1. La arquitectura ya es multi-curso, aunque solo hay un curso poblado:
 
 | Componente | Esfuerzo |
 |---|---|
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase M.2.*
+*Última actualización: 2026-05-12 tras Fase N.1 (multi-curso architectural refactor).*

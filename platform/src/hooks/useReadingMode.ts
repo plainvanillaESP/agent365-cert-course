@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react'
  * navegar entre módulos. Se ignora silenciosamente si `localStorage`
  * no está disponible.
  */
-const STORAGE_KEY = 'agent365-reading-mode'
+const STORAGE_KEY = 'pv-learn-reading-mode'
 const ATTR = 'data-reading-mode'
 
 function readInitial(): boolean {

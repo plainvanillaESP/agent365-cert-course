@@ -44,10 +44,10 @@ export interface FocusState {
   totalSeconds: number
 }
 
-const KEY_POMODOROS_TOTAL = 'agent365-focus-pomodoros-total'
-const KEY_TOTAL_SECONDS = 'agent365-focus-total-seconds'
-const KEY_POMODOROS_TODAY = 'agent365-focus-pomodoros-today'
-const KEY_POMODOROS_TODAY_DATE = 'agent365-focus-pomodoros-today-date'
+const KEY_POMODOROS_TOTAL = 'pv-learn-focus-pomodoros-total'
+const KEY_TOTAL_SECONDS = 'pv-learn-focus-total-seconds'
+const KEY_POMODOROS_TODAY = 'pv-learn-focus-pomodoros-today'
+const KEY_POMODOROS_TODAY_DATE = 'pv-learn-focus-pomodoros-today-date'
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10)

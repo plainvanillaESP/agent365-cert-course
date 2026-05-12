@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Question } from '@/lib/quiz'
 import { getQuestionsForModule } from '@/lib/quiz'
 import { CONTENT_MODULES } from '@/lib/course'
+import { useCourseStorageKey } from '@/lib/storage'
 import {
   type CardState,
   type SrsQuality,
@@ -17,8 +18,6 @@ import {
  * vez (módulo nuevo o pregunta nueva), se crea con `createCard()` y
  * queda inmediatamente due.
  */
-
-const STORAGE_KEY = 'agent365-srs-cards'
 
 interface DeckEntry {
   question: Question
@@ -41,16 +40,24 @@ export function useFlashcards(): {
   /** Borra el progreso de SRS (con confirm del consumidor). */
   reset: () => void
 } {
-  const [statesById, setStatesById] = useState<Record<string, CardState>>(() => loadCardStates())
+  const storageKey = useCourseStorageKey('srs-cards')
+  const [statesById, setStatesById] = useState<Record<string, CardState>>(() =>
+    loadCardStates(storageKey),
+  )
+
+  // Si el curso cambia, recarga el deck.
+  useEffect(() => {
+    setStatesById(loadCardStates(storageKey))
+  }, [storageKey])
 
   // Persistencia en cada cambio.
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(statesById))
+      localStorage.setItem(storageKey, JSON.stringify(statesById))
     } catch {
       /* localStorage bloqueado: ignorar */
     }
-  }, [statesById])
+  }, [statesById, storageKey])
 
   // Conjunto plano de preguntas con su moduleId/slug.
   const questions = useMemo<DeckEntry[]>(() => {
@@ -88,19 +95,19 @@ export function useFlashcards(): {
   const reset = useCallback(() => {
     setStatesById({})
     try {
-      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(storageKey)
     } catch {
       /* ignore */
     }
-  }, [])
+  }, [storageKey])
 
   return { all, due, dueCount: due.length, reviewCard, reset }
 }
 
-function loadCardStates(): Record<string, CardState> {
+function loadCardStates(storageKey: string): Record<string, CardState> {
   if (typeof window === 'undefined') return {}
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(storageKey)
     if (!raw) return {}
     const parsed = JSON.parse(raw)
     return typeof parsed === 'object' && parsed !== null ? parsed : {}

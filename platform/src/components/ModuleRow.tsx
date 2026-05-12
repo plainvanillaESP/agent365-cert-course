@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { CheckCircle2, Lock, ArrowRight } from 'lucide-react'
 import type { CourseModule } from '@/lib/course'
 import { formatDuration } from '@/lib/course'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { Badge } from '@/components/Badge'
 
 interface ModuleRowProps {
@@ -104,6 +105,9 @@ function ListVariant({
   isLocked: boolean
   isExam: boolean
 }) {
+  const courseCtx = useCourseOptional()
+  const modulePath = (id: number, section: string) =>
+    courseCtx ? courseCtx.href(`modulo/${id}/${section}`) : `/modulo/${id}/${section}`
   const content = (
     <div className="flex items-center gap-3 sm:gap-4 px-4 py-3 group">
       {/* Estado icono */}
@@ -180,7 +184,7 @@ function ListVariant({
     return (
       <li>
         <Link
-          to={`/modulo/${m.id}/teoria`}
+          to={modulePath(m.id, 'teoria')}
           className="block hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
         >
           {content}
@@ -219,6 +223,9 @@ function SidebarVariant({
   onClick?: () => void
   children?: ReactNode
 }) {
+  const courseCtx = useCourseOptional()
+  const modulePath = (id: number, section: string) =>
+    courseCtx ? courseCtx.href(`modulo/${id}/${section}`) : `/modulo/${id}/${section}`
   if (!isProduced) {
     return (
       <li>
@@ -252,7 +259,7 @@ function SidebarVariant({
   return (
     <li>
       <NavLink
-        to={`/modulo/${m.id}/teoria`}
+        to={modulePath(m.id, 'teoria')}
         onClick={onClick}
         className={({ isActive }) =>
           [

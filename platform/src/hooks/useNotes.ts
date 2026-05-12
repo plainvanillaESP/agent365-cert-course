@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCourseStorageKey } from '@/lib/storage'
 
 /**
  * Notas del alumno por módulo.
  *
- * Persistencia en `localStorage` bajo la clave `agent365-notes-m{N}`.
- * Mantenemos el prefijo legacy para no romper progreso existente; cuando
- * llegue la fase 8 (multi-curso) se migrará al prefijo `pv-learn-{slug}-…`.
+ * Persistencia en `localStorage` bajo `pv-learn-{slug}-notes-m{N}`. El
+ * slug viene del curso activo (CourseContext), así que cada curso
+ * tiene su propio juego de notas sin colisión.
  *
  * El guardado se debounce 300 ms tras la última pulsación para evitar
  * machacar `localStorage` con cada tecla. `savedAt` registra el instante
@@ -32,11 +33,10 @@ interface UseNotesResult {
   wordCount: number
 }
 
-const KEY_PREFIX = 'agent365-notes-m'
 const SAVE_DEBOUNCE_MS = 300
 
 export function useNotes(moduleId: number): UseNotesResult {
-  const storageKey = `${KEY_PREFIX}${moduleId}`
+  const storageKey = useCourseStorageKey(`notes-m${moduleId}`)
 
   const [notes, setNotesState] = useState<string>('')
   const [savedAt, setSavedAt] = useState<number | null>(null)

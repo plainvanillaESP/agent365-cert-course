@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useCourse } from '@/contexts/CourseContext'
 import {
   BookOpen,
   Newspaper,
@@ -163,11 +164,12 @@ function CrossReferencesSection({ items }: { items: CrossReference[] }) {
 function CrossReferenceRow({ item }: { item: CrossReference }) {
   const target = findModule(item.moduleId)
   const isProduced = !!target?.faseProduccion && target.faseProduccion <= 2
+  const { href } = useCourse()
 
   if (target && isProduced) {
     return (
       <Link
-        to={`/modulo/${target.id}/teoria`}
+        to={href(`modulo/${target.id}/teoria`)}
         className="grid grid-cols-[1fr_auto] items-center gap-4 px-4 py-3 hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
       >
         <Topic topic={item.topic} moduleTitle={item.moduleTitle} moduleId={item.moduleId} />

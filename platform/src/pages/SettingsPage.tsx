@@ -65,7 +65,7 @@ export function SettingsPage() {
     try {
       localStorage.removeItem('agent365-exam-history')
       localStorage.removeItem('agent365-exam-current')
-      window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
+      window.dispatchEvent(new CustomEvent('pv-learn-progress-changed'))
       setNotice({ type: 'ok', text: 'Historial del examen borrado.' })
     } catch {
       setNotice({ type: 'err', text: 'No se pudo borrar (localStorage bloqueado).' })
@@ -310,5 +310,5 @@ function applyStorageDump(data: Record<string, string>): void {
       /* localStorage lleno o bloqueado, salta esa entrada */
     }
   }
-  window.dispatchEvent(new CustomEvent('agent365-progress-changed'))
+  window.dispatchEvent(new CustomEvent('pv-learn-progress-changed'))
 }

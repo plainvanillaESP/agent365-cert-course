@@ -4,6 +4,7 @@ import { Search, BookOpen, ListChecks, FlaskConical, Link as LinkIcon, Hash, X }
 import { Modal } from '@/components/Modal'
 import { KeyCombo } from '@/hooks/useKeyboardShortcuts'
 import { searchCourse, highlight, type SearchResult, type SearchResultType } from '@/lib/search'
+import { useCourse } from '@/contexts/CourseContext'
 import { IconButton } from '@/components/Button'
 
 interface SearchPaletteProps {
@@ -36,6 +37,7 @@ const TYPE_LABEL: Record<SearchResultType, string> = {
  */
 export function SearchPalette({ open, onClose }: SearchPaletteProps) {
   const navigate = useNavigate()
+  const { href } = useCourse()
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -87,7 +89,10 @@ export function SearchPalette({ open, onClose }: SearchPaletteProps) {
 
   const goToResult = (r: SearchResult) => {
     onClose()
-    navigate(r.to)
+    // `r.to` viene como path relativo dentro del curso (sin
+    // `/cursos/<slug>/`). El href del CourseContext lo absolutiza al
+    // curso activo.
+    navigate(href(r.to))
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

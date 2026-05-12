@@ -52,18 +52,20 @@ export const QUIZ_PASS_RATIO = 0.7
  */
 export type AccessMode = 'sequential' | 'free'
 
-const ACCESS_MODE_KEY = 'agent365-access-mode'
+// Per-curso para que cada curso tenga su modo de acceso. Si en el futuro
+// se necesita un modo global del alumno, mover a `pv-learn-access-mode`.
+const ACCESS_MODE_KEY = (): string => `pv-learn-${activeCourseSlug()}-access-mode`
 
 export function getAccessMode(): AccessMode {
   if (typeof localStorage === 'undefined') return 'sequential'
-  const raw = localStorage.getItem(ACCESS_MODE_KEY)
+  const raw = localStorage.getItem(ACCESS_MODE_KEY())
   return raw === 'free' ? 'free' : 'sequential'
 }
 
 export function setAccessMode(mode: AccessMode): void {
   if (typeof localStorage === 'undefined') return
   try {
-    localStorage.setItem(ACCESS_MODE_KEY, mode)
+    localStorage.setItem(ACCESS_MODE_KEY(), mode)
     notifyProgressChanged()
   } catch {
     /* localStorage bloqueado, ignore */
@@ -108,12 +110,16 @@ export const TRACKED_SECTIONS: TrackedSection[] = ['teoria', 'laboratorios', 'qu
 
 /* ----------------------------- Keys localStorage ---------------------------- */
 
+import { activeCourseSlug } from './storage'
+
 const READING_KEY = (moduleId: number, section: TrackedSection): string =>
-  `agent365-reading-m${moduleId}-${section}`
+  `pv-learn-${activeCourseSlug()}-reading-m${moduleId}-${section}`
 
-const QUIZ_HISTORY_KEY = (moduleId: number): string => `agent365-quiz-m${moduleId}-history`
+const QUIZ_HISTORY_KEY = (moduleId: number): string =>
+  `pv-learn-${activeCourseSlug()}-quiz-m${moduleId}-history`
 
-const SECTION_VISITS_KEY = 'agent365-section-visits'
+const SECTION_VISITS_KEY = (): string =>
+  `pv-learn-${activeCourseSlug()}-section-visits`
 
 /* ----------------------- Lectura de estado por componente ------------------ */
 
@@ -164,7 +170,7 @@ interface VisitsMap {
 
 function getVisits(): VisitsMap {
   if (typeof localStorage === 'undefined') return {}
-  const data = safeParse<VisitsMap>(localStorage.getItem(SECTION_VISITS_KEY))
+  const data = safeParse<VisitsMap>(localStorage.getItem(SECTION_VISITS_KEY()))
   return data && typeof data === 'object' ? data : {}
 }
 
@@ -187,7 +193,7 @@ export function markSectionVisited(moduleId: number, section: TrackedSection): v
   if (visits[key]) return // ya estaba registrada
   visits[key] = Date.now()
   try {
-    localStorage.setItem(SECTION_VISITS_KEY, JSON.stringify(visits))
+    localStorage.setItem(SECTION_VISITS_KEY(), JSON.stringify(visits))
     notifyProgressChanged()
   } catch {
     /* localStorage bloqueado, ignore */
@@ -240,11 +246,12 @@ export function clearAllProgress(): void {
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i)
     if (!k) continue
+    const courseKeyPrefix = `pv-learn-${activeCourseSlug()}-`
     if (
-      k.startsWith('agent365-reading-m') ||
-      k.startsWith('agent365-quiz-m') ||
-      k === SECTION_VISITS_KEY ||
-      k === ACCESS_MODE_KEY
+      k.startsWith(`${courseKeyPrefix}reading-m`) ||
+      k.startsWith(`${courseKeyPrefix}quiz-m`) ||
+      k === SECTION_VISITS_KEY() ||
+      k === ACCESS_MODE_KEY()
     ) {
       keys.push(k)
     }
@@ -310,7 +317,7 @@ function computeVisitState(
 
 /* --------------------------- Notificación cross-tab ------------------------- */
 
-const PROGRESS_EVENT = 'agent365-progress-changed'
+const PROGRESS_EVENT = 'pv-learn-progress-changed'
 
 /**
  * Notifica al mismo tab de un cambio en localStorage. El evento nativo
@@ -327,13 +334,14 @@ export function subscribeProgressChanges(handler: () => void): () => void {
   if (typeof window === 'undefined') return () => {}
   const onCustom = () => handler()
   const onStorage = (e: StorageEvent) => {
-    // solo nos importan keys del motor de progreso
+    // solo nos importan keys del motor de progreso del curso activo
+    const prefix = `pv-learn-${activeCourseSlug()}-`
     if (
       !e.key ||
-      e.key.startsWith('agent365-reading-m') ||
-      e.key.startsWith('agent365-quiz-m') ||
-      e.key === SECTION_VISITS_KEY ||
-      e.key === ACCESS_MODE_KEY
+      e.key.startsWith(`${prefix}reading-m`) ||
+      e.key.startsWith(`${prefix}quiz-m`) ||
+      e.key === SECTION_VISITS_KEY() ||
+      e.key === ACCESS_MODE_KEY()
     ) {
       handler()
     }

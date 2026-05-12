@@ -19,6 +19,8 @@ import { Highlighter } from '@/components/Highlighter'
 import { Fade } from '@/components/Transitions'
 import { markSectionVisited, type TrackedSection } from '@/lib/progress'
 import { useModuleProgress, useUnlockState } from '@/hooks/useModuleProgress'
+import { useCourse } from '@/contexts/CourseContext'
+import { useCourseStorageKey } from '@/lib/storage'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'quiz-practica', 'recursos']
 
@@ -31,6 +33,9 @@ const SECTION_META = {
 
 export function ModulePage() {
   const { id, section = 'teoria' } = useParams<{ id: string; section?: string }>()
+  const { href } = useCourse()
+  const moduleIdRaw = id ? parseInt(id, 10) : 0
+  const scrollKey = useCourseStorageKey(`reading-m${moduleIdRaw}-teoria`)
 
   const moduleId = id ? parseInt(id, 10) : NaN
   const module = !isNaN(moduleId) ? findModule(moduleId) : undefined
@@ -73,14 +78,14 @@ export function ModulePage() {
     return () => window.removeEventListener('pv-learn:toggle-notes', onToggle)
   }, [])
 
-  if (!module) return <Navigate to="/" replace />
+  if (!module) return <Navigate to={href()} replace />
   // Alias legacy: /modulo/X/evaluacion → /modulo/X/quiz-practica.
   // Bookmarks o enlaces externos al path antiguo siguen funcionando.
   if (section === 'evaluacion') {
-    return <Navigate to={`/modulo/${moduleId}/quiz-practica`} replace />
+    return <Navigate to={href(`modulo/${moduleId}/quiz-practica`)} replace />
   }
   if (!VALID_SECTIONS.includes(section as ContentType)) {
-    return <Navigate to={`/modulo/${moduleId}/teoria`} replace />
+    return <Navigate to={href(`modulo/${moduleId}/teoria`)} replace />
   }
   // Gate de acceso (Bloque D.4): si el módulo está bloqueado en modo
   // secuencial, redirigir a /progreso con un querystring para que la
@@ -88,7 +93,7 @@ export function ModulePage() {
   // efímero. La URL queda guardable en bookmarks; al desbloquear, el
   // mensaje desaparece naturalmente.
   if (!isUnlocked(moduleId)) {
-    return <Navigate to={`/progreso?locked=${moduleId}`} replace />
+    return <Navigate to={href(`progreso?locked=${moduleId}`)} replace />
   }
 
   const content = loadContent(module.slug, section as ContentType)
@@ -135,7 +140,7 @@ export function ModulePage() {
                 return (
                   <NavLink
                     key={slug}
-                    to={`/modulo/${module.id}/${slug}`}
+                    to={href(`modulo/${module.id}/${slug}`)}
                     end
                     className={({ isActive }) =>
                       [
@@ -185,7 +190,7 @@ export function ModulePage() {
 
         {/* Barra de progreso de lectura, solo en teoría con contenido */}
         {section === 'teoria' && content && (
-          <ScrollProgress storageKey={`agent365-reading-m${module.id}-teoria`} />
+          <ScrollProgress storageKey={scrollKey} />
         )}
 
         {/* Contenido — envuelto en Fade con key por sección para que el
@@ -218,7 +223,7 @@ export function ModulePage() {
             <div>
               {prevAvail && prevModule && (
                 <Link
-                  to={`/modulo/${prevModule.id}/teoria`}
+                  to={href(`modulo/${prevModule.id}/teoria`)}
                   className="group block px-4 py-3 rounded-md border border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
                 >
                   <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
@@ -234,7 +239,7 @@ export function ModulePage() {
             <div className="text-right">
               {nextAvail && nextModule && (
                 <Link
-                  to={`/modulo/${nextModule.id}/teoria`}
+                  to={href(`modulo/${nextModule.id}/teoria`)}
                   className="group block px-4 py-3 rounded-md border border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
                 >
                   <div className="flex items-center justify-end gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">

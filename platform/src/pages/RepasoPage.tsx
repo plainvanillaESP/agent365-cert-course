@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useCourse } from '@/contexts/CourseContext'
 import { Sparkles, RotateCcw, ArrowRight, Trash2, BookOpen } from 'lucide-react'
 import { useFlashcards } from '@/hooks/useFlashcards'
 import type { SrsQuality } from '@/lib/srs'
@@ -27,6 +28,7 @@ import { Button } from '@/components/Button'
  */
 export function RepasoPage() {
   const { all, due, dueCount, reviewCard, reset } = useFlashcards()
+  const { href } = useCourse()
   const [sessionIds, setSessionIds] = useState<string[]>(() => due.map(d => d.question.id))
   const [idx, setIdx] = useState(0)
   const [flipped, setFlipped] = useState(false)
@@ -113,7 +115,7 @@ export function RepasoPage() {
           >
             Reiniciar progreso SRS
           </Button>
-          <Link to="/" className="text-[13.5px] text-[var(--text-active)] hover:underline">
+          <Link to={href()} className="text-[13.5px] text-[var(--text-active)] hover:underline">
             Volver al inicio
           </Link>
         </div>
@@ -139,7 +141,7 @@ export function RepasoPage() {
           <Sparkles className="size-[13px] text-[var(--color-pv-purple-500)]" aria-hidden />
           <span>
             Módulo {String(module.id).padStart(2, '0')} ·{' '}
-            <Link to={`/modulo/${module.id}/teoria`} className="text-[var(--text-active)] hover:underline">
+            <Link to={href(`modulo/${module.id}/teoria`)} className="text-[var(--text-active)] hover:underline">
               {module.titulo}
             </Link>
           </span>

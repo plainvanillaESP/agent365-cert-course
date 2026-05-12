@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Certificate } from '@/components/exam/Certificate'
+import { useCourse } from '@/contexts/CourseContext'
+import { useCourseStorageKey } from '@/lib/storage'
 import type { ExamAttempt } from '@/hooks/useExamState'
-
-const HISTORY_KEY = 'agent365-exam-history'
 
 /**
  * Carga el intento desde localStorage y renderiza el certificado si está
@@ -16,12 +16,14 @@ const HISTORY_KEY = 'agent365-exam-history'
  */
 export function CertificatePage() {
   const { attemptId } = useParams<{ attemptId: string }>()
+  const { href } = useCourse()
+  const historyKey = useCourseStorageKey('exam-history')
 
   const attempt = useMemo<ExamAttempt | null>(() => {
     if (!attemptId) return null
     if (typeof localStorage === 'undefined') return null
     try {
-      const raw = localStorage.getItem(HISTORY_KEY)
+      const raw = localStorage.getItem(historyKey)
       if (!raw) return null
       const arr = JSON.parse(raw) as ExamAttempt[]
       if (!Array.isArray(arr)) return null
@@ -29,7 +31,7 @@ export function CertificatePage() {
     } catch {
       return null
     }
-  }, [attemptId])
+  }, [attemptId, historyKey])
 
   if (!attempt) {
     return (
@@ -39,7 +41,7 @@ export function CertificatePage() {
           El intento referenciado no existe en este navegador. Es posible que se haya borrado el historial o que estés en un dispositivo distinto.
         </p>
         <Link
-          to="/examen"
+          to={href('examen')}
           className="inline-block text-[13.5px] text-[var(--text-active)] hover:underline"
         >
           Volver al examen
@@ -56,7 +58,7 @@ export function CertificatePage() {
           Solo se emite certificado para intentos que superan el umbral del 70 %. Vuelve al examen para intentarlo de nuevo.
         </p>
         <Link
-          to="/examen"
+          to={href('examen')}
           className="inline-block text-[13.5px] text-[var(--text-active)] hover:underline"
         >
           Volver al examen
