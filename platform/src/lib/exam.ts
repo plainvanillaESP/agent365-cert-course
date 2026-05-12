@@ -22,6 +22,7 @@ import yaml from 'js-yaml'
 import { parseQuizMarkdown } from './quiz-parser'
 import { type Question } from './quiz'
 import { AREAS } from './course'
+import { loadExamBankGlob } from './course-paths'
 
 /* ------------------------------ Constantes -------------------------------- */
 
@@ -50,14 +51,7 @@ export const EXAM_COOLDOWN_DAYS = 7
  * banco por argumento, lo que permite testear el flujo del examen desde
  * Node aunque el glob esté inactivo.
  */
-const bancoFiles: Record<string, string> =
-  typeof import.meta !== 'undefined' && typeof (import.meta as { glob?: unknown }).glob === 'function'
-    ? (import.meta.glob('../../../cursos/agent365-cert/banco-examen.md', {
-        query: '?raw',
-        import: 'default',
-        eager: true,
-      }) as Record<string, string>)
-    : {}
+const bancoFiles: Record<string, string> = loadExamBankGlob()
 
 interface ParsedBancoFrontmatter {
   total_preguntas_objetivo?: number

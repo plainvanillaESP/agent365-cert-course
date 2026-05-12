@@ -12,6 +12,42 @@
 
 /* --------------------------- Metadatos del curso -------------------------- */
 
+/**
+ * Slug del curso, único e inmutable. Se usa para:
+ *
+ *   - Prefijar todas las storage keys del navegador (`pv-learn-{slug}-…`).
+ *   - Diferenciar cursos cuando convivan varios en un mismo dominio
+ *     (fase 8 del roadmap, ver `docs/roadmap-y-deuda-tecnica.md`).
+ *
+ * IMPORTANTE: si se cambia este valor en un curso ya en producción,
+ * todos los alumnos pierden su progreso guardado (las keys cambian).
+ * Solo cambiar al arrancar un curso nuevo.
+ *
+ * Limitación: los `import.meta.glob` de Vite NO pueden consumir este
+ * valor (necesitan strings literales). Por eso los paths a los archivos
+ * del curso siguen hardcoded en `lib/exam.ts` y `lib/quiz.ts`. Si
+ * cambia el slug, hay que cambiarlos también ahí.
+ */
+export const COURSE_SLUG = 'agent365-cert'
+
+/**
+ * Prefijo de las storage keys del navegador. Derivado de `COURSE_SLUG`
+ * para que múltiples cursos servidos desde el mismo dominio no colisionen.
+ *
+ * Patrón: `pv-learn-{slug}-{ámbito}-{detalle}`.
+ *
+ * Ejemplos:
+ *   pv-learn-agent365-cert-exam-current
+ *   pv-learn-agent365-cert-quiz-m5-history
+ *   pv-learn-agent365-cert-lab-m9
+ *
+ * Nota: hoy los hooks usan el prefijo legacy `agent365-…` por
+ * compatibilidad con los alumnos que ya tienen progreso guardado.
+ * Cuando llegue la fase 8 (multi-curso) se migrará via un step de
+ * un-shot que renombra keys antiguas al nuevo prefijo.
+ */
+export const STORAGE_PREFIX = `pv-learn-${COURSE_SLUG}`
+
 /** Título principal del curso, visible en la home y en los breadcrumbs. */
 export const COURSE_TITLE = 'Microsoft Agent 365 IT Admin'
 

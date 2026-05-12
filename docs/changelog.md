@@ -10,7 +10,17 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[UX]` Fase G.5 — Design system consolidado: Badge, ModuleRow, Stat/StatsGrid, PageHeader, Modal + refactor de seis páginas.
+- `[Docs/Infra]` Fase G.6 — Audit completo + dos fixes de plug-and-play.
+  - **Nuevo `docs/roadmap-y-deuda-tecnica.md`** — Documento vivo con tres bloques:
+    1. **Audit técnico** del estado actual de plug-and-play: identifica `lib/labs.ts` (173 líneas) y `lib/resources.ts` (1.711 líneas) como contenido del curso hardcoded en la plataforma (deuda técnica 🔴), los dos `import.meta.glob` con paths a `cursos/agent365-cert/` (🟡), las storage keys con prefijo `agent365-` (🟢), comentarios JSDoc obsoletos y `index.html` con meta tags del curso.
+    2. **Propuesta UX/UI top-class**: 30+ mejoras agrupadas en navegación (búsqueda global, atajos de teclado, breadcrumbs), aprendizaje activo (notas, highlighter, modo focus, práctica adaptativa, flashcards SM-2), visual (skeletons, transiciones, confetti, modo lectura), multimedia (vídeo con marcadores, Mermaid, code playgrounds), accesibilidad (audit AAA, skip links, code-splitting, PWA), social (compartir certificado, verificación pública, Open Badges) e i18n.
+    3. **Plan de producción restante**: Fase 8 (plataforma multi-curso, 23–35 h), Fase 9 (backend + auth, 40–54 h), Fase 10 (panel admin, 32–47 h) y bloque de comercialización (decisión de Miguel pendiente).
+  - **Dos fixes baratos del audit aplicados**:
+    - **`COURSE_SLUG` y `STORAGE_PREFIX` en `lib/course.ts`** — Constantes derivadas pensadas para servir varios cursos desde el mismo dominio sin colisión de localStorage. Hoy los hooks siguen usando el prefijo legacy `agent365-…` por compatibilidad con alumnos con progreso ya guardado; cuando llegue la fase multi-curso se migra con un step de un-shot que renombra keys.
+    - **`lib/course-paths.ts`** (nuevo) — Centraliza los dos `import.meta.glob` con literales `cursos/agent365-cert/…` que existían dispersos en `lib/exam.ts` y `lib/quiz.ts`. Es el **único archivo de la plataforma** donde aparece el slug por necesidad técnica de Vite. `reusar-plataforma.md` actualizado para reflejarlo.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 3.04s. test:exam 34/34 OK.
+
+
   - **Cinco componentes nuevos**, todos pensados como bloques reutilizables que cualquier curso PV-Learn futuro puede usar sin modificar:
     - **`Badge`** (`components/Badge.tsx`) — Pildora de texto con siete variantes semánticas (`neutral`, `success`, `warning`, `danger`, `info`, `brand`, `frontier`), tres tamaños (`xs`, `sm`, `md`), soporte de `dot` y `icon`, y modo interactivo (`onClick`). Reemplaza los pills inline duplicados en `HomePage`, `ProgressPage`, `NavSidebar` y otros.
     - **`ModuleRow`** (`components/ModuleRow.tsx`) — Representación única de un módulo en cualquier listado. Dos variantes: `list` (home, futuros catálogos) con icono de estado, número, título, duración, badge y flecha; `sidebar` (navegación lateral) compacta con número + título y soporte para sub-secciones como `children`. Elimina la triplicación previa entre HomePage, NavSidebar y ProgressPage.
