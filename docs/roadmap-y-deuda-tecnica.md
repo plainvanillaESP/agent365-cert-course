@@ -12,16 +12,16 @@ Documento vivo que recoge:
 
 La meta declarada es que la plataforma React pueda servir **cualquier curso PV-Learn** sin tocar código de componentes. Hoy no se cumple del todo. Lo que queda:
 
-### 1.1 Contenido del curso hardcoded en la plataforma 🔴 Crítico
+### 1.1 Contenido del curso hardcoded en la plataforma ✅ RESUELTO (H.1)
 
-| Archivo | Líneas | Qué contiene | Por qué es problema |
+| Archivo | Antes | Ahora | Migración |
 |---|---|---|---|
-| `platform/src/lib/labs.ts` | 173 | Configuración de los 16 laboratorios interactivos: productos seleccionables, decisiones de diseño, retroalimentación por opción | El contenido del curso vive en TypeScript dentro de la plataforma, no en `cursos/agent365-cert/`. Arrancar otro curso obliga a editar este archivo |
-| `platform/src/lib/resources.ts` | 1.711 | Recursos (enlaces, documentación, lecturas) de los 16 módulos: títulos, URLs, descripciones, categorización por relevancia | Mismo problema, ×10 en tamaño. Es contenido editorial puro |
+| `platform/src/lib/labs.ts` | 173 líneas con datos del M01 inline | 130 líneas: solo tipos, parser y API | Datos en `cursos/agent365-cert/modulos/<modulo>/lab.yaml` |
+| `platform/src/lib/resources.ts` | 1.711 líneas con 8 módulos hardcoded | 105 líneas: solo tipos, parser y API | Datos en `cursos/agent365-cert/modulos/<modulo>/recursos.yaml` (M01–M08) |
 
-**Coste de migrar**: ~6–10 h. Diseñar un esquema YAML o markdown estructurado dentro de cada `cursos/<slug>/modulos/<modulo>/`, escribir el parser, eliminar las funciones que devuelven datos hardcoded, actualizar los consumidores (`Lab`, `Resources`). El validador `validate-course.py` también necesita reglas nuevas para los nuevos archivos.
+Ambos archivos cargan los datos vía `import.meta.glob` (eager) desde `course-paths.ts`. Si un módulo no tiene `lab.yaml` o `recursos.yaml`, la sección cae al fallback markdown sin error.
 
-**Por qué no se hizo ya**: en producción acelerada del curso se priorizó velocidad de iteración. Mover esos datos a archivos parseables requiere un round-trip mayor que tener un objeto TypeScript con autocompletado.
+**Resultado**: la plataforma React ya no contiene contenido editorial del curso. Para arrancar otro curso PV-Learn basta con poner los `lab.yaml` y `recursos.yaml` correspondientes en `cursos/<nuevo-slug>/modulos/`.
 
 ### 1.2 Paths a `cursos/agent365-cert/` hardcoded 🟡 Medio
 
@@ -198,9 +198,9 @@ El documento `docs/curso-como-producto.md` (creado en F.4) tiene el análisis ec
 
 Si solo se va a invertir trabajo limitado, este es el orden con mejor relación impacto/esfuerzo:
 
-1. **🟢 Quick wins** (1–2 días): Atajos teclado globales, Skeleton states, code-splitting, skip links, breadcrumbs estructurados, indicador de progreso en header. Mucho impacto perceptual por poco trabajo.
+1. **✅ Plug-and-play real** (resuelto en H.1): `labs.ts` y `resources.ts` migrados a YAML por módulo. `course-paths.ts` y `COURSE_SLUG` centralizan el resto de literales. La plataforma React ya no contiene contenido del curso.
 
-2. **🟡 Plug-and-play real** (1 semana): Migrar `labs.ts` y `resources.ts` al paquete del curso, extraer `course-paths.ts`, prefijar storage keys. Necesario antes de Fase 8.
+2. **🟢 Quick wins** (1–2 días): Atajos teclado globales, Skeleton states, code-splitting, skip links, breadcrumbs estructurados, indicador de progreso en header. Mucho impacto perceptual por poco trabajo.
 
 3. **🔴 Multi-curso + backend** (3–4 semanas): Si Miguel decide comercializar, este es el bloque que habilita todo lo demás.
 

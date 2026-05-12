@@ -10,7 +10,20 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[Docs/Infra]` Fase G.6 — Audit completo + dos fixes de plug-and-play.
+- `[Infra]` Fase H.1 — Plug-and-play real: contenido editorial migrado del TypeScript al paquete del curso.
+  - **Migración masiva de `lib/labs.ts` y `lib/resources.ts` a archivos YAML** dentro de cada módulo del curso. La plataforma React ya no contiene ningún dato editorial del curso; solo tipos, parsers y funciones puras.
+    - `platform/src/lib/labs.ts`: de **173 líneas** (datos M01 inline) a **137** (solo tipos y API). Los datos pasan a `cursos/agent365-cert/modulos/modulo-01-fundamentos/lab.yaml`.
+    - `platform/src/lib/resources.ts`: de **1.711 líneas** (datos de M01–M08 inline) a **118** (solo tipos, API y `hostnameOf`). Los datos pasan a `cursos/agent365-cert/modulos/<modulo>/recursos.yaml` (8 archivos generados).
+    - Reducción total: **1.884 líneas → 255 líneas** (-87%).
+  - **9 archivos YAML nuevos en el paquete del curso**: `modulo-01-.../lab.yaml` (10 escenarios, 6 productos, 3 errorPatterns) y `modulo-{01..08}-.../recursos.yaml` (9+7+6+5+6+7+6+6 categorías, ~168 recursos en total, 29 cross-references). Cada archivo lleva su cabecera con el formato documentado.
+  - **`platform/src/lib/course-paths.ts` ampliado** con `loadLabsGlob()` y `loadResourcesGlob()`. Los nuevos globs siguen el patrón establecido en G.6: solo este archivo tiene literales `cursos/agent365-cert/…` por necesidad técnica de Vite (que exige strings literales en `import.meta.glob`).
+  - **Mecánica de carga**: ambos módulos hacen lookup via `Map<moduleId, datos>` calculado una vez al cargar el bundle. Si un módulo no tiene `lab.yaml` o `recursos.yaml`, los getters devuelven `null` y el componente cae al fallback markdown sin error. Esto permite producir módulos sin lab interactivo o sin recursos estructurados sin esfuerzo extra.
+  - **Tipo `ProductId`** pasa de unión literal `'A365' | 'CCS' | ...` a `string`. Pierde autocompletado en el componente Lab pero el coste es mínimo (el componente nunca enumera productos a mano, los itera). A cambio, añadir un producto nuevo en otro curso solo requiere editar el YAML.
+  - **`docs/reusar-plataforma.md`** actualizado: la lista de archivos por módulo ahora incluye `lab.yaml` y `recursos.yaml` como puntos de extensión opcionales del contenido editorial.
+  - **`docs/roadmap-y-deuda-tecnica.md`** actualizado: la sección 1.1 (contenido hardcoded) pasa de 🔴 Crítico a ✅ Resuelto. Esto cierra la deuda técnica más grande de cara a la fase 8 (multi-curso).
+- `[Build]` Validador: 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.85s. test:exam 34/34 OK.
+
+
   - **Nuevo `docs/roadmap-y-deuda-tecnica.md`** — Documento vivo con tres bloques:
     1. **Audit técnico** del estado actual de plug-and-play: identifica `lib/labs.ts` (173 líneas) y `lib/resources.ts` (1.711 líneas) como contenido del curso hardcoded en la plataforma (deuda técnica 🔴), los dos `import.meta.glob` con paths a `cursos/agent365-cert/` (🟡), las storage keys con prefijo `agent365-` (🟢), comentarios JSDoc obsoletos y `index.html` con meta tags del curso.
     2. **Propuesta UX/UI top-class**: 30+ mejoras agrupadas en navegación (búsqueda global, atajos de teclado, breadcrumbs), aprendizaje activo (notas, highlighter, modo focus, práctica adaptativa, flashcards SM-2), visual (skeletons, transiciones, confetti, modo lectura), multimedia (vídeo con marcadores, Mermaid, code playgrounds), accesibilidad (audit AAA, skip links, code-splitting, PWA), social (compartir certificado, verificación pública, Open Badges) e i18n.

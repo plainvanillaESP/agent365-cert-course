@@ -1,0 +1,157 @@
+# Recursos editoriales del módulo.
+#
+# Formato consumido por `platform/src/lib/resources.ts` a través de
+# `loadResourcesGlob()` (course-paths.ts). Solo los módulos que tienen
+# este archivo presentan la sección "Recursos" activa; el resto cae al
+# fallback markdown.
+#
+# Estructura:
+#
+#   moduleId: número del módulo.
+#   intro: párrafo introductorio (markdown plano permitido).
+#   externalNote: disclaimer opcional para fuentes externas.
+#   categories: lista de bloques. Cada bloque:
+#     id, title, description (opcional), resources (lista).
+#   resources: cada recurso lleva type, title, url, description,
+#     date (solo blogs), lang ('es' | 'en').
+#   crossReferences: enlaces a otros módulos del curso. Cada uno:
+#     topic, moduleId, moduleTitle.
+
+moduleId: 8
+intro: >-
+  Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y
+  verificado a la fecha de última actualización.
+categories:
+  - id: docs-lifecycle-actions
+    title: Documentación oficial — Acciones de gobernanza
+    resources:
+      - type: docs
+        title: Agent lifecycle actions overview
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/lifecycle-actions
+        description: Las 11 acciones del ciclo agrupadas con efecto y reversibilidad.
+        lang: en
+      - type: docs
+        title: "Publish, Activate, Deploy: the publishing workflow"
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/publishing-workflow
+        description: Flujo de aprobación.
+        lang: en
+      - type: docs
+        title: "Pin, Block, Unblock: visibility and access controls"
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/visibility-controls
+        description: Controles de visibilidad.
+        lang: en
+      - type: docs
+        title: Remove vs Delete agents
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/remove-vs-delete
+        description: La distinción crítica con timeline de propagación 24 h.
+        lang: en
+      - type: docs
+        title: Approve agent updates
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/approve-updates
+        description: Workflow de actualizaciones.
+        lang: en
+  - id: docs-templates
+    title: Documentación oficial — Plantillas
+    resources:
+      - type: docs
+        title: Default Template for Agent 365
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/default-template
+        description: Políticas estándar incluidas.
+        lang: en
+      - type: docs
+        title: Create Custom Templates
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/custom-templates
+        description: Guía de creación con políticas configurables.
+        lang: en
+      - type: docs
+        title: Template policies reference
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/template-policies
+        description: Catálogo completo de políticas configurables.
+        lang: en
+  - id: docs-publishing-wizard
+    title: Documentación oficial — Wizard de publishing
+    resources:
+      - type: docs
+        title: Publishing wizard step-by-step
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/publishing-wizard
+        description: Los 7 pasos.
+        lang: en
+      - type: docs
+        title: Permissions review during publishing
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/permissions-review
+        description: Paso 6 detallado.
+        lang: en
+      - type: docs
+        title: Admin consent for agents
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/admin-consent
+        description: Cuándo se requiere y cómo otorgarlo.
+        lang: en
+  - id: docs-ownerless
+    title: Documentación oficial — Ownerless y Reassign
+    resources:
+      - type: docs
+        title: Manage ownerless agents
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/ownerless-agents
+        description: Vista de gestión y patrones de remediación.
+        lang: en
+      - type: docs
+        title: Reassign ownership for Agent Builder agents
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/reassign-ownership
+        description: La limitación a Agent Builder.
+        lang: en
+      - type: docs
+        title: Reassign Copilot Studio agents in Power Platform admin center
+        url: https://learn.microsoft.com/power-platform/admin/copilot-studio-app-reassignment
+        description: Proceso paralelo para Copilot Studio.
+        lang: en
+      - type: docs
+        title: Reassign Foundry agents in Azure portal
+        url: https://learn.microsoft.com/azure/ai-foundry/reassign-agent-ownership
+        description: Proceso para Foundry.
+        lang: en
+  - id: docs-lifecycle-sharepoint
+    title: Documentación oficial — Ciclo de vida y SharePoint Embedded
+    resources:
+      - type: docs
+        title: Agent retirement best practices
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/retirement-best-practices
+        description: Ciclo recomendado de 4 semanas.
+        lang: en
+      - type: docs
+        title: SharePoint Embedded containers for agents
+        url: https://learn.microsoft.com/sharepoint/dev/embedded/agent-containers
+        description: Implicaciones para Delete.
+        lang: en
+      - type: docs
+        title: Restore-Agent365Agent PowerShell cmdlet
+        url: https://learn.microsoft.com/powershell/module/microsoft.agent365/restore-agent365agent
+        description: Cancelación de Delete dentro de la ventana de 24 h.
+        lang: en
+  - id: powershell-automation
+    title: PowerShell y automatización
+    resources:
+      - type: docs
+        title: Microsoft Agent 365 PowerShell module
+        url: https://learn.microsoft.com/powershell/module/microsoft.agent365
+        description: Cmdlets disponibles.
+        lang: en
+      - type: docs
+        title: Bulk operations on agents
+        url: https://learn.microsoft.com/microsoft-agent-365/admin/bulk-operations
+        description: Block, deploy, remove en bulk.
+        lang: en
+      - type: docs
+        title: Power Automate — Agent lifecycle automation
+        url: https://learn.microsoft.com/power-automate/agent-365-lifecycle-automation
+        description: Flows para el ciclo trimestral.
+        lang: en
+crossReferences:
+  - topic: Conditional Access en plantillas
+    moduleId: 9
+    moduleTitle: Permisos, accesos y Conditional Access
+  - topic: DLP y sensitivity labels en plantillas
+    moduleId: 10
+    moduleTitle: Microsoft Purview y compliance
+  - topic: Audit log de las acciones del ciclo
+    moduleId: 12
+    moduleTitle: Monitorización, auditoría y reporting

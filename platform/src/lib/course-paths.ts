@@ -48,3 +48,31 @@ export function loadQuizModulesGlob(): Record<string, string> {
     { query: '?raw', import: 'default', eager: true },
   )
 }
+
+/**
+ * Devuelve todos los archivos `lab.yaml` por módulo del curso.
+ *
+ * Patrón: `cursos/<slug>/modulos/<modulo>/lab.yaml`. Solo los módulos
+ * con laboratorio interactivo tienen este archivo; el resto se ignora
+ * silenciosamente y el componente Lab cae al fallback markdown.
+ */
+export function loadLabsGlob(): Record<string, string> {
+  return import.meta.glob<string>(
+    '../../../cursos/agent365-cert/modulos/**/lab.yaml',
+    { query: '?raw', import: 'default', eager: true },
+  )
+}
+
+/**
+ * Devuelve todos los archivos `recursos.yaml` por módulo del curso.
+ *
+ * Patrón: `cursos/<slug>/modulos/<modulo>/recursos.yaml`. Solo los
+ * módulos con recursos editoriales tienen este archivo; el resto se
+ * ignora silenciosamente y el componente Resources muestra el fallback.
+ */
+export function loadResourcesGlob(): Record<string, string> {
+  return import.meta.glob<string>(
+    '../../../cursos/agent365-cert/modulos/**/recursos.yaml',
+    { query: '?raw', import: 'default', eager: true },
+  )
+}
