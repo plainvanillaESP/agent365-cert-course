@@ -2,6 +2,7 @@ import { CheckCircle2, XCircle, RotateCcw, Award, Clock } from 'lucide-react'
 import { Button, ButtonLink } from '@/components/Button'
 import { EXAM_PASS_PCT, type AreaBreakdown } from '@/lib/exam'
 import type { ExamAttempt } from '@/hooks/useExamState'
+import { ExamReview } from './ExamReview'
 
 interface ExamResultProps {
   attempt: ExamAttempt
@@ -115,6 +116,8 @@ export function ExamResult({
           Una caída fuerte en un área concreta sugiere repasar los módulos correspondientes antes de un nuevo intento.
         </p>
       </section>
+
+      <ExamReview attempt={attempt} />
     </div>
   )
 }

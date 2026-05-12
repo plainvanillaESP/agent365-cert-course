@@ -1,14 +1,33 @@
 import { useEffect, useState } from 'react'
-import { Printer, ArrowLeft } from 'lucide-react'
+import { Printer, ArrowLeft, Trash2 } from 'lucide-react'
 import { ButtonLink, Button } from '@/components/Button'
 import type { ExamAttempt } from '@/hooks/useExamState'
 
 const LOGO_POSITIVO = `${import.meta.env.BASE_URL}logotipo-positivo.svg`
 
+const LEARNER_NAME_KEY = 'agent365-learner-name'
+
+function loadStoredName(): string {
+  if (typeof localStorage === 'undefined') return ''
+  try {
+    return localStorage.getItem(LEARNER_NAME_KEY) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+function storeName(name: string): void {
+  if (typeof localStorage === 'undefined') return
+  try {
+    if (name.trim()) localStorage.setItem(LEARNER_NAME_KEY, name.trim())
+    else localStorage.removeItem(LEARNER_NAME_KEY)
+  } catch {
+    /* localStorage bloqueado, ignorar */
+  }
+}
+
 interface CertificateProps {
   attempt: ExamAttempt
-  /** nombre del alumno; si no se conoce, se pide. */
-  initialLearnerName?: string
 }
 
 /**
@@ -22,56 +41,99 @@ interface CertificateProps {
  * No generamos PDF en frontend: el browser abre el cuadro de impresión y
  * el usuario elige "Guardar como PDF". Cero dependencias añadidas y
  * compatible con cualquier navegador moderno.
+ *
+ * El nombre del alumno se guarda en localStorage SOLO si el alumno marca
+ * el consentimiento explícito. Si no, se mantiene en memoria durante la
+ * visita pero no se persiste. Botón visible para borrar el nombre guardado.
  */
-export function Certificate({ attempt, initialLearnerName = '' }: CertificateProps) {
-  const [name, setName] = useState(initialLearnerName)
+export function Certificate({ attempt }: CertificateProps) {
+  const [name, setName] = useState(() => loadStoredName())
+  const [consent, setConsent] = useState<boolean>(() => loadStoredName().length > 0)
 
+  // Si el alumno acepta el consentimiento, persistimos al teclear.
+  // Si lo desactiva, eliminamos lo guardado previamente.
   useEffect(() => {
-    if (initialLearnerName) setName(initialLearnerName)
-  }, [initialLearnerName])
+    if (consent) storeName(name)
+    else if (loadStoredName()) storeName('')
+  }, [consent, name])
 
   const verificationId = makeVerificationId(attempt)
   const issuedAt = new Date(attempt.submittedAt)
+  const hasStoredName = loadStoredName().length > 0
 
   return (
     <div className="space-y-6">
       {/* Controles solo en pantalla */}
-      <div className="print:hidden max-w-4xl mx-auto flex flex-wrap items-center gap-3 justify-between">
-        <ButtonLink
-          to="/examen"
-          variant="ghost"
-          size="md"
-          iconLeft={<ArrowLeft className="size-[16px] stroke-[1.75]" aria-hidden />}
-        >
-          Volver al examen
-        </ButtonLink>
-        <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
-            <span>Tu nombre:</span>
-            <input
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Nombre y apellidos"
-              className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5 text-[13.5px] w-[260px] focus:outline-none focus:ring-2 focus:ring-[var(--color-pv-purple-600)]"
-            />
-          </label>
-          <Button
-            variant="primary"
+      <div className="print:hidden max-w-4xl mx-auto space-y-3">
+        <div className="flex flex-wrap items-center gap-3 justify-between">
+          <ButtonLink
+            to="/examen"
+            variant="ghost"
             size="md"
-            onClick={() => window.print()}
-            disabled={!name.trim()}
-            iconLeft={<Printer className="size-[16px] stroke-[2]" aria-hidden />}
+            iconLeft={<ArrowLeft className="size-[16px] stroke-[1.75]" aria-hidden />}
           >
-            Imprimir o guardar como PDF
-          </Button>
+            Volver al examen
+          </ButtonLink>
+          <div className="flex items-center gap-3 flex-wrap">
+            <label className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
+              <span>Tu nombre:</span>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Nombre y apellidos"
+                className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5 text-[13.5px] w-[260px] focus:outline-none focus:ring-2 focus:ring-[var(--color-pv-purple-600)]"
+              />
+            </label>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => window.print()}
+              disabled={!name.trim()}
+              iconLeft={<Printer className="size-[16px] stroke-[2]" aria-hidden />}
+            >
+              Imprimir o guardar como PDF
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <p className="print:hidden max-w-4xl mx-auto text-[12.5px] text-[var(--text-muted)]">
-        Al pulsar imprimir, tu navegador abrirá el cuadro de impresión estándar.
-        En la mayoría de navegadores puedes elegir <strong>«Guardar como PDF»</strong> como destino para obtener un archivo descargable.
-      </p>
+        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface-2)] px-4 py-3 text-[13px] text-[var(--text-secondary)] flex flex-wrap items-center gap-3">
+          <label className="flex items-start gap-2 cursor-pointer flex-1 min-w-[280px]">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={e => setConsent(e.target.checked)}
+              className="mt-[3px] accent-[var(--color-pv-purple-600)]"
+            />
+            <span className="leading-snug">
+              Recordar mi nombre en este navegador para futuros certificados.
+              {' '}
+              <span className="text-[var(--text-muted)]">
+                Se guarda solo en este dispositivo (localStorage). Puedes borrarlo en cualquier momento.
+              </span>
+            </span>
+          </label>
+          {hasStoredName && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                storeName('')
+                setName('')
+                setConsent(false)
+              }}
+              iconLeft={<Trash2 className="size-3.5 stroke-[1.75]" aria-hidden />}
+            >
+              Borrar nombre guardado
+            </Button>
+          )}
+        </div>
+
+        <p className="text-[12.5px] text-[var(--text-muted)]">
+          Al pulsar imprimir, tu navegador abrirá el cuadro de impresión estándar.
+          En la mayoría de navegadores puedes elegir <strong>«Guardar como PDF»</strong> como destino para obtener un archivo descargable.
+        </p>
+      </div>
 
       {/* Lienzo del certificado */}
       <article

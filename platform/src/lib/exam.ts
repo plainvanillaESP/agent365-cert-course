@@ -42,11 +42,22 @@ export const EXAM_COOLDOWN_DAYS = 7
 
 /* ------------------------------ Carga del banco --------------------------- */
 
-const bancoFiles = import.meta.glob('../../../cursos/agent365-cert/banco-examen.md', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+/**
+ * Cargamos el banco vía `import.meta.glob`, una API de Vite. En entornos
+ * fuera del bundle (tsx, Node, jest...) esa función no existe, así que
+ * comprobamos su presencia antes de invocarla y caemos a `{}` cuando no
+ * está. Las funciones puras `selectFromBank` y `scoreExam` aceptan el
+ * banco por argumento, lo que permite testear el flujo del examen desde
+ * Node aunque el glob esté inactivo.
+ */
+const bancoFiles: Record<string, string> =
+  typeof import.meta !== 'undefined' && typeof (import.meta as { glob?: unknown }).glob === 'function'
+    ? (import.meta.glob('../../../cursos/agent365-cert/banco-examen.md', {
+        query: '?raw',
+        import: 'default',
+        eager: true,
+      }) as Record<string, string>)
+    : {}
 
 interface ParsedBancoFrontmatter {
   total_preguntas_objetivo?: number
@@ -102,19 +113,35 @@ export function getExamBankDeclaredSize(): number {
 }
 
 /**
- * Selecciona N preguntas del banco en orden aleatorio. La selección es
- * con remplazo NO permitido: si N > banco, devuelve todo el banco.
- *
- * Esto es Fisher-Yates con un PRNG seedable para tests reproducibles.
- *
- * @param count  número objetivo de preguntas
- * @param seed   opcional, semilla para reproducibilidad
+ * Devuelve las preguntas del banco que coincidan con los IDs dados, en el
+ * mismo orden. IDs no encontrados se omiten. Útil para repintar un intento
+ * tras carga desde localStorage.
  */
-export function selectExamQuestions(count: number, seed?: number): Question[] {
-  const pool = [...BANCO_QUESTIONS]
+export function getQuestionsByIds(ids: string[]): Question[] {
+  const byId = new Map<string, Question>()
+  for (const q of BANCO_QUESTIONS) byId.set(q.id, q)
+  const out: Question[] = []
+  for (const id of ids) {
+    const q = byId.get(id)
+    if (q) out.push(q)
+  }
+  return out
+}
+
+/**
+ * Variante pura de `selectExamQuestions` que opera sobre un banco
+ * inyectado. Útil para tests fuera del bundle de Vite (donde
+ * `import.meta.glob` no carga el banco) y como base de la versión
+ * que sí usa el banco del paquete.
+ *
+ * @param bank   banco de preguntas a barajar
+ * @param count  número objetivo
+ * @param seed   semilla del PRNG; obligatoria aquí para reproducibilidad
+ */
+export function selectFromBank(bank: Question[], count: number, seed: number): Question[] {
+  const pool = [...bank]
   const n = Math.min(count, pool.length)
-  const rng = makeRng(seed ?? defaultSeed())
-  // Fisher-Yates parcial
+  const rng = makeRng(seed)
   for (let i = pool.length - 1; i > pool.length - n - 1 && i > 0; i--) {
     const j = Math.floor(rng() * (i + 1))
     const tmp = pool[i]
@@ -122,6 +149,18 @@ export function selectExamQuestions(count: number, seed?: number): Question[] {
     pool[j] = tmp
   }
   return pool.slice(pool.length - n).reverse()
+}
+
+/**
+ * Selecciona N preguntas del banco oficial del paquete en orden
+ * aleatorio. La selección es con remplazo NO permitido: si N > banco,
+ * devuelve todo el banco.
+ *
+ * @param count  número objetivo de preguntas
+ * @param seed   opcional, semilla para reproducibilidad
+ */
+export function selectExamQuestions(count: number, seed?: number): Question[] {
+  return selectFromBank(BANCO_QUESTIONS, count, seed ?? defaultSeed())
 }
 
 /**

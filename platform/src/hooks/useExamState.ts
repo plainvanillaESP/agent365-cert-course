@@ -58,6 +58,18 @@ export interface ExamAttempt {
   scoring: ExamScoring
   /** ids de las preguntas presentadas, en el orden mostrado. */
   questionIds: string[]
+  /**
+   * Respuestas del alumno indexadas por questionId. Incluye respuestas
+   * incompletas (auto-submit por timeout) representadas con su `emptyAnswerFor`.
+   * Se persisten para permitir la revisión post-examen.
+   */
+  answers: Record<string, Answer>
+  /**
+   * Para cada questionId, indica si la respuesta del alumno fue correcta.
+   * Equivalente a recalcular `isAnswerCorrect` por cada pregunta, pero
+   * cacheado en el intento para no depender del banco en la revisión.
+   */
+  perQuestionCorrect: Record<string, boolean>
 }
 
 interface CurrentSnapshot {
@@ -289,8 +301,8 @@ export function useExamState(): UseExamStateReturn {
 
   return {
     phase,
-    questions: phase === 'in-progress' ? (current?.questions ?? []) : (lastResult ? questionsFromAttempt(lastResult, history) : []),
-    answers: phase === 'in-progress' ? (current?.answers ?? {}) : (lastResult ? attemptAnswers(lastResult) : {}),
+    questions: phase === 'in-progress' ? (current?.questions ?? []) : [],
+    answers: phase === 'in-progress' ? (current?.answers ?? {}) : (lastResult?.answers ?? {}),
     lastResult,
     history,
     remainingSec,
@@ -325,21 +337,7 @@ function buildAttemptFromSnapshot(
     reason,
     scoring,
     questionIds: snap.questions.map(q => q.id),
+    answers: snap.answers,
+    perQuestionCorrect: perQ,
   }
-}
-
-/**
- * Las preguntas y respuestas no se persisten en `ExamAttempt` para
- * mantener el historial compacto. Tras `submit`, el shell ya tiene el
- * snapshot vivo en `lastResult` + lookup desde el banco para repintar
- * un resumen, pero NO se exponen las respuestas concretas — solo el
- * resultado agregado. Esta función conserva la firma para futuras
- * vistas que quieran enseñar al alumno qué falló (a definir).
- */
-function questionsFromAttempt(_a: ExamAttempt, _h: ExamAttempt[]): Question[] {
-  return []
-}
-
-function attemptAnswers(_a: ExamAttempt): Record<string, Answer> {
-  return {}
 }
