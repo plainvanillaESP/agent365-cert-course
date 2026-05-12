@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { Sun, Moon, Menu, Activity } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
+import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
 import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
@@ -19,6 +20,17 @@ function GithubIcon({ className }: { className?: string }) {
 
 export function Header({ onMenuToggle }: HeaderProps) {
   const { theme, toggle } = useTheme()
+  const snapshots = useCourseProgress()
+
+  // Progreso global del curso: media del % completado por módulo.
+  // Para que la cifra crezca de forma estable usamos sections completas
+  // sobre el total de secciones rastreables del curso, no la media de
+  // booleanos por módulo. Eso da una progresión más lineal.
+  const totalSections = snapshots.reduce((acc, s) => acc + s.totalSections, 0)
+  const completedSections = snapshots.reduce((acc, s) => acc + s.completedCount, 0)
+  const progressPct = totalSections > 0
+    ? Math.round((completedSections / totalSections) * 100)
+    : 0
 
   return (
     <header
@@ -74,9 +86,18 @@ export function Header({ onMenuToggle }: HeaderProps) {
                   : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
               ].join(' ')
             }
+            aria-label={`Progreso del curso, ${progressPct}% completado`}
           >
             <Activity className="size-[15px] stroke-[1.75]" aria-hidden />
             <span className="hidden sm:inline">Progreso</span>
+            {progressPct > 0 && (
+              <span
+                className="ml-0.5 inline-flex items-center justify-center min-w-[2rem] h-5 px-1.5 rounded-full bg-[var(--color-pv-purple-500)]/15 text-[11px] font-semibold text-[var(--color-pv-purple-600)] dark:text-[var(--color-pv-purple-300)] tabular-nums"
+                aria-hidden
+              >
+                {progressPct}%
+              </span>
+            )}
           </NavLink>
           <a
             href="https://github.com/plainvanillaESP/agent365-cert-course"

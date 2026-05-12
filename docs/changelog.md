@@ -10,7 +10,19 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[Infra]` Fase H.1 — Plug-and-play real: contenido editorial migrado del TypeScript al paquete del curso.
+- `[UX]` Fase H.2 — Quick wins UX: breadcrumbs, atajos de teclado, indicador de progreso, skeletons, code-splitting y skip link.
+  - **`Breadcrumbs`** (`components/Breadcrumbs.tsx`) — Componente reutilizable con marcado semántico (`aria-label="Breadcrumb"`, `aria-current="page"` en el último item) y datos estructurados schema.org `BreadcrumbList` incrustados como JSON-LD para SEO. Reemplaza el breadcrumb inline que `ModulePage` tenía.
+  - **`useKeyboardShortcuts` + `ShortcutsModal`** — Hook centralizado de atajos globales que escucha en `document`, normaliza combinaciones (`meta`/`shift`), auto-skip dentro de inputs (con `enableInInputs` para opt-in) y modal de ayuda que agrupa los atajos por categoría.
+    - Atajos definidos en `App.tsx`: `?` (ayuda), `g`/`p`/`e`/`s` (navegación a inicio/progreso/examen/ajustes), `j`/`k` (módulo siguiente/anterior preservando la sección), `t`/`q`/`l`/`r` (cambiar de sección dentro de un módulo: Teoría/Quiz/Labs/Recursos), `Escape` (cerrar diálogos).
+    - Helpers `KeyChip`, `KeyCombo`, `shortcutKeys()` para renderizar combinaciones con tipografía `<kbd>` mono, respetando platform (`⌘` en Mac, `Ctrl` en Windows/Linux).
+  - **Indicador de progreso en header** — `Header.tsx` consume `useCourseProgress()` y muestra una pildora con el % completado del curso (secciones completadas / totales). El cálculo es lineal y estable, no media de booleanos por módulo. Solo aparece cuando hay progreso > 0%. `aria-label` descriptivo para lectores de pantalla.
+  - **`Skeleton` + `SkeletonParagraph` + `WhenReady`** (`components/Skeleton.tsx`) — Placeholders de carga con shimmer suave (animación CSS `pv-skeleton-shimmer`, respeta `prefers-reduced-motion`). Tres formas: `line` (default), `circle`, `rect`. `SkeletonParagraph` para previsualizar varios renglones con anchos variables. `WhenReady` para envolver condicionalmente. Sustituye los "Cargando…" inertes que había aquí y allá.
+  - **Code-splitting por ruta** — `App.tsx` refactorizado para usar `React.lazy()` + `Suspense` por página. El bundle inicial baja de ~600 KB a **215 KB** (gzip 67 KB). El resto se descarga bajo demanda: `HomePage` (3.5 KB), `SettingsPage` (8 KB), `ProgressPage` (13 KB), `CertificatePage` (11 KB), `ExamPage` (33 KB). `ModulePage` sigue grande (1 MB) porque empaqueta todo el contenido markdown del curso, pero solo se descarga al entrar en un módulo.
+  - **Skip link** al inicio del shell — `<a href="#main-content">Saltar al contenido</a>` oculto con `sr-only` que aparece visible al recibir foco con Tab. Apunta al `<main>` con `id="main-content"` y `tabIndex={-1}` para que el foco se mueva correctamente.
+  - **`docs/componentes-reutilizables.md`** ampliado con secciones de `Breadcrumbs`, `Skeleton` (familia) y atajos de teclado (`useKeyboardShortcuts`, `ShortcutsModal`, `KeyChip`, `KeyCombo`) documentados con ejemplos y tablas de props.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.31s. test:exam 34/34 OK.
+
+
   - **Migración masiva de `lib/labs.ts` y `lib/resources.ts` a archivos YAML** dentro de cada módulo del curso. La plataforma React ya no contiene ningún dato editorial del curso; solo tipos, parsers y funciones puras.
     - `platform/src/lib/labs.ts`: de **173 líneas** (datos M01 inline) a **137** (solo tipos y API). Los datos pasan a `cursos/agent365-cert/modulos/modulo-01-fundamentos/lab.yaml`.
     - `platform/src/lib/resources.ts`: de **1.711 líneas** (datos de M01–M08 inline) a **118** (solo tipos, API y `hostnameOf`). Los datos pasan a `cursos/agent365-cert/modulos/<modulo>/recursos.yaml` (8 archivos generados).

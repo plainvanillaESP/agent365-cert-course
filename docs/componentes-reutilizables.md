@@ -245,6 +245,97 @@ Para callouts dentro de markdown (en módulos del curso), no se usa `<Callout>` 
 
 ---
 
+### `Breadcrumbs`
+
+Migas de pan con marcado semántico (`aria-label="Breadcrumb"`, `aria-current="page"` en el último item) y datos estructurados schema.org BreadcrumbList incrustados como JSON-LD para que motores de búsqueda enriquezcan los SERPs.
+
+```tsx
+import { Breadcrumbs } from '@/components/Breadcrumbs'
+import { Home } from 'lucide-react'
+
+<Breadcrumbs items={[
+  { label: 'Inicio', to: '/', icon: <Home className="size-3" /> },
+  { label: 'Módulo 04', to: '/modulo/4/teoria' },
+  { label: 'Teoría' },                            // último → texto plano + aria-current
+]} />
+```
+
+| Prop | Tipo | Uso |
+|---|---|---|
+| `items` | `BreadcrumbItem[]` | Lista ordenada; el último item siempre es texto plano |
+| `className` | `string` | Clases extra opcionales |
+
+Cada `BreadcrumbItem` tiene `label`, opcional `to` (Link de React Router) e opcional `icon` (ReactNode pequeño).
+
+---
+
+### `Skeleton`, `SkeletonParagraph`, `WhenReady`
+
+Placeholders de carga con shimmer suave (animación CSS, respeta `prefers-reduced-motion`). Reemplazan spinners y "Cargando…" inertes con un placeholder que ocupa el sitio del contenido futuro y reduce CLS.
+
+```tsx
+import { Skeleton, SkeletonParagraph, WhenReady } from '@/components/Skeleton'
+
+// Bloques sueltos
+<Skeleton width="40%" height="1.5em" />
+<Skeleton shape="circle" width="32px" height="32px" />
+<Skeleton shape="rect" width="100%" height="200px" />
+
+// Párrafo de varias líneas (3 por defecto)
+<SkeletonParagraph lines={4} />
+
+// Envolvedor declarativo
+<WhenReady ready={!loading} fallback={<SkeletonParagraph lines={5} />}>
+  <article>{content}</article>
+</WhenReady>
+```
+
+| Prop de `Skeleton` | Tipo | Default |
+|---|---|---|
+| `width` | string CSS | `100%` |
+| `height` | string CSS | `1em` |
+| `shape` | `'line' | 'circle' | 'rect'` | `'line'` |
+| `ariaLabel` | string | (oculto a a11y por defecto; pásalo solo en el contenedor padre) |
+
+Para regiones con varios skeletons usar `role="status"` y `aria-live="polite"` en el contenedor, no en cada Skeleton.
+
+---
+
+## Atajos de teclado
+
+### `useKeyboardShortcuts`, `ShortcutsModal`, `KeyChip`, `KeyCombo`
+
+Registro centralizado de atajos de teclado. El hook escucha en `document` con captura única y normaliza combinaciones; el modal de ayuda los lista agrupados.
+
+```tsx
+import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts'
+import { ShortcutsModal } from '@/components/ShortcutsModal'
+
+const [helpOpen, setHelpOpen] = useState(false)
+const shortcuts: Shortcut[] = [
+  { key: '?', shift: true, description: 'Mostrar ayuda', group: 'Ayuda', handler: () => setHelpOpen(true) },
+  { key: 'g', description: 'Ir al inicio', group: 'Navegación', handler: () => navigate('/') },
+  { key: 'j', description: 'Siguiente módulo', group: 'En un módulo', handler: () => /* … */ },
+]
+useKeyboardShortcuts(shortcuts)
+
+<ShortcutsModal open={helpOpen} onClose={() => setHelpOpen(false)} shortcuts={shortcuts} />
+```
+
+| Campo de `Shortcut` | Tipo | Uso |
+|---|---|---|
+| `key` | string | Tecla, lowercase para letras, `?`/`Escape`/etc. |
+| `meta` | boolean | Requiere Cmd o Ctrl |
+| `shift` | boolean | Requiere Shift |
+| `description` | string | Texto mostrado en el modal de ayuda |
+| `group` | string | Agrupador en el modal |
+| `handler` | `() => void` | Callback |
+| `enableInInputs` | boolean | Permite ejecutar dentro de inputs (default: false) |
+
+Helpers `KeyChip` (tecla individual) y `KeyCombo` (varias teclas con `+`) renderizan teclas como `<kbd>` con tipografía mono. `shortcutKeys(s)` calcula el array a mostrar respetando platform (`⌘` en Mac, `Ctrl` en Windows/Linux).
+
+---
+
 ## Botones y acciones
 
 ### `Button`

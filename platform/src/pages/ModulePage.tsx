@@ -1,10 +1,11 @@
 import { useParams, Navigate, NavLink, Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { ChevronRight, BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight, Check } from 'lucide-react'
+import { BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight, Check } from 'lucide-react'
 import { findModule, getAreaForModule, formatDuration } from '@/lib/course'
 import { loadContent, type ContentType } from '@/lib/content'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
 import { PageHeader } from '@/components/PageHeader'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { TableOfContents } from '@/components/TableOfContents'
 import { Quiz } from '@/components/quiz/Quiz'
 import { getQuestionsForModule } from '@/lib/quiz'
@@ -78,22 +79,14 @@ export function ModulePage() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,var(--layout-content-max))_var(--layout-toc-w)] gap-8 xl:gap-12 max-w-[calc(var(--layout-content-max)+var(--layout-toc-w)+3rem)] mx-auto">
       <div className="min-w-0">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12.5px] text-[var(--text-muted)] mb-5 flex-wrap">
-          <Link to="/" className="hover:text-[var(--text-primary)] transition-colors no-underline">
-            Inicio
-          </Link>
-          {area && (
-            <>
-              <ChevronRight className="size-3 shrink-0 text-[var(--text-faint)]" aria-hidden />
-              <span>Área {area.id} · {area.nombreEs}</span>
-            </>
-          )}
-          <ChevronRight className="size-3 shrink-0 text-[var(--text-faint)]" aria-hidden />
-          <span className="text-[var(--text-secondary)] font-medium">
-            Módulo {String(module.id).padStart(2, '0')}
-          </span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: 'Inicio', to: '/' },
+            ...(area ? [{ label: `Área ${area.id} · ${area.nombreEs}` }] : []),
+            { label: `Módulo ${String(module.id).padStart(2, '0')}` },
+          ]}
+          className="mb-5"
+        />
 
         {/* Header del módulo */}
         <div className="pb-5 mb-6 border-b border-[var(--border-default)]">

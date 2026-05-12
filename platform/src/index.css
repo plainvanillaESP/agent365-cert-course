@@ -803,3 +803,42 @@ html.dark .badge-status-deprecated {
     outline-offset: 4px;
   }
 }
+
+/* ============================================================
+   Skeleton (placeholders de carga con shimmer suave).
+   Consumido por components/Skeleton.tsx.
+   ============================================================ */
+
+.pv-skeleton {
+  background-color: var(--bg-surface-2);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--bg-surface-hover) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: pv-skeleton-shimmer 1.4s ease-in-out infinite;
+  /* Si el consumidor no marca width/height inline, ocupar baseline. */
+  min-height: 0.5em;
+  /* No queremos que el shimmer cuente para a11y */
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes pv-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-skeleton {
+    animation: none;
+    background-image: none;
+  }
+}
