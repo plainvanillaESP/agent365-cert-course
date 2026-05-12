@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { ChevronUp, ChevronLeft, ChevronRight, Send, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/Button'
+import { Modal } from '@/components/Modal'
 import { QuestionCard } from '@/components/quiz/QuestionCard'
 import { QuestionMultipleChoice } from '@/components/quiz/QuestionMultipleChoice'
 import { QuestionMultipleResponse } from '@/components/quiz/QuestionMultipleResponse'
@@ -300,52 +301,44 @@ function ConfirmDialog({
   onCancel: () => void
   onConfirm: () => void
 }) {
-  const titleId = 'exam-confirm-dialog-title'
   const confirmBtnRef = useRef<HTMLButtonElement | null>(null)
 
   // Focus inicial en el botón de confirmar (acción primaria del dialog).
-  // Escape cierra. Click fuera no cierra (decisión explícita: que el
-  // alumno tenga que elegir un botón).
   useEffect(() => {
     confirmBtnRef.current?.focus()
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        onCancel()
-      }
-    }
-    document.addEventListener('keydown', handleKey)
-    return () => document.removeEventListener('keydown', handleKey)
-  }, [onCancel])
+  }, [])
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={titleId}
-    >
-      <div className="max-w-md w-full rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 shadow-xl space-y-4">
+    <Modal
+      open
+      onClose={onCancel}
+      ariaLabel="¿Finalizar el examen ahora?"
+      size="sm"
+      closeOnBackdrop={false}
+      header={
         <div className="flex items-start gap-3">
           <AlertTriangle className="size-[20px] stroke-[1.75] text-amber-500 shrink-0 mt-0.5" aria-hidden />
-          <div className="space-y-1">
-            <h2 id={titleId} className="text-[16px] font-semibold text-[var(--text-primary)]">
-              ¿Finalizar el examen ahora?
-            </h2>
-            <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
-              Quedan <strong className="font-semibold">{missing}</strong> preguntas sin responder. Si finalizas ahora, esas preguntas se contarán como incorrectas y no podrás volver a editarlas.
-            </p>
-          </div>
+          <h2 className="text-[16px] font-semibold text-[var(--text-primary)] mt-0.5">
+            ¿Finalizar el examen ahora?
+          </h2>
         </div>
-        <div className="flex justify-end gap-2 pt-2">
+      }
+      footer={
+        <>
           <Button variant="secondary" size="md" onClick={onCancel}>
             Seguir respondiendo
           </Button>
           <Button ref={confirmBtnRef} variant="primary" size="md" onClick={onConfirm}>
             Finalizar de todos modos
           </Button>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    >
+      <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
+        Quedan <strong className="font-semibold">{missing}</strong> preguntas sin responder. Si
+        finalizas ahora, esas preguntas se contarán como incorrectas y no podrás volver a
+        editarlas.
+      </p>
+    </Modal>
   )
 }

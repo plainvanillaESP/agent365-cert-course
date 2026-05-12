@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Settings as SettingsIcon, ShieldOff, Trash2, Download, Upload } from 'lucide-react'
+import { ShieldOff, Trash2, Download, Upload } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { Section } from '@/components/Layout'
+import { PageHeader } from '@/components/PageHeader'
 import { Callout } from '@/components/Callout'
 import {
   getAccessMode,
@@ -9,6 +10,7 @@ import {
   clearAllProgress,
   type AccessMode,
 } from '@/lib/progress'
+import { COURSE_TITLE } from '@/lib/course'
 
 /**
  * Página /ajustes — controles que afectan a toda la plataforma:
@@ -103,7 +105,9 @@ export function SettingsPage() {
         throw new Error('archivo inválido')
       }
       const ok = window.confirm(
-        'Importar este archivo sustituirá tu progreso actual de Agent 365 en este navegador. ¿Continuar?',
+        'Importar este archivo sustituirá tu progreso actual de ' +
+          COURSE_TITLE +
+          ' en este navegador. ¿Continuar?',
       )
       if (!ok) return
       applyStorageDump(data as Record<string, string>)
@@ -116,18 +120,11 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      <header className="space-y-2">
-        <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-semibold">
-          <SettingsIcon className="size-[14px] stroke-[1.75]" aria-hidden />
-          Ajustes
-        </div>
-        <h1 className="text-[28px] font-semibold text-[var(--text-primary)] leading-tight">
-          Configuración del curso
-        </h1>
-        <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed max-w-2xl">
-          Controla cómo accedes al curso y gestiona los datos guardados en este navegador. Todos los cambios afectan solo a este dispositivo.
-        </p>
-      </header>
+      <PageHeader
+        eyebrow="Ajustes"
+        title="Configuración del curso"
+        description="Controla cómo accedes al curso y gestiona los datos guardados en este navegador. Todos los cambios afectan solo a este dispositivo."
+      />
 
       {notice && (
         <Callout kind={notice.type === 'ok' ? 'success' : 'warning'}>

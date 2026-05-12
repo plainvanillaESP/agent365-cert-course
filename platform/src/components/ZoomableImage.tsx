@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
-import { createPortal } from 'react-dom'
-import { X, ZoomIn, Plus, Minus, RotateCcw, Loader2 } from 'lucide-react'
+import { ZoomIn, Plus, Minus, RotateCcw, X, Loader2 } from 'lucide-react'
+import { Modal } from '@/components/Modal'
 
 interface ZoomableImageProps {
   src?: string
@@ -15,28 +15,16 @@ const SCALE_STEP = 0.25
 /**
  * Imagen con click-to-zoom integrado.
  *
- * En vista normal, la imagen mantiene su comportamiento markdown habitual
- * (responsive, lazy load) y muestra un indicador de "Ampliar" al pasar
- * por encima. Click abre un lightbox modal con:
+ * Comportamiento en vista normal: imagen markdown habitual con
+ * indicador "Ampliar" al pasar por encima. Click abre el lightbox.
  *
- *   - Backdrop oscuro semitransparente. Click cierra.
- *   - Controles superiores: zoom in/out (50-400%, paso 25%), reset, cerrar.
- *   - Pan con drag cuando hay zoom (`scale > 1`).
- *   - Rueda del ratón para zoom continuo.
- *   - Doble click para resetear a 100%.
- *   - Atajos teclado: Esc cierra, +/- zoom, 0 reset.
- *   - Etiqueta inferior con el alt para contexto.
- *   - Loading state mientras la imagen carga (raro, suele venir del cache).
+ * Comportamiento en lightbox (Modal bare): backdrop oscuro, controles
+ * de zoom (50-400%), pan con drag cuando hay zoom, doble click para
+ * resetear, wheel para zoom continuo. Atajos: Esc / + / - / 0.
  *
- * La imagen del modal se posiciona directamente en el flex container con
- * el transform aplicado a ella misma. Esto evita el problema clásico de
- * un div wrapper con max-width/height pero sin contenido cargado, que
- * colapsa a 0x0 hasta que la imagen termina de cargar.
- *
- * Se renderiza vía createPortal en `document.body` para evitar conflictos
- * con párrafos generados por react-markdown que podrían contener el
- * componente. Bloquea el scroll del body mientras está abierto. Compatible
- * con `prefers-reduced-motion` y `print:hidden` para el certificado.
+ * La mecánica de Modal (portal, scroll lock, Escape) viene del
+ * componente Modal base. Aquí solo se gestiona el estado de zoom
+ * y la imagen.
  */
 export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
   const [open, setOpen] = useState(false)
@@ -60,26 +48,19 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
   const zoomIn = useCallback(() => setScale(s => Math.min(s + SCALE_STEP, MAX_SCALE)), [])
   const zoomOut = useCallback(() => setScale(s => Math.max(s - SCALE_STEP, MIN_SCALE)), [])
 
-  // Listeners globales y bloqueo de scroll cuando se abre el modal.
+  // Atajos de teclado específicos del zoom (Esc lo gestiona Modal).
   useEffect(() => {
     if (!open) return
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose()
-      else if (e.key === '+' || e.key === '=') zoomIn()
+      if (e.key === '+' || e.key === '=') zoomIn()
       else if (e.key === '-' || e.key === '_') zoomOut()
       else if (e.key === '0') handleReset()
     }
     document.addEventListener('keydown', handleKey)
-    return () => {
-      document.body.style.overflow = prevOverflow
-      document.removeEventListener('keydown', handleKey)
-    }
-  }, [open, handleClose, handleReset, zoomIn, zoomOut])
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [open, handleReset, zoomIn, zoomOut])
 
-  // Reset zoom y offset al cerrar.
+  // Reset al cerrar.
   useEffect(() => {
     if (!open) {
       setScale(1)
@@ -97,8 +78,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
     }
   }
 
-  /* ---------------- Drag (pan) cuando hay zoom ---------------- */
-
+  /* Drag (pan) cuando hay zoom */
   const onImgPointerDown = (e: React.PointerEvent<HTMLImageElement>) => {
     if (scale <= 1) return
     dragRef.current = {
@@ -125,8 +105,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
     }
   }
 
-  /* ---------------- Wheel zoom ---------------- */
-
+  /* Wheel zoom continuo */
   const onWheel = (e: React.WheelEvent) => {
     e.preventDefault()
     const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP
@@ -161,17 +140,14 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
         </span>
       </span>
 
-      {open && createPortal(
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm print:hidden overflow-hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label={alt ? `Imagen ampliada: ${alt}` : 'Imagen ampliada'}
-          onClick={e => {
-            if (e.target === e.currentTarget) handleClose()
-          }}
-          onWheel={onWheel}
-        >
+      <Modal
+        open={open}
+        onClose={handleClose}
+        ariaLabel={alt ? `Imagen ampliada: ${alt}` : 'Imagen ampliada'}
+        bare
+        className="bg-black/85 overflow-hidden"
+      >
+        <div className="contents" onWheel={onWheel}>
           {!loaded && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Loader2 className="size-10 stroke-[1.5] text-white/70 animate-spin" aria-hidden />
@@ -204,7 +180,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
             </div>
           )}
 
-          {/* Imagen — directa al flex container, transform sobre sí misma */}
+          {/* Imagen */}
           <img
             src={src}
             alt={alt}
@@ -228,9 +204,8 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
               touchAction: 'none',
             }}
           />
-        </div>,
-        document.body,
-      )}
+        </div>
+      </Modal>
     </>
   )
 }

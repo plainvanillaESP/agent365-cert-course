@@ -10,10 +10,17 @@ import {
   Trash2,
   Sparkles,
   Lock,
-  AlertCircle,
   Unlock,
 } from 'lucide-react'
-import { AREAS, MODULES, formatDuration, findModule, type CourseModule, type CourseArea } from '@/lib/course'
+import {
+  AREAS,
+  MODULES,
+  formatDuration,
+  findModule,
+  COURSE_TITLE,
+  type CourseModule,
+  type CourseArea,
+} from '@/lib/course'
 import { useCourseProgress, useAccessMode, useUnlockState } from '@/hooks/useModuleProgress'
 import {
   clearAllProgress,
@@ -21,6 +28,10 @@ import {
   type TrackedSection,
 } from '@/lib/progress'
 import { Button } from '@/components/Button'
+import { Section } from '@/components/Layout'
+import { PageHeader } from '@/components/PageHeader'
+import { Callout } from '@/components/Callout'
+import { Badge } from '@/components/Badge'
 
 const SECTION_META: Record<TrackedSection, { label: string; short: string; icon: typeof BookOpenText }> = {
   teoria:          { label: 'Teoría',         short: 'Teoría',  icon: BookOpenText  },
@@ -52,37 +63,29 @@ export function ProgressPage() {
         <LockedBanner module={lockedModule} />
       )}
 
-      {/* Hero */}
-      <section className="pb-8 mb-8 border-b border-[var(--border-default)]">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-2.5">
-          Tu progreso
-        </div>
-        <h1 className="font-display text-[32px] sm:text-[38px] leading-[1.1] tracking-[-0.02em] font-bold text-[var(--text-primary)]">
-          Microsoft Agent 365 IT Admin
-        </h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)] max-w-prose">
-          Tu avance por los módulos producidos del curso. El progreso se guarda en este navegador;
-          si cambias de equipo o limpias los datos del sitio, se reinicia.
-        </p>
+      <PageHeader
+        eyebrow="Tu progreso"
+        title={COURSE_TITLE}
+        description="Tu avance por los módulos producidos del curso. El progreso se guarda en este navegador; si cambias de equipo o limpias los datos del sitio, se reinicia."
+      />
 
+      <div className="pb-8 mb-8 border-b border-[var(--border-default)]">
         <ProgressBar pct={completionPct} completed={completedModules} total={totalModules} />
-      </section>
+      </div>
 
       {/* Próximo paso */}
       {nextStep && (
-        <section className="mb-10">
-          <SectionHeader eyebrow="Continuar" title="Tu próximo paso" />
+        <Section eyebrow="Continuar" title="Tu próximo paso">
           <NextStepCard nextStep={nextStep} />
-        </section>
+        </Section>
       )}
 
       {/* Por área */}
-      <section className="mb-10">
-        <SectionHeader
-          eyebrow="Detalle"
-          title="Progreso por área del examen"
-          description="Cada módulo muestra el estado de sus cuatro secciones: teoría, quiz, laboratorios y recursos."
-        />
+      <Section
+        eyebrow="Detalle"
+        title="Progreso por área del examen"
+        description="Cada módulo muestra el estado de sus cuatro secciones: teoría, quiz, laboratorios y recursos."
+      >
         <div className="space-y-6">
           {AREAS.map(area => {
             const areaModules = MODULES.filter(m => m.areaExamen === area.id && m.id !== 17)
@@ -98,7 +101,7 @@ export function ProgressPage() {
             )
           })}
         </div>
-      </section>
+      </Section>
 
       {/* Modo de acceso + reinicio */}
       <section className="mt-12 pt-6 border-t border-[var(--border-default)] space-y-6">
@@ -113,18 +116,12 @@ export function ProgressPage() {
 
 function LockedBanner({ module }: { module: CourseModule }) {
   return (
-    <div className="mb-6 rounded-md border border-amber-500/40 bg-amber-500/[0.08] p-4">
-      <div className="flex items-start gap-3">
-        <AlertCircle
-          className="size-5 shrink-0 text-amber-600 dark:text-amber-400 stroke-[1.75] mt-0.5"
-          aria-hidden
-        />
-        <div className="text-[13.5px] leading-relaxed text-[var(--text-primary)]">
-          <span className="font-semibold">Módulo {String(module.id).padStart(2, '0')} aún no disponible:</span>{' '}
-          completa los módulos anteriores producidos del curso para desbloquearlo, o activa el{' '}
-          <span className="font-medium">modo acceso libre</span> al pie de esta página si prefieres saltarte el orden recomendado.
-        </div>
-      </div>
+    <div className="mb-6">
+      <Callout kind="warning">
+        <span className="font-semibold">Módulo {String(module.id).padStart(2, '0')} aún no disponible:</span>{' '}
+        completa los módulos anteriores producidos del curso para desbloquearlo, o activa el{' '}
+        <span className="font-medium">modo acceso libre</span> al pie de esta página si prefieres saltarte el orden recomendado.
+      </Callout>
     </div>
   )
 }
@@ -211,30 +208,6 @@ function ProgressBar({ pct, completed, total }: { pct: number; completed: number
         />
       </div>
     </div>
-  )
-}
-
-function SectionHeader({
-  eyebrow,
-  title,
-  description,
-}: {
-  eyebrow: string
-  title: string
-  description?: string
-}) {
-  return (
-    <header className="mb-5">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)] mb-1.5">
-        {eyebrow}
-      </div>
-      <h2 className="font-display text-[22px] font-bold text-[var(--text-primary)] leading-tight">
-        {title}
-      </h2>
-      {description && (
-        <p className="mt-2 text-[14px] text-[var(--text-secondary)] max-w-prose">{description}</p>
-      )}
-    </header>
   )
 }
 
@@ -372,22 +345,19 @@ function ModuleRow({
               M{String(module.id).padStart(2, '0')}
             </span>
             {!isProduced && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-[var(--bg-surface-2)] text-[var(--text-muted)]">
-                <Lock className="size-2.5 stroke-[2.5]" aria-hidden />
+              <Badge variant="neutral" size="xs" icon={<Lock className="size-2.5 stroke-[2.5]" aria-hidden />}>
                 Pendiente
-              </span>
+              </Badge>
             )}
             {isLocked && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-amber-500/15 text-amber-700 dark:text-amber-300">
-                <Lock className="size-2.5 stroke-[2.5]" aria-hidden />
+              <Badge variant="warning" size="xs" icon={<Lock className="size-2.5 stroke-[2.5]" aria-hidden />}>
                 Bloqueado
-              </span>
+              </Badge>
             )}
             {isComplete && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                <Check className="size-2.5 stroke-[2.5]" aria-hidden />
+              <Badge variant="success" size="xs" icon={<Check className="size-2.5 stroke-[2.5]" aria-hidden />}>
                 Completado
-              </span>
+              </Badge>
             )}
           </div>
           <div className="text-[14px] font-medium text-[var(--text-primary)] leading-snug">

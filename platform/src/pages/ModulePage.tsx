@@ -4,6 +4,7 @@ import { ChevronRight, BookOpenText, FlaskConical, ClipboardCheck, Link2, Chevro
 import { findModule, getAreaForModule, formatDuration } from '@/lib/course'
 import { loadContent, type ContentType } from '@/lib/content'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
+import { PageHeader } from '@/components/PageHeader'
 import { TableOfContents } from '@/components/TableOfContents'
 import { Quiz } from '@/components/quiz/Quiz'
 import { getQuestionsForModule } from '@/lib/quiz'
@@ -95,14 +96,12 @@ export function ModulePage() {
         </nav>
 
         {/* Header del módulo */}
-        <header className="pb-5 mb-6 border-b border-[var(--border-default)]">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] mb-2.5">
-            Módulo {String(module.id).padStart(2, '0')}
-          </div>
-          <h1 className="font-display text-[30px] sm:text-[34px] leading-[1.15] tracking-[-0.02em] font-bold text-[var(--text-primary)]">
-            {module.titulo}
-          </h1>
-          <div className="flex items-center gap-3 mt-2.5 text-[13px] text-[var(--text-muted)] flex-wrap">
+        <div className="pb-5 mb-6 border-b border-[var(--border-default)]">
+          <PageHeader
+            eyebrow={`Módulo ${String(module.id).padStart(2, '0')}`}
+            title={module.titulo}
+          />
+          <div className="flex items-center gap-3 mt-3 text-[13px] text-[var(--text-muted)] flex-wrap">
             <span>{formatDuration(module.duracionMin)}</span>
             {module.preguntas > 0 && (
               <>
@@ -143,7 +142,7 @@ export function ModulePage() {
               )
             })}
           </div>
-        </header>
+        </div>
 
         {/* Barra de progreso de lectura, solo en teoría con contenido */}
         {section === 'teoria' && content && (
