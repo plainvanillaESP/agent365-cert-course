@@ -184,6 +184,15 @@ function AppShell({
       handler: () => currentModuleId !== null && navigate(`/modulo/${currentModuleId}/recursos`),
     },
     {
+      key: 'n',
+      description: 'Abrir/cerrar el panel de notas',
+      group: 'En un módulo',
+      handler: () => {
+        if (currentModuleId === null) return
+        window.dispatchEvent(new CustomEvent('pv-learn:toggle-notes'))
+      },
+    },
+    {
       key: 'Escape',
       description: 'Cerrar diálogo o panel lateral',
       group: 'General',

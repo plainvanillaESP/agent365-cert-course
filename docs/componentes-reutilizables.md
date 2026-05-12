@@ -374,6 +374,45 @@ Matching: AND de todos los tokens, normaliza tildes/case, scoring con peso por t
 
 ---
 
+## Notas del alumno
+
+### `NotesPanel` + `useNotes`
+
+Drawer lateral derecho para que el alumno tome notas en markdown por módulo. La UI vive en `components/NotesPanel.tsx`; el estado (texto, debounce de guardado, contadores, export) en `hooks/useNotes.ts`.
+
+```tsx
+import { NotesPanel } from '@/components/NotesPanel'
+
+const [open, setOpen] = useState(false)
+<NotesPanel
+  open={open}
+  onClose={() => setOpen(false)}
+  moduleId={module.id}
+  moduleTitle={module.titulo}
+/>
+```
+
+Toggle por teclado: el atajo `n` se registra en `App.tsx` (para que aparezca en el modal de ayuda) y dispara `CustomEvent('pv-learn:toggle-notes')` que `ModulePage` escucha localmente. Esto desacopla el atajo global del estado local del panel.
+
+```ts
+import { useNotes } from '@/hooks/useNotes'
+
+const {
+  notes,
+  setNotes,
+  savedAt,         // ms timestamp del último flush a localStorage
+  status,          // 'idle' | 'pending' | 'saved'
+  clear,
+  exportToMd,      // descarga notas-modulo-NN.md con frontmatter
+  characterCount,
+  wordCount,
+} = useNotes(moduleId)
+```
+
+Persistencia en `localStorage` bajo `agent365-notes-m{N}` con escritura debounced 300 ms. Si `localStorage` falla (modo privado, quota), degrada en silencio: el texto vive en memoria. El backdrop del panel aparece solo en pantallas `< lg`; en desktop convive con la lectura.
+
+---
+
 ## Botones y acciones
 
 ### `Button`
