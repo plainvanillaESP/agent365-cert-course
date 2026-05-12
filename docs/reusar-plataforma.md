@@ -79,19 +79,24 @@ Los pesos y número de preguntas por área deben sumar 100 % y al `numero_pregun
 
 ### 4. Vaciar módulos y empezar a producir
 
-Cada módulo vive en `cursos/<nuevo-curso>/modulos/modulo-NN-slug/` con cinco archivos:
+Cada módulo vive en `cursos/<nuevo-curso>/modulos/modulo-NN-slug/` con estos archivos:
 
 ```
 modulo-NN-slug/
   module.yaml         # Metadatos: estado, duración, OAs, glosario
   teoria.md           # Contenido principal
   quiz-practica.md    # Preguntas de práctica (mismo formato que banco-examen.md)
-  laboratorios.md     # Ejercicios prácticos
-  recursos.md         # Lecturas, enlaces, vídeos
+  laboratorios.md     # Texto del laboratorio formativo
+  lab.yaml            # OPCIONAL: configuración del laboratorio interactivo
+  recursos.md         # Texto introductorio de la sección Recursos
+  recursos.yaml       # OPCIONAL: catálogo estructurado de enlaces y categorías
   README.md           # Resumen rápido para reviewers
+  assets/             # Imágenes, diagramas
 ```
 
 El estado en `module.yaml` (`en_diseño` / `en_produccion` / `producido`) controla la visualización en la sidebar y en la home.
+
+**Sobre los `.yaml` opcionales**: `lab.yaml` y `recursos.yaml` son los puntos de extensión del contenido editorial del módulo. Si están presentes, la plataforma renderiza la versión rica (lab interactivo, lista de recursos categorizada). Si faltan, cae al fallback markdown sin error. Ver formato exacto en cualquier módulo del curso Agent 365 como referencia.
 
 ### 5. Vaciar el banco de examen
 

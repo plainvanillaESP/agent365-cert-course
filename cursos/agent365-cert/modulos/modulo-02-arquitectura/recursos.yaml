@@ -1,0 +1,166 @@
+# Recursos editoriales del módulo.
+#
+# Formato consumido por `platform/src/lib/resources.ts` a través de
+# `loadResourcesGlob()` (course-paths.ts). Solo los módulos que tienen
+# este archivo presentan la sección "Recursos" activa; el resto cae al
+# fallback markdown.
+#
+# Estructura:
+#
+#   moduleId: número del módulo.
+#   intro: párrafo introductorio (markdown plano permitido).
+#   externalNote: disclaimer opcional para fuentes externas.
+#   categories: lista de bloques. Cada bloque:
+#     id, title, description (opcional), resources (lista).
+#   resources: cada recurso lleva type, title, url, description,
+#     date (solo blogs), lang ('es' | 'en').
+#   crossReferences: enlaces a otros módulos del curso. Cada uno:
+#     topic, moduleId, moduleTitle.
+
+moduleId: 2
+intro: >-
+  Documentación oficial y referencias técnicas usadas para producir este módulo. Cada enlace está
+  vivo y verificado a la fecha de última actualización.
+categories:
+  - id: docs-workload
+    title: Documentación oficial — Agent workload en Microsoft 365 admin center
+    resources:
+      - type: docs
+        title: Microsoft Agent 365 — overview
+        url: https://learn.microsoft.com/microsoft-agent-365/
+        description: Punto de entrada general del producto.
+        lang: en
+      - type: docs
+        title: Agent 365 in M365 admin center — Overview
+        url: https://learn.microsoft.com/microsoft-365/admin/manage/agent-365-overview
+        description: Explicación de la página Overview y de las cuatro hero metrics.
+        lang: en
+      - type: docs
+        title: Manage the agent registry
+        url: https://learn.microsoft.com/microsoft-365/admin/manage/manage-agent-registry
+        description: Filtros, columnas y página de detalle del Registry.
+        lang: en
+      - type: docs
+        title: Manage the agent map
+        url: https://learn.microsoft.com/microsoft-365/admin/manage/manage-agent-map
+        description: Visualización de grafo y agrupación por plataforma.
+        lang: en
+      - type: docs
+        title: Agent settings in the admin center
+        url: https://learn.microsoft.com/microsoft-365/admin/manage/agent-settings
+        description: Integraciones con Defender, Purview y defaults de publishing.
+        lang: en
+  - id: docs-identities
+    title: Documentación oficial — Agent identities (Entra)
+    resources:
+      - type: docs
+        title: What is Microsoft Entra Agent ID
+        url: https://learn.microsoft.com/entra/agent-id/identity-platform/what-is-agent-id
+        description: Los 4 tipos de objetos del directorio.
+        lang: en
+      - type: docs
+        title: What are agent identities
+        url: https://learn.microsoft.com/entra/agent-id/what-are-agent-identities
+        description: Visión técnica del modelo de identidad.
+        lang: en
+  - id: docs-types
+    title: Documentación oficial — Tipos de agentes gestionables
+    resources:
+      - type: docs
+        title: Connect existing agents to Agent 365
+        url: https://learn.microsoft.com/microsoft-agent-365/connect-existing-agents
+        description: Qué tipos hay y cómo se registran.
+        lang: en
+      - type: docs
+        title: Microsoft Copilot Studio overview
+        url: https://learn.microsoft.com/microsoft-copilot-studio/
+        description: DA, CEA y Backend Plugin.
+        lang: en
+      - type: docs
+        title: Microsoft Foundry agents
+        url: https://learn.microsoft.com/azure/ai-foundry/agents/
+        description: LOB, non-LOB y hosted.
+        lang: en
+      - type: docs
+        title: SharePoint agents
+        url: https://learn.microsoft.com/sharepoint/sharepoint-agents
+        description: .agent files y librerías documentales.
+        lang: en
+      - type: docs
+        title: Agent Builder in Microsoft 365 Copilot
+        url: https://learn.microsoft.com/microsoft-365-copilot/agent-builder-overview
+        description: Agentes declarativos sin pasar por Copilot Studio.
+        lang: en
+      - type: docs
+        title: Microsoft 365 Agents Toolkit
+        url: https://learn.microsoft.com/microsoft-365/agents-toolkit/
+        description: Extensión de VS Code para agentes pro-code.
+        lang: en
+  - id: docs-mcp
+    title: Documentación oficial — Work IQ MCP servers
+    resources:
+      - type: docs
+        title: Tooling servers overview (Work IQ MCP)
+        url: https://learn.microsoft.com/microsoft-agent-365/tooling-servers-overview
+        description: Los 8 servidores y a qué dan acceso.
+        lang: en
+  - id: docs-sdks
+    title: Documentación oficial — SDKs
+    resources:
+      - type: docs
+        title: Microsoft 365 Agents SDK
+        url: https://learn.microsoft.com/microsoft-365/agents-sdk/
+        description: "Transporte conversacional. npm: @microsoft/agents."
+        lang: en
+      - type: docs
+        title: Microsoft Agent 365 SDK
+        url: https://learn.microsoft.com/microsoft-agent-365/sdk/
+        description: "Gobernanza, observabilidad, MCP. npm: @microsoft/agent365."
+        lang: en
+  - id: ignite-sessions
+    title: Sesiones de Microsoft Ignite 2025
+    description: >-
+      Las sesiones grabadas siguen disponibles en Microsoft Ignite on demand. Son la mejor
+      introducción visual al producto.
+    resources:
+      - type: blog
+        title: "Introducing Microsoft Agent 365: governance for the agent era"
+        url: https://ignite.microsoft.com/sessions/agent-365-keynote
+        description: Keynote de presentación del producto.
+        date: Ignite 2025
+        lang: en
+      - type: blog
+        title: "Inside Agent 365: architecture and the four pillars"
+        url: https://ignite.microsoft.com/sessions/agent-365-architecture
+        description: Sesión técnica que cubre los componentes que este módulo explica.
+        date: Ignite 2025
+        lang: en
+      - type: blog
+        title: From Copilot Studio to production with Agent 365
+        url: https://ignite.microsoft.com/sessions/agent-365-end-to-end
+        description: Caso práctico end-to-end.
+        date: Ignite 2025
+        lang: en
+  - id: deep-readings
+    title: Lecturas de profundidad
+    resources:
+      - type: blog
+        title: "Microsoft Mechanics: Agent 365 architecture deep-dive"
+        url: https://www.youtube.com/@MicrosoftMechanics
+        description: Vídeo de 20 min que recorre los componentes con demos.
+        lang: en
+      - type: blog
+        title: Microsoft Tech Community — Agent 365 blog
+        url: https://techcommunity.microsoft.com/category/microsoft-agent-365
+        description: Anuncios de características nuevas y posts técnicos.
+        lang: en
+crossReferences:
+  - topic: Licenciamiento y planificación
+    moduleId: 3
+    moduleTitle: Licenciamiento, prerrequisitos y planificación
+  - topic: Microsoft Entra Agent ID
+    moduleId: 6
+    moduleTitle: Microsoft Entra Agent ID e identidades
+  - topic: Agent Registry y Agent Map
+    moduleId: 7
+    moduleTitle: Agent Registry y Agent Map

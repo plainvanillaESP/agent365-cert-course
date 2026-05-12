@@ -1,0 +1,185 @@
+# Recursos editoriales del módulo.
+#
+# Formato consumido por `platform/src/lib/resources.ts` a través de
+# `loadResourcesGlob()` (course-paths.ts). Solo los módulos que tienen
+# este archivo presentan la sección "Recursos" activa; el resto cae al
+# fallback markdown.
+#
+# Estructura:
+#
+#   moduleId: número del módulo.
+#   intro: párrafo introductorio (markdown plano permitido).
+#   externalNote: disclaimer opcional para fuentes externas.
+#   categories: lista de bloques. Cada bloque:
+#     id, title, description (opcional), resources (lista).
+#   resources: cada recurso lleva type, title, url, description,
+#     date (solo blogs), lang ('es' | 'en').
+#   crossReferences: enlaces a otros módulos del curso. Cada uno:
+#     topic, moduleId, moduleTitle.
+
+moduleId: 6
+intro: >-
+  Documentación oficial y referencias usadas para producir este módulo. Cada enlace está vivo y
+  verificado a la fecha de última actualización.
+categories:
+  - id: docs-entra-agent-id
+    title: Documentación oficial — Microsoft Entra Agent ID
+    resources:
+      - type: docs
+        title: Microsoft Entra Agent ID overview
+        url: https://learn.microsoft.com/entra/agent-id/overview
+        description: "Visión consolidada del producto: tipos de objetos, flujos de autenticación, gobernanza."
+        lang: en
+      - type: docs
+        title: Agent identity blueprints
+        url: https://learn.microsoft.com/entra/agent-id/blueprints
+        description: Anatomía completa del blueprint y restricciones.
+        lang: en
+      - type: docs
+        title: Agent identity blueprint principal
+        url: https://learn.microsoft.com/entra/agent-id/blueprint-principals
+        description: Qué es el principal y cómo se relaciona con admin consents.
+        lang: en
+      - type: docs
+        title: Agent identities
+        url: https://learn.microsoft.com/entra/agent-id/agent-identities
+        description: La instancia concreta y su ciclo de vida.
+        lang: en
+      - type: docs
+        title: Agent users
+        url: https://learn.microsoft.com/entra/agent-id/agent-users
+        description: "La propiedad opcional userType: AgentUser para agentes humano-like."
+        lang: en
+  - id: docs-auth-flows
+    title: Documentación oficial — Flujos de autenticación
+    resources:
+      - type: docs
+        title: On-Behalf-Of (OBO) flow for agents
+        url: https://learn.microsoft.com/entra/agent-id/obo-flow
+        description: Flujo delegado, intercambio de tokens, audit log.
+        lang: en
+      - type: docs
+        title: Own identity flow (autonomous agents)
+        url: https://learn.microsoft.com/entra/agent-id/own-identity-flow
+        description: Flujo client_credentials, atribución al agente.
+        lang: en
+      - type: docs
+        title: Choosing OBO vs own identity
+        url: https://learn.microsoft.com/entra/agent-id/choosing-flow
+        description: Guía de decisión por tipo de caso de uso.
+        lang: en
+  - id: docs-sponsorship
+    title: Documentación oficial — Sponsorship y lifecycle
+    resources:
+      - type: docs
+        title: Agent sponsorship overview
+        url: https://learn.microsoft.com/entra/agent-id/sponsorship
+        description: Qué es el sponsor, cómo se asigna, comportamiento ante leaver.
+        lang: en
+      - type: docs
+        title: Lifecycle workflows for agent identities
+        url: https://learn.microsoft.com/entra/id-governance/lifecycle-workflow-templates
+        description: Triggers onLeaver, onMover, onJoiner y tareas disponibles.
+        lang: en
+      - type: docs
+        title: Transfer sponsorship to manager — how it works
+        url: https://learn.microsoft.com/entra/agent-id/transfer-sponsorship
+        description: Flujo automático de transferencia y requireReview.
+        lang: en
+  - id: docs-permissions
+    title: Documentación oficial — Permisos y atributos
+    resources:
+      - type: docs
+        title: Inheritable permissions in agent identity blueprints
+        url: https://learn.microsoft.com/entra/agent-id/inheritable-permissions
+        description: El límite duro de 10 resource apps × 40 scopes y por qué.
+        lang: en
+      - type: docs
+        title: Custom security attributes
+        url: https://learn.microsoft.com/entra/fundamentals/custom-security-attributes-overview
+        description: Definición a nivel directorio y aplicación a agent identities.
+        lang: en
+      - type: docs
+        title: Access packages for agent identities
+        url: >-
+          https://learn.microsoft.com/entra/id-governance/entitlement-management-access-package-create
+        description: Asignar permisos vía access packages.
+        lang: en
+      - type: docs
+        title: Multi-select disable for agent identities
+        url: https://learn.microsoft.com/entra/agent-id/bulk-disable
+        description: Operación masiva y diagnóstico de impacto.
+        lang: en
+  - id: docs-graph-api
+    title: Documentación oficial — APIs Microsoft Graph
+    resources:
+      - type: docs
+        title: Microsoft Graph beta — agent identities
+        url: https://learn.microsoft.com/graph/api/resources/agentidentity
+        description: Esquema completo del objeto y operaciones.
+        lang: en
+      - type: docs
+        title: Risky agents API
+        url: https://learn.microsoft.com/graph/api/resources/riskyagent
+        description: /beta/identityProtection/riskyAgents para listar agentes con riesgo.
+        lang: en
+      - type: docs
+        title: Agent risk detections API
+        url: https://learn.microsoft.com/graph/api/resources/agentriskdetection
+        description: Detecciones específicas de Identity Protection para agentes.
+        lang: en
+      - type: docs
+        title: signInEventTypes for agent sign-ins
+        url: https://learn.microsoft.com/graph/api/resources/signin#signineventtypes
+        description: Filtro para identificar sign-ins de agent identities en audit logs.
+        lang: en
+  - id: docs-convergence
+    title: Documentación oficial — Convergencia mayo 2026
+    resources:
+      - type: blog
+        title: Microsoft 365 admin center is now the home for Agent 365 management
+        url: https://techcommunity.microsoft.com/blog/microsoft-365-admin-agent-365
+        description: Anuncio oficial de la convergencia.
+        date: Mayo 2026
+        lang: en
+      - type: docs
+        title: Migrating from /beta/agentRegistry/* to /beta/copilot/admin/*
+        url: https://learn.microsoft.com/microsoft-agent-365/api-migration-may-2026
+        description: Guía de migración con tabla de endpoints antiguos y nuevos.
+        lang: en
+      - type: docs
+        title: Agent registry in Entra admin center — deprecation notice
+        url: https://learn.microsoft.com/entra/agent-id/registry-deprecation
+        description: Fechas exactas, ventana de retrocompatibilidad de 90 días.
+        lang: en
+  - id: cli
+    title: CLI Microsoft Agent 365
+    resources:
+      - type: commercial
+        title: Microsoft Agent 365 CLI on npm
+        url: https://www.npmjs.com/package/@microsoft/agent365-cli
+        description: Paquete oficial publicado por Microsoft.
+        lang: en
+      - type: docs
+        title: a365 CLI reference
+        url: https://learn.microsoft.com/microsoft-agent-365/cli/reference
+        description: "Referencia completa de comandos: setup, create, update, list, lifecycle-workflow."
+        lang: en
+      - type: docs
+        title: a365 CLI tutorial — first blueprint
+        url: https://learn.microsoft.com/microsoft-agent-365/cli/first-blueprint
+        description: Tutorial guiado oficial.
+        lang: en
+crossReferences:
+  - topic: Operación del Agent Registry y Map
+    moduleId: 7
+    moduleTitle: Agent Registry y Agent Map
+  - topic: Distribución vía access packages
+    moduleId: 8
+    moduleTitle: Despliegue, distribución y ciclo de vida
+  - topic: Conditional Access para agent identities
+    moduleId: 9
+    moduleTitle: Permisos, accesos y Conditional Access
+  - topic: Riesgos de agentes en Defender
+    moduleId: 12
+    moduleTitle: Monitorización, auditoría y reporting
