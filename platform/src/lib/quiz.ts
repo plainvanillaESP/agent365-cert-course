@@ -14,6 +14,7 @@
  */
 
 import { parseQuizMarkdown } from './quiz-parser'
+import { loadQuizModulesGlob } from './course-paths'
 
 export type QuestionType =
   | 'multiple-choice'
@@ -87,15 +88,11 @@ export type Question =
 /**
  * Glob eager de los quiz-practica.md de TODOS los módulos del curso activo.
  * Vite los empaqueta en build, así que el lookup es síncrono y barato.
+ *
+ * El glob vive en `course-paths.ts` para que cambiar de curso solo
+ * requiera tocar ese archivo.
  */
-const quizFiles = import.meta.glob(
-  '../../../cursos/agent365-cert/modulos/**/quiz-practica.md',
-  {
-    query: '?raw',
-    import: 'default',
-    eager: true,
-  },
-) as Record<string, string>
+const quizFiles = loadQuizModulesGlob()
 
 /**
  * Mapa moduleId → preguntas parseadas. Se calcula una vez al cargar el bundle.

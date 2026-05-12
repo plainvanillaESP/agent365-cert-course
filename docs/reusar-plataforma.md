@@ -143,19 +143,25 @@ export const MODULES: CourseModule[] = [
 
 Convención: el módulo con `areaExamen: 0` se identifica como el examen final (no aparece en el conteo de módulos de contenido).
 
-### 7. Actualizar `platform/src/lib/exam.ts`
+### 7. Actualizar `platform/src/lib/course-paths.ts`
 
-Los textos del banco y las áreas se cargan dinámicamente del `course.yaml` y del `banco-examen.md` del paquete. Aun así, la ruta al banco está hardcodeada como `import.meta.glob` para que Vite la incluya en el bundle:
-
-```ts
-const bancoFiles = ... import.meta.glob('../../../cursos/agent365-cert/banco-examen.md', ...)
-```
-
-Sustituir la ruta por el nuevo paquete:
+Vite exige strings literales en los `import.meta.glob`, así que **los paths al banco de examen y a los quizzes están centralizados en un único archivo**:
 
 ```ts
-const bancoFiles = ... import.meta.glob('../../../cursos/<nuevo-curso>/banco-examen.md', ...)
+// platform/src/lib/course-paths.ts
+
+export function loadExamBankGlob() {
+  return import.meta.glob('../../../cursos/agent365-cert/banco-examen.md', ...)
+}
+
+export function loadQuizModulesGlob() {
+  return import.meta.glob('../../../cursos/agent365-cert/modulos/**/quiz-practica.md', ...)
+}
 ```
+
+Sustituir `agent365-cert` por el slug del nuevo curso en ambos globs. Esos son **los únicos dos puntos** de la plataforma React donde el slug aparece hardcoded por necesidad técnica.
+
+Verificar también que `COURSE_SLUG` en `lib/course.ts` coincide (se usa para los prefijos de storage).
 
 ### 8. Marca: logos y textos institucionales
 
