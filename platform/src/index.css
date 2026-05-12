@@ -467,6 +467,218 @@ html.dark .markdown-body blockquote {
   margin-top: 0.75rem;
 }
 
+/* ------------------------------------------------------------------------- *
+ *  Variante .markdown-lab — estilos refuerzo para laboratorios prácticos.
+ *
+ *  Los labs son guías paso a paso con bloques de prerrequisitos, captura
+ *  pendiente, validación, advertencias y tips. La variante refuerza:
+ *
+ *    - Headers de sección con borde lateral coloreado (visualmente
+ *      separar "Pasos", "Validación", "Variantes y extensiones"…).
+ *    - Listas ordenadas con numeración grande y separación entre items.
+ *    - Pasos con sub-items (anidados) más legibles.
+ *    - Callouts visuales para blockquotes según su tipo detectado
+ *      (capture / warning / success / tip / info).
+ * ------------------------------------------------------------------------- */
+
+.markdown-lab h2 {
+  border-bottom: none;
+  padding-bottom: 0;
+  padding-left: 0.85rem;
+  border-left: 4px solid var(--color-pv-purple-600, #9A44E5);
+  margin-top: 2.5rem;
+}
+
+.markdown-lab h3 {
+  padding-left: 0.7rem;
+  border-left: 3px solid var(--text-secondary);
+  margin-top: 2rem;
+}
+
+.markdown-lab h4 {
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: none;
+  margin-top: 1.5rem;
+  padding: 0.4rem 0.7rem;
+  background-color: var(--bg-surface-2);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Listas ordenadas como pasos numerados */
+.markdown-lab ol {
+  list-style: none;
+  counter-reset: lab-step;
+  padding-left: 0;
+}
+
+.markdown-lab ol > li {
+  counter-increment: lab-step;
+  position: relative;
+  padding-left: 2.5rem;
+  margin-block: 0.85rem;
+  min-height: 1.75rem;
+}
+
+.markdown-lab ol > li::before {
+  content: counter(lab-step);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #9A44E5 0%, #F68DAC 100%);
+  color: white;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Listas anidadas vuelven a estilo discreto */
+.markdown-lab ol ol,
+.markdown-lab ol ul,
+.markdown-lab ul ol,
+.markdown-lab ul ul {
+  list-style: revert;
+  padding-left: 1.5rem;
+  counter-reset: none;
+}
+
+.markdown-lab ol ol > li,
+.markdown-lab ol ul > li,
+.markdown-lab ul ol > li,
+.markdown-lab ul ul > li {
+  counter-increment: none;
+  padding-left: 0;
+  margin-block: 0.25rem;
+  min-height: 0;
+}
+
+.markdown-lab ol ol > li::before,
+.markdown-lab ol ul > li::before,
+.markdown-lab ul ol > li::before,
+.markdown-lab ul ul > li::before {
+  content: none;
+}
+
+/* Separación entre pasos consecutivos */
+.markdown-lab ol > li + li {
+  margin-top: 1rem;
+}
+
+/* Resaltar labels tipo "**Objetivo:**", "**Resultado esperado:**" al inicio de párrafo */
+.markdown-lab p > strong:first-child {
+  display: inline-block;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 0.15rem;
+}
+
+/* ------------------------- Callouts ------------------------- */
+/*
+ *  Sustituyen al blockquote por defecto cuando el renderer ha clasificado
+ *  el contenido. Los datos vienen vía data-callout="kind" + class
+ *  callout callout-{kind}. Cinco variantes con colores semánticos.
+ */
+
+.markdown-lab blockquote.callout {
+  border-left: 4px solid;
+  border-radius: 6px;
+  padding: 0.85rem 1rem 0.85rem 1.1rem;
+  margin-block: 1.25rem;
+  background-color: var(--bg-surface-2);
+  font-style: normal;
+  position: relative;
+}
+
+.markdown-lab blockquote.callout > *:first-child { margin-top: 0; }
+.markdown-lab blockquote.callout > *:last-child { margin-bottom: 0; }
+
+.markdown-lab blockquote.callout::before {
+  content: '';
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  position: absolute;
+  top: 0.95rem;
+  left: -0.6rem;
+  border-radius: 999px;
+  border: 2px solid var(--bg-canvas);
+}
+
+/* info / nota / prerrequisitos */
+.markdown-lab blockquote.callout-info {
+  border-left-color: rgb(59 130 246);
+  background-color: rgb(59 130 246 / 0.06);
+}
+.markdown-lab blockquote.callout-info::before { background-color: rgb(59 130 246); }
+
+/* warning / advertencia */
+.markdown-lab blockquote.callout-warning {
+  border-left-color: rgb(245 158 11);
+  background-color: rgb(245 158 11 / 0.08);
+}
+.markdown-lab blockquote.callout-warning::before { background-color: rgb(245 158 11); }
+
+/* success / validación */
+.markdown-lab blockquote.callout-success {
+  border-left-color: rgb(34 197 94);
+  background-color: rgb(34 197 94 / 0.07);
+}
+.markdown-lab blockquote.callout-success::before { background-color: rgb(34 197 94); }
+
+/* tip / consejo */
+.markdown-lab blockquote.callout-tip {
+  border-left-color: rgb(168 85 247);
+  background-color: rgb(168 85 247 / 0.07);
+}
+.markdown-lab blockquote.callout-tip::before { background-color: rgb(168 85 247); }
+
+/* capture / captura pendiente */
+.markdown-lab blockquote.callout-capture {
+  border-left-color: rgb(120 113 108);
+  background-color: rgb(120 113 108 / 0.05);
+  border: 2px dashed rgb(120 113 108 / 0.4);
+  border-left-width: 4px;
+  border-left-style: solid;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.markdown-lab blockquote.callout-capture::before { background-color: rgb(120 113 108); }
+
+/* Dark mode overrides */
+html.dark .markdown-lab blockquote.callout-info {
+  background-color: rgb(59 130 246 / 0.12);
+}
+html.dark .markdown-lab blockquote.callout-warning {
+  background-color: rgb(245 158 11 / 0.14);
+}
+html.dark .markdown-lab blockquote.callout-success {
+  background-color: rgb(34 197 94 / 0.14);
+}
+html.dark .markdown-lab blockquote.callout-tip {
+  background-color: rgb(168 85 247 / 0.14);
+}
+html.dark .markdown-lab blockquote.callout-capture {
+  background-color: rgb(120 113 108 / 0.12);
+  border-color: rgb(168 162 158 / 0.4);
+  border-left-color: rgb(168 162 158);
+}
+
+/* Reduced motion: no transición en hover de pasos (no aplica hoy, defensivo) */
+@media (prefers-reduced-motion: reduce) {
+  .markdown-lab ol > li::before {
+    transition: none;
+  }
+}
+
 /* Badges textuales */
 .badge-status {
   display: inline-block;

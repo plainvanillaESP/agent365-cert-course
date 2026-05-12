@@ -1,4 +1,5 @@
 import { Lightbulb } from 'lucide-react'
+import { InlineMarkdown } from '@/components/InlineMarkdown'
 import type {
   Question,
   MultipleChoiceQuestion,
@@ -35,7 +36,7 @@ export function QuestionFeedback({ question }: Props) {
         {isDragAndDrop(question) && <DnDAnswer question={question} />}
         {isOrdering(question) && <OrderingAnswer question={question} />}
         <p className="text-[13.5px] leading-relaxed text-[var(--text-secondary)]">
-          {question.justification}
+          <InlineMarkdown text={question.justification} />
         </p>
       </div>
     </div>
@@ -51,7 +52,9 @@ function MCAnswer({ question }: { question: MultipleChoiceQuestion }) {
       <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-300">
         {correct.id}
       </span>
-      <span className="text-[var(--text-primary)]">— {correct.text}</span>
+      <span className="text-[var(--text-primary)]">
+        — <InlineMarkdown text={correct.text} />
+      </span>
     </div>
   )
 }
@@ -71,7 +74,9 @@ function MRAnswer({ question }: { question: MultipleResponseQuestion }) {
             <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 shrink-0">
               {opt.id}
             </span>
-            <span className="text-[var(--text-primary)]">{opt.text}</span>
+            <span className="text-[var(--text-primary)]">
+              <InlineMarkdown text={opt.text} />
+            </span>
           </li>
         ))}
       </ul>
@@ -91,7 +96,9 @@ function DnDAnswer({ question }: { question: DragAndDropQuestion }) {
           const target = question.targets.find(t => t.id === targetId)
           return (
             <li key={item.id} className="text-[13px] flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="text-[var(--text-secondary)]">{item.text}</span>
+              <span className="text-[var(--text-secondary)]">
+                <InlineMarkdown text={item.text} />
+              </span>
               <span className="text-[var(--text-faint)]">→</span>
               <span className="font-medium text-emerald-700 dark:text-emerald-300">
                 {target?.label ?? targetId}
@@ -120,7 +127,9 @@ function OrderingAnswer({ question }: { question: OrderingQuestion }) {
               <span className="font-mono font-semibold text-emerald-700 dark:text-emerald-300 shrink-0">
                 {idx + 1}.
               </span>
-              <span className="text-[var(--text-primary)]">{item.text}</span>
+              <span className="text-[var(--text-primary)]">
+                <InlineMarkdown text={item.text} />
+              </span>
             </li>
           )
         })}

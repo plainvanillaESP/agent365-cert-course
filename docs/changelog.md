@@ -10,7 +10,22 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[Contenido]` Fase F.4 — Hardening final: paginación mobile del examen, accesibilidad WCAG, documento de reuso de la plataforma y análisis económico del curso como producto.
+- `[Contenido]` Fase G.1 — Fixes UX post-launch: markdown inline en preguntas, lightbox para imágenes, labs visualmente reforzados.
+  - **Bug `**bold**` literal en preguntas — resuelto.** Nuevo componente `platform/src/components/InlineMarkdown.tsx` que renderiza markdown inline (negrita, cursiva, `code`, enlaces) sin envolver en `<p>`, basado en `react-markdown` con `remark-gfm`. Aplicado en `QuestionMultipleChoice`, `QuestionMultipleResponse`, `QuestionDragAndDrop`, `QuestionOrdering` (en prompts, opciones, items y feedback "debería ir aquí") y en `QuestionFeedback` (justificaciones y respuestas correctas). Ahora `**PALABRA**` se renderiza correctamente como **PALABRA** en lugar de mostrar los asteriscos literales.
+  - **Lightbox para imágenes y SVGs.** Nuevo componente `platform/src/components/ZoomableImage.tsx`: click sobre cualquier imagen del curso abre overlay full-screen con backdrop oscuro. Controles de zoom (in / out / reset, 50 % – 400 %), pan con drag cuando hay zoom, contador de % visible, etiqueta inferior con el alt para contexto, atajos de teclado (Esc, +, −, 0), backdrop click cierra. Usa `createPortal` para renderizarse en `document.body` y evitar conflictos con el contenedor padre. Bloqueo de scroll del body mientras está abierto. Soporta `prefers-reduced-motion` y `print:hidden` para no aparecer al imprimir. Conectado al `MarkdownRenderer` sustituyendo el `<img>` por defecto.
+  - **Labs visualmente reforzados.** `MarkdownRenderer` acepta nueva prop `variant?: 'default' | 'lab'`. La variante `lab` aplica clase `markdown-lab` y clasifica blockquotes automáticamente por su contenido en cinco tipos:
+    - **capture** — `[CAPTURA PENDIENTE ...]`, "captura...", "screenshot..." → caja con borde discontinuo gris para los placeholders de capturas que aún no se han producido.
+    - **warning** — `⚠`, "importante:", "atención:", "aviso:", "cuidado" → callout ámbar.
+    - **success** — "validación:", "resultado esperado:", "ok:" → callout verde.
+    - **tip** — "tip:", "consejo:", "pro tip" → callout púrpura.
+    - **info** — "nota:", "prerrequisitos", "requisitos previos", "recordatorio" → callout azul (fallback por defecto).
+  - **Pasos numerados visuales.** Las listas ordenadas dentro de `.markdown-lab` se renderizan con bullets circulares en gradient pink → purple Plain Vanilla, sustituyendo el `1.` `2.` `3.` plano de markdown. Sub-listas (anidadas) vuelven a estilo discreto para no romper la jerarquía visual. Separación reforzada entre pasos consecutivos para legibilidad.
+  - **Headers de sección en labs** con borde lateral (h2: borde gordo púrpura; h3: borde fino gris; h4: pill sobre fondo `bg-surface-2`).
+  - `ModulePage` pasa `variant="lab"` al `MarkdownRenderer` cuando `section === 'laboratorios'`.
+  - `platform/src/index.css` con ~140 líneas nuevas de CSS para `.markdown-lab` y las cinco variantes de callout (con dark mode overrides).
+- `[Build]` Validador `scripts/validate-course.py` reporta 277 OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 1.94s. `npm run test:exam` OK 34/34 checks.
+
+ paginación mobile del examen, accesibilidad WCAG, documento de reuso de la plataforma y análisis económico del curso como producto.
   - **`platform/src/hooks/useMediaQuery.ts`** — Hook genérico que devuelve `true/false` para un media query y reacciona a cambios de viewport en vivo. Compatible con SSR (devuelve `false` en server).
   - **`platform/src/components/exam/ExamInProgress.tsx`** — Paginación del examen en mobile (< 768 px) en chunks de 10 preguntas. En desktop sigue siendo scroll continuo con sidebar. Mini-índice de páginas arriba con tres estados visuales por página (vacía / parcial / completa) y contador `answered/total` por chunk. Nav prev/next abajo; en la última página el botón «Siguiente» se sustituye por «Finalizar». `safePage` clampado al cambio de viewport para evitar índices fuera de rango. Sin cambios en el estado del intento.
   - **`platform/src/components/exam/ExamTimer.tsx`** — Accesibilidad mejorada: `role="timer"` (semánticamente correcto) en lugar de `role="status"`. `aria-live` desactivado en la pastilla visible para no saturar al lector cada segundo. Canal separado con `aria-live="polite"` que anuncia solo cruces de umbral (10 min, 5 min, 2 min, 1 min, expirado), evitando ráfagas mediante `lastAnnouncedRef`.

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { ArrowUp, ArrowDown, Check, X } from 'lucide-react'
+import { InlineMarkdown } from '@/components/InlineMarkdown'
 import type { OrderingQuestion, OrderingAnswer } from '@/lib/quiz'
 
 interface Props {
@@ -49,7 +50,7 @@ export function QuestionOrdering({ question, answer, submission, onChange }: Pro
               i === 0 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] italic',
             ].join(' ')}
           >
-            {p}
+            <InlineMarkdown text={p} />
           </p>
         ))}
       </div>
@@ -96,7 +97,7 @@ export function QuestionOrdering({ question, answer, submission, onChange }: Pro
                   {indicatorContent}
                 </span>
                 <span className="flex-1 min-w-0 text-[14px] leading-relaxed text-[var(--text-primary)]">
-                  {item.text}
+                  <InlineMarkdown text={item.text} />
                 </span>
                 {!submitted && (
                   <div className="flex flex-col gap-0.5 shrink-0">
@@ -123,7 +124,10 @@ export function QuestionOrdering({ question, answer, submission, onChange }: Pro
               </div>
               {submitted && !isCorrectHere && expectedAtThisPosition && (
                 <p className="text-[12px] text-[var(--text-muted)] mt-1 ml-11">
-                  En esta posición debería ir: <span className="text-[var(--text-secondary)]">{itemById[expectedAtThisPosition]?.text}</span>
+                  En esta posición debería ir:{' '}
+                  <span className="text-[var(--text-secondary)]">
+                    <InlineMarkdown text={itemById[expectedAtThisPosition]?.text ?? ''} />
+                  </span>
                 </p>
               )}
             </li>

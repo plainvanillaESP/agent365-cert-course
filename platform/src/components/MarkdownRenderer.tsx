@@ -5,6 +5,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypeHighlight from 'rehype-highlight'
 import { resolveContentUrl } from '@/lib/content'
 import { ExternalLink } from 'lucide-react'
+import { ZoomableImage } from '@/components/ZoomableImage'
 import type { Components } from 'react-markdown'
 import type { ReactNode, ReactElement } from 'react'
 
@@ -12,6 +13,12 @@ interface MarkdownRendererProps {
   body: string
   moduleSlug: string
   className?: string
+  /**
+   * Variante de presentación. `'lab'` aplica clases adicionales para
+   * destacar pasos numerados, callouts (capturas pendientes, validación,
+   * advertencia) y prerrequisitos. Por defecto `'default'` (teoría).
+   */
+  variant?: 'default' | 'lab'
 }
 
 /**
@@ -59,11 +66,11 @@ function transformChildren(children: ReactNode): ReactNode {
   return transformBadges(children)
 }
 
-export function MarkdownRenderer({ body, moduleSlug, className = '' }: MarkdownRendererProps) {
+export function MarkdownRenderer({ body, moduleSlug, className = '', variant = 'default' }: MarkdownRendererProps) {
   const components: Components = {
-    img: ({ src, alt, ...rest }) => {
+    img: ({ src, alt }) => {
       const resolved = src ? resolveContentUrl(moduleSlug, src) : undefined
-      return <img src={resolved} alt={alt} loading="lazy" {...rest} />
+      return <ZoomableImage src={resolved} alt={alt} />
     },
     a: ({ href, children, ...rest }) => {
       const isExternal = href?.startsWith('http://') || href?.startsWith('https://')
@@ -87,10 +94,22 @@ export function MarkdownRenderer({ body, moduleSlug, className = '' }: MarkdownR
     li: ({ children, ...rest }) => <li {...rest}>{transformChildren(children)}</li>,
     td: ({ children, ...rest }) => <td {...rest}>{transformChildren(children)}</td>,
     th: ({ children, ...rest }) => <th {...rest}>{transformChildren(children)}</th>,
+    // En la variante lab, los blockquotes se clasifican por su contenido
+    // (capturas pendientes, advertencias, validación, nota) y se renderizan
+    // como callouts visuales en lugar de un blockquote plano.
+    blockquote: ({ children, ...rest }) => {
+      if (variant !== 'lab') return <blockquote {...rest}>{children}</blockquote>
+      const kind = classifyCallout(children)
+      return (
+        <blockquote {...rest} data-callout={kind} className={`callout callout-${kind}`}>
+          {children}
+        </blockquote>
+      )
+    },
   }
 
   return (
-    <article className={`markdown-body ${className}`}>
+    <article className={`markdown-body ${variant === 'lab' ? 'markdown-lab' : ''} ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
@@ -104,4 +123,42 @@ export function MarkdownRenderer({ body, moduleSlug, className = '' }: MarkdownR
       </ReactMarkdown>
     </article>
   )
+}
+
+/**
+ * Clasifica un blockquote por la primera línea de texto que contiene,
+ * para asignarle un estilo de callout. Patrones reconocidos:
+ *
+ *   - capture:   `[CAPTURA PENDIENTE ...]`, «captura...», «screenshot...»
+ *   - warning:   `⚠`, «importante:», «atención:», «aviso:», «cuidado»
+ *   - success:   «validación:», «resultado esperado:», «ok:»
+ *   - info:      «nota:», «prerrequisitos», «requisitos previos», «recordatorio»
+ *   - tip:       «tip:», «consejo:», «pro tip»
+ *   - default:   nota genérica.
+ */
+function classifyCallout(children: ReactNode): string {
+  const text = extractFirstText(children).toLowerCase().trim()
+  if (/^\[captura pendiente/i.test(text) || /captura/.test(text) || /screenshot/.test(text)) return 'capture'
+  if (text.startsWith('⚠') || /^(importante|atención|atencion|aviso|cuidado|warning)\b/.test(text)) return 'warning'
+  if (/^(validación|validacion|resultado esperado|ok)\b/.test(text)) return 'success'
+  if (/^(tip|consejo|pro tip)\b/.test(text)) return 'tip'
+  if (/^(nota|prerrequisitos|requisitos previos|recordatorio|info)\b/.test(text)) return 'info'
+  return 'info'
+}
+
+function extractFirstText(node: ReactNode): string {
+  if (typeof node === 'string') return node
+  if (typeof node === 'number') return String(node)
+  if (Array.isArray(node)) {
+    for (const c of node) {
+      const t = extractFirstText(c)
+      if (t.trim()) return t
+    }
+    return ''
+  }
+  if (node && typeof node === 'object' && 'props' in node) {
+    const props = (node as { props?: { children?: ReactNode } }).props
+    if (props?.children !== undefined) return extractFirstText(props.children)
+  }
+  return ''
 }
