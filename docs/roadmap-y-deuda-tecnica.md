@@ -85,7 +85,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | ~~**Highlighter sobre la teoría**: seleccionar texto → guardar como destacado, vista de "tus destacados" por módulo~~ ✅ L.1 (vista pendiente) | Alto | 10–14 h | `lib/highlights.ts`, `hooks/useHighlights.ts`, `components/Highlighter.tsx` |
 | ~~**Modo focus / Pomodoro**: temporizador 25/5 que oculta sidebar y notificaciones, contador acumulado de tiempo de estudio~~ ✅ K.1 | Medio | 4–6 h | `lib/focusStore.ts`, `components/FocusTimer.tsx`, `hooks/useFocusMode.ts` |
 | ~~**Práctica adaptativa**: en quizzes, las preguntas falladas se reinyectan automáticamente al final con cooldown~~ ✅ I.2 | Alto | 4–6 h | `hooks/useQuizState.ts`, `components/quiz/Quiz.tsx` |
-| **Flashcards generadas desde el banco**: vista alternativa donde cada pregunta se ve como tarjeta de repaso espaciado (Anki-like, SM-2) | Alto | 12–16 h | Nuevo módulo entero `Flashcards`, `useSpacedRepetition` |
+| ~~**Flashcards generadas desde el banco**: vista alternativa donde cada pregunta se ve como tarjeta de repaso espaciado (Anki-like, SM-2)~~ ✅ L.7 | Alto | 12–16 h | `lib/srs.ts`, `hooks/useFlashcards.ts`, `pages/RepasoPage.tsx`, `components/flashcards/` |
 
 ### 2.3 Visual y micro-interacciones
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase L.6.*
+*Última actualización: 2026-05-12 tras Fase L.7.*

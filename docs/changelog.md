@@ -10,6 +10,16 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase L.7 — Repaso espaciado (SM-2) con flashcards sobre el banco completo de preguntas.
+  - **`lib/srs.ts` (nuevo)** — Algoritmo SM-2 puro sin React. Tipos `CardState`, `SrsQuality (0–5)`. Funciones `createCard`, `review(card, quality, now)` (recalcula `repetitions`, `easeFactor` con clamp a `MIN_EASE = 1.3`, `interval` en días, `dueAt` en ms), `isDue(card, now)`, `humanizeInterval(days)` para mostrar "3 días" / "2 meses" / "1 año". Reutilizable desde cualquier shell.
+  - **`hooks/useFlashcards` (nuevo)** — Deck del curso completo: itera `CONTENT_MODULES` produccidos, llama `getQuestionsForModule` y empareja cada `Question` con su `CardState` (o crea uno nuevo `dueAt = now` si la card es virgen). Devuelve `all`, `due`, `dueCount`, `reviewCard(cardId, quality)` y `reset()`. Persistencia en `agent365-srs-cards` como `{ [cardId]: CardState }`.
+  - **`components/flashcards/Flashcard.tsx` (nuevo)** — Tarjeta plana (no flip 3D, más estable en mobile). Anverso: id de pregunta + área + Bloom + prompt. Reverso: respuesta canónica según el tipo de pregunta (mc/scenario → texto de la opción correcta, mr → lista de correctas, ordering → orden numerado, dnd → solo justificación) + justificación. Reutiliza `InlineMarkdown`.
+  - **`pages/RepasoPage.tsx` (nuevo)** — Tres estados de UI: (1) deck vacío → mensaje informativo; (2) cero due → "Estás al día" con `humanizeInterval` hasta la próxima + statbox con cards totales + cards revisadas; (3) sesión activa → `PageHeader` + contexto de módulo (link al módulo origen) + `Flashcard` envuelta en `<Fade>` (cambio entre cards reanima) + botón "Mostrar respuesta" o cuatro botones de calidad (Otra vez / Difícil / Bien / Fácil mapeados a 1 / 3 / 4 / 5).
+  - **Ruta `/repaso`** registrada en `App.tsx` con lazy-load. Atajo global `Shift+R` ("Repaso") en grupo "Navegación" — convive con `r` (Recursos dentro de un módulo) porque el shortcut sin shift solo dispara cuando `shift` está libre.
+  - **`NavSidebar`** — Nuevo `RepasoLink` (componente local) bajo el examen final, con icono `Sparkles` y pildora con el número de cards vencidas hoy (consultado via `useFlashcards().dueCount`).
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[UX]` Fase L.6 — Compartir certificado en LinkedIn, X, Web Share API y copia al portapapeles.
   - **`components/ShareButtons.tsx` (nuevo)** — Botonera reutilizable con cuatro acciones: LinkedIn (sharer `feed/?shareActive=true&text=...`), X/Twitter (`twitter.com/intent/tweet`), Web Share API (solo aparece si `navigator.share` existe; útil en mobile y navegadores modernos), copia al portapapeles con `navigator.clipboard.writeText` + fallback a `window.prompt` si está bloqueado. Recibe `url`, `text`, `title` y dos variantes (`full` con icono + label, `compact` solo icono). Cualquier shell PV-Learn la puede consumir en futuros badges, recursos compartibles, etc.
   - **Iconos sociales SVG inline** — La versión instalada de `lucide-react` (1.14) no expone `Linkedin` ni `Twitter`. En lugar de añadir `react-icons` por algo tan puntual, escribí los paths oficiales simplificados como componentes funcionales (`LinkedinIcon`, `XIcon`) dentro del propio `ShareButtons`. Cero peso adicional.

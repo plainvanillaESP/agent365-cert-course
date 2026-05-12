@@ -24,6 +24,7 @@ const ProgressPage = lazy(() => import('@/pages/ProgressPage').then(m => ({ defa
 const ExamPage = lazy(() => import('@/pages/ExamPage').then(m => ({ default: m.ExamPage })))
 const CertificatePage = lazy(() => import('@/pages/CertificatePage').then(m => ({ default: m.CertificatePage })))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const RepasoPage = lazy(() => import('@/pages/RepasoPage').then(m => ({ default: m.RepasoPage })))
 
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
@@ -150,6 +151,13 @@ function AppShell({
       handler: () => navigate('/ajustes'),
     },
     {
+      key: 'R',
+      shift: true,
+      description: 'Ir al repaso (flashcards)',
+      group: 'Navegación',
+      handler: () => navigate('/repaso'),
+    },
+    {
       key: 'j',
       description: 'Siguiente módulo',
       group: 'En un módulo',
@@ -259,6 +267,7 @@ function AppShell({
               <Route path="/examen" element={<ExamPage />} />
               <Route path="/certificado/:attemptId" element={<CertificatePage />} />
               <Route path="/ajustes" element={<SettingsPage />} />
+              <Route path="/repaso" element={<RepasoPage />} />
               <Route path="*" element={<HomePage />} />
             </Routes>
           </Suspense>
