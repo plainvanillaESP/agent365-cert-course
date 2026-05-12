@@ -151,6 +151,65 @@ check(
   `byArea=${sumByArea} score=${r6.score}`,
 )
 
+/* ---------------------- Simulación E2E del intento ------------------------ */
+//
+// Simulamos un intento completo: seleccionar preguntas, contestar mezcla
+// acierto/fallo, recalcular scoring y verificar que el breakdown por área
+// y la condición de aprobado se comportan como debería.
+
+const e2eSelection = selectFromBank(banco, EXAM_NUM_QUESTIONS, 12345)
+check('E2E: selección de 60 preguntas con seed=12345', e2eSelection.length === 60)
+
+// Aciertos heterogéneos: por área damos distintos % de aciertos para que
+// el breakdown muestre variación realista.
+//   - Área 1 (9): 8/9 (89%)
+//   - Área 2 (18): 16/18 (89%)
+//   - Área 3 (9): 5/9 (56%)
+//   - Área 4 (12): 7/12 (58%)
+//   - Área 5 (12): 8/12 (67%)
+//   total: 44/60 (73%) → passed
+const e2eCorrect: Record<string, boolean> = {}
+const targetByArea: Record<number, number> = { 1: 8, 2: 16, 3: 5, 4: 7, 5: 8 }
+const usedByArea: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+for (const q of e2eSelection) {
+  const t = targetByArea[q.area] ?? 0
+  if (usedByArea[q.area] < t) {
+    e2eCorrect[q.id] = true
+    usedByArea[q.area]++
+  } else {
+    e2eCorrect[q.id] = false
+  }
+}
+
+const e2eScore = scoreExam(e2eSelection, e2eCorrect)
+check('E2E: score total = 44', e2eScore.score === 44, `actual=${e2eScore.score}`)
+check('E2E: pct = 73', e2eScore.pct === 73, `actual=${e2eScore.pct}`)
+check('E2E: passed = true (73 >= 70)', e2eScore.passed === true)
+
+// Breakdown por área cuadra con los aciertos objetivo
+for (const a of e2eScore.byArea) {
+  const target = targetByArea[a.areaId] ?? 0
+  check(
+    `E2E: área ${a.areaId} reporta ${target} aciertos`,
+    a.correct === target,
+    `actual=${a.correct}`,
+  )
+}
+
+// Identificación de áreas débiles (< 70 %)
+const weakAreas = e2eScore.byArea.filter(a => a.pct < 70).map(a => a.areaId)
+check('E2E: detecta áreas débiles correctamente', weakAreas.length === 3 && weakAreas.includes(3) && weakAreas.includes(4) && weakAreas.includes(5), `weakAreas=${weakAreas.join(',')}`)
+
+// Caso borde: score = 0
+const zeroCorrect: Record<string, boolean> = Object.fromEntries(e2eSelection.map(q => [q.id, false]))
+const zeroScore = scoreExam(e2eSelection, zeroCorrect)
+check('E2E borde: 0 aciertos → 0 % failed', zeroScore.score === 0 && zeroScore.pct === 0 && !zeroScore.passed)
+
+// Caso borde: score perfecto
+const fullCorrect: Record<string, boolean> = Object.fromEntries(e2eSelection.map(q => [q.id, true]))
+const fullScore = scoreExam(e2eSelection, fullCorrect)
+check('E2E borde: 60 aciertos → 100 % passed', fullScore.score === 60 && fullScore.pct === 100 && fullScore.passed)
+
 console.log()
 console.log(`  Resultado: ${report.ok} OK · ${report.fail} FAIL`)
 if (report.fail > 0) {

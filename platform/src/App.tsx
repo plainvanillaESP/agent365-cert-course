@@ -7,8 +7,19 @@ import { ModulePage } from '@/pages/ModulePage'
 import { ProgressPage } from '@/pages/ProgressPage'
 import { ExamPage } from '@/pages/ExamPage'
 import { CertificatePage } from '@/pages/CertificatePage'
+import { SettingsPage } from '@/pages/SettingsPage'
 
-const basename = import.meta.env.PROD ? '/agent365-cert-course' : ''
+// Basename del router:
+//   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
+//     rutas SPA funcionen al servir desde cualquier carpeta.
+//   - Producción GitHub Pages: /agent365-cert-course
+//   - Dev: vacío.
+const basename =
+  import.meta.env.VITE_OFFLINE === '1'
+    ? ''
+    : import.meta.env.PROD
+      ? '/agent365-cert-course'
+      : ''
 
 export function App() {
   const [navOpen, setNavOpen] = useState(false)
@@ -27,6 +38,7 @@ export function App() {
               <Route path="/modulo/:id/:section" element={<ModulePage />} />
               <Route path="/examen" element={<ExamPage />} />
               <Route path="/certificado/:attemptId" element={<CertificatePage />} />
+              <Route path="/ajustes" element={<SettingsPage />} />
               <Route path="*" element={<HomePage />} />
             </Routes>
           </main>

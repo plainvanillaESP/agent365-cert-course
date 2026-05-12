@@ -1,6 +1,6 @@
 import { NavLink, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Lock } from 'lucide-react'
+import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Lock, Settings as SettingsIcon } from 'lucide-react'
 import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
 import { useUnlockState } from '@/hooks/useModuleProgress'
 
@@ -82,6 +82,25 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
             currentModuleId={currentModuleId}
             onItemClick={onClose}
           />
+
+          {/* Ajustes */}
+          <div className="pt-3 mt-3 border-t border-[var(--border-subtle)]">
+            <NavLink
+              to="/ajustes"
+              onClick={onClose}
+              className={({ isActive }) =>
+                [
+                  'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] no-underline transition-colors',
+                  isActive
+                    ? 'bg-[var(--bg-active)] text-[var(--text-active)] font-medium'
+                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
+                ].join(' ')
+              }
+            >
+              <SettingsIcon className="size-[15px] shrink-0 stroke-[1.75]" aria-hidden />
+              <span>Ajustes</span>
+            </NavLink>
+          </div>
         </div>
       </nav>
     </>

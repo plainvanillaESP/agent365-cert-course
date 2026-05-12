@@ -564,3 +564,17 @@ html.dark .badge-status-deprecated {
     margin: 1.5cm;
   }
 }
+
+/* Highlight visual al saltar a una pregunta desde el índice del examen */
+.exam-jump-highlight {
+  animation: exam-jump-pulse 1.2s ease-out;
+}
+
+@keyframes exam-jump-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(154, 68, 229, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(154, 68, 229, 0);
+  }
+}

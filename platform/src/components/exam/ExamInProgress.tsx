@@ -20,7 +20,10 @@ import {
   type OrderingAnswer,
 } from '@/lib/quiz'
 import { ExamTimer } from './ExamTimer'
+import { ExamSidebarIndex } from './ExamSidebarIndex'
 import { EXAM_DURATION_MIN } from '@/lib/exam'
+
+const questionAnchorId = (idx: number) => `exam-q-${idx + 1}`
 
 interface ExamInProgressProps {
   questions: Question[]
@@ -86,50 +89,58 @@ export function ExamInProgress({
         </div>
       </div>
 
-      {/* Preguntas */}
-      <ol className="space-y-5 list-none p-0 m-0">
-        {questions.map((q, idx) => {
-          const ans = answers[q.id]
-          return (
-            <li key={q.id}>
-              <QuestionCard index={idx} state="pending">
-                {isMultipleChoice(q) && ans?.type === 'mc' && (
-                  <QuestionMultipleChoice
-                    question={q}
-                    answer={ans as MCAnswer}
-                    submission={null}
-                    onChange={a => onAnswerChange(q.id, a)}
-                  />
-                )}
-                {isMultipleResponse(q) && ans?.type === 'mr' && (
-                  <QuestionMultipleResponse
-                    question={q}
-                    answer={ans as MRAnswer}
-                    submission={null}
-                    onChange={a => onAnswerChange(q.id, a)}
-                  />
-                )}
-                {isDragAndDrop(q) && ans?.type === 'dnd' && (
-                  <QuestionDragAndDrop
-                    question={q}
-                    answer={ans as DnDAnswer}
-                    submission={null}
-                    onChange={a => onAnswerChange(q.id, a)}
-                  />
-                )}
-                {isOrdering(q) && ans?.type === 'order' && (
-                  <QuestionOrdering
-                    question={q}
-                    answer={ans as OrderingAnswer}
-                    submission={null}
-                    onChange={a => onAnswerChange(q.id, a)}
-                  />
-                )}
-              </QuestionCard>
-            </li>
-          )
-        })}
-      </ol>
+      {/* Preguntas con índice lateral */}
+      <div className="flex gap-6">
+        <ol className="flex-1 min-w-0 space-y-5 list-none p-0 m-0">
+          {questions.map((q, idx) => {
+            const ans = answers[q.id]
+            return (
+              <li key={q.id} id={questionAnchorId(idx)} className="scroll-mt-[calc(var(--layout-header-h)+5rem)]">
+                <QuestionCard index={idx} state="pending">
+                  {isMultipleChoice(q) && ans?.type === 'mc' && (
+                    <QuestionMultipleChoice
+                      question={q}
+                      answer={ans as MCAnswer}
+                      submission={null}
+                      onChange={a => onAnswerChange(q.id, a)}
+                    />
+                  )}
+                  {isMultipleResponse(q) && ans?.type === 'mr' && (
+                    <QuestionMultipleResponse
+                      question={q}
+                      answer={ans as MRAnswer}
+                      submission={null}
+                      onChange={a => onAnswerChange(q.id, a)}
+                    />
+                  )}
+                  {isDragAndDrop(q) && ans?.type === 'dnd' && (
+                    <QuestionDragAndDrop
+                      question={q}
+                      answer={ans as DnDAnswer}
+                      submission={null}
+                      onChange={a => onAnswerChange(q.id, a)}
+                    />
+                  )}
+                  {isOrdering(q) && ans?.type === 'order' && (
+                    <QuestionOrdering
+                      question={q}
+                      answer={ans as OrderingAnswer}
+                      submission={null}
+                      onChange={a => onAnswerChange(q.id, a)}
+                    />
+                  )}
+                </QuestionCard>
+              </li>
+            )
+          })}
+        </ol>
+
+        <ExamSidebarIndex
+          questions={questions}
+          answers={answers}
+          getQuestionAnchorId={questionAnchorId}
+        />
+      </div>
 
       {/* Pie con submit y back-to-top */}
       <div className="flex flex-wrap items-center gap-3 pt-2">
