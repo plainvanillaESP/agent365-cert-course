@@ -990,3 +990,49 @@ html.dark mark.pv-highlight-purple {
     animation: none;
   }
 }
+
+/* ============================================================================
+ * Alto contraste
+ *
+ * Se activa automáticamente cuando el SO/navegador reporta
+ * `prefers-contrast: more`. Sube los contrastes de bordes y texto, vuelve
+ * los muted al color secondary y endurece los focus rings.
+ *
+ * No requiere intervención del usuario: se aplica solo. Para validación
+ * con axe-core o similar, comprobar bajo este media query.
+ * ============================================================================ */
+
+@media (prefers-contrast: more) {
+  :root {
+    /* Bordes más oscuros para que se distingan a primera vista */
+    --border-subtle: var(--color-neutral-300);
+    --border-default: var(--color-neutral-400);
+    --border-strong: var(--color-neutral-600);
+    /* Texto muted se acerca a secondary para subir contraste */
+    --text-muted: var(--color-neutral-700);
+    --text-faint: var(--color-neutral-500);
+  }
+  html.dark {
+    --border-subtle: var(--color-neutral-600);
+    --border-default: var(--color-neutral-500);
+    --border-strong: var(--color-neutral-300);
+    --text-muted: #E2E1DD;
+    --text-faint: #9A988F;
+  }
+  /* Focus ring más grueso para que destaque sin ambigüedad. */
+  :focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+  /* Subrayar todos los links del contenido (no solo on hover) en alto
+     contraste para que se identifiquen sin depender del color. */
+  .markdown-body a {
+    text-decoration: underline;
+  }
+  /* Marks del highlighter: borde para que se distingan del fondo cuando
+     el color sea sutil. */
+  mark.pv-highlight {
+    outline: 1px solid currentColor;
+    outline-offset: 0;
+  }
+}

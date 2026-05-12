@@ -114,8 +114,8 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | **Audit AAA**: pasar axe-core sobre todas las páginas, corregir los warnings | Medio | 4–6 h |
 | ~~**Code-splitting por ruta**: hoy todo el JS va en un solo bundle (~500 KB warning de Vite)~~ ✅ H.2 + H.3 | Medio | 2–3 h |
 | **PWA con service worker**: la plataforma es instalable, funciona offline tras la primera visita | Alto | 6–10 h |
-| **Modo alto contraste** detectado automáticamente (`prefers-contrast: more`) | Bajo | 2 h |
-| **Soporte completo de teclado** en lightbox (ya está bien), drag-drop de quiz (revisar) y resto de interactivos | Medio | 3–4 h |
+| ~~**Modo alto contraste** detectado automáticamente (`prefers-contrast: more`)~~ ✅ L.3 | Bajo | 2 h | CSS bajo `@media (prefers-contrast: more)` |
+| ~~**Soporte completo de teclado** en lightbox (ya está bien), drag-drop de quiz (revisar) y resto de interactivos~~ ✅ L.3 (auditado) | Medio | 3–4 h | KeyboardSensor de dnd-kit + Ordering con botones |
 
 ### 2.6 Social y prueba social
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase L.2.*
+*Última actualización: 2026-05-12 tras Fase L.3.*

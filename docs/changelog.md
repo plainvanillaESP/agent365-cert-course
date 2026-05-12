@@ -10,6 +10,14 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[a11y]` Fase L.3 — Alto contraste automático + revisión de soporte de teclado.
+  - **`@media (prefers-contrast: more)`** en `index.css` — Cuando el SO/navegador lo solicita, sube los `--border-*` un escalón en la escala stone (subtle → 300, default → 400, strong → 600 en light; espejado en dark), acerca `--text-muted` a `text-secondary` para subir el contraste de texto fino, engorda el `outline` del `:focus-visible` a 3 px con offset 3 px, subraya todos los `a` dentro de `.markdown-body` (no solo on hover) y añade un outline a los `<mark>` del highlighter para que se distingan del fondo aunque el color sea sutil. Todo via CSS, sin código JS, sin intervención del alumno.
+  - **DnD** (`QuestionDragAndDrop.tsx`) — Ya tenía `KeyboardSensor` configurado en `useSensors` (verificación post-revisión). Tab para entrar al ítem, Space para tomarlo, flechas para mover, Enter para soltar. La accesibilidad existía pero no estaba auditada formalmente; ahora queda documentada.
+  - **Ordering** (`QuestionOrdering.tsx`) — Implementado con botones `ArrowUp`/`ArrowDown` por ítem (no drag), accesible por teclado por construcción.
+  - **Focus visible global** — Ya existía en `:focus-visible { outline: 2px solid var(--color-pv-purple-500); outline-offset: 2px; }`. Bajo `prefers-contrast: more` pasa a 3/3.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[UX]` Fase L.2 — Transiciones de página/sección con CSS, sin framer-motion.
   - **`components/Transitions.tsx` (nuevo)** — Helper `<Fade fadeKey="..." variant="fade|slide-right">` que envuelve el contenido y usa `key` para remontar al cambiar `fadeKey`, lo que dispara la animación CSS de entrada. Implementación deliberadamente ligera (sin librería) para no añadir ~30 kB de `framer-motion` por algo que se resuelve con `@keyframes`.
   - **CSS** (en `index.css`) — Dos keyframes: `pv-fade-in` (opacidad + 4 px de slide vertical, 220 ms `cubic-bezier(.22,.61,.36,1)`) y `pv-slide-in-right` (opacidad + 12 px horizontal, 260 ms). Bajo `@media (prefers-reduced-motion: reduce)` ambas se anulan, así que en accesibilidad estricta no hay movimiento.
