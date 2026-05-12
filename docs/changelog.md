@@ -10,6 +10,13 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[a11y]` Fase M.2 — Auditoría a11y en tiempo de desarrollo con `@axe-core/react`.
+  - **`main.tsx`** — Bloque condicional `import.meta.env.DEV` que importa dinámicamente `@axe-core/react` y lo ejecuta sobre el `ReactDOM` con 1000 ms de debounce. Reporta a la consola del navegador todas las violaciones a11y que detecte tras cada render (selectores afectados, regla violada, link a la guía Deque). Solo en `npm run dev`: en producción la guardia DEV queda dead code y Rollup la purga (verificado en build).
+  - **`@axe-core/react` como devDependency** (~1.5 MB en `node_modules`, cero impacto en el bundle de producción). Por qué runtime devtool y no audit CI: el contenido se renderiza dinámicamente (markdown, drawers, modales, transiciones); axe en CI sobre HTML estático perdería la mayoría del UI. El alumno (en este caso, nosotros desarrollando) ve los problemas en consola y los corrige al verlos.
+  - **Convivencia con `prefers-contrast: more`** (L.3) — Ahora hay dos capas de garantía: (1) CSS automático que sube contrastes en SO con alto contraste; (2) axe en dev que avisa de violaciones de contraste antes de pushear.
+- `[Build]` Validador 277 OK. tsc clean. Build OK (axe no entra en prod). test:exam 34/34 OK.
+
+
 - `[Infra]` Fase M.1 — Infraestructura i18n con `react-i18next` + selector de idioma. ES default + EN placeholder.
   - **`i18n/index.ts` (nuevo)** — Configuración i18next con `LanguageDetector` (orden: `localStorage` (`pv-learn-language`) → `navigator` → `htmlTag`), namespace `common`, `fallbackLng: 'es'`, `supportedLngs: ['es', 'en']`. Reutilizable: cualquier shell PV-Learn lo hereda con un `import './i18n'` en `main.tsx`.
   - **`locales/{es,en}/common.json`** — Strings de UI (header, nav, common, module, shortcuts) en JSON. Sin escapar HTML. Plural support via convenciones de i18next (`_plural` suffix). Solo cubre las claves visibles principales; cuando se traduzca una página nueva, se añaden sus claves aquí. **El contenido del curso (teoría/quiz/labs/recursos) NO entra en i18n**: el día que se traduzca, vendrá produciendo `cursos/<slug>-<lang>/` (estructura de paquete duplicada) en lugar de strings.

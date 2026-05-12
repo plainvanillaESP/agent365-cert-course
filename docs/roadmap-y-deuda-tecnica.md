@@ -111,7 +111,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
 | ~~**Skip links** al inicio de cada página (saltar a contenido principal)~~ ✅ H.2 | Bajo | 30 min |
-| **Audit AAA**: pasar axe-core sobre todas las páginas, corregir los warnings | Medio | 4–6 h |
+| ~~**Audit AAA**: pasar axe-core sobre todas las páginas, corregir los warnings~~ ✅ M.2 (axe en dev runtime) | Medio | 4–6 h | `@axe-core/react` cargado bajo `import.meta.env.DEV` en `main.tsx` |
 | ~~**Code-splitting por ruta**: hoy todo el JS va en un solo bundle (~500 KB warning de Vite)~~ ✅ H.2 + H.3 | Medio | 2–3 h |
 | ~~**PWA con service worker**: la plataforma es instalable, funciona offline tras la primera visita~~ ✅ L.4 | Alto | 6–10 h | `vite-plugin-pwa` + manifest en `vite.config.ts` |
 | ~~**Modo alto contraste** detectado automáticamente (`prefers-contrast: more`)~~ ✅ L.3 | Bajo | 2 h | CSS bajo `@media (prefers-contrast: more)` |
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase M.1.*
+*Última actualización: 2026-05-12 tras Fase M.2.*
