@@ -1,8 +1,9 @@
 import { Link, NavLink } from 'react-router-dom'
-import { Sun, Moon, Menu, Activity, Search, Glasses } from 'lucide-react'
+import { Sun, Moon, Menu, Activity, Search, Glasses, Timer } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { useReadingMode } from '@/hooks/useReadingMode'
+import { useFocusMode } from '@/hooks/useFocusMode'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
 import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
@@ -27,6 +28,7 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const { theme, toggle } = useTheme()
   const snapshots = useCourseProgress()
   const { enabled: readingMode, toggle: toggleReading } = useReadingMode()
+  const focus = useFocusMode()
 
   // Progreso global del curso: media del % completado por módulo.
   // Para que la cifra crezca de forma estable usamos sections completas
@@ -143,6 +145,23 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
           >
             <GithubIcon className="size-[17px]" />
           </a>
+          <IconButton
+            onClick={() => (focus.phase === 'idle' ? focus.startWork() : focus.stop())}
+            label={
+              focus.phase === 'idle'
+                ? 'Iniciar modo focus (Pomodoro 25/5)'
+                : 'Detener el temporizador'
+            }
+            size="md"
+            aria-pressed={focus.phase !== 'idle'}
+            className={
+              focus.phase !== 'idle'
+                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                : undefined
+            }
+          >
+            <Timer className="size-[17px]" />
+          </IconButton>
           <IconButton
             onClick={toggleReading}
             label={readingMode ? 'Salir del modo lectura' : 'Activar modo lectura'}

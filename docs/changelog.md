@@ -10,6 +10,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase K.1 — Modo focus (Pomodoro 25/5) con timer flotante y contadores persistentes.
+  - **`lib/focusStore.ts` (nuevo)** — Store singleton a nivel de módulo con suscriptores. Tres fases: `idle`, `work` (25 min), `shortBreak` (5 min). Tick por `setInterval(1s)` que decrementa `secondsRemaining` y, en fase `work`, incrementa `totalSeconds` acumulado (persistido cada 30 s para no machacar `localStorage`). Al cerrar un bloque de trabajo, transición automática a `shortBreak`. Al cerrar un descanso vuelve a `idle` y para el tick — más respetuoso que arrancar otro work sin consentimiento. `skipPhase()` cierra la fase actual (un work saltado contabiliza como pomodoro, decisión del alumno).
+  - **Persistencia ligera** — `agent365-focus-pomodoros-total`, `agent365-focus-total-seconds` (vida del navegador), `agent365-focus-pomodoros-today` con `agent365-focus-pomodoros-today-date` (reset al cambiar de día ISO). El temporizador en sí NO persiste: si el alumno recarga, el timer descarta. Pomodoros completados sí. Evita la complejidad de calcular `startedAt + duracion - now` con pausas, system clock drift, etc.
+  - **`hooks/useFocusMode.ts` (nuevo)** — Hook fino sobre el store via `useSyncExternalStore(subscribe, getSnapshot, getSnapshot)`. Devuelve el estado + las acciones (`startWork`, `pause`, `resume`, `stop`, `skipPhase`).
+  - **`components/FocusTimer.tsx` (nuevo)** — Tarjeta flotante bottom-right del viewport, oculta cuando `phase === 'idle'`. Diseño:
+    - Barra de progreso superior con `transition-[width] 1s linear`, respeta `prefers-reduced-motion`.
+    - Icono y color contextual: `Timer` en púrpura para work, `Coffee` en verde para shortBreak.
+    - mm:ss grande en font-mono tabular-nums.
+    - Acciones: Pausar/Reanudar, Saltar (con tooltip que explica que un work saltado cuenta el pomodoro).
+    - Contador del día solo aparece tras el primer pomodoro completado, con el tiempo total acumulado en formato legible (min / h).
+    - `pb-[env(safe-area-inset-bottom)]` para iOS notch.
+  - **Atajo global `f`** (grupo "Vista") — Si la fase es `idle`, arranca un bloque de trabajo. Si está corriendo, pausa; si está pausado, reanuda. La lógica vive en `App.tsx` y consume el store directamente (sin hook) porque solo necesita el snapshot puntual en el handler del atajo.
+  - **Botón Timer en el Header** — Junto al toggle de modo lectura. Con `aria-pressed` que refleja si el timer está activo y fondo púrpura tenue en ese caso. Click cuando idle → arranca work; click cuando activo → para todo (stop) para resetear sin tener que tocar el panel flotante.
+  - **Integración con modo lectura** — Son ortogonales: el alumno puede combinarlos manualmente (`i` + `f`). No fuerzo el reading mode al arrancar focus para no presumir que es lo que el alumno quiere.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK. test:exam 34/34 OK. Bundle inicial 226 KB (+7 KB sobre J.1 por el store + el componente que están en el bundle inicial al ser globales).
+
+
 - `[UX]` Fase J.1 — TOC mejorado + Modo lectura inmersivo.
   - **`TableOfContents` reescrito** — La versión anterior se quedaba con el primer heading que intersectaba el viewport (con `break` al primer match en `entries`), lo que producía parpadeos al scrollear rápido. Nueva implementación:
     - Mantiene un `Set` en `useRef` con los IDs visibles en cada momento; al recibir entries del `IntersectionObserver` actualiza el set y elige el primero en **orden de documento**. Si entre dos headings no hay ninguno visible, conserva el último activo (no se pierde el highlight al pasar por el "hueco").

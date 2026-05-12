@@ -4,8 +4,10 @@ import { Header } from '@/components/Header'
 import { NavSidebar } from '@/components/NavSidebar'
 import { Skeleton, SkeletonParagraph } from '@/components/Skeleton'
 import { ShortcutsModal } from '@/components/ShortcutsModal'
+import { FocusTimer } from '@/components/FocusTimer'
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts'
 import { CONTENT_MODULES } from '@/lib/course'
+import { getFocusSnapshot, startWork, pause, resume } from '@/lib/focusStore'
 
 // SearchPalette arrastra todo el contenido del curso (índice). Lazy-load
 // para que no entre en el bundle inicial; el chunk se descarga la primera
@@ -201,6 +203,17 @@ function AppShell({
       },
     },
     {
+      key: 'f',
+      description: 'Modo focus (Pomodoro 25/5)',
+      group: 'Vista',
+      handler: () => {
+        const snap = getFocusSnapshot()
+        if (snap.phase === 'idle') startWork()
+        else if (snap.running) pause()
+        else resume()
+      },
+    },
+    {
       key: 'Escape',
       description: 'Cerrar diálogo o panel lateral',
       group: 'General',
@@ -263,6 +276,9 @@ function AppShell({
           <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
         </Suspense>
       )}
+
+      {/* Tarjeta flotante del Pomodoro. Se autoesconde si phase === 'idle'. */}
+      <FocusTimer />
     </div>
   )
 }
