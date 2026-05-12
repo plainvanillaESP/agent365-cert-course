@@ -6,6 +6,7 @@ import { useReadingMode } from '@/hooks/useReadingMode'
 import { useFocusMode } from '@/hooks/useFocusMode'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
 
 interface HeaderProps {
@@ -182,6 +183,7 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
           >
             {theme === 'dark' ? <Sun className="size-[17px]" /> : <Moon className="size-[17px]" />}
           </IconButton>
+          <LanguageSwitcher />
         </div>
       </div>
     </header>

@@ -1,0 +1,51 @@
+{
+  "header": {
+    "search": "Buscar",
+    "progress": "Progreso",
+    "github": "Repositorio en GitHub",
+    "readingMode": "Activar modo lectura",
+    "readingModeExit": "Salir del modo lectura",
+    "focusStart": "Iniciar modo focus (Pomodoro 25/5)",
+    "focusStop": "Detener el temporizador",
+    "themeLight": "Cambiar a modo claro",
+    "themeDark": "Cambiar a modo oscuro",
+    "menu": "Abrir navegación",
+    "language": "Idioma"
+  },
+  "nav": {
+    "home": "Inicio del curso",
+    "exam": "Examen final",
+    "review": "Repaso",
+    "settings": "Ajustes",
+    "saveAndQuit": "Guardar y salir"
+  },
+  "common": {
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "loading": "Cargando…",
+    "error": "Error",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "module": {
+    "section": {
+      "teoria": "Teoría",
+      "labs": "Laboratorios",
+      "quiz": "Práctica",
+      "resources": "Recursos"
+    },
+    "notes": "Notas",
+    "duration": "{{minutes}} min",
+    "questionsInExam": "{{count}} pregunta en el examen",
+    "questionsInExam_plural": "{{count}} preguntas en el examen"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "hint": "Pulsa <kbd>?</kbd> en cualquier momento para abrir esta ayuda."
+  }
+}

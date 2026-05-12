@@ -129,8 +129,8 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
-| **i18n completo** con react-i18next: UI traducible (botones, labels, mensajes), curso en español de origen pero plataforma EN-ES-FR | Alto | 8–12 h base + traducción ongoing |
-| **Toggle de idioma** en el header con detección de `navigator.language` | Bajo | 2 h |
+| ~~**i18n completo** con react-i18next: UI traducible (botones, labels, mensajes), curso en español de origen pero plataforma EN-ES-FR~~ ✅ M.1 (infra; migración de strings ongoing) | Alto | 8–12 h base + traducción ongoing | `i18n/`, `locales/{es,en}/common.json` |
+| ~~**Toggle de idioma** en el header con detección de `navigator.language`~~ ✅ M.1 | Bajo | 2 h | `components/LanguageSwitcher.tsx` |
 
 ---
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase L.7.*
+*Última actualización: 2026-05-12 tras Fase M.1.*

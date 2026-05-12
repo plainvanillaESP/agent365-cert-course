@@ -10,6 +10,15 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[Infra]` Fase M.1 — Infraestructura i18n con `react-i18next` + selector de idioma. ES default + EN placeholder.
+  - **`i18n/index.ts` (nuevo)** — Configuración i18next con `LanguageDetector` (orden: `localStorage` (`pv-learn-language`) → `navigator` → `htmlTag`), namespace `common`, `fallbackLng: 'es'`, `supportedLngs: ['es', 'en']`. Reutilizable: cualquier shell PV-Learn lo hereda con un `import './i18n'` en `main.tsx`.
+  - **`locales/{es,en}/common.json`** — Strings de UI (header, nav, common, module, shortcuts) en JSON. Sin escapar HTML. Plural support via convenciones de i18next (`_plural` suffix). Solo cubre las claves visibles principales; cuando se traduzca una página nueva, se añaden sus claves aquí. **El contenido del curso (teoría/quiz/labs/recursos) NO entra en i18n**: el día que se traduzca, vendrá produciendo `cursos/<slug>-<lang>/` (estructura de paquete duplicada) en lugar de strings.
+  - **`components/LanguageSwitcher.tsx` (nuevo)** — Dropdown minimal con icono `Globe` que lista los idiomas soportados (consumidos vía `SUPPORTED_LANGUAGES` y `LANGUAGE_LABELS`). Persistencia delegada a `i18next-browser-languagedetector` (no se duplica lógica). Cierre on-click-fuera. Reutilizable con prop `className`.
+  - **Header** — Botón del switcher al final de la fila de acciones.
+  - **Coste runtime**: i18next + react-i18next + language-detector + locales JSON ≈ 30 kB minificado (~10 kB gzip). Aceptable para abrir el camino a EN/FR sin tocar componentes en el futuro.
+- `[Build]` Validador 277 OK. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[UX]` Fase L.7 — Repaso espaciado (SM-2) con flashcards sobre el banco completo de preguntas.
   - **`lib/srs.ts` (nuevo)** — Algoritmo SM-2 puro sin React. Tipos `CardState`, `SrsQuality (0–5)`. Funciones `createCard`, `review(card, quality, now)` (recalcula `repetitions`, `easeFactor` con clamp a `MIN_EASE = 1.3`, `interval` en días, `dueAt` en ms), `isDue(card, now)`, `humanizeInterval(days)` para mostrar "3 días" / "2 meses" / "1 año". Reutilizable desde cualquier shell.
   - **`hooks/useFlashcards` (nuevo)** — Deck del curso completo: itera `CONTENT_MODULES` produccidos, llama `getQuestionsForModule` y empareja cada `Question` con su `CardState` (o crea uno nuevo `dueAt = now` si la card es virgen). Devuelve `all`, `due`, `dueCount`, `reviewCard(cardId, quality)` y `reset()`. Persistencia en `agent365-srs-cards` como `{ [cardId]: CardState }`.
