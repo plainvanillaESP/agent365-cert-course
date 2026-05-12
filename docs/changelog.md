@@ -10,6 +10,27 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase L.1 — Highlighter del alumno: resaltar texto sobre la teoría y los labs con cuatro colores.
+  - **`lib/highlights.ts` (nuevo, ~310 líneas)** — Motor sin dependencia de React, reutilizable desde cualquier shell. Tipos `Highlight`, `HighlightColor`, `PlainTextMap`. Funciones puras:
+    - `buildPlainTextMap(container)` — Walker de `TreeWalker` que construye el texto plano del contenedor + un mapeo `Text → { start, end }` para reanchorrar offsets DOM ↔ texto.
+    - `locatePayload(plain, prefix, payload, suffix)` — Busca `prefix + payload + suffix` en el texto plano. Si el match con contexto es único, devuelve el rango; si no, fallback a buscar el payload solo (acepta solo si es única ocurrencia). Devuelve `null` ante ambigüedad.
+    - `rangeFromPlainIndices(map, start, end)` — Convierte un par de offsets en el texto plano en un `Range` DOM que abarca esos chars (potencialmente cruzando text nodes).
+    - `wrapRangeWithHighlight(range, id, color)` — Aplica `<mark>` a los text nodes intersectados por el rango, splitando inicios/finales según haga falta. Maneja rangos multi-nodo.
+    - `highlightFromSelection(container, selection, color)` — Construye el objeto `Highlight` a partir de la selección actual del navegador, con `prefix`/`suffix` de hasta 16 chars para reanchorrar tras recargas.
+    - `paintHighlight(container, h)` / `unpaintHighlight(container, id)` — Aplican y eliminan marks; el unpaint llama a `parent.normalize()` para mergear text nodes adyacentes y no fragmentar el DOM (lo que rompería búsquedas posteriores).
+  - **`hooks/useHighlights(moduleId, section)` (nuevo)** — Carga, añade, borra y limpia con persistencia en `agent365-highlights-m{N}-{section}`. Emite `CustomEvent('pv-learn:highlights-changed')` para que componentes ajenos que muestren contadores se sincronicen sin acoplarse al hook.
+  - **`components/Highlighter.tsx` (nuevo)** — Orquestador. Recibe `getContainer: () => HTMLElement | null` en lugar de un ref directo, lo que desacopla el highlighter del componente que renderiza el markdown — útil para que cualquier shell future-proof pueda montarlo sin tener que forward-refear el `<article>`. Capacidades:
+    - Escucha `mouseup`/`touchend` globales, filtra selecciones que no caigan dentro del contenedor objetivo, descarta selecciones < 3 caracteres (`MIN_HIGHLIGHT_LEN`).
+    - Renderiza una `HighlighterBar` flotante con paleta de 4 colores (`yellow`, `green`, `pink`, `purple`) absoluta al documento (no fixed, así sigue la selección al scrollear).
+    - Click sobre un `<mark>` ya pintado muestra la barra con `Trash2` para quitar.
+    - `useLayoutEffect` re-aplica al DOM la lista persistida tras cambio de `contentKey` (la composición `${moduleId}-${section}`). Antes del paint hace una limpieza preventiva con `parent.normalize()` para fusionar text nodes residuales y mantener los offsets reanchorrables.
+    - `onMouseDown` en la barra hace `preventDefault` para no robar el rango antes de que el handler de color dispare en mouseup.
+  - **Robustez frente a cambios de contenido** — `prefix` + `suffix` permiten que, si el editor cambia ligeramente la teoría, los highlights existentes sigan reanchorrándose mientras el fragmento exacto siga en el texto. Si no encuentra match único, el highlight queda "huérfano": persiste en localStorage pero no se pinta. No se borra automáticamente.
+  - **CSS** (en `index.css`) — Cuatro variantes de color con tonos claros para el modo light (`#fff59d`, `#c8e6c9`, `#f8bbd0`, `#d1b3ff`) y versiones translúcidas para el modo dark con `rgba(...)` para que el texto siga legible. `transition: background-color 0.12s ease-out` para feedback al hover.
+  - **Integración en `ModulePage`** — Solo se monta cuando `section === 'teoria' || section === 'laboratorios'`. El `getContainer` busca el `article.markdown-body` que `MarkdownRenderer` siempre monta. En quiz/recursos no se activa.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[UX]` Fase K.2 — Confetti al aprobar + soporte Mermaid en teoría.
   - **`lib/confetti.ts` (nuevo)** — Wrapper sobre `canvas-confetti` con tres añadidos: (1) lazy-load de la librería (no entra en el bundle inicial), (2) respeto a `prefers-reduced-motion` (no-op silencioso si el SO lo pide), (3) paleta Plain Vanilla por defecto (`#9A44E5 → #F68DAC` con tonos intermedios y blanco). Exporta `celebrate()` (ráfaga corta de dos lados, ~700 ms) para hitos pequeños y `celebrateBig()` (1.5 s de ráfagas escalonadas) para el examen final.
   - **Quiz** — Al validar con `score === total && total > 0`, lanza `celebrate()`. El feedback de "100 %" sigue existiendo en el `QuizResult` independientemente, así que sin animación el alumno también recibe el feedback. La política es la del quiz oficial (modo `full`); en modo `adaptive` no se lanza confetti, porque no es un intento oficial.

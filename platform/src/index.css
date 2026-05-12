@@ -894,3 +894,53 @@ html[data-reading-mode='on'] main > div.grid {
     /* nada que animar en este modo, pero garantizamos no introducir transiciones */
   }
 }
+
+/* ============================================================================
+ * Highlights del alumno
+ *
+ * Marks aplicadas por `components/Highlighter.tsx`. Cuatro colores que el
+ * alumno elige al guardar (yellow, green, pink, purple). Los estilos vienen
+ * con un poco de padding, esquinas redondeadas y cursor hand para indicar
+ * que se puede pulsar (al clicar se ofrece quitar).
+ * ============================================================================ */
+
+mark.pv-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.12s ease-out;
+}
+
+mark.pv-highlight-yellow {
+  background-color: #fff59d; /* amber 200 visualmente */
+}
+html.dark mark.pv-highlight-yellow {
+  background-color: rgba(255, 235, 130, 0.32);
+  color: inherit;
+}
+
+mark.pv-highlight-green {
+  background-color: #c8e6c9;
+}
+html.dark mark.pv-highlight-green {
+  background-color: rgba(180, 240, 180, 0.28);
+  color: inherit;
+}
+
+mark.pv-highlight-pink {
+  background-color: #f8bbd0;
+}
+html.dark mark.pv-highlight-pink {
+  background-color: rgba(255, 170, 200, 0.28);
+  color: inherit;
+}
+
+mark.pv-highlight-purple {
+  background-color: #d1b3ff;
+}
+html.dark mark.pv-highlight-purple {
+  background-color: rgba(190, 150, 255, 0.32);
+  color: inherit;
+}

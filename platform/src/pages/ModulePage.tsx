@@ -15,6 +15,7 @@ import { Resources } from '@/components/resources/Resources'
 import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
 import { NotesPanel } from '@/components/NotesPanel'
+import { Highlighter } from '@/components/Highlighter'
 import { markSectionVisited, type TrackedSection } from '@/lib/progress'
 import { useModuleProgress, useUnlockState } from '@/hooks/useModuleProgress'
 
@@ -262,6 +263,20 @@ export function ModulePage() {
           moduleTitle={module.titulo}
         />
       </div>
+
+      {/* Highlighter — solo en secciones de prosa (teoría/labs). El
+          selector busca el `<article.markdown-body>` que MarkdownRenderer
+          monta. Si la sección actual no usa MarkdownRenderer (quiz,
+          recursos), getContainer devolverá null y el componente no
+          intentará pintar nada. */}
+      {(section === 'teoria' || section === 'laboratorios') && (
+        <Highlighter
+          getContainer={() => document.querySelector<HTMLElement>('article.markdown-body')}
+          moduleId={module.id}
+          section={section}
+          contentKey={`${module.id}-${section}`}
+        />
+      )}
     </div>
   )
 }
