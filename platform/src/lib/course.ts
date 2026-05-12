@@ -81,7 +81,7 @@ export const MODULES: CourseModule[] = [
   { id: 14, slug: 'modulo-14-gobernanza-avanzada',           titulo: 'Gobernanza avanzada y multi-tenant',                duracionMin: 132, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 2  },
   { id: 15, slug: 'modulo-15-troubleshooting',               titulo: 'Troubleshooting y operación',                       duracionMin: 117, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 1  },
   { id: 16, slug: 'modulo-16-costes-optimizacion',           titulo: 'Costes, optimización y mejores prácticas',          duracionMin: 117, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 1  },
-  { id: 17, slug: 'modulo-17-examen-certificacion',          titulo: 'Examen de certificación',                           duracionMin: 90,  areaExamen: 0, estado: 'pendiente', faseProduccion: 7, preguntas: 60 },
+  { id: 17, slug: 'modulo-17-examen-certificacion',          titulo: 'Examen de certificación',                           duracionMin: 90,  areaExamen: 0, estado: 'producido', faseProduccion: 7, preguntas: 60 },
 ]
 
 export const COURSE_TOTAL_MIN = MODULES.slice(0, 16).reduce((sum, m) => sum + m.duracionMin, 0)
