@@ -1,4 +1,5 @@
 import { Check, X } from 'lucide-react'
+import { InlineMarkdown } from '@/components/InlineMarkdown'
 import type { MultipleResponseQuestion, MRAnswer } from '@/lib/quiz'
 
 interface Props {
@@ -35,7 +36,7 @@ export function QuestionMultipleResponse({ question, answer, submission, onChang
               i === 0 ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] italic',
             ].join(' ')}
           >
-            {p}
+            <InlineMarkdown text={p} />
           </p>
         ))}
       </div>
@@ -118,7 +119,7 @@ export function QuestionMultipleResponse({ question, answer, submission, onChang
                       {opt.id}
                     </span>
                     <span className="text-[14px] leading-relaxed text-[var(--text-primary)]">
-                      {opt.text}
+                      <InlineMarkdown text={opt.text} />
                     </span>
                   </span>
                 </label>

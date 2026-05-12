@@ -158,7 +158,11 @@ export function ModulePage() {
         ) : section === 'recursos' && getResourcesForModule(module.id) ? (
           <Resources moduleId={module.id} />
         ) : content ? (
-          <MarkdownRenderer body={content.body} moduleSlug={module.slug} />
+          <MarkdownRenderer
+            body={content.body}
+            moduleSlug={module.slug}
+            variant={section === 'laboratorios' ? 'lab' : 'default'}
+          />
         ) : (
           <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
         )}

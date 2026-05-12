@@ -10,6 +10,7 @@ import {
   useDroppable,
 } from '@dnd-kit/core'
 import { Check, X, GripVertical } from 'lucide-react'
+import { InlineMarkdown } from '@/components/InlineMarkdown'
 import type { DragAndDropQuestion, DnDAnswer } from '@/lib/quiz'
 import { dndItemCorrectness } from '@/lib/quiz'
 
@@ -73,7 +74,7 @@ export function QuestionDragAndDrop({ question, answer, submission, onChange }: 
   return (
     <div>
       <p className="text-[14.5px] leading-relaxed text-[var(--text-primary)] mb-5">
-        {question.prompt}
+        <InlineMarkdown text={question.prompt} />
       </p>
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -257,7 +258,9 @@ function DraggableItem({
       {...attributes}
     >
       {indicator}
-      <span className="text-[var(--text-primary)] flex-1 min-w-0">{item.text}</span>
+      <span className="text-[var(--text-primary)] flex-1 min-w-0">
+        <InlineMarkdown text={item.text} />
+      </span>
     </li>
   )
 }
