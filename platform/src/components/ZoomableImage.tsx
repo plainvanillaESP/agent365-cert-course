@@ -83,13 +83,26 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
     dragRef.current = null
   }
 
+  // Handler de teclado para accesibilidad: Enter y Space abren el lightbox
+  // sobre el span tipo botón (no usamos <button> porque el wrapper acaba
+  // dentro de un <p> generado por markdown y un button con display:inline-block
+  // colapsa el ancho del <img> que envuelve).
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleOpen()
+    }
+  }
+
   return (
     <>
-      <button
-        type="button"
+      <span
+        role="button"
+        tabIndex={0}
         onClick={handleOpen}
+        onKeyDown={handleKeyDown}
         className={[
-          'group relative inline-block max-w-full p-0 m-0 border-0 bg-transparent cursor-zoom-in print:cursor-default',
+          'group relative block max-w-full cursor-zoom-in print:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md',
           className ?? '',
         ].join(' ')}
         aria-label={alt ? `Ampliar imagen: ${alt}` : 'Ampliar imagen'}
@@ -98,7 +111,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
           src={src}
           alt={alt}
           loading="lazy"
-          className="max-w-full h-auto rounded-md transition-[box-shadow] duration-200 group-hover:shadow-md"
+          className="max-w-full h-auto block rounded-md transition-[box-shadow] duration-200 group-hover:shadow-md"
         />
         <span
           className="absolute top-2 right-2 hidden sm:flex items-center gap-1 rounded-md bg-black/55 text-white text-[11px] px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm print:hidden"
@@ -107,7 +120,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
           <ZoomIn className="size-3 stroke-[2]" />
           Ampliar
         </span>
-      </button>
+      </span>
 
       {open && createPortal(
         <div
