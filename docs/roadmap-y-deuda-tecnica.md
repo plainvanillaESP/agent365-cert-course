@@ -93,7 +93,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 |---|---|---|---|
 | ~~**Skeleton states** para cargas (ahora no hay nada visible)~~ ✅ H.2 | Medio | 2–3 h | `components/Skeleton.tsx` |
 | **Animaciones de transición** entre secciones del módulo (Teoría → Quiz → Labs) con framer-motion | Medio | 4–6 h | Wrapper de página, prefers-reduced-motion respetado |
-| **Confetti / celebración** al completar un módulo o aprobar el examen (sutil, no infantil) | Bajo | 1 h | Lib `canvas-confetti`, dispara desde Certificate y ProgressPage |
+| ~~**Confetti / celebración** al completar un módulo o aprobar el examen (sutil, no infantil)~~ ✅ K.2 | Bajo | 1 h | `lib/confetti.ts` con lazy-load + respeto prefers-reduced-motion |
 | ~~**Modo lectura inmersivo** para teoría: full-width sin sidebar, fuente serif opcional, tracking y line-height ampliados~~ ✅ J.1 | Medio | 2–3 h | `hooks/useReadingMode.ts` + CSS `data-reading-mode="on"` |
 | ~~**Vista de tabla de contenidos sticky** en el módulo (mini-mapa de los H2/H3 del markdown)~~ ✅ J.1 | Alto | 3–4 h | `components/TableOfContents.tsx` reescrito |
 
@@ -102,7 +102,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
 | **Video embed con marcadores**: si el curso incluye videos (YouTube/Vimeo/MP4), poder marcar timestamps y volver a ellos | Alto | 8–12 h | Nuevo `VideoPlayer` con scrubber, marcadores |
-| **Diagramas Mermaid interactivos** en teoría (flowcharts, sequence diagrams, mindmaps) | Medio | 2–3 h | Plugin de markdown para `mermaid` |
+| ~~**Diagramas Mermaid interactivos** en teoría (flowcharts, sequence diagrams, mindmaps)~~ ✅ K.2 | Medio | 2–3 h | `components/MermaidBlock.tsx` + override de `<pre>` en `MarkdownRenderer` |
 | **Code playgrounds**: bloques de código ejecutables (Sandpack para JS/TS, equivalente para PowerShell) | Alto | 6–10 h | Componente que detecta `lang="powershell run"` etc. |
 | **Imágenes responsive con srcset** (hoy se sirve siempre la versión completa) | Medio | 2–3 h | Adaptación de `ZoomableImage` y pipeline de assets |
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase K.1.*
+*Última actualización: 2026-05-12 tras Fase K.2.*

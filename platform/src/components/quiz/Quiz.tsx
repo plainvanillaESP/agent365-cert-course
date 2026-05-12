@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { CheckCircle2, RotateCcw, History, Trash2, Repeat2, ListChecks } from 'lucide-react'
 import { useQuizState } from '@/hooks/useQuizState'
+import { celebrate } from '@/lib/confetti'
 import {
   isMultipleChoice,
   isMultipleResponse,
@@ -46,10 +47,14 @@ export function Quiz({ moduleId }: QuizProps) {
 
   const submission_ref = useRef<HTMLDivElement | null>(null)
 
-  // Al validar, hacer scroll suave al resultado
+  // Al validar, hacer scroll suave al resultado y, si todo correcto,
+  // lanzar confetti (respeta prefers-reduced-motion en lib/confetti.ts).
   useEffect(() => {
     if (submission && submission_ref.current) {
       submission_ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (submission.score === submission.total && submission.total > 0) {
+        void celebrate()
+      }
     }
   }, [submission])
 
