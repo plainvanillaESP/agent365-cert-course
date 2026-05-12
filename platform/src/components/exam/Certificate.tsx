@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Printer, ArrowLeft, Trash2 } from 'lucide-react'
 import { ButtonLink, Button } from '@/components/Button'
+import { ShareButtons } from '@/components/ShareButtons'
 import type { ExamAttempt } from '@/hooks/useExamState'
 import { CertificateSeal } from './CertificateSeal'
 import { CertificateBadge } from './CertificateBadge'
@@ -136,6 +137,25 @@ export function Certificate({ attempt }: CertificateProps) {
           Al pulsar imprimir, tu navegador abrirá el cuadro de impresión estándar.
           En la mayoría de navegadores puedes elegir <strong>«Guardar como PDF»</strong> como destino para obtener un archivo descargable.
         </p>
+
+        {/* Compartir: enlaces a redes (LinkedIn / X), Web Share API en
+            mobile y copia al portapapeles. El enlace lleva al
+            certificado en este navegador; cuando exista verificación
+            pública (fase 9 backend) el shareUrl podrá apuntar a la URL
+            verificable persistente. */}
+        <div className="pt-1">
+          <div className="text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-semibold mb-2">
+            Compartir
+          </div>
+          <ShareButtons
+            text={
+              name.trim()
+                ? `He aprobado el examen de certificación ${COURSE_CERT_TITLE}.`
+                : `Examen de certificación ${COURSE_CERT_TITLE} aprobado.`
+            }
+            title={`Certificado ${COURSE_CERT_TITLE}`}
+          />
+        </div>
       </div>
 
       {/* Lienzo del certificado */}

@@ -121,7 +121,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
-| **Compartir certificado**: botones de compartir en LinkedIn, Twitter/X con OG image dinámico generado | Alto | 4–6 h |
+| ~~**Compartir certificado**: botones de compartir en LinkedIn, Twitter/X con OG image dinámico generado~~ ✅ L.6 (OG dinámico pendiente, requiere backend) | Alto | 4–6 h | `components/ShareButtons.tsx` |
 | **Verificación pública del certificado**: URL `/cert/{verificationId}` que muestra el certificado a cualquier visitante (sin necesidad de hacer el curso) | Alto | 6–8 h, requiere backend mínimo |
 | **Insignias Open Badges** estándar al completar el curso (Mozilla Open Badges v2) | Medio | 4–6 h, requiere emisor de badges |
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase L.5.*
+*Última actualización: 2026-05-12 tras Fase L.6.*

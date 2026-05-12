@@ -10,6 +10,13 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase L.6 — Compartir certificado en LinkedIn, X, Web Share API y copia al portapapeles.
+  - **`components/ShareButtons.tsx` (nuevo)** — Botonera reutilizable con cuatro acciones: LinkedIn (sharer `feed/?shareActive=true&text=...`), X/Twitter (`twitter.com/intent/tweet`), Web Share API (solo aparece si `navigator.share` existe; útil en mobile y navegadores modernos), copia al portapapeles con `navigator.clipboard.writeText` + fallback a `window.prompt` si está bloqueado. Recibe `url`, `text`, `title` y dos variantes (`full` con icono + label, `compact` solo icono). Cualquier shell PV-Learn la puede consumir en futuros badges, recursos compartibles, etc.
+  - **Iconos sociales SVG inline** — La versión instalada de `lucide-react` (1.14) no expone `Linkedin` ni `Twitter`. En lugar de añadir `react-icons` por algo tan puntual, escribí los paths oficiales simplificados como componentes funcionales (`LinkedinIcon`, `XIcon`) dentro del propio `ShareButtons`. Cero peso adicional.
+  - **Integración en `Certificate`** — Sección "Compartir" debajo del botón de imprimir. Cuando el alumno ha introducido su nombre, el `text` sugerido es "He aprobado el examen de certificación {COURSE_CERT_TITLE}."; si no, queda genérico. El `url` por defecto es `window.location.href`, lo que apunta al certificado en este navegador; cuando llegue verificación pública (Fase 9 con backend), el `shareUrl` podrá apuntar a la URL verificable persistente sin tocar el componente.
+- `[Build]` Validador 277 OK. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[Perf]` Fase L.5 — Performance de imágenes: `loading="lazy"` + `decoding="async"`.
   - **`ZoomableImage`** ya tenía `loading="lazy"` en la thumbnail. Añadido `decoding="async"` en thumbnail y modal para que la decodificación no bloquee el hilo principal.
   - **`Certificate`** — logo Plain Vanilla con `decoding="async"`. Sin lazy aquí porque el certificado es la única view donde aparece y queremos que esté listo al renderizar.
