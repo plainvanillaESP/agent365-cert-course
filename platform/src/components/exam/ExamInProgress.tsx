@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { ChevronUp, Send, AlertTriangle } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { ChevronUp, ChevronLeft, ChevronRight, Send, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { QuestionCard } from '@/components/quiz/QuestionCard'
 import { QuestionMultipleChoice } from '@/components/quiz/QuestionMultipleChoice'
@@ -22,8 +22,11 @@ import {
 import { ExamTimer } from './ExamTimer'
 import { ExamSidebarIndex } from './ExamSidebarIndex'
 import { EXAM_DURATION_MIN } from '@/lib/exam'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 const questionAnchorId = (idx: number) => `exam-q-${idx + 1}`
+
+const MOBILE_PAGE_SIZE = 10
 
 interface ExamInProgressProps {
   questions: Question[]
@@ -41,10 +44,26 @@ export function ExamInProgress({
   onSubmit,
 }: ExamInProgressProps) {
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  const [currentPage, setCurrentPage] = useState(0)
+
+  const totalPages = Math.ceil(questions.length / MOBILE_PAGE_SIZE)
+  // Clamp por si totalPages cambia (improbable: las preguntas son fijas durante el intento)
+  const safePage = Math.min(currentPage, Math.max(0, totalPages - 1))
+  const startIdx = isMobile ? safePage * MOBILE_PAGE_SIZE : 0
+  const endIdx = isMobile ? Math.min(startIdx + MOBILE_PAGE_SIZE, questions.length) : questions.length
+  const visibleQuestions = questions.slice(startIdx, endIdx)
+  const isLastPage = safePage === totalPages - 1
+  const isFirstPage = safePage === 0
 
   const answeredCount = questions.filter(q => answers[q.id] && isAnswerComplete(q, answers[q.id])).length
   const totalSec = EXAM_DURATION_MIN * 60
   const progressPct = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0
+
+  const goToPage = (p: number) => {
+    setCurrentPage(p)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const handleSubmitClick = () => {
     if (answeredCount < questions.length) {
@@ -56,6 +75,7 @@ export function ExamInProgress({
 
   return (
     <div className="space-y-6">
+      <h1 className="sr-only">Examen final en curso</h1>
       {/* Header sticky con timer y progreso */}
       <div className="sticky top-[var(--layout-header-h)] z-30 -mx-5 sm:-mx-8 lg:-mx-12 px-5 sm:px-8 lg:px-12 py-3 bg-[var(--bg-canvas)]/95 backdrop-blur border-b border-[var(--border-default)]">
         <div className="flex flex-wrap items-center gap-3 sm:gap-4 max-w-5xl">
@@ -89,10 +109,59 @@ export function ExamInProgress({
         </div>
       </div>
 
+      {/* Mini-índice de páginas (solo mobile) */}
+      {isMobile && totalPages > 1 && (
+        <nav
+          aria-label="Navegación entre páginas del examen"
+          className="flex items-center gap-1.5 overflow-x-auto py-2 -mx-1 px-1"
+        >
+          {Array.from({ length: totalPages }).map((_, p) => {
+            const from = p * MOBILE_PAGE_SIZE
+            const to = Math.min(from + MOBILE_PAGE_SIZE, questions.length)
+            const pageQuestions = questions.slice(from, to)
+            const answered = pageQuestions.filter(q => answers[q.id] && isAnswerComplete(q, answers[q.id])).length
+            const total = pageQuestions.length
+            const status =
+              answered === 0
+                ? 'empty'
+                : answered === total
+                  ? 'full'
+                  : 'partial'
+            const active = p === safePage
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => goToPage(p)}
+                aria-current={active ? 'page' : undefined}
+                aria-label={`Página ${p + 1} de ${totalPages}, preguntas ${from + 1} a ${to}, ${answered} de ${total} respondidas`}
+                className={[
+                  'shrink-0 px-3 py-1.5 rounded-md text-[12.5px] font-medium border transition-colors',
+                  'tabular-nums whitespace-nowrap',
+                  active
+                    ? 'border-[var(--color-pv-purple-600)] bg-[var(--color-pv-purple-600)]/10 text-[var(--text-primary)]'
+                    : status === 'full'
+                      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200'
+                      : status === 'partial'
+                        ? 'border-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200'
+                        : 'border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)]',
+                ].join(' ')}
+              >
+                {from + 1}–{to}
+                <span className="ml-1 text-[10.5px] opacity-70">
+                  {answered}/{total}
+                </span>
+              </button>
+            )
+          })}
+        </nav>
+      )}
+
       {/* Preguntas con índice lateral */}
       <div className="flex gap-6">
         <ol className="flex-1 min-w-0 space-y-5 list-none p-0 m-0">
-          {questions.map((q, idx) => {
+          {visibleQuestions.map((q, i) => {
+            const idx = startIdx + i
             const ans = answers[q.id]
             return (
               <li key={q.id} id={questionAnchorId(idx)} className="scroll-mt-[calc(var(--layout-header-h)+5rem)]">
@@ -141,6 +210,46 @@ export function ExamInProgress({
           getQuestionAnchorId={questionAnchorId}
         />
       </div>
+
+      {/* Nav prev/next mobile (solo si paginado) */}
+      {isMobile && totalPages > 1 && (
+        <nav
+          aria-label="Navegación entre páginas"
+          className="flex items-center justify-between gap-3 pt-2 border-t border-[var(--border-subtle)]"
+        >
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => goToPage(safePage - 1)}
+            disabled={isFirstPage}
+            iconLeft={<ChevronLeft className="size-[16px] stroke-[1.75]" aria-hidden />}
+          >
+            Anterior
+          </Button>
+          <span className="text-[12.5px] text-[var(--text-muted)] tabular-nums" aria-live="polite">
+            Página {safePage + 1} / {totalPages}
+          </span>
+          {!isLastPage ? (
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => goToPage(safePage + 1)}
+              iconRight={<ChevronRight className="size-[16px] stroke-[1.75]" aria-hidden />}
+            >
+              Siguiente
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleSubmitClick}
+              iconLeft={<Send className="size-[16px] stroke-[2]" aria-hidden />}
+            >
+              Finalizar
+            </Button>
+          )}
+        </nav>
+      )}
 
       {/* Pie con submit y back-to-top */}
       <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -191,17 +300,36 @@ function ConfirmDialog({
   onCancel: () => void
   onConfirm: () => void
 }) {
+  const titleId = 'exam-confirm-dialog-title'
+  const confirmBtnRef = useRef<HTMLButtonElement | null>(null)
+
+  // Focus inicial en el botón de confirmar (acción primaria del dialog).
+  // Escape cierra. Click fuera no cierra (decisión explícita: que el
+  // alumno tenga que elegir un botón).
+  useEffect(() => {
+    confirmBtnRef.current?.focus()
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onCancel()
+      }
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [onCancel])
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
       role="dialog"
       aria-modal="true"
+      aria-labelledby={titleId}
     >
       <div className="max-w-md w-full rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 shadow-xl space-y-4">
         <div className="flex items-start gap-3">
           <AlertTriangle className="size-[20px] stroke-[1.75] text-amber-500 shrink-0 mt-0.5" aria-hidden />
           <div className="space-y-1">
-            <h2 className="text-[16px] font-semibold text-[var(--text-primary)]">
+            <h2 id={titleId} className="text-[16px] font-semibold text-[var(--text-primary)]">
               ¿Finalizar el examen ahora?
             </h2>
             <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
@@ -213,7 +341,7 @@ function ConfirmDialog({
           <Button variant="secondary" size="md" onClick={onCancel}>
             Seguir respondiendo
           </Button>
-          <Button variant="primary" size="md" onClick={onConfirm}>
+          <Button ref={confirmBtnRef} variant="primary" size="md" onClick={onConfirm}>
             Finalizar de todos modos
           </Button>
         </div>
