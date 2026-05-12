@@ -1,8 +1,9 @@
 import { NavLink, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Lock, Settings as SettingsIcon } from 'lucide-react'
+import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Settings as SettingsIcon } from 'lucide-react'
 import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
 import { useUnlockState } from '@/hooks/useModuleProgress'
+import { ModuleRow } from '@/components/ModuleRow'
 
 const SECTIONS = [
   { slug: 'teoria',       label: 'Teoría',       icon: BookOpenText  },
@@ -157,115 +158,45 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
       {expanded && (
         <ul className="mt-0.5 mb-1 ml-3 pl-2 border-l border-[var(--border-subtle)] space-y-px">
           {modules.map(m => (
-            <ModuleItem
+            <ModuleRow
               key={m.id}
               module={m}
+              variant="sidebar"
               isCurrent={m.id === currentModuleId}
-              onItemClick={onItemClick}
+              onClick={onItemClick}
               unlocked={isUnlocked(m.id)}
-            />
+            >
+              {m.id === currentModuleId && (
+                <ul className="ml-6 mt-0.5 mb-1 space-y-px">
+                  {SECTIONS.map(s => {
+                    const Icon = s.icon
+                    return (
+                      <li key={s.slug}>
+                        <NavLink
+                          to={`/modulo/${m.id}/${s.slug}`}
+                          onClick={onItemClick}
+                          className={({ isActive }) =>
+                            [
+                              'flex items-center gap-2 px-2.5 py-1 rounded-md text-[12.5px] no-underline transition-colors',
+                              isActive
+                                ? 'text-[var(--text-active)] font-medium bg-[var(--bg-active)]'
+                                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]',
+                            ].join(' ')
+                          }
+                        >
+                          <Icon className="size-[13px] shrink-0 stroke-[1.75]" aria-hidden />
+                          <span>{s.label}</span>
+                        </NavLink>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </ModuleRow>
           ))}
         </ul>
       )}
     </div>
-  )
-}
-
-interface ModuleItemProps {
-  module: CourseModule
-  isCurrent: boolean
-  onItemClick?: () => void
-  unlocked: boolean
-}
-
-function ModuleItem({ module, isCurrent, onItemClick, unlocked }: ModuleItemProps) {
-  const isProduced = module.estado === 'producido'
-  const moduleNum = String(module.id).padStart(2, '0')
-
-  if (!isProduced) {
-    return (
-      <li>
-        <div className="flex items-start gap-2 px-2.5 py-[5px] rounded-md text-[var(--text-faint)] cursor-not-allowed text-[13px] leading-snug">
-          <span className="font-mono text-[11px] tabular-nums shrink-0 mt-px opacity-70">
-            {moduleNum}
-          </span>
-          <span className="break-words">{module.titulo}</span>
-        </div>
-      </li>
-    )
-  }
-
-  // Producido pero bloqueado por orden secuencial: visible pero sin enlace
-  if (!unlocked) {
-    return (
-      <li>
-        <div
-          className="flex items-start gap-2 px-2.5 py-[5px] rounded-md text-[var(--text-faint)] cursor-not-allowed text-[13px] leading-snug"
-          title="Completa los módulos anteriores para desbloquear este, o activa el modo acceso libre desde /progreso"
-        >
-          <span className="font-mono text-[11px] tabular-nums shrink-0 mt-px opacity-70">
-            {moduleNum}
-          </span>
-          <span className="break-words flex-1">{module.titulo}</span>
-          <Lock className="size-[11px] shrink-0 mt-[3px] opacity-70 stroke-[1.75]" aria-hidden />
-        </div>
-      </li>
-    )
-  }
-
-  return (
-    <li>
-      <NavLink
-        to={`/modulo/${module.id}/teoria`}
-        onClick={onItemClick}
-        className={({ isActive }) =>
-          [
-            'flex items-start gap-2 px-2.5 py-[5px] rounded-md no-underline transition-colors text-[13px] leading-snug',
-            (isActive || isCurrent)
-              ? 'bg-[var(--bg-active)] text-[var(--text-active)] font-medium'
-              : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
-          ].join(' ')
-        }
-      >
-        <span
-          className={[
-            'font-mono text-[11px] tabular-nums shrink-0 mt-px',
-            (isCurrent) ? 'opacity-100' : 'opacity-60',
-          ].join(' ')}
-        >
-          {moduleNum}
-        </span>
-        <span className="break-words">{module.titulo}</span>
-      </NavLink>
-
-      {/* Sub-secciones del módulo activo */}
-      {isCurrent && (
-        <ul className="ml-6 mt-0.5 mb-1 space-y-px">
-          {SECTIONS.map(s => {
-            const Icon = s.icon
-            return (
-              <li key={s.slug}>
-                <NavLink
-                  to={`/modulo/${module.id}/${s.slug}`}
-                  onClick={onItemClick}
-                  className={({ isActive }) =>
-                    [
-                      'flex items-center gap-2 px-2.5 py-1 rounded-md text-[12.5px] no-underline transition-colors',
-                      isActive
-                        ? 'text-[var(--text-active)] font-medium bg-[var(--bg-active)]'
-                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]',
-                    ].join(' ')
-                  }
-                >
-                  <Icon className="size-[13px] shrink-0 stroke-[1.75]" aria-hidden />
-                  <span>{s.label}</span>
-                </NavLink>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </li>
   )
 }
 

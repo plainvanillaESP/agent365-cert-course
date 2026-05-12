@@ -85,6 +85,35 @@ import { ZoomableImage } from '@/components/ZoomableImage'
 
 ## Layout y avisos
 
+### `PageHeader`
+
+Cabecera estándar de página. Reemplaza los headers ad-hoc que cada página inventaba con tamaños y tracking ligeramente distintos. Dos modos:
+
+```tsx
+import { PageHeader } from '@/components/PageHeader'
+
+// Hero (con logo grande a la izquierda): para la home y landings
+<PageHeader
+  eyebrow="Plain Vanilla Solutions · Curso"
+  title={COURSE_TITLE}
+  description={COURSE_DESCRIPTION}
+  logo={<img src="..." className="size-[96px] rounded-[18px]" />}
+  actions={<ButtonLink to="/modulo/1/teoria">Empezar</ButtonLink>}
+/>
+
+// Simple (sin logo): para páginas internas
+<PageHeader
+  eyebrow="Tu progreso"
+  title="Microsoft Agent 365 IT Admin"
+  description="Tu avance por los módulos producidos del curso..."
+/>
+```
+
+| Modo | Cuándo usar | Tipografía |
+|---|---|---|
+| `logo` | Home, landings | h1 34-40 px display bold |
+| sin `logo` | Settings, examen, progreso, módulos | h1 28-32 px display semibold |
+
 ### `Section` (de `@/components/Layout`)
 
 Bloque estándar para agrupar contenido en una página. Eyebrow uppercase opcional + título grande + descripción + contenido. Se usa en home, settings, examen, progreso. Cualquier página nueva debe usarlo en lugar de inventar otra forma de presentar secciones.
@@ -133,6 +162,62 @@ import { History } from 'lucide-react'
   action={<Button>Empezar examen</Button>}
 />
 ```
+
+### `Stat`, `StatsGrid` (de `@/components/Layout`)
+
+Métrica destacada: label uppercase pequeña + valor grande tabular-nums. Composer dentro de `StatsGrid` y los bordes finos del grid se gestionan automáticamente.
+
+```tsx
+import { Stat, StatsGrid } from '@/components/Layout'
+import { BookOpen, Clock } from 'lucide-react'
+
+<StatsGrid cols={4}>
+  <Stat icon={<BookOpen className="size-[14px]" />} label="Módulos" value="16" />
+  <Stat icon={<Clock className="size-[14px]" />} label="Duración" value="18h" />
+  <Stat label="Examen" value="90 min" hint="60 preguntas" />
+  <Stat label="Preguntas" value="60" />
+</StatsGrid>
+```
+
+### `Modal`
+
+Modal genérico con createPortal, backdrop oscuro, bloqueo de scroll del body, focus inicial y Escape para cerrar. **Cualquier modal nuevo debe pasar por aquí**: `ConfirmDialog`, `ZoomableImage` y futuros diálogos lo consumen.
+
+```tsx
+import { Modal } from '@/components/Modal'
+
+// Modo normal (cabecera + body + footer)
+<Modal
+  open={confirmOpen}
+  onClose={() => setConfirmOpen(false)}
+  size="sm"
+  header={<h2 className="text-[16px] font-semibold">¿Confirmar acción?</h2>}
+  footer={
+    <>
+      <Button variant="secondary" onClick={onCancel}>Cancelar</Button>
+      <Button variant="primary" onClick={onConfirm}>Continuar</Button>
+    </>
+  }
+>
+  <p>Texto explicativo de la acción.</p>
+</Modal>
+
+// Modo bare (sin chrome, contenido directo al backdrop)
+<Modal open={lightboxOpen} onClose={...} bare className="bg-black/85">
+  <img src={...} />
+</Modal>
+```
+
+| Prop | Uso |
+|---|---|
+| `size="sm" / "md" / "lg" / "auto"` | Max-width del card |
+| `bare` | Sin chrome; el children va directo al backdrop |
+| `closeOnBackdrop={false}` | Solo cierre explícito (Escape o X) |
+| `header`, `footer` | Slots opcionales |
+
+---
+
+## Estados y filas
 
 ### `Callout`
 

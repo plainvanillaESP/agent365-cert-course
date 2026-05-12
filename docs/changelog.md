@@ -10,7 +10,26 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[UX]` Fase G.4 — Fix lightbox vacío + sistema de componentes consolidado.
+- `[UX]` Fase G.5 — Design system consolidado: Badge, ModuleRow, Stat/StatsGrid, PageHeader, Modal + refactor de seis páginas.
+  - **Cinco componentes nuevos**, todos pensados como bloques reutilizables que cualquier curso PV-Learn futuro puede usar sin modificar:
+    - **`Badge`** (`components/Badge.tsx`) — Pildora de texto con siete variantes semánticas (`neutral`, `success`, `warning`, `danger`, `info`, `brand`, `frontier`), tres tamaños (`xs`, `sm`, `md`), soporte de `dot` y `icon`, y modo interactivo (`onClick`). Reemplaza los pills inline duplicados en `HomePage`, `ProgressPage`, `NavSidebar` y otros.
+    - **`ModuleRow`** (`components/ModuleRow.tsx`) — Representación única de un módulo en cualquier listado. Dos variantes: `list` (home, futuros catálogos) con icono de estado, número, título, duración, badge y flecha; `sidebar` (navegación lateral) compacta con número + título y soporte para sub-secciones como `children`. Elimina la triplicación previa entre HomePage, NavSidebar y ProgressPage.
+    - **`Stat`** y **`StatsGrid`** en `components/Layout.tsx` — Métrica destacada con label uppercase pequeño + valor grande tabular-nums + hint opcional. La rejilla compone los bordes finos del grid automáticamente. Reemplaza la función `Stat` interna que HomePage tenía duplicada.
+    - **`PageHeader`** (`components/PageHeader.tsx`) — Cabecera estándar con dos modos: **hero** con logo grande a la izquierda (para landings tipo home) y **simple** sin logo (para páginas internas). Eyebrow + título + descripción + acciones. Elimina los headers ad-hoc que cada página inventaba con tamaños y tracking distintos.
+    - **`Modal`** (`components/Modal.tsx`) — Modal base con createPortal a `document.body`, bloqueo de scroll, focus inicial, Escape para cerrar, click en backdrop (configurable), tamaños `sm/md/lg/auto` y modo `bare` (sin chrome, para contenidos con su propio diseño como el lightbox). Cualquier modal nuevo de la plataforma debe consumirlo.
+  - **Seis refactors** aplicando los nuevos componentes:
+    - `HomePage` — Hero local sustituido por `PageHeader` con logo; StatsGrid local sustituido por `StatsGrid` + `Stat` de Layout; `ModuleRow` propio eliminado (usa el compartido).
+    - `NavSidebar` — `ModuleItem` propio eliminado. Las sub-secciones del módulo activo pasan ahora como `children` de `ModuleRow`.
+    - `ProgressPage` — `SectionHeader` propio eliminado; usa `Section` compartido. `LockedBanner` (div estilizado a mano con borde amber y texto) sustituido por `<Callout kind="warning">`. Tres pills inline (Pendiente / Bloqueado / Completado) en su `ModuleRow` propio migrados a `<Badge>`. Cabecera principal usa `PageHeader` con `COURSE_TITLE` (antes literal `"Microsoft Agent 365 IT Admin"`).
+    - `SettingsPage` — Cabecera propia sustituida por `PageHeader`. El confirm del importador de progreso usa `COURSE_TITLE` (antes literal `"Agent 365"`).
+    - `ExamPreStart` — Cabecera propia sustituida por `PageHeader`.
+    - `ModulePage` — h1 propio sustituido por `PageHeader`. Las tabs de sección (Teoría/Quiz/Labs/Recursos) quedan inline porque son específicas de esta página.
+    - `ZoomableImage` — Refactor para usar `Modal` con `bare={true}`. Mecánica de portal/Escape/scroll-lock viene de `Modal`. El zoom, drag, wheel y atajos siguen aquí.
+    - `ConfirmDialog` en `ExamInProgress` — Refactor para usar `Modal` con `header` y `footer`. Mecánica común consolidada.
+  - **`docs/componentes-reutilizables.md`** ampliado con secciones de `PageHeader`, `Stat`/`StatsGrid` y `Modal` documentadas con ejemplos de uso y tabla de props clave.
+- `[Build]` Validador: 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.74s. test:exam 34/34 OK.
+
+
   - **Fix: lightbox vacío al ampliar imagen.** El `<div>` lienzo del modal anterior tenía `transform: scale(1)` + `max-width: 95vw` + `max-height: 95vh` sin width/height explícitos. Mientras la imagen del modal cargaba (o si su `src` cambiaba), el div padre colapsaba a 0x0 y nunca volvía a expandirse correctamente en algunos navegadores. **Refactor**: la imagen va directamente al flex container del modal, el `transform` se aplica a la imagen, y `e.stopPropagation()` en su `onClick` evita que el click sobre la imagen cierre el modal.
   - **Mejoras UX del lightbox**:
     - **Loading state**: spinner (`Loader2`) mientras la imagen del modal carga. Suele venir del cache (carga instantánea), pero cubre el caso edge.

@@ -146,3 +146,80 @@ export function EmptyState({ icon, title, description, action, className = '' }:
     </div>
   )
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Stat                                                                      */
+/* -------------------------------------------------------------------------- */
+
+interface StatProps {
+  /** Icono pequeño antes del label (opcional). */
+  icon?: ReactNode
+  /** Etiqueta corta en uppercase (ej. "Módulos", "Duración"). */
+  label: string
+  /** Valor numérico o textual destacado. */
+  value: ReactNode
+  /** Texto pequeño bajo el valor (opcional). */
+  hint?: string
+  className?: string
+}
+
+/**
+ * Métrica destacada: label uppercase pequeña + valor grande tabular-nums.
+ *
+ * Es el patrón que la home usa para mostrar "17 módulos / 18h /
+ * 90 min examen / 60 preguntas" y que también aplica para resultados
+ * del examen, página de progreso, dashboards futuros. Tipografía
+ * y tracking unificados a un único componente.
+ *
+ * Si se compone dentro de `StatsGrid`, los bordes y el grid se
+ * gestionan automáticamente.
+ */
+export function Stat({ icon, label, value, hint, className = '' }: StatProps) {
+  return (
+    <div className={['bg-[var(--bg-surface)] px-4 py-3.5', className].join(' ')}>
+      <div className="flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.06em] font-semibold text-[var(--text-muted)] mb-1.5">
+        {icon && <span className="shrink-0">{icon}</span>}
+        <span>{label}</span>
+      </div>
+      <div className="text-[20px] font-semibold leading-none text-[var(--text-primary)] tabular-nums font-display tracking-tight whitespace-nowrap">
+        {value}
+      </div>
+      {hint && (
+        <div className="text-[11px] text-[var(--text-muted)] mt-1.5">
+          {hint}
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface StatsGridProps {
+  /** Número de columnas en desktop (sm+). En móvil siempre 2. */
+  cols?: 2 | 3 | 4
+  children: ReactNode
+  className?: string
+}
+
+/**
+ * Cuadrícula de stats con bordes finos entre celdas. Patrón visual
+ * usado en la home para presentar las cifras del curso de un vistazo.
+ * Componer pasando varios `<Stat>` como children.
+ */
+export function StatsGrid({ cols = 4, children, className = '' }: StatsGridProps) {
+  const colsClass: Record<2 | 3 | 4, string> = {
+    2: 'sm:grid-cols-2',
+    3: 'sm:grid-cols-3',
+    4: 'sm:grid-cols-4',
+  }
+  return (
+    <section
+      className={[
+        'grid grid-cols-2 rounded-lg overflow-hidden border border-[var(--border-default)] bg-[var(--border-subtle)] gap-px',
+        colsClass[cols],
+        className,
+      ].join(' ')}
+    >
+      {children}
+    </section>
+  )
+}
