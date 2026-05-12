@@ -10,6 +10,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase G.4 — Fix lightbox vacío + sistema de componentes consolidado.
+  - **Fix: lightbox vacío al ampliar imagen.** El `<div>` lienzo del modal anterior tenía `transform: scale(1)` + `max-width: 95vw` + `max-height: 95vh` sin width/height explícitos. Mientras la imagen del modal cargaba (o si su `src` cambiaba), el div padre colapsaba a 0x0 y nunca volvía a expandirse correctamente en algunos navegadores. **Refactor**: la imagen va directamente al flex container del modal, el `transform` se aplica a la imagen, y `e.stopPropagation()` en su `onClick` evita que el click sobre la imagen cierre el modal.
+  - **Mejoras UX del lightbox**:
+    - **Loading state**: spinner (`Loader2`) mientras la imagen del modal carga. Suele venir del cache (carga instantánea), pero cubre el caso edge.
+    - **Wheel zoom**: rueda del ratón sobre el modal hace zoom continuo (paso 0.25, rango 0.5–4×).
+    - **Double click**: resetea zoom y offset a 100 % y centrado.
+    - **Pointer capture**: drag con `setPointerCapture` para que el pan funcione bien cuando el cursor sale temporalmente de la imagen.
+    - **Constantes extraídas**: `MIN_SCALE`, `MAX_SCALE`, `SCALE_STEP` al inicio del archivo.
+    - **`touch-action: none`**: para móvil, evita que el navegador intente gestos por defecto sobre la imagen del modal.
+  - **Sistema de componentes consolidado** (todo reutilizable):
+    - **`platform/src/components/Layout.tsx`** (nuevo) — Exporta `Section`, `Card`, `EmptyState`. Son los patrones de layout que la home, settings y otras páginas estaban duplicando. Ahora un único punto de verdad para presentaciones de sección, contenedores con borde y estados vacíos.
+    - **`platform/src/components/Callout.tsx`** (nuevo) — Bloque de aviso con icono y color semántico. Mismas cinco variantes que los blockquotes de markdown (`info`, `warning`, `success`, `tip`, `capture`), pero invocable desde JSX en cualquier sitio. El lenguaje visual es idéntico al de los callouts del contenido del curso, así que la experiencia se mantiene coherente entre módulos y páginas de UI.
+    - **`platform/src/pages/HomePage.tsx`** — Eliminadas las funciones locales `Section` y `Card`, ahora importadas de `Layout`. Los `<Card>` que envuelven listas con `divide-y` usan `flush` para no añadir padding extra.
+    - **`platform/src/pages/SettingsPage.tsx`** — Eliminada la función local `Section` (era una variante más simple, sin eyebrow). El sistema de avisos contextuales (notice) ya no usa un div estilizado a mano, sino `<Callout kind="success" />` / `<Callout kind="warning" />`. Coherencia visual con los callouts del contenido.
+  - **`docs/componentes-reutilizables.md`** — Nueva sección "Layout y avisos" documentando `Section`, `Card`, `EmptyState` y `Callout` con ejemplos de uso. Catálogo completo del design system disponible.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.92s. test:exam 34/34 OK.
+
 - `[UX]` Fase G.3 — Fix imágenes invisibles + coherencia visual + catálogo de componentes.
   - **Fix: imágenes invisibles en teoría y labs.** El `<button>` con `inline-block` que envolvía cada imagen en `ZoomableImage` colapsaba el ancho del `<img>` cuando react-markdown renderiza la imagen dentro de un `<p>`. Cambiado a `<span role="button" tabIndex={0}>` con `display: block` y handler `onKeyDown` para Enter/Space (accesibilidad de teclado preservada). Las imágenes vuelven a verse con el tamaño que markdown les daba antes de F.2.
   - **Coherencia visual: callouts aplican en toda la plataforma.** Los callouts (info / warning / success / tip / capture) ahora se renderizan en teoría, labs y recursos. Antes solo aplicaban en `variant="lab"`, lo que rompía la coherencia visual entre secciones. Cambios:
@@ -19,7 +36,7 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
   - **Nuevo `docs/componentes-reutilizables.md`** — Catálogo del design system: render de markdown (`MarkdownRenderer` con su variante `lab`, `InlineMarkdown`, `ZoomableImage`), botones (`Button`, `ButtonLink`, `ButtonAnchor`, `IconButton`), patrones (cards, sections, badges), tokens visuales (colores, tipografía, espaciado) e iconografía. Define la regla "tres usos justifican un componente" para mantener el set acotado. Enlazado desde `reusar-plataforma.md`.
 - `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.44s. test:exam 34/34 OK.
 
- eliminado el roadmap de producción de la home y parametrizados los textos hardcoded de Agent 365.
+- `[UX]` Fase G.2 — Portada genérica: eliminado el roadmap de producción de la home y parametrizados los textos hardcoded de Agent 365.
   - **`platform/src/pages/HomePage.tsx`** — Eliminada la sección "Estado de producción" (roadmap de fases 0-9 del desarrollo interno del curso). Esta información no aporta al alumno y es específica de Agent 365. Eliminados también los componentes `PhaseRow`, `PhaseIcon`, `PhaseBadge`, las interfaces `Phase` y `PhaseStatus`, y el array `PHASES`. La home queda con Hero → StatsGrid → Áreas de competencia → Temario.
   - **Plataforma plug-and-play.** Sustituidos los literales hardcoded por constantes leídas de `lib/course.ts`. Cambiar de curso ahora se reduce a editar metadatos en un solo archivo:
     - `COURSE_TITLE`, `COURSE_EYEBROW`, `COURSE_DESCRIPTION`, `COURSE_LOGO` → usados en `HomePage` (Hero) y `Header`.
@@ -29,7 +46,7 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
   - **`docs/reusar-plataforma.md`** — Paso 6 actualizado con la lista completa de constantes que hay que tocar al adaptar la plataforma a otro curso PV-Learn. Además se documenta la convención `areaExamen: 0` para identificar el módulo del examen final.
 - `[Build]` Validador: 277 OK / 0 warnings / 0 errors. `npx tsc --noEmit` clean. Build OK 1.50s. `npm run test:exam` 34/34 OK.
 
- markdown inline en preguntas, lightbox para imágenes, labs visualmente reforzados.
+- `[Contenido]` Fase G.1 — Fixes UX post-launch: markdown inline en preguntas, lightbox para imágenes, labs visualmente reforzados.
   - **Bug `**bold**` literal en preguntas — resuelto.** Nuevo componente `platform/src/components/InlineMarkdown.tsx` que renderiza markdown inline (negrita, cursiva, `code`, enlaces) sin envolver en `<p>`, basado en `react-markdown` con `remark-gfm`. Aplicado en `QuestionMultipleChoice`, `QuestionMultipleResponse`, `QuestionDragAndDrop`, `QuestionOrdering` (en prompts, opciones, items y feedback "debería ir aquí") y en `QuestionFeedback` (justificaciones y respuestas correctas). Ahora `**PALABRA**` se renderiza correctamente como **PALABRA** en lugar de mostrar los asteriscos literales.
   - **Lightbox para imágenes y SVGs.** Nuevo componente `platform/src/components/ZoomableImage.tsx`: click sobre cualquier imagen del curso abre overlay full-screen con backdrop oscuro. Controles de zoom (in / out / reset, 50 % – 400 %), pan con drag cuando hay zoom, contador de % visible, etiqueta inferior con el alt para contexto, atajos de teclado (Esc, +, −, 0), backdrop click cierra. Usa `createPortal` para renderizarse en `document.body` y evitar conflictos con el contenedor padre. Bloqueo de scroll del body mientras está abierto. Soporta `prefers-reduced-motion` y `print:hidden` para no aparecer al imprimir. Conectado al `MarkdownRenderer` sustituyendo el `<img>` por defecto.
   - **Labs visualmente reforzados.** `MarkdownRenderer` acepta nueva prop `variant?: 'default' | 'lab'`. La variante `lab` aplica clase `markdown-lab` y clasifica blockquotes automáticamente por su contenido en cinco tipos:
