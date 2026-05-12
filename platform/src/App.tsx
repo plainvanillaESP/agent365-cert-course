@@ -5,6 +5,8 @@ import { NavSidebar } from '@/components/NavSidebar'
 import { HomePage } from '@/pages/HomePage'
 import { ModulePage } from '@/pages/ModulePage'
 import { ProgressPage } from '@/pages/ProgressPage'
+import { ExamPage } from '@/pages/ExamPage'
+import { CertificatePage } from '@/pages/CertificatePage'
 
 const basename = import.meta.env.PROD ? '/agent365-cert-course' : ''
 
@@ -23,6 +25,8 @@ export function App() {
               <Route path="/progreso" element={<ProgressPage />} />
               <Route path="/modulo/:id" element={<ModulePage />} />
               <Route path="/modulo/:id/:section" element={<ModulePage />} />
+              <Route path="/examen" element={<ExamPage />} />
+              <Route path="/certificado/:attemptId" element={<CertificatePage />} />
               <Route path="*" element={<HomePage />} />
             </Routes>
           </main>

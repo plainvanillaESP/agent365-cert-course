@@ -8,6 +8,26 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-12
+
+- `[Contenido]` Fase F.1 — M17 cerrado: examen final cronometrado con UI específica. M17 (Examen de certificación) queda **producido**. Con esto, **el curso entero está completo** (16 módulos de contenido + examen final navegable end-to-end).
+  - **`platform/src/lib/exam.ts`** — Loader del banco oficial (60 preguntas EX-NN-NNN parseadas desde `cursos/agent365-cert/banco-examen.md` vía `import.meta.glob`), selección aleatoria con PRNG seedable (xmur3 + sfc32, suficiente para barajar), `scoreExam` con breakdown por área de competencia, constantes canónicas (60 preguntas, 90 min, 70 % umbral, 3 intentos máximos, 7 días cooldown).
+  - **`platform/src/hooks/useExamState.ts`** — Máquina de estados `pre-start` / `in-progress` / `result`. Timer sobre deadline absoluto (resiste a navegación fuera de pestaña sin drift). Persistencia en localStorage: `agent365-exam-current` (snapshot del intento en curso, sobrevive a refresh) y `agent365-exam-history` (array de `ExamAttempt` con score, pass/fail y razón manual/timeout). Auto-submit cuando el reloj llega a 00:00. Lógica de cooldown si se agotan 3 intentos sin aprobar. Si el último intento aprobó, no se ofrecen más intentos.
+  - **`platform/src/components/exam/ExamTimer.tsx`** — Pastilla de countdown con formato `MM:SS` o `H:MM:SS`. Cambio de color a ámbar bajo 10 min y rojo bajo 2 min, con parpadeo discreto en los últimos 2 min. Barra de progreso visual del tiempo consumido.
+  - **`platform/src/components/exam/ExamPreStart.tsx`** — Pantalla previa con reglas (4 cards: 60 preguntas / 90 min / 70 % / 3 intentos), aviso de banco incompleto si aplica, estado del alumno (intentos restantes, cooldown activo, último aprobado), CTA de inicio y historial de intentos previos.
+  - **`platform/src/components/exam/ExamInProgress.tsx`** — Vista del examen activo con header sticky bajo el shell (timer + barra de respondidas + botón Finalizar). Las 60 preguntas listadas reutilizando `QuestionMultipleChoice`/`QuestionMultipleResponse`/`QuestionDragAndDrop`/`QuestionOrdering` del Bloque D. Modal de confirmación si quedan preguntas sin responder al pulsar Finalizar.
+  - **`platform/src/components/exam/ExamResult.tsx`** — Post-submit: hero con score grande (aciertos, porcentaje, umbral), CTAs (ver certificado si aprobado, reintentar si quedan intentos, volver a pre-start), breakdown por área con barra de aciertos por área y nota sobre repaso.
+  - **`platform/src/components/exam/Certificate.tsx`** — Vista del certificado A4 horizontal en HTML. Cero dependencias de PDF: el usuario imprime con `window.print()` y el browser ofrece «Guardar como PDF». Cabecera con logo Plain Vanilla + ID de verificación (FNV-1a hash del attempt id), cuerpo con nombre del alumno (input no persistido por privacidad), puntuación, fecha, pie con datos fiscales.
+  - **`platform/src/pages/ExamPage.tsx`** — Orquesta las 3 fases del hook. Activa `beforeunload` warning cuando hay intento en curso.
+  - **`platform/src/pages/CertificatePage.tsx`** — Lee el `attemptId` de la URL, busca en historial de localStorage, renderiza certificado si aprobado o muestra mensaje claro si no.
+  - **`platform/src/App.tsx`** — Rutas `/examen` y `/certificado/:attemptId` añadidas.
+  - **`platform/src/components/NavSidebar.tsx`** — Link de M17 en la sección «Evaluación final» apunta a `/examen` en lugar de `/modulo/17/teoria`.
+  - **`platform/src/lib/course.ts`** — M17 cambia a `estado: 'producido'`.
+  - **`platform/src/index.css`** — Bloque `@media print` para impresión limpia del certificado: oculta header/nav/controles, fondo blanco forzado, `@page A4 landscape` con márgenes razonables, lienzo `.cert-page` sin border/shadow al imprimir.
+- `[Build]` Validador `scripts/validate-course.py` reporta 277 OK · 0 warnings · 0 errors. `npx tsc --noEmit` sin errores. Build Vite OK 2.64s. Parser sobre el banco: 60 preguntas con distribución por área canónica (Á1=9, Á2=18, Á3=9, Á4=12, Á5=12, suma 60), todos los tipos del parser representados (multiple-choice 23, scenario 22, drag-and-drop 9, multiple-response 4, ordering 2), todos los IDs `EX-NN-NNN` bien formados, EX-16-001 presente.
+
+**Hito alcanzado — curso completo end-to-end.** Con M17 producido, **los 17 módulos del curso están listos**. El alumno puede ahora: navegar los 16 módulos de contenido en cualquier orden o secuencial, hacer los quizzes de práctica de cada módulo, completar los laboratorios, lanzar el examen final cronometrado con 60 preguntas aleatorias del banco oficial, recibir resultado con breakdown por área y descargar (imprimir como PDF) un certificado firmado por Plain Vanilla con ID de verificación. La plataforma queda en estado funcional para liberación.
+
 ## 2026-05-11
 
 - `[Contenido]` Fase E.10 — M16 cerrado en un único PR: teoría + labs + quiz + manifest + 1 pregunta al banco. M16 (Costes, optimización y mejores prácticas) queda **producido**. **Banco oficial alcanza el 100 %** (60/60 preguntas). Módulo ligero producido en un único PR (mismo patrón que E.7 con M13 y E.9 con M15). Con esto, **los 16 módulos de contenido están producidos** (94 %) y el banco oficial está completo. Solo queda M17 (examen final cronometrado) para cerrar el curso.

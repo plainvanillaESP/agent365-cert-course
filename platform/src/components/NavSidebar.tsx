@@ -269,7 +269,7 @@ function ExamSection({
       </div>
       {isProduced ? (
         <NavLink
-          to={`/modulo/${module.id}/teoria`}
+          to="/examen"
           onClick={onItemClick}
           className={({ isActive }) =>
             [
