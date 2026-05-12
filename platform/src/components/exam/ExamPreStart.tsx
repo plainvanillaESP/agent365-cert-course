@@ -8,6 +8,7 @@ import {
   EXAM_MAX_ATTEMPTS,
   getExamBankSize,
 } from '@/lib/exam'
+import { COURSE_EXAM_TITLE, COURSE_EXAM_INTRO, CONTENT_MODULES, EXAM_MODULE, COURSE_CERT_TITLE } from '@/lib/course'
 import type { ExamAttempt } from '@/hooks/useExamState'
 
 interface ExamPreStartProps {
@@ -34,13 +35,13 @@ export function ExamPreStart({
     <div className="max-w-3xl mx-auto space-y-8">
       <header className="space-y-3">
         <div className="text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-semibold">
-          Módulo 17 · Examen final
+          Módulo {EXAM_MODULE.id} · Examen final
         </div>
         <h1 className="text-[28px] sm:text-[32px] font-semibold text-[var(--text-primary)] leading-[1.1] tracking-[-0.01em]">
-          Examen de certificación Agent 365
+          {COURSE_EXAM_TITLE}
         </h1>
         <p className="text-[15px] text-[var(--text-secondary)] leading-relaxed max-w-2xl">
-          Pon a prueba lo aprendido en los 16 módulos del curso. El examen está cronometrado y simula las condiciones de una certificación profesional. Aprobar este examen te acredita como Microsoft Agent 365 IT Administrator por Plain Vanilla.
+          {COURSE_EXAM_INTRO} Pon a prueba lo aprendido en los {CONTENT_MODULES.length} módulos del curso. Aprobar este examen te acredita como {COURSE_CERT_TITLE} por Plain Vanilla.
         </p>
       </header>
 

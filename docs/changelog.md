@@ -10,7 +10,17 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[Contenido]` Fase G.1 — Fixes UX post-launch: markdown inline en preguntas, lightbox para imágenes, labs visualmente reforzados.
+- `[UX]` Fase G.2 — Portada genérica: eliminado el roadmap de producción de la home y parametrizados los textos hardcoded de Agent 365.
+  - **`platform/src/pages/HomePage.tsx`** — Eliminada la sección "Estado de producción" (roadmap de fases 0-9 del desarrollo interno del curso). Esta información no aporta al alumno y es específica de Agent 365. Eliminados también los componentes `PhaseRow`, `PhaseIcon`, `PhaseBadge`, las interfaces `Phase` y `PhaseStatus`, y el array `PHASES`. La home queda con Hero → StatsGrid → Áreas de competencia → Temario.
+  - **Plataforma plug-and-play.** Sustituidos los literales hardcoded por constantes leídas de `lib/course.ts`. Cambiar de curso ahora se reduce a editar metadatos en un solo archivo:
+    - `COURSE_TITLE`, `COURSE_EYEBROW`, `COURSE_DESCRIPTION`, `COURSE_LOGO` → usados en `HomePage` (Hero) y `Header`.
+    - `COURSE_CERT_TITLE`, `COURSE_CERT_LEGAL_NAME` → usados en `Certificate`.
+    - `COURSE_EXAM_TITLE`, `COURSE_EXAM_INTRO` → usados en `ExamPreStart`.
+    - `CONTENT_MODULES`, `EXAM_MODULE`, `COURSE_TOTAL_QUESTIONS`, `COURSE_START_PATH` → derivadas del catálogo `MODULES`, usadas en `HomePage` y `ExamPreStart` para dejar de hardcodear "17 módulos", "16 módulos", "60 preguntas" o `/modulo/1/teoria`.
+  - **`docs/reusar-plataforma.md`** — Paso 6 actualizado con la lista completa de constantes que hay que tocar al adaptar la plataforma a otro curso PV-Learn. Además se documenta la convención `areaExamen: 0` para identificar el módulo del examen final.
+- `[Build]` Validador: 277 OK / 0 warnings / 0 errors. `npx tsc --noEmit` clean. Build OK 1.50s. `npm run test:exam` 34/34 OK.
+
+ markdown inline en preguntas, lightbox para imágenes, labs visualmente reforzados.
   - **Bug `**bold**` literal en preguntas — resuelto.** Nuevo componente `platform/src/components/InlineMarkdown.tsx` que renderiza markdown inline (negrita, cursiva, `code`, enlaces) sin envolver en `<p>`, basado en `react-markdown` con `remark-gfm`. Aplicado en `QuestionMultipleChoice`, `QuestionMultipleResponse`, `QuestionDragAndDrop`, `QuestionOrdering` (en prompts, opciones, items y feedback "debería ir aquí") y en `QuestionFeedback` (justificaciones y respuestas correctas). Ahora `**PALABRA**` se renderiza correctamente como **PALABRA** en lugar de mostrar los asteriscos literales.
   - **Lightbox para imágenes y SVGs.** Nuevo componente `platform/src/components/ZoomableImage.tsx`: click sobre cualquier imagen del curso abre overlay full-screen con backdrop oscuro. Controles de zoom (in / out / reset, 50 % – 400 %), pan con drag cuando hay zoom, contador de % visible, etiqueta inferior con el alt para contexto, atajos de teclado (Esc, +, −, 0), backdrop click cierra. Usa `createPortal` para renderizarse en `document.body` y evitar conflictos con el contenedor padre. Bloqueo de scroll del body mientras está abierto. Soporta `prefers-reduced-motion` y `print:hidden` para no aparecer al imprimir. Conectado al `MarkdownRenderer` sustituyendo el `<img>` por defecto.
   - **Labs visualmente reforzados.** `MarkdownRenderer` acepta nueva prop `variant?: 'default' | 'lab'`. La variante `lab` aplica clase `markdown-lab` y clasifica blockquotes automáticamente por su contenido en cinco tipos:
