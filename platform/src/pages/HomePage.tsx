@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Clock, BookOpen, GraduationCap, FileText, CheckCircle2, Lock } from 'lucide-react'
 import { ButtonLink } from '@/components/Button'
+import { Section, Card } from '@/components/Layout'
 import {
   AREAS,
   MODULES,
@@ -45,9 +46,8 @@ export function HomePage() {
       <Section
         eyebrow="Temario"
         title={`Los ${numTotalModules} módulos del curso`}
-        description=""
       >
-        <Card>
+        <Card flush>
           <ul className="divide-y divide-[var(--border-subtle)]">
             {CONTENT_MODULES.map(m => (
               <ModuleRow key={m.id} module={m} unlocked={isUnlocked(m.id)} />
@@ -55,7 +55,7 @@ export function HomePage() {
           </ul>
         </Card>
         <div className="mt-3">
-          <Card>
+          <Card flush>
             <ModuleRow module={EXAM_MODULE} isExam unlocked={isUnlocked(EXAM_MODULE.id)} />
           </Card>
         </div>
@@ -124,50 +124,6 @@ function Stat({ icon, label, value }: { icon: ReactNode; label: string; value: s
       <div className="text-[20px] font-semibold leading-none text-[var(--text-primary)] tabular-nums font-display tracking-tight whitespace-nowrap">
         {value}
       </div>
-    </div>
-  )
-}
-
-function Section({
-  eyebrow,
-  title,
-  description,
-  children,
-}: {
-  eyebrow: string
-  title: string
-  description: string
-  children: ReactNode
-}) {
-  return (
-    <section className="mt-12">
-      <div className="mb-5">
-        <div className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)] mb-1.5">
-          {eyebrow}
-        </div>
-        <h2 className="font-display text-[22px] sm:text-[24px] font-semibold text-[var(--text-primary)] leading-tight tracking-[-0.015em]">
-          {title}
-        </h2>
-        {description && (
-          <p className="text-[14.5px] text-[var(--text-secondary)] mt-2 max-w-[600px]">
-            {description}
-          </p>
-        )}
-      </div>
-      {children}
-    </section>
-  )
-}
-
-function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return (
-    <div
-      className={[
-        'rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] overflow-hidden',
-        className,
-      ].join(' ')}
-    >
-      {children}
     </div>
   )
 }

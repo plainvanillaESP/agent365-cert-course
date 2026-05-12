@@ -83,6 +83,83 @@ import { ZoomableImage } from '@/components/ZoomableImage'
 
 ---
 
+## Layout y avisos
+
+### `Section` (de `@/components/Layout`)
+
+Bloque estándar para agrupar contenido en una página. Eyebrow uppercase opcional + título grande + descripción + contenido. Se usa en home, settings, examen, progreso. Cualquier página nueva debe usarlo en lugar de inventar otra forma de presentar secciones.
+
+```tsx
+import { Section } from '@/components/Layout'
+
+<Section
+  eyebrow="Examen"
+  title="Áreas de competencia"
+  description="Pesos canónicos de cada área."
+  action={<Button>Ver detalles</Button>} // opcional
+>
+  <ContenidoDeLaSeccion />
+</Section>
+```
+
+### `Card` (de `@/components/Layout`)
+
+Contenedor con borde y fondo. Padding por defecto, o `flush` cuando el contenido es una lista que ya gestiona su propio padding interno (típicamente `<ul>` con `divide-y`).
+
+```tsx
+import { Card } from '@/components/Layout'
+
+<Card>Contenido con padding</Card>
+
+<Card flush>
+  <ul className="divide-y divide-[var(--border-subtle)]">
+    {items.map(i => <Row key={i.id} item={i} />)}
+  </ul>
+</Card>
+```
+
+### `EmptyState` (de `@/components/Layout`)
+
+Estado vacío estándar para listas sin datos (sin intentos del examen, sin historial, búsqueda sin resultados). Icono opcional + título + descripción + CTA. Coherencia visual entre "no hay datos" en todas las páginas.
+
+```tsx
+import { EmptyState } from '@/components/Layout'
+import { History } from 'lucide-react'
+
+<EmptyState
+  icon={<History className="size-10 stroke-[1.5]" />}
+  title="Aún no has hecho ningún intento"
+  description="Cuando termines el examen verás aquí los resultados."
+  action={<Button>Empezar examen</Button>}
+/>
+```
+
+### `Callout`
+
+Bloque de aviso con icono y color semántico. Mismo lenguaje visual que los blockquotes del markdown (mismo set de colores y comportamiento), pero invocable desde cualquier componente JSX. Cinco variantes:
+
+| `kind` | Color | Uso |
+|---|---|---|
+| `info` (default) | Azul | Contexto, prerrequisitos, notas |
+| `warning` | Ámbar | Advertencias, atención |
+| `success` | Verde | Confirmaciones, validación |
+| `tip` | Púrpura | Consejos, mejoras opcionales |
+| `capture` | Gris discontinuo | Placeholder, pendiente |
+
+```tsx
+import { Callout } from '@/components/Callout'
+
+<Callout kind="warning" title="Antes de empezar">
+  Verifica que tienes acceso de administrador al tenant antes de seguir.
+</Callout>
+
+<Callout kind="success">Intento guardado correctamente.</Callout>
+```
+
+Para callouts dentro de markdown (en módulos del curso), no se usa `<Callout>` directamente: el `MarkdownRenderer` clasifica blockquotes `>` por su primera línea y aplica el estilo visual equivalente. El componente `Callout` es para JSX en páginas React.
+
+---
+
 ## Botones y acciones
 
 ### `Button`

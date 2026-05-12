@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Settings as SettingsIcon, ShieldOff, Trash2, Download, Upload, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Settings as SettingsIcon, ShieldOff, Trash2, Download, Upload } from 'lucide-react'
 import { Button } from '@/components/Button'
+import { Section } from '@/components/Layout'
+import { Callout } from '@/components/Callout'
 import {
   getAccessMode,
   setAccessMode,
@@ -128,21 +130,9 @@ export function SettingsPage() {
       </header>
 
       {notice && (
-        <div
-          className={[
-            'rounded-md border px-4 py-3 text-[13.5px] flex items-start gap-2',
-            notice.type === 'ok'
-              ? 'border-emerald-500/60 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200'
-              : 'border-red-500/60 bg-red-500/10 text-red-800 dark:text-red-200',
-          ].join(' ')}
-        >
-          {notice.type === 'ok' ? (
-            <CheckCircle2 className="size-[16px] stroke-[1.75] shrink-0 mt-0.5" aria-hidden />
-          ) : (
-            <AlertCircle className="size-[16px] stroke-[1.75] shrink-0 mt-0.5" aria-hidden />
-          )}
-          <span>{notice.text}</span>
-        </div>
+        <Callout kind={notice.type === 'ok' ? 'success' : 'warning'}>
+          {notice.text}
+        </Callout>
       )}
 
       {/* Modo de acceso */}
@@ -223,26 +213,6 @@ export function SettingsPage() {
         </p>
       </Section>
     </div>
-  )
-}
-
-function Section({
-  title,
-  description,
-  children,
-}: {
-  title: string
-  description: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className="space-y-3">
-      <div className="space-y-1">
-        <h2 className="text-[18px] font-semibold text-[var(--text-primary)]">{title}</h2>
-        <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed">{description}</p>
-      </div>
-      {children}
-    </section>
   )
 }
 
