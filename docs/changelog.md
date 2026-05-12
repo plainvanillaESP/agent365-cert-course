@@ -10,7 +10,16 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
-- `[UX]` Fase G.2 — Portada genérica: eliminado el roadmap de producción de la home y parametrizados los textos hardcoded de Agent 365.
+- `[UX]` Fase G.3 — Fix imágenes invisibles + coherencia visual + catálogo de componentes.
+  - **Fix: imágenes invisibles en teoría y labs.** El `<button>` con `inline-block` que envolvía cada imagen en `ZoomableImage` colapsaba el ancho del `<img>` cuando react-markdown renderiza la imagen dentro de un `<p>`. Cambiado a `<span role="button" tabIndex={0}>` con `display: block` y handler `onKeyDown` para Enter/Space (accesibilidad de teclado preservada). Las imágenes vuelven a verse con el tamaño que markdown les daba antes de F.2.
+  - **Coherencia visual: callouts aplican en toda la plataforma.** Los callouts (info / warning / success / tip / capture) ahora se renderizan en teoría, labs y recursos. Antes solo aplicaban en `variant="lab"`, lo que rompía la coherencia visual entre secciones. Cambios:
+    - `MarkdownRenderer.tsx`: el componente `blockquote` clasifica siempre via `classifyCallout()`, no solo en variant lab.
+    - `index.css`: los selectores `.markdown-lab blockquote.callout-*` movidos a `.markdown-body blockquote.callout-*`. Añadido `background-image: none` para anular el linear-gradient del blockquote por defecto y evitar conflicto de cascada.
+    - Pasos numerados visuales con bullets en gradient brand siguen solo en `markdown-lab` (es lo específico de ejercicios prácticos; en teoría las listas ordenadas no son "pasos").
+  - **Nuevo `docs/componentes-reutilizables.md`** — Catálogo del design system: render de markdown (`MarkdownRenderer` con su variante `lab`, `InlineMarkdown`, `ZoomableImage`), botones (`Button`, `ButtonLink`, `ButtonAnchor`, `IconButton`), patrones (cards, sections, badges), tokens visuales (colores, tipografía, espaciado) e iconografía. Define la regla "tres usos justifican un componente" para mantener el set acotado. Enlazado desde `reusar-plataforma.md`.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 1.44s. test:exam 34/34 OK.
+
+ eliminado el roadmap de producción de la home y parametrizados los textos hardcoded de Agent 365.
   - **`platform/src/pages/HomePage.tsx`** — Eliminada la sección "Estado de producción" (roadmap de fases 0-9 del desarrollo interno del curso). Esta información no aporta al alumno y es específica de Agent 365. Eliminados también los componentes `PhaseRow`, `PhaseIcon`, `PhaseBadge`, las interfaces `Phase` y `PhaseStatus`, y el array `PHASES`. La home queda con Hero → StatsGrid → Áreas de competencia → Temario.
   - **Plataforma plug-and-play.** Sustituidos los literales hardcoded por constantes leídas de `lib/course.ts`. Cambiar de curso ahora se reduce a editar metadatos en un solo archivo:
     - `COURSE_TITLE`, `COURSE_EYEBROW`, `COURSE_DESCRIPTION`, `COURSE_LOGO` → usados en `HomePage` (Hero) y `Header`.

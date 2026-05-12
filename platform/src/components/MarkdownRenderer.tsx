@@ -94,11 +94,11 @@ export function MarkdownRenderer({ body, moduleSlug, className = '', variant = '
     li: ({ children, ...rest }) => <li {...rest}>{transformChildren(children)}</li>,
     td: ({ children, ...rest }) => <td {...rest}>{transformChildren(children)}</td>,
     th: ({ children, ...rest }) => <th {...rest}>{transformChildren(children)}</th>,
-    // En la variante lab, los blockquotes se clasifican por su contenido
-    // (capturas pendientes, advertencias, validación, nota) y se renderizan
-    // como callouts visuales en lugar de un blockquote plano.
+    // Los blockquotes se clasifican siempre por su contenido (capturas
+    // pendientes, advertencias, validación, tip, info) y se renderizan
+    // como callouts visuales. La coherencia visual es la misma en
+    // teoría, labs y recursos.
     blockquote: ({ children, ...rest }) => {
-      if (variant !== 'lab') return <blockquote {...rest}>{children}</blockquote>
       const kind = classifyCallout(children)
       return (
         <blockquote {...rest} data-callout={kind} className={`callout callout-${kind}`}>

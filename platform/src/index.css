@@ -585,22 +585,27 @@ html.dark .markdown-body blockquote {
  *  Sustituyen al blockquote por defecto cuando el renderer ha clasificado
  *  el contenido. Los datos vienen vía data-callout="kind" + class
  *  callout callout-{kind}. Cinco variantes con colores semánticos.
+ *
+ *  Scope: .markdown-body (no solo lab) para que el lenguaje visual de
+ *  callouts sea el mismo en teoría, labs y recursos.
  */
 
-.markdown-lab blockquote.callout {
+.markdown-body blockquote.callout {
   border-left: 4px solid;
   border-radius: 6px;
   padding: 0.85rem 1rem 0.85rem 1.1rem;
   margin-block: 1.25rem;
   background-color: var(--bg-surface-2);
+  background-image: none;
   font-style: normal;
   position: relative;
+  color: var(--text-primary);
 }
 
-.markdown-lab blockquote.callout > *:first-child { margin-top: 0; }
-.markdown-lab blockquote.callout > *:last-child { margin-bottom: 0; }
+.markdown-body blockquote.callout > *:first-child { margin-top: 0; }
+.markdown-body blockquote.callout > *:last-child { margin-bottom: 0; }
 
-.markdown-lab blockquote.callout::before {
+.markdown-body blockquote.callout::before {
   content: '';
   display: block;
   width: 0.85rem;
@@ -613,35 +618,35 @@ html.dark .markdown-body blockquote {
 }
 
 /* info / nota / prerrequisitos */
-.markdown-lab blockquote.callout-info {
+.markdown-body blockquote.callout-info {
   border-left-color: rgb(59 130 246);
   background-color: rgb(59 130 246 / 0.06);
 }
-.markdown-lab blockquote.callout-info::before { background-color: rgb(59 130 246); }
+.markdown-body blockquote.callout-info::before { background-color: rgb(59 130 246); }
 
 /* warning / advertencia */
-.markdown-lab blockquote.callout-warning {
+.markdown-body blockquote.callout-warning {
   border-left-color: rgb(245 158 11);
   background-color: rgb(245 158 11 / 0.08);
 }
-.markdown-lab blockquote.callout-warning::before { background-color: rgb(245 158 11); }
+.markdown-body blockquote.callout-warning::before { background-color: rgb(245 158 11); }
 
 /* success / validación */
-.markdown-lab blockquote.callout-success {
+.markdown-body blockquote.callout-success {
   border-left-color: rgb(34 197 94);
   background-color: rgb(34 197 94 / 0.07);
 }
-.markdown-lab blockquote.callout-success::before { background-color: rgb(34 197 94); }
+.markdown-body blockquote.callout-success::before { background-color: rgb(34 197 94); }
 
 /* tip / consejo */
-.markdown-lab blockquote.callout-tip {
+.markdown-body blockquote.callout-tip {
   border-left-color: rgb(168 85 247);
   background-color: rgb(168 85 247 / 0.07);
 }
-.markdown-lab blockquote.callout-tip::before { background-color: rgb(168 85 247); }
+.markdown-body blockquote.callout-tip::before { background-color: rgb(168 85 247); }
 
 /* capture / captura pendiente */
-.markdown-lab blockquote.callout-capture {
+.markdown-body blockquote.callout-capture {
   border-left-color: rgb(120 113 108);
   background-color: rgb(120 113 108 / 0.05);
   border: 2px dashed rgb(120 113 108 / 0.4);
@@ -651,28 +656,28 @@ html.dark .markdown-body blockquote {
   font-family: var(--font-mono);
   font-size: 0.85rem;
 }
-.markdown-lab blockquote.callout-capture::before { background-color: rgb(120 113 108); }
+.markdown-body blockquote.callout-capture::before { background-color: rgb(120 113 108); }
 
 /* Dark mode overrides */
-html.dark .markdown-lab blockquote.callout-info {
+html.dark .markdown-body blockquote.callout-info {
   background-color: rgb(59 130 246 / 0.12);
 }
-html.dark .markdown-lab blockquote.callout-warning {
+html.dark .markdown-body blockquote.callout-warning {
   background-color: rgb(245 158 11 / 0.14);
 }
-html.dark .markdown-lab blockquote.callout-success {
+html.dark .markdown-body blockquote.callout-success {
   background-color: rgb(34 197 94 / 0.14);
 }
-html.dark .markdown-lab blockquote.callout-tip {
+html.dark .markdown-body blockquote.callout-tip {
   background-color: rgb(168 85 247 / 0.14);
 }
-html.dark .markdown-lab blockquote.callout-capture {
+html.dark .markdown-body blockquote.callout-capture {
   background-color: rgb(120 113 108 / 0.12);
   border-color: rgb(168 162 158 / 0.4);
   border-left-color: rgb(168 162 158);
 }
 
-/* Reduced motion: no transición en hover de pasos (no aplica hoy, defensivo) */
+/* Reduced motion: no transición en hover de pasos */
 @media (prefers-reduced-motion: reduce) {
   .markdown-lab ol > li::before {
     transition: none;

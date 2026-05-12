@@ -2,6 +2,8 @@
 
 Este documento describe cómo arrancar un nuevo curso del estilo PV-Learn reutilizando la plataforma que se construyó para Agent 365. El esfuerzo total de un curso nuevo se concentra en el **contenido** (módulos, banco de preguntas, laboratorios); la plataforma React/Vite se reutiliza prácticamente intacta.
 
+> Antes de tocar componentes, lee también [`componentes-reutilizables.md`](./componentes-reutilizables.md), el catálogo del design system. Define qué componentes hay disponibles (MarkdownRenderer, InlineMarkdown, ZoomableImage, Button…) y cuándo conviene usar cada uno. La coherencia visual de la plataforma depende de respetarlo.
+
 ---
 
 ## Qué se reutiliza vs. qué cambia
