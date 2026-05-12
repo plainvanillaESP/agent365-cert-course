@@ -10,6 +10,14 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[Perf]` Fase L.5 — Performance de imágenes: `loading="lazy"` + `decoding="async"`.
+  - **`ZoomableImage`** ya tenía `loading="lazy"` en la thumbnail. Añadido `decoding="async"` en thumbnail y modal para que la decodificación no bloquee el hilo principal.
+  - **`Certificate`** — logo Plain Vanilla con `decoding="async"`. Sin lazy aquí porque el certificado es la única view donde aparece y queremos que esté listo al renderizar.
+  - **SVG inline** (la mayoría del contenido del curso) ya no se beneficia de lazy/decoding (es texto inline), así que no se tocan. Los SVG procesados por Vite vienen como `<img src="data:..." />` o como URL hasheada y aplican igual.
+  - **srcset / variantes responsive**: no implementado en este fase. Hoy todas las imágenes del curso son SVG vectoriales que escalan sin pérdida; el coste de bytes no justifica todavía un pipeline de generación de variantes. Cuando lleguen PNG/JPG de capturas a >1600 px se podrá añadir `vite-imagetools` o un script offline; el componente `ZoomableImage` está listo para recibir `srcset`/`sizes` desde el atributo del markdown (los pasaría a través). Anotado en el roadmap.
+- `[Build]` Validador 277 OK. tsc clean. Build OK. test:exam 34/34 OK.
+
+
 - `[Build]` Fase L.4 — PWA con service worker (`vite-plugin-pwa`) — la plataforma es instalable y funciona offline tras la primera visita.
   - **`vite-plugin-pwa` configurado en `vite.config.ts`** — `registerType: 'autoUpdate'` (el SW se actualiza solo sin pedir permiso al alumno), `injectRegister` por defecto registra el SW automáticamente al cargar (no hace falta tocar `main.tsx`). El plugin se omite cuando `VITE_OFFLINE=1` porque ahí el bundle se sirve desde `file://` o un USB y un SW no aporta nada.
   - **Manifest** — nombre completo del curso, short_name "PV-Learn Agent 365", color brand `#9A44E5`, fondo claro `#FAFAF9`, idioma `es-ES`, scope y start_url alineados con el `base` de Vite (`/agent365-cert-course/` en producción), icono `agent365-logo-256.png` (con purpose `any` + `maskable`). Cuando lleguemos a multi-curso (fase 8) el manifest se generará por curso.

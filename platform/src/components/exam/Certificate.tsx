@@ -153,7 +153,12 @@ export function Certificate({ attempt }: CertificateProps) {
         <div className="h-full flex flex-col">
           {/* Cabecera */}
           <header className="flex items-center justify-between">
-            <img src={LOGO_POSITIVO} alt="Plain Vanilla" className="h-8" />
+            <img
+              src={LOGO_POSITIVO}
+              alt="Plain Vanilla"
+              className="h-8"
+              decoding="async"
+            />
             <div className="text-right">
               <div className="text-[10.5px] uppercase tracking-[0.12em] text-slate-500 font-semibold">
                 Certificado oficial

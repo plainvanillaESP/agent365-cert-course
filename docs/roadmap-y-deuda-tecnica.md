@@ -104,7 +104,7 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | **Video embed con marcadores**: si el curso incluye videos (YouTube/Vimeo/MP4), poder marcar timestamps y volver a ellos | Alto | 8–12 h | Nuevo `VideoPlayer` con scrubber, marcadores |
 | ~~**Diagramas Mermaid interactivos** en teoría (flowcharts, sequence diagrams, mindmaps)~~ ✅ K.2 | Medio | 2–3 h | `components/MermaidBlock.tsx` + override de `<pre>` en `MarkdownRenderer` |
 | **Code playgrounds**: bloques de código ejecutables (Sandpack para JS/TS, equivalente para PowerShell) | Alto | 6–10 h | Componente que detecta `lang="powershell run"` etc. |
-| **Imágenes responsive con srcset** (hoy se sirve siempre la versión completa) | Medio | 2–3 h | Adaptación de `ZoomableImage` y pipeline de assets |
+| ~~**Imágenes responsive con srcset** (hoy se sirve siempre la versión completa)~~ ✅ L.5 (lazy + decoding async; srcset pendiente hasta que haya PNGs grandes) | Medio | 2–3 h | `loading="lazy"` y `decoding="async"` añadidos a `ZoomableImage` y `Certificate` |
 
 ### 2.5 Accesibilidad y rendimiento
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase L.4.*
+*Última actualización: 2026-05-12 tras Fase L.5.*
