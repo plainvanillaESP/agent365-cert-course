@@ -1,7 +1,8 @@
 import { Link, NavLink } from 'react-router-dom'
-import { Sun, Moon, Menu, Activity, Search } from 'lucide-react'
+import { Sun, Moon, Menu, Activity, Search, Glasses } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
+import { useReadingMode } from '@/hooks/useReadingMode'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
 import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
@@ -25,6 +26,7 @@ function GithubIcon({ className }: { className?: string }) {
 export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const { theme, toggle } = useTheme()
   const snapshots = useCourseProgress()
+  const { enabled: readingMode, toggle: toggleReading } = useReadingMode()
 
   // Progreso global del curso: media del % completado por módulo.
   // Para que la cifra crezca de forma estable usamos sections completas
@@ -141,6 +143,19 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
           >
             <GithubIcon className="size-[17px]" />
           </a>
+          <IconButton
+            onClick={toggleReading}
+            label={readingMode ? 'Salir del modo lectura' : 'Activar modo lectura'}
+            size="md"
+            aria-pressed={readingMode}
+            className={
+              readingMode
+                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                : undefined
+            }
+          >
+            <Glasses className="size-[17px]" />
+          </IconButton>
           <IconButton
             onClick={toggle}
             label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}

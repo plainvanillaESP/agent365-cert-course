@@ -10,6 +10,21 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[UX]` Fase J.1 — TOC mejorado + Modo lectura inmersivo.
+  - **`TableOfContents` reescrito** — La versión anterior se quedaba con el primer heading que intersectaba el viewport (con `break` al primer match en `entries`), lo que producía parpadeos al scrollear rápido. Nueva implementación:
+    - Mantiene un `Set` en `useRef` con los IDs visibles en cada momento; al recibir entries del `IntersectionObserver` actualiza el set y elige el primero en **orden de documento**. Si entre dos headings no hay ninguno visible, conserva el último activo (no se pierde el highlight al pasar por el "hueco").
+    - Marca como **leídos** los headings por los que ya ha pasado el activo, con un dot púrpura tenue a la izquierda. El alumno ve dónde ha avanzado aunque vuelva atrás.
+    - `MutationObserver` sobre `.markdown-body` para reconstruir la lista si el contenido cambia (carga diferida de imágenes que reordena IDs, navegación SPA sin desmontar el componente).
+    - Conserva `scroll-margin-top` ya existente en CSS para que el scroll de anclaje respete la altura del header sticky.
+  - **`useReadingMode` (nuevo)** — Toggle persistente en `localStorage` bajo `agent365-reading-mode`. Aplica `data-reading-mode="on"` al `<html>` (no a `body`) para que las reglas CSS sean estables incluso en chunks lazy. Sincroniza entre pestañas via `storage` event y entre componentes via custom event `pv-learn:toggle-reading-mode`. No persiste por módulo: es preferencia del alumno.
+  - **CSS del modo lectura** — Cuando `html[data-reading-mode='on']`:
+    - Ocultar la `nav[aria-label='Navegación del curso']` (sidebar de módulos) y la TOC lateral.
+    - Cambiar el grid de dos columnas del `ModulePage` a un `display: block` con `max-width: 780px` centrado. Esto ensancha el texto solo cuando el alumno lo quiere.
+    - `.markdown-body` sube a `font-size: 16px`, `line-height: 1.72` y `letter-spacing: 0.005em` para favorecer la lectura larga.
+  - **Toggle visible** — Icono `Glasses` (Lucide) en el header junto al toggle de tema, con `aria-pressed` que refleja el estado y fondo púrpura tenue cuando está activo. Atajo global `i` (de "inmersivo") en grupo "Vista" del modal de ayuda.
+- `[Build]` Validador 277 OK / 0 warnings / 0 errors. tsc clean. Build OK 0.55s. test:exam 34/34 OK. Bundle inicial 219 KB (gzip 68 KB); CSS 84 KB (+1 KB por las reglas del modo lectura).
+
+
 - `[UX]` Fase I.2 — Práctica adaptativa: reinyectar las preguntas falladas con cooldown.
   - **`hooks/useQuizState.ts` ampliado** — Nuevo modo de práctica `PracticeMode = 'full' | 'adaptive'`. El modo `full` es el quiz oficial de toda la vida: persiste en `history` y notifica al motor de progreso (`agent365-progress-changed`). El modo `adaptive` es una ronda de repaso con solo las preguntas falladas en la última submisión; **NO persiste en `history`** ni cuenta para el progreso, así no se contamina el modelo de "primera vez aprobado".
   - **Cooldown** — Tras acertar una pregunta en modo adaptativo, ésta entra en cooldown de **30 minutos** (`ADAPTIVE_COOLDOWN_MS`). Las preguntas con cooldown activo NO se incluyen en futuras rondas adaptativas, así el alumno no machaca la misma cuando ya la dominó. La persistencia vive en `agent365-quiz-m{N}-cooldowns` (`{ questionId: untilTimestamp }`); al cargar se descartan automáticamente los cooldowns ya expirados. `clearHistory()` también borra las cooldowns.

@@ -842,3 +842,55 @@ html.dark .badge-status-deprecated {
     background-image: none;
   }
 }
+
+/* ============================================================================
+ * Modo lectura inmersivo
+ *
+ * Se activa cuando el `<html>` lleva `data-reading-mode="on"` (gestionado por
+ * `hooks/useReadingMode.ts`). Cambia el layout para favorecer la lectura
+ * larga:
+ *
+ *   - Oculta la sidebar de módulos y la tabla de contenidos lateral.
+ *   - Ensancha el contenedor de teoría y lo centra en el viewport.
+ *   - Aumenta la altura de línea y el tracking sutilmente.
+ *   - Mantiene los breadcrumbs y el header del módulo (orientación).
+ *
+ * Importante: el modo se aplica en cualquier sección del módulo, no solo
+ * teoría. En quiz/labs/recursos el efecto principal es ensanchar y ocultar
+ * la sidebar, lo que también es deseable.
+ * ============================================================================ */
+
+html[data-reading-mode='on'] nav[aria-label='Navegación del curso'],
+html[data-reading-mode='on'] nav[aria-label='Tabla de contenidos'] {
+  display: none;
+}
+
+html[data-reading-mode='on'] .markdown-body {
+  font-size: 16px;
+  line-height: 1.72;
+  letter-spacing: 0.005em;
+}
+
+html[data-reading-mode='on'] .markdown-body h2,
+html[data-reading-mode='on'] .markdown-body h3 {
+  letter-spacing: -0.005em;
+}
+
+/* En reading mode el "main" tiene padding propio; eliminamos el grid de
+   dos columnas con TOC, todo a una columna ancha. La regla afecta al grid
+   principal de ModulePage. */
+html[data-reading-mode='on'] main > div.grid {
+  display: block;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Botón flotante "Salir del modo lectura" se mantiene visible (lo coloca
+   ModulePage con `position: fixed`). No hace falta CSS extra. */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-reading-mode='on'] {
+    /* nada que animar en este modo, pero garantizamos no introducir transiciones */
+  }
+}

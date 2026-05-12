@@ -193,6 +193,14 @@ function AppShell({
       },
     },
     {
+      key: 'i',
+      description: 'Modo lectura inmersivo',
+      group: 'Vista',
+      handler: () => {
+        window.dispatchEvent(new CustomEvent('pv-learn:toggle-reading-mode'))
+      },
+    },
+    {
       key: 'Escape',
       description: 'Cerrar diálogo o panel lateral',
       group: 'General',

@@ -94,8 +94,8 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 | ~~**Skeleton states** para cargas (ahora no hay nada visible)~~ ✅ H.2 | Medio | 2–3 h | `components/Skeleton.tsx` |
 | **Animaciones de transición** entre secciones del módulo (Teoría → Quiz → Labs) con framer-motion | Medio | 4–6 h | Wrapper de página, prefers-reduced-motion respetado |
 | **Confetti / celebración** al completar un módulo o aprobar el examen (sutil, no infantil) | Bajo | 1 h | Lib `canvas-confetti`, dispara desde Certificate y ProgressPage |
-| **Modo lectura inmersivo** para teoría: full-width sin sidebar, fuente serif opcional, tracking y line-height ampliados | Medio | 2–3 h | Toggle en header, clase CSS `.reading-mode` |
-| **Vista de tabla de contenidos sticky** en el módulo (mini-mapa de los H2/H3 del markdown) | Alto | 3–4 h | Ya existe `TableOfContents`, mejorar sticky + active highlight |
+| ~~**Modo lectura inmersivo** para teoría: full-width sin sidebar, fuente serif opcional, tracking y line-height ampliados~~ ✅ J.1 | Medio | 2–3 h | `hooks/useReadingMode.ts` + CSS `data-reading-mode="on"` |
+| ~~**Vista de tabla de contenidos sticky** en el módulo (mini-mapa de los H2/H3 del markdown)~~ ✅ J.1 | Alto | 3–4 h | `components/TableOfContents.tsx` reescrito |
 
 ### 2.4 Multimedia y contenido rico
 
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase I.2.*
+*Última actualización: 2026-05-12 tras Fase J.1.*
