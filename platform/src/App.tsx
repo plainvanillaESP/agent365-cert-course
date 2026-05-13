@@ -5,6 +5,7 @@ import { NavSidebar } from '@/components/NavSidebar'
 import { Skeleton, SkeletonParagraph } from '@/components/Skeleton'
 import { ShortcutsModal } from '@/components/ShortcutsModal'
 import { FocusTimer } from '@/components/FocusTimer'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts'
 import { CONTENT_MODULES } from '@/lib/course'
 import { defaultCourseSlug } from '@/lib/coursesRegistry'
@@ -405,17 +406,19 @@ export function App() {
   const [searchOpen, setSearchOpen] = useState(false)
 
   return (
-    <BrowserRouter basename={basename}>
-      <AuthProvider>
-        <AppShell
-          navOpen={navOpen}
-          setNavOpen={setNavOpen}
-          shortcutsOpen={shortcutsOpen}
-          setShortcutsOpen={setShortcutsOpen}
-          searchOpen={searchOpen}
-          setSearchOpen={setSearchOpen}
-        />
-      </AuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter basename={basename}>
+        <AuthProvider>
+          <AppShell
+            navOpen={navOpen}
+            setNavOpen={setNavOpen}
+            shortcutsOpen={shortcutsOpen}
+            setShortcutsOpen={setShortcutsOpen}
+            searchOpen={searchOpen}
+            setSearchOpen={setSearchOpen}
+          />
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
