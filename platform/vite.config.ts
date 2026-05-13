@@ -3,14 +3,53 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { resolve } from 'node:path'
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { load as parseYaml } from 'js-yaml'
 
-// Constantes del curso para inyectar en el manifest. Si en el futuro
-// PV-Learn sirve varios cursos desde el mismo dominio (fase 8 multi-curso),
-// el manifest se generará dinámicamente; por ahora se centraliza aquí.
-const COURSE_NAME = 'Microsoft Agent 365 IT Admin'
-const COURSE_SHORT = 'PV-Learn Agent 365'
-const COURSE_DESCRIPTION =
-  'Curso de certificación profesional sobre Microsoft Agent 365 para administradores IT.'
+/**
+ * Resuelve los metadatos del curso por defecto leyéndolos del `course.yaml`.
+ *
+ * El "curso por defecto" es el primero por orden alfabético de slug que no
+ * sea `demo-*`. Esa misma lógica vive en `lib/coursesRegistry.ts` (a nivel
+ * de runtime). Aquí la repetimos a nivel de build porque el plugin PWA
+ * necesita el manifest serializado en el bundle.
+ *
+ * Si en el futuro PV-Learn sirve varios cursos desde el mismo dominio y
+ * cada uno necesita su propio manifest, habrá que generar manifests por
+ * curso (uno cada `/cursos/<slug>/manifest.webmanifest`); pero para el
+ * arranque comercial con un único producto principal, el manifest del
+ * curso default es suficiente.
+ */
+function loadDefaultCourseMetadata(): {
+  name: string
+  shortName: string
+  description: string
+  lang: string
+} {
+  const cursosDir = resolve(__dirname, '..', 'cursos')
+
+  // Primer curso (excluyendo demos) por orden alfabético.
+  const slugs = readdirSync(cursosDir)
+    .filter(s => !s.startsWith('.') && !s.startsWith('demo-'))
+    .filter(s => statSync(resolve(cursosDir, s)).isDirectory())
+    .sort()
+
+  if (slugs.length === 0) {
+    throw new Error('No course found in cursos/ (excluding demos)')
+  }
+
+  const yamlPath = resolve(cursosDir, slugs[0], 'course.yaml')
+  const data = parseYaml(readFileSync(yamlPath, 'utf-8')) as Record<string, unknown>
+
+  const name = String(data.nombre ?? 'PV-Learn')
+  const shortName = String(data.nombre_corto ?? name)
+  const description = String(data.descripcion_corta ?? '')
+  const lang = String(data.idioma ?? 'es-ES')
+
+  return { name, shortName, description, lang }
+}
+
+const courseMeta = loadDefaultCourseMetadata()
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -39,13 +78,13 @@ export default defineConfig({
             'plain-vanilla-imagotipo.png',
           ],
           manifest: {
-            name: COURSE_NAME,
-            short_name: COURSE_SHORT,
-            description: COURSE_DESCRIPTION,
+            name: courseMeta.name,
+            short_name: courseMeta.shortName,
+            description: courseMeta.description,
             theme_color: '#9A44E5',
             background_color: '#FAFAF9',
             display: 'standalone',
-            lang: 'es-ES',
+            lang: courseMeta.lang,
             scope: '/',
             start_url: '/',
             icons: [
