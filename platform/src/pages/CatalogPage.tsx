@@ -98,12 +98,11 @@ function CourseCard({ course }: { course: CourseData }) {
       </p>
 
       <div className="flex items-center justify-between text-[12px] text-[var(--text-muted)]">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <span className="inline-flex items-center gap-1.5">
             <BookOpen className="size-[12px]" aria-hidden />
             {numContent} módulos
           </span>
-          <span aria-hidden className="text-[var(--text-faint)]">·</span>
           <span className="inline-flex items-center gap-1.5">
             <Clock className="size-[12px]" aria-hidden />
             {formatDuration(course.totalMinutes)}

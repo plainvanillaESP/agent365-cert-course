@@ -35,7 +35,7 @@ export function ExamPreStart({
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <PageHeader
-        eyebrow={`Módulo ${EXAM_MODULE.id} · Examen final`}
+        eyebrow={`Módulo ${EXAM_MODULE.id}, Examen final`}
         title={COURSE_EXAM_TITLE}
         description={`${COURSE_EXAM_INTRO} Pon a prueba lo aprendido en los ${CONTENT_MODULES.length} módulos del curso. Aprobar este examen te acredita como ${COURSE_CERT_TITLE} por Plain Vanilla.`}
       />

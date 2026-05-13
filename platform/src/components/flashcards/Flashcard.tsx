@@ -21,7 +21,7 @@ export function Flashcard({ question, flipped }: FlashcardProps) {
   return (
     <article className="rounded-xl border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-sm">
       <div className="text-[10.5px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-semibold mb-3">
-        {question.id} · {areaLabel(question.area)} · {bloomLabel(question.bloom)}
+        {question.id} <span className="opacity-50 mx-1">/</span> {areaLabel(question.area)} <span className="opacity-50 mx-1">/</span> {bloomLabel(question.bloom)}
       </div>
 
       <div className="text-[15.5px] leading-relaxed text-[var(--text-primary)] mb-4">

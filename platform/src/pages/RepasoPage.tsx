@@ -140,7 +140,7 @@ export function RepasoPage() {
         <div className="mt-4 mb-6 text-[12.5px] text-[var(--text-muted)] flex items-center gap-2">
           <Sparkles className="size-[13px] text-[var(--color-pv-purple-500)]" aria-hidden />
           <span>
-            Módulo {String(module.id).padStart(2, '0')} ·{' '}
+            Módulo {String(module.id).padStart(2, '0')}{', '}
             <Link to={href(`modulo/${module.id}/teoria`)} className="text-[var(--text-active)] hover:underline">
               {module.titulo}
             </Link>

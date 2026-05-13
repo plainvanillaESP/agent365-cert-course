@@ -98,7 +98,7 @@ export function NotesPanel({ open, onClose, moduleId, moduleTitle }: NotesPanelP
               Notas del módulo
             </h2>
             <p className="text-[12px] text-[var(--text-muted)] truncate mt-0.5">
-              Módulo {String(moduleId).padStart(2, '0')} · {moduleTitle}
+              Módulo {String(moduleId).padStart(2, '0')}, {moduleTitle}
             </p>
           </div>
           <IconButton onClick={onClose} label="Cerrar notas" size="sm">
@@ -134,21 +134,15 @@ export function NotesPanel({ open, onClose, moduleId, moduleTitle }: NotesPanelP
           id="notes-meta"
           className="shrink-0 border-t border-[var(--border-subtle)] px-3 py-2.5 flex items-center justify-between gap-2 text-[11.5px] text-[var(--text-muted)]"
         >
-          <div className="flex items-center gap-3 tabular-nums">
+          <div className="flex items-center gap-4 tabular-nums">
             <span aria-label={`${wordCount} palabras`}>
               {wordCount} palabra{wordCount === 1 ? '' : 's'}
-            </span>
-            <span aria-hidden className="text-[var(--text-faint)]">
-              ·
             </span>
             <span aria-label={`${characterCount} caracteres`}>
               {characterCount.toLocaleString('es')} char
             </span>
             {savedLabel && (
               <>
-                <span aria-hidden className="text-[var(--text-faint)]">
-                  ·
-                </span>
                 <span
                   className={
                     status === 'pending'

@@ -152,12 +152,12 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
           aria-hidden
         />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--text-muted)] tabular-nums">
               Área {area.id}
             </span>
             <span className="text-[10px] font-mono text-[var(--text-faint)] tabular-nums">
-              · {area.pesoExamen}%
+              {area.pesoExamen}%
             </span>
           </div>
           <div className="text-[13px] font-medium text-[var(--text-secondary)] mt-0.5 leading-snug">

@@ -182,7 +182,7 @@ export function Quiz({ moduleId }: QuizProps) {
                 onClick={startAdaptiveRound}
                 iconLeft={<Repeat2 className="size-[16px] stroke-[2]" aria-hidden />}
               >
-                Otra ronda · {adaptivePendingCount} pendientes
+                Otra ronda ({adaptivePendingCount} pendientes)
               </Button>
             )}
             <Button
@@ -245,8 +245,7 @@ function AdaptiveBanner({
         aria-hidden
       />
       <div className="flex-1 min-w-0 text-[13px]">
-        <span className="font-semibold text-[var(--text-primary)]">Modo repaso</span>
-        <span className="text-[var(--text-secondary)]"> · </span>
+        <span className="font-semibold text-[var(--text-primary)]">Modo repaso.</span>{' '}
         <span className="text-[var(--text-secondary)]">
           {submitted
             ? 'Acabas de validar esta ronda. Los aciertos entran en cooldown 30 min.'

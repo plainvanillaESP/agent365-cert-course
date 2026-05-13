@@ -225,7 +225,7 @@ export function Certificate({ attempt }: CertificateProps) {
                   Firma
                 </div>
                 <div className="text-[12px] text-slate-700">
-                  Director Gerente · Plain Vanilla Solutions SL
+                  Director Gerente, Plain Vanilla Solutions SL
                 </div>
               </div>
 
@@ -240,7 +240,7 @@ export function Certificate({ attempt }: CertificateProps) {
                 <div className="text-right">
                   <div className="text-[10.5px] text-slate-500 uppercase tracking-[0.08em]">Emitido por</div>
                   <div className="text-[13px] font-semibold text-slate-900">Plain Vanilla Solutions SL</div>
-                  <div className="text-[10.5px] text-slate-500">B87644233 · Madrid</div>
+                  <div className="text-[10.5px] text-slate-500">B87644233, Madrid</div>
                 </div>
               </div>
             </div>
