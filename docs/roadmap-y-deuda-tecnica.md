@@ -152,43 +152,43 @@ Refactor completado en N.1. La arquitectura ya es multi-curso, aunque solo hay u
 | Resolución de rutas: `/cursos/<slug>/modulo/N/teoria` en lugar de `/modulo/N/teoria` | 4–6 h |
 | **Total estimado** | **23–35 h** (3–5 días de trabajo) |
 
-### 3.2 Fase 9 — Backend mínimo + autenticación 🔴 Mayor
+### 3.2 Fase 9 — Backend mínimo + autenticación ✅ Resuelto (Fase P)
 
-Hoy todo es localStorage. Para que el alumno tenga progreso sincronizado entre dispositivos, certificados verificables y un panel admin:
+Implementado en Fase P con Supabase env-gated. El mismo bundle funciona en local (sin env vars) y en producción (con env vars del provider). Schema canónico aplicado, RLS activa, magic link operativo, `/cert/:verificationId` pública.
 
-| Componente | Esfuerzo |
+| Componente | Estado |
 |---|---|
-| Backend (recomendado: Cloudflare Workers + D1, o Supabase) | – |
-| Autenticación email-only (magic link) o OAuth (Google/Microsoft) | 8–12 h |
-| Schema de DB: users, courses, attempts, progress, certificates | 4–6 h |
-| API endpoints (CRUD progreso, intentos, certificados) | 12–16 h |
-| Migración del cliente: localStorage → API + offline-first cache | 12–16 h |
-| Página `/cert/{verificationId}` pública (cf. 2.6) | 4 h |
-| **Total estimado** | **40–54 h** (1–1.5 semanas) |
+| Backend Supabase | ✅ |
+| Autenticación email-only magic link | ✅ |
+| Schema DB (user_profile, course_enrollment, user_progress, exam_attempt) | ✅ |
+| Página `/cert/{verificationId}` pública | ✅ |
+| Migración del cliente localStorage → API | Pendiente (R.2 / R.3 lo aprovecharán al construir admins) |
 
-### 3.3 Fase 10 — Panel admin de cursos y certificación 🟡 Medio
+### 3.3 Fase R — Monetización (B2C + B2B + admins) 🟢 En curso
 
-Una vez hay backend, el admin (Plain Vanilla) necesita una UI para:
+Sustituye a la antigua "Fase 10" del roadmap original. Cubre el modelo comercial completo: ventas individuales B2C con Stripe Checkout, contratos B2B con seats nominales asignables y los dos paneles admin (Plain Vanilla y organización cliente).
 
-| Componente | Esfuerzo |
-|---|---|
-| Login admin con role-based access | 2–3 h |
-| Dashboard: alumnos activos, intentos del examen, tasa de aprobación por módulo | 6–8 h |
-| Vista de alumno individual: progreso, intentos, certificado | 4–6 h |
-| Generador de PDF del certificado (sustituir window.print) usando React-PDF o Puppeteer | 8–10 h |
-| Editor de cursos (CRUD básico sobre cursos del catálogo) | 12–20 h (opcional) |
-| **Total estimado** | **32–47 h** (1 semana sin editor de cursos, 1.5 con él) |
+Documentación detallada: [`docs/fase-r-monetizacion.md`](./fase-r-monetizacion.md).
 
-### 3.4 Comercialización 🟢 Decisión de Miguel
+| Sub-fase | Alcance | Esfuerzo | Estado |
+|---|---|---|---|
+| **R.1 Foundation** | Doc de arquitectura, schema SQL ampliado (5 tablas + función `user_has_access_to_course` + trigger seat-binding), tipos TypeScript stub | 4–6 h | ✅ |
+| **R.2 Admin Plain Vanilla MVP** | Panel `/admin` con dashboard + CRUD orgs + lista usuarios + asignar manualmente subscriptions | 12–16 h | 🟡 |
+| **R.3 Admin organización MVP** | Panel `/org/:slug/admin` con gestión de seats + invitaciones masivas + dashboard progreso del equipo + certificados | 10–14 h | 🟡 |
+| **R.4 B2C Stripe Checkout** | Landing comercial `/comprar`, Stripe Checkout one-time, webhook, course_purchase | 8–12 h | 🟡 |
+| **R.5 B2B Stripe Subscriptions** (opcional) | Self-service de subscriptions B2B. Si Plain Vanilla prefiere mantener facturación manual, se omite | 12–16 h | 🟡 |
+| **R.6 Generador PDF certificado** | Reemplazar `window.print()` por React-PDF o Puppeteer en server | 6–8 h | 🟡 |
+| **Total R completo** | | **52–72 h** | |
 
-Pendiente de decidir antes de empezar Fases 8–10:
+**Decisiones comerciales pendientes** (input de Miguel antes de R.4): precio B2C, precio B2B por seat, modelo perpetuo vs caducidad, descuentos por volumen, cuenta Stripe.
 
-- ¿Sacar el curso al mercado o quedárselo como recurso interno?
-- ¿Canal? (partner SWO/Insight, B2B directo a empresas, B2C a individuales)
-- ¿Marca? (Plain Vanilla, white-label para partner, marca compartida)
-- ¿Idiomas? (hoy solo ES; FAIN pidió FR; EN amplía mercado global)
-- ¿Mantenimiento? (Microsoft Agent 365 evoluciona rápido, el curso requiere actualización trimestral mínimo)
-- ¿Modelo? (licencia perpetua, suscripción anual, paquete con consultoría)
+### 3.4 Comercialización 🟢 Decidido
+
+Decisión confirmada de Miguel: **comercializar sí**. Modelo doble:
+- **B2C individual**: alumno paga y compra el curso (Stripe Checkout)
+- **B2B empresa**: contrato de N seats que el admin de la empresa asigna a emails concretos
+
+Plataforma desplegada en `learn.plainvanilla.ai` (Vercel). Detalles en `docs/fase-r-monetizacion.md`.
 
 El documento `docs/curso-como-producto.md` (creado en F.4) tiene el análisis económico detallado: coste real ~5.000–6.500 € vs equivalente mercado ~53.800 € (ratio 9×), con tres escenarios de pricing.
 
@@ -200,12 +200,12 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 1. **✅ Plug-and-play real** (resuelto en H.1): `labs.ts` y `resources.ts` migrados a YAML por módulo. `course-paths.ts` y `COURSE_SLUG` centralizan el resto de literales. La plataforma React ya no contiene contenido del curso.
 
-2. **🟢 Quick wins** (1–2 días): Atajos teclado globales, Skeleton states, code-splitting, skip links, breadcrumbs estructurados, indicador de progreso en header. Mucho impacto perceptual por poco trabajo.
+2. **✅ Quick wins** (resuelto en H.2): Atajos teclado globales, Skeleton states, code-splitting, skip links, breadcrumbs estructurados, indicador de progreso en header. Bundle inicial de 600 KB a 215 KB.
 
-3. **🔴 Multi-curso + backend** (3–4 semanas): Si Miguel decide comercializar, este es el bloque que habilita todo lo demás.
+3. **✅ Multi-curso + backend** (resuelto en Fases N + P): arquitectura `/cursos/<slug>/...`, registry, storage prefijado, magic link via Supabase, schema canónico aplicado.
 
-4. **🟢 Diferenciación premium** (variable): Notas del alumno, highlighter, flashcards, video embebido. Cada uno mejora el producto pero solo si se va a vender.
+4. **🟢 Monetización Fase R** (en curso): R.1 foundation cerrada. Quedan R.2 admin Plain Vanilla, R.3 admin org, R.4 B2C Stripe, R.5 B2B Stripe (opcional), R.6 PDF certificado.
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase P (backend Supabase env-gated + verify page).*
+*Última actualización: 2026-05-13 tras Fase R.1 (foundation: schema ampliado + tipos billing + control de acceso unificado).*

@@ -103,13 +103,59 @@ async function supabaseLoadCurrentUser(): Promise<User | null> {
   const { data: { session }, error } = await supabase.auth.getSession()
   if (error || !session?.user) return null
   const u = session.user
-  const enrolled = await supabase
-    .from('course_enrollment')
-    .select('course_slug')
-    .eq('user_id', u.id)
-  const assignedCourses: string[] = (enrolled.data ?? []).map(
-    (r: { course_slug: string }) => r.course_slug,
-  )
+
+  // Cursos accesibles: tres fuentes en paralelo (R.1).
+  //   1. course_enrollment (cortesía / asignación manual del admin)
+  //   2. course_purchase (compra B2C activa)
+  //   3. organization_seat activo (B2B)
+  // Las tres consultan en paralelo y se unen. RLS filtra por user_id.
+  // En el futuro este conjunto se puede sustituir por una sola RPC a
+  // la función SQL `user_has_access_to_course`, pero por ahora un OR
+  // en tres tablas es legible y suficientemente eficiente (cada una
+  // está indexada por user_id).
+  const [enrolled, purchased, seated] = await Promise.all([
+    supabase
+      .from('course_enrollment')
+      .select('course_slug')
+      .eq('user_id', u.id),
+    supabase
+      .from('course_purchase')
+      .select('course_slug, expires_at')
+      .eq('user_id', u.id),
+    supabase
+      .from('organization_seat')
+      .select('subscription_id, revoked_at, organization_subscription!inner(course_slug, expires_at)')
+      .eq('user_id', u.id)
+      .is('revoked_at', null),
+  ])
+
+  const slugs = new Set<string>()
+  for (const row of enrolled.data ?? []) {
+    slugs.add((row as { course_slug: string }).course_slug)
+  }
+  const now = Date.now()
+  for (const row of purchased.data ?? []) {
+    const r = row as { course_slug: string; expires_at: string | null }
+    if (r.expires_at == null || new Date(r.expires_at).getTime() > now) {
+      slugs.add(r.course_slug)
+    }
+  }
+  for (const row of seated.data ?? []) {
+    const r = row as {
+      organization_subscription:
+        | { course_slug: string; expires_at: string | null }
+        | Array<{ course_slug: string; expires_at: string | null }>
+        | null
+    }
+    // PostgREST devuelve el join como array (incluso con !inner). Si solo
+    // hay una FK, normalizamos a primer elemento.
+    const subRaw = r.organization_subscription
+    const sub = Array.isArray(subRaw) ? subRaw[0] ?? null : subRaw
+    if (sub && (sub.expires_at == null || new Date(sub.expires_at).getTime() > now)) {
+      slugs.add(sub.course_slug)
+    }
+  }
+
   return {
     id: u.id,
     email: u.email ?? '',
@@ -118,7 +164,7 @@ async function supabaseLoadCurrentUser(): Promise<User | null> {
       u.email?.split('@')[0] ??
       'Alumno',
     createdAt: u.created_at ? new Date(u.created_at).getTime() : Date.now(),
-    assignedCourses,
+    assignedCourses: Array.from(slugs),
   }
 }
 

@@ -8,7 +8,18 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
-## 2026-05-12
+## 2026-05-13
+
+- `[Arch]` Fase R.1 — Monetización foundation: B2C + B2B + admin (sin Stripe ni UI todavía).
+  - **`docs/fase-r-monetizacion.md` (nuevo)** — Documento de arquitectura completo. Cubre: visión de los dos canales (B2C compra individual, B2B contrato con seats nominales), modelo de datos (5 entidades nuevas), flujos completos (cómo se contrata, cómo se asignan seats, cómo entra el alumno), paneles admin (Plain Vanilla en `/admin/*` y org en `/org/:slug/admin/*` con todas las rutas detalladas), Stripe integration (productos, webhooks, eventos), roadmap de sub-fases R.1 → R.6 con estimaciones (52-72 h total), decisiones comerciales pendientes (pricing B2C/B2B, perpetuo vs caducidad, descuentos volumen, cuenta Stripe).
+  - **`supabase/schema-fase-r.sql` (nuevo)** — Schema SQL idempotente que añade al schema base de Fase P las 5 tablas nuevas (`organization`, `organization_member`, `organization_subscription`, `organization_seat`, `course_purchase`) + RLS policies + función `user_has_access_to_course(uuid, text)` que centraliza el control de acceso (orden: enrollment → purchase → seat) + trigger `handle_new_user` ampliado para vincular automáticamente seats asignados pre-registro. Decisión clave: **seats nominales B2B**: el admin de la org asigna `assigned_email` antes de que el alumno se haya registrado, cuando entra por magic link el trigger le vincula su seat (resuelve "que no todos puedan hacer el mismo").
+  - **`platform/src/lib/billing.ts` (nuevo)** — Tipos TypeScript que reflejan el schema (`Organization`, `OrganizationMember`, `OrganizationSubscription`, `OrganizationSeat`, `CoursePurchase`, `PricingTier`) + `AccessSource` para que la UI muestre por qué un alumno tiene acceso ("Tu acceso viene de ACS" vs "Compraste el 12/05/2026") + API stubs (`getOrganizationsForUser`, `getSeatsForOrganization`, `inviteEmailsToSubscription`, `revokeSeat`, `getPurchasesForUser`, `startCheckout`). Las funciones reales se implementan en R.2/R.3/R.4 pero las firmas quedan ya disponibles.
+  - **`platform/src/lib/auth.ts` ampliado** — `supabaseLoadCurrentUser()` ahora consulta las **tres fuentes en paralelo** (`course_enrollment`, `course_purchase` activas, `organization_seat` activos con join a `organization_subscription`) para poblar `assignedCourses`. Antes solo leía enrollment. El resto del frontend no necesita cambiar: ve el mismo `user.assignedCourses` de siempre.
+  - **Decisiones comerciales pendientes (Miguel)** antes de R.4: precio B2C, precio B2B por seat/mes, modelo perpetuo vs caducidad, descuentos volumen, cuenta Stripe (existente o nueva, IVA UE automático).
+
+---
+
+
 
 - `[Arch]` Fase P — Backend real con Supabase (env-gated, fallback al modo local).
   - **`lib/supabase.ts` (nuevo)** — Cliente Supabase env-gated. `getSupabase()` devuelve un `SupabaseClient` si `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` están definidos; si no, devuelve `null`. `isSupabaseEnabled()` expone esto como booleano. El mismo bundle funciona en local (sin env vars) y en producción (con env vars del provider) sin tocar código. `_resetSupabaseClientForTests()` para invalidar el singleton entre tests.
