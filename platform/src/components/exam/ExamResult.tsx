@@ -63,7 +63,7 @@ export function ExamResult({
           <Clock className="size-[14px] stroke-[1.75]" aria-hidden />
           <span>
             Duración real: <strong className="font-mono tabular-nums">{formatDuration(attempt.durationSec)}</strong>
-            {' · '}
+            {'. '}
             Finalizado el{' '}
             {new Date(attempt.submittedAt).toLocaleString('es-ES', {
               dateStyle: 'long',
@@ -150,7 +150,7 @@ function AreaRow({ area }: { area: AreaBreakdown }) {
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
       <div className="flex flex-wrap items-baseline gap-2 mb-2">
         <span className="text-[10.5px] uppercase tracking-[0.06em] text-[var(--text-muted)] font-semibold tabular-nums">
-          Área {area.areaId} · {area.pesoExamen} %
+          Área {area.areaId} ({area.pesoExamen} %)
         </span>
         <span className="text-[14px] font-medium text-[var(--text-primary)]">{area.areaNombreEs}</span>
         <span className="ml-auto font-mono text-[13px] tabular-nums text-[var(--text-secondary)]">

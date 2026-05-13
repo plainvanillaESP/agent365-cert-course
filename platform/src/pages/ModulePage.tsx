@@ -109,7 +109,7 @@ export function ModulePage() {
         <Breadcrumbs
           items={[
             { label: 'Inicio', to: '/' },
-            ...(area ? [{ label: `Área ${area.id} · ${area.nombreEs}` }] : []),
+            ...(area ? [{ label: `Área ${area.id}, ${area.nombreEs}` }] : []),
             { label: `Módulo ${String(module.id).padStart(2, '0')}` },
           ]}
           className="mb-5"
@@ -121,13 +121,10 @@ export function ModulePage() {
             eyebrow={`Módulo ${String(module.id).padStart(2, '0')}`}
             title={module.titulo}
           />
-          <div className="flex items-center gap-3 mt-3 text-[13px] text-[var(--text-muted)] flex-wrap">
+          <div className="flex items-center gap-4 mt-3 text-[13px] text-[var(--text-muted)] flex-wrap">
             <span>{formatDuration(module.duracionMin)}</span>
             {module.preguntas > 0 && (
-              <>
-                <span aria-hidden className="text-[var(--text-faint)]">·</span>
-                <span>{module.preguntas} {module.preguntas === 1 ? 'pregunta' : 'preguntas'} en el examen</span>
-              </>
+              <span>{module.preguntas} {module.preguntas === 1 ? 'pregunta' : 'preguntas'} en el examen</span>
             )}
           </div>
 
@@ -228,7 +225,7 @@ export function ModulePage() {
                 >
                   <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                     <ChevronLeft className="size-3 stroke-[2.25]" aria-hidden />
-                    <span>Anterior · Módulo {String(prevModule.id).padStart(2, '0')}</span>
+                    <span>Anterior, módulo {String(prevModule.id).padStart(2, '0')}</span>
                   </div>
                   <div className="text-[14px] font-medium text-[var(--text-primary)] mt-1 leading-snug">
                     {prevModule.titulo}
@@ -243,7 +240,7 @@ export function ModulePage() {
                   className="group block px-4 py-3 rounded-md border border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
                 >
                   <div className="flex items-center justify-end gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                    <span>Siguiente · Módulo {String(nextModule.id).padStart(2, '0')}</span>
+                    <span>Siguiente, módulo {String(nextModule.id).padStart(2, '0')}</span>
                     <ArrowRight className="size-3 stroke-[2.25]" aria-hidden />
                   </div>
                   <div className="text-[14px] font-medium text-[var(--text-primary)] mt-1 leading-snug">

@@ -1,7 +1,7 @@
 /**
  * Sello circular del certificado Plain Vanilla. SVG inline para evitar
  * dependencias de imagen. Se compone de:
- *   - Anillo exterior con texto curvado «PLAIN VANILLA · CERTIFIED»
+ *   - Anillo exterior con texto curvado «PLAIN VANILLA CERTIFIED»
  *   - Borde grueso interior
  *   - Núcleo con iniciales «AG 365» y la palabra «CERTIFIED»
  *
@@ -44,14 +44,14 @@ export function CertificateSeal({ size = 140 }: { size?: number }) {
       {/* Texto curvado superior */}
       <text fill="#0f172a" style={{ fontFamily: 'Bricolage Grotesque, sans-serif', fontSize: '10px', letterSpacing: '0.18em', fontWeight: 600 }}>
         <textPath href="#cert-seal-arc-top" startOffset="50%" textAnchor="middle">
-          PLAIN VANILLA · CERTIFIED
+          PLAIN VANILLA CERTIFIED
         </textPath>
       </text>
 
       {/* Texto curvado inferior */}
       <text fill="#475569" style={{ fontFamily: 'Bricolage Grotesque, sans-serif', fontSize: '9px', letterSpacing: '0.22em', fontWeight: 500 }}>
         <textPath href="#cert-seal-arc-bottom" startOffset="50%" textAnchor="middle">
-          AGENT 365 · IT ADMIN
+          AGENT 365 IT ADMIN
         </textPath>
       </text>
 

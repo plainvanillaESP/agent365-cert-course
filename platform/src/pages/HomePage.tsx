@@ -109,7 +109,7 @@ function AreaCard({ area }: { area: typeof AREAS[number] }) {
             {area.nombreEs}
           </h3>
           <span className="text-[12px] text-[var(--text-muted)] font-mono">
-            {area.modulos.map(m => `M${String(m).padStart(2, '0')}`).join(' · ')}
+            {area.modulos.map(m => `M${String(m).padStart(2, '0')}`).join(', ')}
           </span>
         </div>
         <div className="text-[13px] text-[var(--text-muted)] mt-1 italic">{area.nombre}</div>

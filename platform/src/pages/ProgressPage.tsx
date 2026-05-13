@@ -278,19 +278,20 @@ function AreaSection({
         <div className="flex items-baseline justify-between flex-wrap gap-3">
           <div>
             <div className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)] mb-1">
-              Área {area.id} · {area.pesoExamen}% del examen
+              Área {area.id} ({area.pesoExamen}% del examen)
             </div>
             <h3 className="font-display text-[16px] font-bold text-[var(--text-primary)]">
               {area.nombreEs}
             </h3>
           </div>
           {producedInArea.length > 0 && (
-            <div className="text-[13px] text-[var(--text-secondary)]">
+            <div className="text-[13px] text-[var(--text-secondary)] tabular-nums">
               <span className="font-mono font-semibold text-[var(--text-primary)]">
                 {completedInArea} / {totalInArea}
               </span>
-              <span className="mx-1.5 text-[var(--text-muted)]">·</span>
-              <span className="font-mono">{pctInArea}%</span>
+              <span className="text-[var(--text-muted)] ml-2">
+                ({pctInArea}%)
+              </span>
             </div>
           )}
         </div>

@@ -380,7 +380,7 @@ function ScenarioFeedback({
                 {p.shortLabel}
               </span>
               <span className="text-[var(--text-secondary)]">— {p.fullName}</span>
-              {i < correctProducts.length - 1 && <span className="text-[var(--text-faint)]">·</span>}
+              {i < correctProducts.length - 1 && <span className="text-[var(--text-faint)]">,</span>}
             </span>
           ))}
         </div>

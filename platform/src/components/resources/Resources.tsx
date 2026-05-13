@@ -105,10 +105,9 @@ function ResourceCard({ resource }: { resource: Resource }) {
           <Icon className={`size-[13px] stroke-[1.75] ${color}`} aria-hidden />
           <span>{label}</span>
           {resource.date && (
-            <>
-              <span className="text-[var(--text-faint)]">·</span>
-              <span className="font-normal normal-case tracking-normal">{resource.date}</span>
-            </>
+            <span className="font-normal normal-case tracking-normal text-[var(--text-faint)]">
+              {resource.date}
+            </span>
           )}
           {resource.lang === 'en' && (
             <span className="ml-auto inline-block px-1.5 py-px rounded text-[9.5px] font-mono font-semibold text-[var(--text-muted)] bg-[var(--bg-surface-2)] tracking-normal">
@@ -207,7 +206,7 @@ function Topic({
         {topic}
       </div>
       <div className="text-[12px] text-[var(--text-muted)] mt-0.5">
-        Módulo {String(moduleId).padStart(2, '0')} · {moduleTitle}
+        Módulo {String(moduleId).padStart(2, '0')}, {moduleTitle}
       </div>
     </div>
   )

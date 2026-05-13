@@ -5,10 +5,11 @@ import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { useReadingMode } from '@/hooks/useReadingMode'
 import { useFocusMode } from '@/hooks/useFocusMode'
 import { useCourseOptional } from '@/contexts/CourseContext'
+import { useAuth } from '@/contexts/AuthContext'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
-import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
+import { COURSE_LOGO } from '@/lib/course'
 
 interface HeaderProps {
   onMenuToggle?: () => void
@@ -32,11 +33,19 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const { enabled: readingMode, toggle: toggleReading } = useReadingMode()
   const focus = useFocusMode()
   const courseCtx = useCourseOptional()
+  const { user } = useAuth()
   // En las páginas que viven dentro de un curso, los links del header
   // resuelven a `/cursos/<slug>/…`. Fuera (ajustes globales, futuro
   // login), apunta al curso por defecto.
   const home = courseCtx ? courseCtx.href() : '/'
   const progresoHref = courseCtx ? courseCtx.href('progreso') : '/progreso'
+
+  // Modo "sin sesión": el alumno todavía no se ha logueado (está en
+  // /login, en una URL pública como /cert/:id, etc.). El header
+  // sigue ahí pero solo enseña el logo de la marca y los toggles
+  // globales (tema, idioma). Nada de progreso, GitHub, focus,
+  // reading mode ni eyebrow del curso, que no tienen sentido todavía.
+  const isAuthenticated = Boolean(user)
 
   // Progreso global del curso: media del % completado por módulo.
   // Para que la cifra crezca de forma estable usamos sections completas
@@ -53,9 +62,9 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
       className="sticky top-0 z-30 h-[var(--layout-header-h)] backdrop-blur-md border-b border-[var(--border-default)] bg-[var(--bg-overlay)]"
     >
       <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
-        {/* Marca + título del curso */}
+        {/* Marca + eyebrow del curso (solo si hay sesión y curso activo) */}
         <div className="flex items-center gap-2 min-w-0">
-          {onMenuToggle && (
+          {onMenuToggle && isAuthenticated && (
             <IconButton
               onClick={onMenuToggle}
               label="Abrir navegación"
@@ -71,28 +80,30 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
             className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
           >
             <Logotipo className="h-7 w-auto shrink-0" />
-            <div className="hidden md:flex items-center gap-2.5 min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
-              <img
-                src={`${import.meta.env.BASE_URL}${COURSE_LOGO}`}
-                alt=""
-                className="size-7 rounded-md shrink-0"
-                aria-hidden
-              />
-              <div className="min-w-0">
-                <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
-                  {COURSE_TITLE}
-                </div>
-                <div className="text-[11px] leading-tight text-[var(--text-muted)] mt-px">
-                  Curso de certificación
+            {isAuthenticated && courseCtx && (
+              <div className="hidden md:flex items-center gap-2.5 min-w-0 pl-3 ml-1 border-l border-[var(--border-default)]">
+                <img
+                  src={`${import.meta.env.BASE_URL}${COURSE_LOGO}`}
+                  alt=""
+                  className="size-7 rounded-md shrink-0"
+                  aria-hidden
+                />
+                <div className="min-w-0">
+                  <div className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
+                    {courseCtx.course.shortTitle || courseCtx.course.title}
+                  </div>
+                  <div className="text-[11px] leading-tight text-[var(--text-muted)] mt-px">
+                    Curso de certificación
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </Link>
         </div>
 
         {/* Acciones */}
         <div className="flex items-center gap-1">
-          {onSearchClick && (
+          {isAuthenticated && onSearchClick && (
             <>
               {/* Botón compacto en mobile */}
               <IconButton
@@ -121,68 +132,72 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
               </button>
             </>
           )}
-          <NavLink
-            to={progresoHref}
-            className={({ isActive }) =>
-              [
-                'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
-                isActive
-                  ? 'text-[var(--text-active)] bg-[var(--bg-active)]'
-                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
-              ].join(' ')
-            }
-            aria-label={`Progreso del curso, ${progressPct}% completado`}
-          >
-            <Activity className="size-[15px] stroke-[1.75]" aria-hidden />
-            <span className="hidden sm:inline">Progreso</span>
-            {progressPct > 0 && (
-              <span
-                className="ml-0.5 inline-flex items-center justify-center min-w-[2rem] h-5 px-1.5 rounded-full bg-[var(--color-pv-purple-500)]/15 text-[11px] font-semibold text-[var(--color-pv-purple-600)] dark:text-[var(--color-pv-purple-300)] tabular-nums"
-                aria-hidden
+          {isAuthenticated && (
+            <>
+              <NavLink
+                to={progresoHref}
+                className={({ isActive }) =>
+                  [
+                    'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
+                    isActive
+                      ? 'text-[var(--text-active)] bg-[var(--bg-active)]'
+                      : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
+                  ].join(' ')
+                }
+                aria-label={`Progreso del curso, ${progressPct}% completado`}
               >
-                {progressPct}%
-              </span>
-            )}
-          </NavLink>
-          <a
-            href="https://github.com/plainvanillaESP/agent365-cert-course"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Repositorio en GitHub"
-            className="size-9 inline-flex items-center justify-center rounded-md text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
-          >
-            <GithubIcon className="size-[17px]" />
-          </a>
-          <IconButton
-            onClick={() => (focus.phase === 'idle' ? focus.startWork() : focus.stop())}
-            label={
-              focus.phase === 'idle'
-                ? 'Iniciar modo focus (Pomodoro 25/5)'
-                : 'Detener el temporizador'
-            }
-            size="md"
-            aria-pressed={focus.phase !== 'idle'}
-            className={
-              focus.phase !== 'idle'
-                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
-                : undefined
-            }
-          >
-            <Timer className="size-[17px]" />
-          </IconButton>
-          <IconButton
-            onClick={toggleReading}
-            label={readingMode ? 'Salir del modo lectura' : 'Activar modo lectura'}
-            size="md"
-            aria-pressed={readingMode}
-            className={
-              readingMode
-                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
-                : undefined
-            }
-          >
-            <Glasses className="size-[17px]" />
-          </IconButton>
+                <Activity className="size-[15px] stroke-[1.75]" aria-hidden />
+                <span className="hidden sm:inline">Progreso</span>
+                {progressPct > 0 && (
+                  <span
+                    className="ml-0.5 inline-flex items-center justify-center min-w-[2rem] h-5 px-1.5 rounded-full bg-[var(--color-pv-purple-500)]/15 text-[11px] font-semibold text-[var(--color-pv-purple-600)] dark:text-[var(--color-pv-purple-300)] tabular-nums"
+                    aria-hidden
+                  >
+                    {progressPct}%
+                  </span>
+                )}
+              </NavLink>
+              <a
+                href="https://github.com/plainvanillaESP/agent365-cert-course"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Repositorio en GitHub"
+                className="size-9 inline-flex items-center justify-center rounded-md text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
+              >
+                <GithubIcon className="size-[17px]" />
+              </a>
+              <IconButton
+                onClick={() => (focus.phase === 'idle' ? focus.startWork() : focus.stop())}
+                label={
+                  focus.phase === 'idle'
+                    ? 'Iniciar modo focus (Pomodoro 25/5)'
+                    : 'Detener el temporizador'
+                }
+                size="md"
+                aria-pressed={focus.phase !== 'idle'}
+                className={
+                  focus.phase !== 'idle'
+                    ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                    : undefined
+                }
+              >
+                <Timer className="size-[17px]" />
+              </IconButton>
+              <IconButton
+                onClick={toggleReading}
+                label={readingMode ? 'Salir del modo lectura' : 'Activar modo lectura'}
+                size="md"
+                aria-pressed={readingMode}
+                className={
+                  readingMode
+                    ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                    : undefined
+                }
+              >
+                <Glasses className="size-[17px]" />
+              </IconButton>
+            </>
+          )}
           <IconButton
             onClick={toggle}
             label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
