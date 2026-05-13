@@ -11,6 +11,8 @@
     "test:exam": "tsx scripts/test-exam-runtime.mts",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "test": "npm run test:unit && npm run test:exam",
     "pack:offline": "bash scripts/pack-offline.sh"
   },
@@ -38,6 +40,7 @@
   "devDependencies": {
     "@axe-core/react": "^4.11.3",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/vite": "^4.2.4",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^24.12.2",
