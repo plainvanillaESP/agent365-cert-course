@@ -31,10 +31,24 @@ export interface User {
   createdAt: number
   /**
    * Slugs de cursos asignados. En el backend local se rellena con
-   * todos los cursos del registry. En Supabase se lee de la tabla
-   * `course_enrollment` (filtrada por RLS).
+   * todos los cursos del registry. En Supabase se lee uniendo
+   * `course_enrollment`, `course_purchase` activas y
+   * `organization_seat` activos (las tres fuentes que reconoce
+   * `user_has_access_to_course` en SQL).
    */
   assignedCourses: string[]
+  /**
+   * El usuario es administrador de la plataforma (Plain Vanilla),
+   * con acceso a /admin/* y todas las tablas de RLS.
+   *
+   *   - **Backend local**: siempre `true`. En local es tu navegador y
+   *     no hay base de datos real; querer probar el panel admin es
+   *     justo lo esperado.
+   *   - **Backend Supabase**: `true` si el JWT incluye
+   *     `app_metadata.role === 'platform_admin'`. Este claim se
+   *     setea en SQL: `update auth.users set raw_app_meta_data = …`.
+   */
+  isPlatformAdmin: boolean
 }
 
 /* ============================================================================ */
@@ -55,9 +69,19 @@ async function localLoadCurrentUser(): Promise<User | null> {
   try {
     const raw = localStorage.getItem(CURRENT_USER_KEY)
     if (!raw) return null
-    const parsed = JSON.parse(raw) as User
+    const parsed = JSON.parse(raw) as Partial<User>
     if (!parsed?.id || !parsed.email) return null
-    return parsed
+    // Forward-compat con sesiones creadas antes de R.2: si la sesión
+    // guardada no tiene isPlatformAdmin (campo añadido en R.2),
+    // lo seteamos a true por defecto en modo local.
+    return {
+      id: parsed.id,
+      email: parsed.email,
+      name: parsed.name ?? parsed.email.split('@')[0],
+      createdAt: parsed.createdAt ?? Date.now(),
+      assignedCourses: parsed.assignedCourses ?? [],
+      isPlatformAdmin: parsed.isPlatformAdmin ?? true,
+    }
   } catch {
     return null
   }
@@ -73,6 +97,9 @@ async function localSignIn(email: string, name: string): Promise<User> {
     name: trimmedName,
     createdAt: Date.now(),
     assignedCourses: courses,
+    // En backend local cualquier sesión tiene acceso al panel admin
+    // para que se pueda probar el flujo R.2 sin Supabase.
+    isPlatformAdmin: true,
   }
   if (typeof localStorage !== 'undefined') {
     try {
@@ -165,6 +192,11 @@ async function supabaseLoadCurrentUser(): Promise<User | null> {
       'Alumno',
     createdAt: u.created_at ? new Date(u.created_at).getTime() : Date.now(),
     assignedCourses: Array.from(slugs),
+    // El claim `role: 'platform_admin'` se setea via SQL en auth.users
+    // raw_app_meta_data. Supabase lo expone como app_metadata en el JWT
+    // y cliente. Sin claim → false (alumno normal).
+    isPlatformAdmin:
+      (u.app_metadata as { role?: string } | undefined)?.role === 'platform_admin',
   }
 }
 

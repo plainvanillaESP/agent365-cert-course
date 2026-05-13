@@ -173,7 +173,7 @@ Documentación detallada: [`docs/fase-r-monetizacion.md`](./fase-r-monetizacion.
 | Sub-fase | Alcance | Esfuerzo | Estado |
 |---|---|---|---|
 | **R.1 Foundation** | Doc de arquitectura, schema SQL ampliado (5 tablas + función `user_has_access_to_course` + trigger seat-binding), tipos TypeScript stub | 4–6 h | ✅ |
-| **R.2 Admin Plain Vanilla MVP** | Panel `/admin` con dashboard + CRUD orgs + lista usuarios + asignar manualmente subscriptions | 12–16 h | 🟡 |
+| **R.2 Admin Plain Vanilla MVP** | Panel `/admin` con dashboard + CRUD orgs + crear subscriptions con seats vacantes. Pendiente para R.2.5: `/admin/usuarios`, `/admin/ventas`, `/admin/certificados` | 12–16 h | ✅ (MVP) |
 | **R.3 Admin organización MVP** | Panel `/org/:slug/admin` con gestión de seats + invitaciones masivas + dashboard progreso del equipo + certificados | 10–14 h | 🟡 |
 | **R.4 B2C Stripe Checkout** | Landing comercial `/comprar`, Stripe Checkout one-time, webhook, course_purchase | 8–12 h | 🟡 |
 | **R.5 B2B Stripe Subscriptions** (opcional) | Self-service de subscriptions B2B. Si Plain Vanilla prefiere mantener facturación manual, se omite | 12–16 h | 🟡 |
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-13 tras Fase R.1 (foundation: schema ampliado + tipos billing + control de acceso unificado).*
+*Última actualización: 2026-05-13 tras Fase R.2 (admin Plain Vanilla MVP: dashboard, CRUD orgs, crear subscriptions con seats vacantes).*

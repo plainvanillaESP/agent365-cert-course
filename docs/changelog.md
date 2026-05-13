@@ -8,6 +8,25 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-13 (continuación) — Fase R.2
+
+- `[Arch]` Fase R.2 — Admin Plain Vanilla MVP.
+  - **`supabase/schema-fase-r-admin.sql` (nuevo)** — Schema delta con policies de RLS que dan acceso global a usuarios con `app_metadata.role = 'platform_admin'` en TODAS las tablas (`user_profile`, `course_enrollment`, `user_progress`, `exam_attempt`, `organization`, `organization_member`, `organization_subscription`, `organization_seat`, `course_purchase`). Helper SQL `is_platform_admin()` evalúa el JWT contra ese claim. Vista `admin_dashboard_kpis` con 6 KPIs precalculados para el dashboard (totalUsers, totalOrganizations, totalSeatsInUse, assignedSeats, purchasesThisMonth, certificatesIssued).
+  - **`platform/src/lib/admin.ts` (nuevo)** — API del panel admin con dispatch local/Supabase. En backend local guarda datos en `localStorage` (keys `pv-learn-admin-organizations`, `pv-learn-admin-subscriptions`, `pv-learn-admin-seats`) para que Miguel pueda probar el flujo sin Supabase configurado. En Supabase ejecuta queries reales autorizadas por las policies de platform_admin. Funciones: `getDashboardKPIs`, `listOrganizations`, `getOrganization`, `createOrganization`, `listSubscriptionsForOrganization`, `createSubscription` (que crea automáticamente N seats vacantes), `listSeatsForOrganization`. Mapeo snake_case (Postgres) ↔ camelCase (TypeScript) centralizado.
+  - **`platform/src/lib/auth.ts` ampliado** — `User` ahora incluye `isPlatformAdmin: boolean`. En local siempre `true` (para probar el panel sin Supabase). En Supabase lee `session.user.app_metadata.role === 'platform_admin'`. `localLoadCurrentUser` es forward-compatible: sesiones guardadas antes de R.2 (sin el campo) se hidratan con `isPlatformAdmin: true` por defecto.
+  - **`RequirePlatformAdmin` HOC** — Wrap análogo a `RequireAuth`. Verifica sesión + flag admin. Sin sesión → `/login`. Con sesión pero sin flag → redirige a `/` (no a `/login` porque la sesión es válida, solo no tiene permisos).
+  - **`AdminLayout`** — Shell propio del admin con su header (logo PV + "Admin Plain Vanilla" + email del user + toggles + signOut) y sidebar específica con secciones (Dashboard, Organizaciones) y un bloque "Próximamente" desactivado (Usuarios, Ventas B2C, Certificados) que se irán activando en sub-sub-fases. Link "Volver al alumno" para alternar entre los dos lados.
+  - **Páginas admin (5 nuevas)**:
+    - `AdminDashboardPage` — KPIs con 6 tarjetas (Users, Orgs, Seats activos con detalle asignados, Ventas mes, Certs) + 2 acciones rápidas (Crear org, Ver orgs) + empty state si no hay orgs todavía
+    - `AdminOrganizationsListPage` — Lista con cards: nombre, slug, email contacto, tax_id+país. Empty state con CTA. Skeleton loader
+    - `AdminOrganizationNewPage` — Form con 3 secciones (Datos generales: nombre, slug auto-generado desde nombre, email contacto; Datos fiscales: razón social, CIF, país, email billing; Notas internas). Auto-slug con normalización NFD + regex `[a-z0-9-]+`. Validación en cliente del slug
+    - `AdminOrganizationDetailPage` — Vista de detalle con datos fiscales + lista de subscriptions + ratio asignados/totales por subscription. Link a panel de la organización (futuro R.3)
+    - `AdminSubscriptionNewPage` — Form para crear contrato N seats: selector curso (del registry multi-curso), número de seats, fecha caducidad opcional, notas. Al guardar crea N filas en `organization_seat` con `assigned_email = NULL` (vacantes)
+  - **Header del alumno** ampliado — Link "Admin" (icono `Wrench`) visible solo si `user.isPlatformAdmin`. Permite alternar al panel admin sin perder la sesión.
+  - **App.tsx** — Rama temprana: si `pathname.startsWith('/admin')`, devuelve `<RequirePlatformAdmin><AdminLayout/></RequirePlatformAdmin>` con sub-rutas anidadas. Las rutas admin no comparten shell con el alumno (header y sidebar propios). Lazy-load completo (`AdminLayout` y 5 páginas) → no entra en el bundle del alumno normal.
+
+---
+
 ## 2026-05-13
 
 - `[Arch]` Fase R.1 — Monetización foundation: B2C + B2B + admin (sin Stripe ni UI todavía).

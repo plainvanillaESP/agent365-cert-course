@@ -33,6 +33,35 @@ const LoginPage = lazy(() => import('@/pages/LoginPage').then(m => ({ default: m
 const CatalogPage = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.CatalogPage })))
 const VerifyPage = lazy(() => import('@/pages/VerifyPage').then(m => ({ default: m.VerifyPage })))
 
+// Panel admin Plain Vanilla (Fase R.2). Lazy-load: no entra al bundle del
+// alumno normal.
+const AdminLayout = lazy(() =>
+  import('@/components/AdminLayout').then(m => ({ default: m.AdminLayout })),
+)
+const AdminDashboardPage = lazy(() =>
+  import('@/pages/admin/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })),
+)
+const AdminOrganizationsListPage = lazy(() =>
+  import('@/pages/admin/AdminOrganizationsListPage').then(m => ({
+    default: m.AdminOrganizationsListPage,
+  })),
+)
+const AdminOrganizationNewPage = lazy(() =>
+  import('@/pages/admin/AdminOrganizationNewPage').then(m => ({
+    default: m.AdminOrganizationNewPage,
+  })),
+)
+const AdminOrganizationDetailPage = lazy(() =>
+  import('@/pages/admin/AdminOrganizationDetailPage').then(m => ({
+    default: m.AdminOrganizationDetailPage,
+  })),
+)
+const AdminSubscriptionNewPage = lazy(() =>
+  import('@/pages/admin/AdminSubscriptionNewPage').then(m => ({
+    default: m.AdminSubscriptionNewPage,
+  })),
+)
+
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE=1` durante build): vacío para que las
 //     rutas SPA funcionen al servir desde cualquier carpeta.
@@ -263,6 +292,32 @@ function AppShell({
     location.pathname === '/login' || location.pathname.startsWith('/cert/')
   const minimal = !user || isPublicRoute
 
+  // Rutas /admin/* usan su propio shell (AdminLayout con header y
+  // sidebar admin). No queremos arrastrar el shell del alumno aquí.
+  const isAdminRoute = location.pathname.startsWith('/admin')
+  if (isAdminRoute) {
+    return (
+      <RequirePlatformAdmin>
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="organizaciones" element={<AdminOrganizationsListPage />} />
+              <Route path="organizaciones/nueva" element={<AdminOrganizationNewPage />} />
+              <Route path="organizaciones/:slug" element={<AdminOrganizationDetailPage />} />
+              <Route
+                path="organizaciones/:slug/subscriptions/nueva"
+                element={<AdminSubscriptionNewPage />}
+              />
+              {/* Catch-all dentro del admin: vuelve al dashboard */}
+              <Route path="*" element={<Navigate to="/admin" replace />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </RequirePlatformAdmin>
+    )
+  }
+
   return (
     <CourseProvider slug={activeSlug}>
     <div className="min-h-dvh flex flex-col">
@@ -377,6 +432,29 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
         replace
       />
     )
+  }
+  return <>{children}</>
+}
+
+/**
+ * Wrapper para rutas /admin/*. Exige sesión + flag platform_admin.
+ * Si hay sesión pero no es admin, redirige a la home (no a /login,
+ * porque la sesión es válida, simplemente no tiene permisos).
+ */
+function RequirePlatformAdmin({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth()
+  const location = useLocation()
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname + location.search }}
+        replace
+      />
+    )
+  }
+  if (!user.isPlatformAdmin) {
+    return <Navigate to="/" replace />
   }
   return <>{children}</>
 }
