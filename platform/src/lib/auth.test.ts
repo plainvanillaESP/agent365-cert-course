@@ -1,62 +1,67 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { loadCurrentUser, signIn, signOut, coursesAssignedTo } from './auth'
 
-describe('lib/auth', () => {
+// Backend local (fallback): los tests corren sin Supabase configurado,
+// así que `isSupabaseEnabled()` devuelve false y las funciones del módulo
+// usan la implementación local que vive en localStorage.
+describe('lib/auth — backend local', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it('loadCurrentUser devuelve null cuando no hay sesión', () => {
-    expect(loadCurrentUser()).toBeNull()
+  it('loadCurrentUser devuelve null cuando no hay sesión', async () => {
+    await expect(loadCurrentUser()).resolves.toBeNull()
   })
 
-  it('signIn persiste el usuario y loadCurrentUser lo recupera', () => {
-    const u = signIn('alumno@x.com', 'Alumno')
-    expect(u.email).toBe('alumno@x.com')
-    expect(u.name).toBe('Alumno')
-    expect(u.id).toMatch(/[a-z0-9-]/)
-    expect(u.assignedCourses).toBeInstanceOf(Array)
-    const loaded = loadCurrentUser()
-    expect(loaded).toEqual(u)
+  it('signIn persiste el usuario y loadCurrentUser lo recupera', async () => {
+    const result = await signIn('alumno@x.com', 'Alumno')
+    expect(result.kind).toBe('signed-in')
+    if (result.kind !== 'signed-in') throw new Error('unreachable')
+    expect(result.user.email).toBe('alumno@x.com')
+    expect(result.user.name).toBe('Alumno')
+    expect(result.user.id).toMatch(/[a-z0-9-]/)
+    expect(result.user.assignedCourses).toBeInstanceOf(Array)
+    const loaded = await loadCurrentUser()
+    expect(loaded).toEqual(result.user)
   })
 
-  it('signIn usa la primera parte del email si name está vacío', () => {
-    const u = signIn('test@example.com', '')
-    expect(u.name).toBe('test')
+  it('signIn usa la primera parte del email si name está vacío', async () => {
+    const r = await signIn('test@example.com', '')
+    if (r.kind !== 'signed-in') throw new Error('unreachable')
+    expect(r.user.name).toBe('test')
   })
 
-  it('signIn trimea email y name', () => {
-    const u = signIn('  a@b.com  ', '  Nombre  ')
-    expect(u.email).toBe('a@b.com')
-    expect(u.name).toBe('Nombre')
+  it('signIn trimea email y name', async () => {
+    const r = await signIn('  a@b.com  ', '  Nombre  ')
+    if (r.kind !== 'signed-in') throw new Error('unreachable')
+    expect(r.user.email).toBe('a@b.com')
+    expect(r.user.name).toBe('Nombre')
   })
 
-  it('signOut limpia la sesión', () => {
-    signIn('x@y.com', 'X')
-    expect(loadCurrentUser()).not.toBeNull()
-    signOut()
-    expect(loadCurrentUser()).toBeNull()
+  it('signOut limpia la sesión', async () => {
+    await signIn('x@y.com', 'X')
+    expect(await loadCurrentUser()).not.toBeNull()
+    await signOut()
+    expect(await loadCurrentUser()).toBeNull()
   })
 
-  it('coursesAssignedTo filtra el catálogo por el array assignedCourses', () => {
-    const u = signIn('x@y.com', 'X')
-    // En el entorno test el registry está vacío (sin import.meta.glob),
-    // así que `coursesAssignedTo` devuelve [] aunque el user tenga
-    // assignedCourses []. Esto valida que la función no revienta.
-    const result = coursesAssignedTo(u)
+  it('coursesAssignedTo filtra el catálogo por el array assignedCourses', async () => {
+    const r = await signIn('x@y.com', 'X')
+    if (r.kind !== 'signed-in') throw new Error('unreachable')
+    const result = coursesAssignedTo(r.user)
     expect(result).toBeInstanceOf(Array)
   })
 
-  it('ignora storage corrupto en loadCurrentUser', () => {
+  it('ignora storage corrupto en loadCurrentUser', async () => {
     localStorage.setItem('pv-learn-current-user', '{{not-json')
-    expect(loadCurrentUser()).toBeNull()
+    await expect(loadCurrentUser()).resolves.toBeNull()
   })
 
-  it('ignora user sin id o email', () => {
+  it('ignora user sin id o email', async () => {
     localStorage.setItem(
       'pv-learn-current-user',
       JSON.stringify({ name: 'X', createdAt: 1, assignedCourses: [] }),
     )
-    expect(loadCurrentUser()).toBeNull()
+    await expect(loadCurrentUser()).resolves.toBeNull()
   })
 })

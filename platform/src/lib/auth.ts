@@ -1,44 +1,45 @@
 /**
- * Contrato de autenticación de PV-Learn.
+ * Auth de PV-Learn, con backend pluggable.
  *
- * Diseñado para enchufarse a cualquier backend (Supabase, Cloudflare
- * Workers + D1, Auth.js, Magic Link propio…) cuando llegue la Fase 9.
- * Hoy ofrece una implementación local con `localStorage` que no valida
- * credenciales — el alumno introduce email + nombre y queda «logado»
- * como invitado. Suficiente para validar la UX del flujo y permitir el
- * acceso a cursos en función de un campo `courses[]` del perfil.
+ * El módulo expone un contrato único (`signIn`, `signOut`,
+ * `loadCurrentUser`, `coursesAssignedTo`) y elige internamente el
+ * backend según `isSupabaseEnabled()`:
  *
- * Cuando llegue el backend real:
+ *   - **Supabase**: magic link al email; sesión persistente vía
+ *     `@supabase/supabase-js`; `assignedCourses` se lee de la tabla
+ *     `course_enrollment` (RLS). Todas las funciones son async.
  *
- *   1. Sustituir `signIn()` por una llamada al endpoint correspondiente
- *      (`POST /auth/magic-link`, OAuth, etc.).
- *   2. Sustituir `loadCurrentUser()` por una verificación de sesión
- *      contra el backend (cookie + endpoint `/me` o JWT en memoria).
- *   3. Sustituir `signOut()` por la baja de la sesión.
- *   4. `assignedCourses(user)` pasaría a leer de la BD; por ahora
- *      devuelve la lista completa del registry, simulando que todos
- *      los alumnos tienen acceso a todos los cursos.
+ *   - **Local** (fallback): el alumno introduce email + nombre y queda
+ *     "logado" como invitado. Sesión en `localStorage` bajo
+ *     `pv-learn-current-user`. Todas las funciones son async para
+ *     mantener firma única; resuelven sincrónicamente.
  *
- * Tipos exportados pensados para no romper esa migración.
+ * Los componentes (`LoginPage`, `AuthContext`, `CatalogPage`,
+ * `SettingsPage`) ya consumen un contrato async, así que el cambio de
+ * backend es transparente para ellos.
  */
 
+import { getSupabase, isSupabaseEnabled } from './supabase'
 import { listCourses, type CourseData } from './coursesRegistry'
 
 export interface User {
-  /** Identificador único. En la versión local es un uuid generado al firmar. */
+  /** Identificador único. UUID del proveedor. */
   id: string
-  /** Email del alumno. No validado en la versión local. */
   email: string
-  /** Nombre visible. */
   name: string
-  /** ms timestamp del primer signIn. */
+  /** ms timestamp de la primera creación. */
   createdAt: number
   /**
-   * Slugs de cursos asignados al alumno. En la versión local se asigna
-   * todo el catálogo por defecto; el backend filtrará por suscripción.
+   * Slugs de cursos asignados. En el backend local se rellena con
+   * todos los cursos del registry. En Supabase se lee de la tabla
+   * `course_enrollment` (filtrada por RLS).
    */
   assignedCourses: string[]
 }
+
+/* ============================================================================ */
+/*                           Backend: local (fallback)                          */
+/* ============================================================================ */
 
 const CURRENT_USER_KEY = 'pv-learn-current-user'
 
@@ -49,8 +50,7 @@ function cryptoRandomId(): string {
   return `u-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
 
-/** Lee el usuario de la sesión actual (puede ser null). */
-export function loadCurrentUser(): User | null {
+async function localLoadCurrentUser(): Promise<User | null> {
   if (typeof localStorage === 'undefined') return null
   try {
     const raw = localStorage.getItem(CURRENT_USER_KEY)
@@ -63,26 +63,7 @@ export function loadCurrentUser(): User | null {
   }
 }
 
-function persistUser(user: User | null): void {
-  if (typeof localStorage === 'undefined') return
-  try {
-    if (user) {
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user))
-    } else {
-      localStorage.removeItem(CURRENT_USER_KEY)
-    }
-  } catch {
-    /* localStorage bloqueado, ignore */
-  }
-}
-
-/**
- * Inicia sesión "como invitado". Acepta cualquier email/nombre y los
- * persiste en `localStorage`. Cuando llegue el backend, esta función
- * pasará a llamar a `POST /auth/magic-link` o similar y devolverá el
- * usuario tras validación.
- */
-export function signIn(email: string, name: string): User {
+async function localSignIn(email: string, name: string): Promise<User> {
   const trimmedEmail = email.trim()
   const trimmedName = name.trim() || trimmedEmail.split('@')[0]
   const courses = listCourses().map(c => c.slug)
@@ -93,12 +74,109 @@ export function signIn(email: string, name: string): User {
     createdAt: Date.now(),
     assignedCourses: courses,
   }
-  persistUser(user)
+  if (typeof localStorage !== 'undefined') {
+    try {
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user))
+    } catch {
+      /* ignore */
+    }
+  }
   return user
 }
 
-export function signOut(): void {
-  persistUser(null)
+async function localSignOut(): Promise<void> {
+  if (typeof localStorage === 'undefined') return
+  try {
+    localStorage.removeItem(CURRENT_USER_KEY)
+  } catch {
+    /* ignore */
+  }
+}
+
+/* ============================================================================ */
+/*                                Backend: Supabase                             */
+/* ============================================================================ */
+
+async function supabaseLoadCurrentUser(): Promise<User | null> {
+  const supabase = getSupabase()
+  if (!supabase) return null
+  const { data: { session }, error } = await supabase.auth.getSession()
+  if (error || !session?.user) return null
+  const u = session.user
+  const enrolled = await supabase
+    .from('course_enrollment')
+    .select('course_slug')
+    .eq('user_id', u.id)
+  const assignedCourses: string[] = (enrolled.data ?? []).map(
+    (r: { course_slug: string }) => r.course_slug,
+  )
+  return {
+    id: u.id,
+    email: u.email ?? '',
+    name:
+      (u.user_metadata?.display_name as string | undefined) ??
+      u.email?.split('@')[0] ??
+      'Alumno',
+    createdAt: u.created_at ? new Date(u.created_at).getTime() : Date.now(),
+    assignedCourses,
+  }
+}
+
+/**
+ * En Supabase el sign-in es por magic link: NO devuelve el `User`
+ * inmediatamente, sino que envía un email con un enlace que, al
+ * pulsarlo, crea la sesión. El contrato del módulo trata esto como un
+ * caso especial: si el backend es Supabase, la promesa resuelve y el
+ * caller debe mostrar "Revisa tu email" y esperar a `loadCurrentUser`
+ * tras el redirect del callback.
+ *
+ * Para que la firma común no haga falsas promesas, este caso se
+ * comunica con `result.kind`.
+ */
+export type SignInResult =
+  | { kind: 'signed-in'; user: User }
+  | { kind: 'magic-link-sent'; email: string }
+
+async function supabaseSignIn(email: string, name: string): Promise<SignInResult> {
+  const supabase = getSupabase()
+  if (!supabase) throw new Error('Supabase no está configurado')
+  const trimmedEmail = email.trim()
+  const trimmedName = name.trim()
+  const { error } = await supabase.auth.signInWithOtp({
+    email: trimmedEmail,
+    options: {
+      emailRedirectTo: window.location.origin,
+      data: trimmedName ? { display_name: trimmedName } : undefined,
+    },
+  })
+  if (error) throw error
+  return { kind: 'magic-link-sent', email: trimmedEmail }
+}
+
+async function supabaseSignOut(): Promise<void> {
+  const supabase = getSupabase()
+  if (!supabase) return
+  await supabase.auth.signOut()
+}
+
+/* ============================================================================ */
+/*                            API pública (despacha)                            */
+/* ============================================================================ */
+
+export async function loadCurrentUser(): Promise<User | null> {
+  if (isSupabaseEnabled()) return supabaseLoadCurrentUser()
+  return localLoadCurrentUser()
+}
+
+export async function signIn(email: string, name: string): Promise<SignInResult> {
+  if (isSupabaseEnabled()) return supabaseSignIn(email, name)
+  const u = await localSignIn(email, name)
+  return { kind: 'signed-in', user: u }
+}
+
+export async function signOut(): Promise<void> {
+  if (isSupabaseEnabled()) return supabaseSignOut()
+  return localSignOut()
 }
 
 /** Lista de `CourseData` de los cursos asignados al usuario. */

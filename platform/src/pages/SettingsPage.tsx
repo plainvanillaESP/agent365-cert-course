@@ -152,8 +152,7 @@ export function SettingsPage() {
               size="sm"
               onClick={() => {
                 if (confirm('¿Cerrar sesión? Tu progreso queda guardado en este navegador.')) {
-                  signOut()
-                  navigate('/login', { replace: true })
+                  void signOut().then(() => navigate('/login', { replace: true }))
                 }
               }}
               iconLeft={<LogOut className="size-3.5 stroke-[1.75]" aria-hidden />}

@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase O (production hardening: tests + CI + ErrorBoundary + budget).*
+*Última actualización: 2026-05-12 tras Fase P (backend Supabase env-gated + verify page).*

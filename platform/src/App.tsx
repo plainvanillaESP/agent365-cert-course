@@ -31,6 +31,7 @@ const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ defa
 const RepasoPage = lazy(() => import('@/pages/RepasoPage').then(m => ({ default: m.RepasoPage })))
 const LoginPage = lazy(() => import('@/pages/LoginPage').then(m => ({ default: m.LoginPage })))
 const CatalogPage = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.CatalogPage })))
+const VerifyPage = lazy(() => import('@/pages/VerifyPage').then(m => ({ default: m.VerifyPage })))
 
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
@@ -252,11 +253,14 @@ function AppShell({
 
   useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen, searchOpen])
 
-  // Sin sesión o en /login: shell minimal (sin sidebar y con header
-  // simplificado). El alumno solo ve el formulario centrado.
+  // Shell minimal (sin sidebar y con header simplificado) en cuatro casos:
+  //   - alumno sin sesión activa
+  //   - estamos en /login
+  //   - estamos en /cert/:id (verificación pública, accesible sin auth)
   const { user } = useAuth()
-  const isLoginPage = location.pathname === '/login'
-  const minimal = !user || isLoginPage
+  const isPublicRoute =
+    location.pathname === '/login' || location.pathname.startsWith('/cert/')
+  const minimal = !user || isPublicRoute
 
   return (
     <CourseProvider slug={activeSlug}>
@@ -288,6 +292,7 @@ function AppShell({
             <Routes>
               {/* Rutas públicas (no requieren sesión) */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/cert/:verificationId" element={<VerifyPage />} />
 
               {/* `/` es el catálogo de cursos asignados al alumno. Si solo
                   hay uno, CatalogPage redirige a su home. */}
