@@ -10,6 +10,18 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[Arch]` Fase N.2 — Auth scaffolding + LoginPage + CatalogPage. Estructura lista para enchufar backend real (Fase 9).
+  - **`lib/auth.ts` (nuevo)** — Contrato de autenticación. Tipo `User` con `id, email, name, createdAt, assignedCourses`. Funciones `loadCurrentUser`, `signIn(email, name)`, `signOut()`, `coursesAssignedTo(user)`. Implementación local sin validación: el alumno introduce email + nombre y queda "logado" como invitado; los datos viven en `localStorage` bajo `pv-learn-current-user`. Cuando llegue el backend real, basta con sustituir las tres funciones por llamadas al API y el shell sigue funcionando.
+  - **`contexts/AuthContext.tsx` (nuevo)** — `AuthProvider` que expone `useAuth()` con `user`, `signIn`, `signOut`. Se monta a nivel de plataforma (encima del router) para que cualquier componente pueda consumirlo.
+  - **`pages/LoginPage.tsx` (nuevo)** — Formulario con email + nombre opcional. Tras submit, redirige al `state.from` (o `/`). Si ya hay sesión, redirige automáticamente. Incluye un `<Callout kind="info">` que explica con claridad que la versión actual no envía datos a ningún servidor.
+  - **`pages/CatalogPage.tsx` (nuevo)** — Lista de cursos asignados al alumno. Con un solo curso asignado, redirige directamente a su home (atajo de UX). Con varios, los muestra como cards con duración + nº de módulos + color de brand. Cuando llegue el backend, `coursesAssignedTo(user)` consultará el API; el componente no cambia.
+  - **`<RequireAuth>` en `App.tsx`** — HOC mínimo que protege todas las rutas excepto `/login`. Si no hay sesión, redirige a `/login` pasando `state.from` con la ruta original para volver tras sign-in. Aplica a `/`, `/ajustes`, `/cursos/:slug/*` y todos los aliases legacy.
+  - **Shell minimal en `/login` y sin sesión** — `AppShell` consume `useAuth()` y, si no hay user o estamos en `/login`, oculta la `NavSidebar` y desactiva los toggles del header (menú móvil, búsqueda). El alumno solo ve el formulario centrado.
+  - **`SettingsPage`** — Nueva sección "Sesión" con email + nombre + botón "Cerrar sesión" (confirm antes de salir). El logout aclara que el progreso queda en el navegador.
+  - **Migración a Fase 9 (auth real)**: solo hay que sustituir el body de las tres funciones de `lib/auth.ts`. El context, las páginas, el RequireAuth y el catálogo se mantienen.
+- `[Build]` Validador 277 OK. tsc clean. Build OK. test:exam 34/34 OK. Smoke test: `/login` y `/` → 200.
+
+
 - `[Arch]` Fase N.1 — Refactor multi-curso (Fase 8 del plan original). Rutas canónicas `/cursos/<slug>/...`, registry dinámico de cursos, storage prefijado por slug.
   - **`lib/coursesRegistry.ts` (nuevo)** — Descubre dinámicamente todos los cursos del repo via `import.meta.glob('cursos/*/course.yaml')` + `import.meta.glob('cursos/*/modulos/*/module.yaml')`. Para cada curso construye un `CourseData` con metadatos (título, idioma, branding, áreas, módulos) leídos de los YAML. Cualquier curso nuevo bajo `cursos/<slug>/` que cumpla la spec se incorpora automáticamente sin tocar código. Guarda fallback a Node-side cuando `import.meta.glob` no está disponible (tests).
   - **`contexts/CourseContext.tsx` (nuevo)** — `CourseProvider` recibe `slug: string` por prop y expone vía `useCourse()` el `CourseData` + un helper `href(path)` que prefija con `/cursos/<slug>/`. Variante `useCourseOptional()` para componentes globales (Header, NavSidebar) que pueden vivir tanto dentro como fuera del provider.

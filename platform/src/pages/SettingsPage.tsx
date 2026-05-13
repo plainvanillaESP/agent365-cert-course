@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { ShieldOff, Trash2, Download, Upload } from 'lucide-react'
+import { ShieldOff, Trash2, Download, Upload, LogOut, User as UserIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Section } from '@/components/Layout'
 import { PageHeader } from '@/components/PageHeader'
 import { Callout } from '@/components/Callout'
+import { useAuth } from '@/contexts/AuthContext'
 import {
   getAccessMode,
   setAccessMode,
@@ -118,6 +120,9 @@ export function SettingsPage() {
     }
   }
 
+  const { user, signOut } = useAuth()
+  const navigate = useNavigate()
+
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <PageHeader
@@ -125,6 +130,39 @@ export function SettingsPage() {
         title="Configuración del curso"
         description="Controla cómo accedes al curso y gestiona los datos guardados en este navegador. Todos los cambios afectan solo a este dispositivo."
       />
+
+      {user && (
+        <Section title="Sesión" eyebrow="Tu cuenta">
+          <div className="flex items-center justify-between gap-4 px-5 py-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="size-9 rounded-full bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] flex items-center justify-center shrink-0">
+                <UserIcon className="size-[16px] stroke-[1.75]" aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[14px] font-medium text-[var(--text-primary)] truncate">
+                  {user.name}
+                </div>
+                <div className="text-[12.5px] text-[var(--text-muted)] truncate">
+                  {user.email}
+                </div>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                if (confirm('¿Cerrar sesión? Tu progreso queda guardado en este navegador.')) {
+                  signOut()
+                  navigate('/login', { replace: true })
+                }
+              }}
+              iconLeft={<LogOut className="size-3.5 stroke-[1.75]" aria-hidden />}
+            >
+              Cerrar sesión
+            </Button>
+          </div>
+        </Section>
+      )}
 
       {notice && (
         <Callout kind={notice.type === 'ok' ? 'success' : 'warning'}>

@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase N.1 (multi-curso architectural refactor).*
+*Última actualización: 2026-05-12 tras Fase N.2 (auth scaffolding + catalog).*

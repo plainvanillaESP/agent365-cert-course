@@ -9,6 +9,7 @@ import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcut
 import { CONTENT_MODULES } from '@/lib/course'
 import { defaultCourseSlug } from '@/lib/coursesRegistry'
 import { CourseProvider } from '@/contexts/CourseContext'
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import { getFocusSnapshot, startWork, pause, resume } from '@/lib/focusStore'
 
 // SearchPalette arrastra todo el contenido del curso (índice). Lazy-load
@@ -27,6 +28,8 @@ const ExamPage = lazy(() => import('@/pages/ExamPage').then(m => ({ default: m.E
 const CertificatePage = lazy(() => import('@/pages/CertificatePage').then(m => ({ default: m.CertificatePage })))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })))
 const RepasoPage = lazy(() => import('@/pages/RepasoPage').then(m => ({ default: m.RepasoPage })))
+const LoginPage = lazy(() => import('@/pages/LoginPage').then(m => ({ default: m.LoginPage })))
+const CatalogPage = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.CatalogPage })))
 
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
@@ -248,6 +251,12 @@ function AppShell({
 
   useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen, searchOpen])
 
+  // Sin sesión o en /login: shell minimal (sin sidebar y con header
+  // simplificado). El alumno solo ve el formulario centrado.
+  const { user } = useAuth()
+  const isLoginPage = location.pathname === '/login'
+  const minimal = !user || isLoginPage
+
   return (
     <CourseProvider slug={activeSlug}>
     <div className="min-h-dvh flex flex-col">
@@ -263,9 +272,12 @@ function AppShell({
         Saltar al contenido
       </a>
 
-      <Header onMenuToggle={() => setNavOpen(!navOpen)} onSearchClick={() => setSearchOpen(true)} />
+      <Header
+        onMenuToggle={minimal ? undefined : () => setNavOpen(!navOpen)}
+        onSearchClick={minimal ? undefined : () => setSearchOpen(true)}
+      />
       <div className="flex flex-1 min-h-0">
-        <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />
+        {!minimal && <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />}
         <main
           id="main-content"
           tabIndex={-1}
@@ -273,42 +285,39 @@ function AppShell({
         >
           <Suspense fallback={<PageFallback />}>
             <Routes>
-              {/*
-                Rutas globales (no atadas a un curso concreto): ajustes
-                del alumno y, eventualmente, login + catálogo.
-              */}
-              <Route path="/ajustes" element={<SettingsPage />} />
+              {/* Rutas públicas (no requieren sesión) */}
+              <Route path="/login" element={<LoginPage />} />
 
-              {/*
-                Rutas del curso activo. Todas las páginas que dependen
-                de un curso viven bajo `/cursos/:slug/*` y consumen
-                `useCourse()` para acceder a sus metadatos. El
-                CourseProvider envuelve TODO el shell (definido más
-                arriba en `AppShell`), así que las rutas anidadas solo
-                renderizan páginas — el context ya está disponible.
-              */}
+              {/* `/` es el catálogo de cursos asignados al alumno. Si solo
+                  hay uno, CatalogPage redirige a su home. */}
+              <Route path="/" element={<RequireAuth><CatalogPage /></RequireAuth>} />
+
+              {/* Ajustes del alumno (global, no asociado a un curso) */}
+              <Route
+                path="/ajustes"
+                element={<RequireAuth><SettingsPage /></RequireAuth>}
+              />
+
+              {/* Rutas del curso activo. */}
               <Route
                 path="/cursos/:slug/*"
                 element={
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="progreso" element={<ProgressPage />} />
-                    <Route path="modulo/:id" element={<ModulePage />} />
-                    <Route path="modulo/:id/:section" element={<ModulePage />} />
-                    <Route path="examen" element={<ExamPage />} />
-                    <Route path="certificado/:attemptId" element={<CertificatePage />} />
-                    <Route path="repaso" element={<RepasoPage />} />
-                    <Route path="*" element={<HomePage />} />
-                  </Routes>
+                  <RequireAuth>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="progreso" element={<ProgressPage />} />
+                      <Route path="modulo/:id" element={<ModulePage />} />
+                      <Route path="modulo/:id/:section" element={<ModulePage />} />
+                      <Route path="examen" element={<ExamPage />} />
+                      <Route path="certificado/:attemptId" element={<CertificatePage />} />
+                      <Route path="repaso" element={<RepasoPage />} />
+                      <Route path="*" element={<HomePage />} />
+                    </Routes>
+                  </RequireAuth>
                 }
               />
 
-              {/*
-                Aliases legacy y fallback: cualquier ruta sin `/cursos/`
-                redirige al curso por defecto. Mantiene retrocompatibilidad
-                con bookmarks/enlaces previos a la migración Fase 8.
-              */}
-              <Route path="/" element={<DefaultCourseRedirect to="" />} />
+              {/* Aliases legacy: bookmarks anteriores a Fase 8 siguen vivos. */}
               <Route path="/progreso" element={<DefaultCourseRedirect to="progreso" />} />
               <Route path="/modulo/:id" element={<LegacyModuleRedirect />} />
               <Route path="/modulo/:id/:section" element={<LegacyModuleRedirect />} />
@@ -318,7 +327,7 @@ function AppShell({
                 element={<LegacyCertificateRedirect />}
               />
               <Route path="/repaso" element={<DefaultCourseRedirect to="repaso" />} />
-              <Route path="*" element={<DefaultCourseRedirect to="" />} />
+              <Route path="*" element={<RequireAuth><CatalogPage /></RequireAuth>} />
             </Routes>
           </Suspense>
         </main>
@@ -341,6 +350,28 @@ function AppShell({
     </div>
     </CourseProvider>
   )
+}
+
+/* --------------------- Gate de autenticación --------------------- */
+
+/**
+ * Wrapper que exige sesión activa para renderizar `children`. Si no
+ * hay usuario, redirige a `/login` y pasa la ruta original en
+ * `state.from` para volver tras el sign-in.
+ */
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth()
+  const location = useLocation()
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname + location.search }}
+        replace
+      />
+    )
+  }
+  return <>{children}</>
 }
 
 /* --------------------- Aliases / redirects --------------------- */
@@ -375,14 +406,16 @@ export function App() {
 
   return (
     <BrowserRouter basename={basename}>
-      <AppShell
-        navOpen={navOpen}
-        setNavOpen={setNavOpen}
-        shortcutsOpen={shortcutsOpen}
-        setShortcutsOpen={setShortcutsOpen}
-        searchOpen={searchOpen}
-        setSearchOpen={setSearchOpen}
-      />
+      <AuthProvider>
+        <AppShell
+          navOpen={navOpen}
+          setNavOpen={setNavOpen}
+          shortcutsOpen={shortcutsOpen}
+          setShortcutsOpen={setShortcutsOpen}
+          searchOpen={searchOpen}
+          setSearchOpen={setSearchOpen}
+        />
+      </AuthProvider>
     </BrowserRouter>
   )
 }
