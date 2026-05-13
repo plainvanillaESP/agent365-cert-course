@@ -10,6 +10,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ## 2026-05-12
 
+- `[Arch]` Fase N.3 — Curso demo `demo-pv-learn` que valida multi-curso en producción + guía de backend.
+  - **`cursos/demo-pv-learn/` (nuevo paquete)** — Curso de demostración minimal con un único módulo "Bienvenida a PV-Learn" que explica qué es la plataforma y la estructura de un paquete. Branding distinto (verde + cian) para que se vea visualmente que la plataforma aplica los tokens del curso, no los de Agent 365. Contiene `course.yaml`, `module.yaml`, `teoria.md` (≈70 líneas) y `quiz-practica.md` con 3 preguntas (Q-01-1, Q-01-2, Q-01-3). Validador: 34 OK · 1 warning (sin banco-examen, esperado) · 0 errors.
+  - **Demostración del plug-and-play** — Sin tocar una línea de código del shell, la plataforma:
+    - Descubre el segundo curso via el glob `cursos/*/course.yaml` en `coursesRegistry`.
+    - Lo expone en `/cursos/demo-pv-learn/` con sus rutas internas (`/modulo/1/teoria`, `/modulo/1/quiz-practica`).
+    - El catálogo (`/`) muestra ahora dos cards: Agent 365 y Demo PV-Learn. Como hay más de un curso, ya no salta directo al curso, sino que el alumno elige.
+    - El storage del alumno se prefija por slug (`pv-learn-demo-pv-learn-notes-m1` ≠ `pv-learn-agent365-cert-notes-m1`), así no hay contaminación entre cursos.
+  - **`docs/backend-integration.md` (nuevo, ~270 líneas)** — Guía completa de migración a backend real (Fase 9). Documenta:
+    - El contrato del cliente (las 4 funciones de `lib/auth.ts`) que es lo único a tocar.
+    - Mapeo storage-keys-localStorage → endpoints-API que cualquier backend debe respetar.
+    - **Opción A — Supabase**: setup paso a paso, instalación del cliente, env vars, schema SQL completo (`user_profile`, `course_enrollment`, `user_progress`, `exam_attempt`) con RLS policies, refactor de `lib/auth.ts` a magic link, verificación pública del certificado.
+    - **Opción B — Cloudflare Workers + D1**: setup, D1 database, endpoints mínimos (8 rutas), Lucia/Auth.js para magic link, CORS, write-through cache offline-first.
+    - Roadmap de migración en 7 pasos.
+    - Recomendación según escenario (comercialización rápida → Supabase; escala → CF Workers; B2B interno con SSO → Entra ID encima).
+- `[Build]` Validador: agent365-cert 277 OK / 0 err, demo-pv-learn 34 OK / 1 warn / 0 err. tsc clean. Build OK. test:exam 34/34. Smoke test: `/`, `/cursos/demo-pv-learn/`, `/cursos/demo-pv-learn/modulo/1/teoria` → 200.
+
+
 - `[Arch]` Fase N.2 — Auth scaffolding + LoginPage + CatalogPage. Estructura lista para enchufar backend real (Fase 9).
   - **`lib/auth.ts` (nuevo)** — Contrato de autenticación. Tipo `User` con `id, email, name, createdAt, assignedCourses`. Funciones `loadCurrentUser`, `signIn(email, name)`, `signOut()`, `coursesAssignedTo(user)`. Implementación local sin validación: el alumno introduce email + nombre y queda "logado" como invitado; los datos viven en `localStorage` bajo `pv-learn-current-user`. Cuando llegue el backend real, basta con sustituir las tres funciones por llamadas al API y el shell sigue funcionando.
   - **`contexts/AuthContext.tsx` (nuevo)** — `AuthProvider` que expone `useAuth()` con `user`, `signIn`, `signOut`. Se monta a nivel de plataforma (encima del router) para que cualquier componente pueda consumirlo.
