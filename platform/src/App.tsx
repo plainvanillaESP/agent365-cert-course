@@ -62,6 +62,23 @@ const AdminSubscriptionNewPage = lazy(() =>
   })),
 )
 
+// Panel admin de organización (Fase R.3).
+const OrgAdminLayout = lazy(() =>
+  import('@/components/OrgAdminLayout').then(m => ({ default: m.OrgAdminLayout })),
+)
+const OrgDashboardPage = lazy(() =>
+  import('@/pages/org-admin/OrgDashboardPage').then(m => ({ default: m.OrgDashboardPage })),
+)
+const OrgSeatsListPage = lazy(() =>
+  import('@/pages/org-admin/OrgSeatsListPage').then(m => ({ default: m.OrgSeatsListPage })),
+)
+const OrgSeatsInvitePage = lazy(() =>
+  import('@/pages/org-admin/OrgSeatsInvitePage').then(m => ({ default: m.OrgSeatsInvitePage })),
+)
+const OrgTeamProgressPage = lazy(() =>
+  import('@/pages/org-admin/OrgTeamProgressPage').then(m => ({ default: m.OrgTeamProgressPage })),
+)
+
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE=1` durante build): vacío para que las
 //     rutas SPA funcionen al servir desde cualquier carpeta.
@@ -315,6 +332,36 @@ function AppShell({
           </Routes>
         </Suspense>
       </RequirePlatformAdmin>
+    )
+  }
+
+  // Rutas /org/:slug/admin/* — panel del admin de la organización (Fase R.3).
+  // OrgAdminLayout internamente valida que el user sea admin de esa org;
+  // si no lo es, redirige a "/" (no necesitamos un HOC RequireOrgAdmin
+  // separado).
+  const isOrgAdminRoute = /^\/org\/[^/]+\/admin/.test(location.pathname)
+  if (isOrgAdminRoute) {
+    if (!user) {
+      return (
+        <Navigate
+          to="/login"
+          state={{ from: location.pathname + location.search }}
+          replace
+        />
+      )
+    }
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/org/:slug/admin" element={<OrgAdminLayout />}>
+            <Route index element={<OrgDashboardPage />} />
+            <Route path="seats" element={<OrgSeatsListPage />} />
+            <Route path="seats/invitar" element={<OrgSeatsInvitePage />} />
+            <Route path="progreso" element={<OrgTeamProgressPage />} />
+            <Route path="*" element={<Navigate to="." replace />} />
+          </Route>
+        </Routes>
+      </Suspense>
     )
   }
 

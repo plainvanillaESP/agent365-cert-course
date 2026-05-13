@@ -8,6 +8,27 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-13 (continuación) — Fase R.3
+
+- `[Arch]` Fase R.3 — Admin de organización MVP. Cierra el ciclo B2B: el admin de la empresa cliente gestiona sus propios seats, invita al equipo y revisa progreso.
+  - **`supabase/schema-fase-r-org-admin.sql` (nuevo)** — Schema delta con `is_org_admin(p_organization_id)` helper SQL + policies de RLS específicas para admins de organización: `organization_seat` (manage seats de sus subscriptions), `user_profile` (leer profiles del equipo), `user_progress` (leer progreso del equipo del curso de la subscription), `exam_attempt` (leer intentos de su equipo). Defensa por subscripción y curso: un admin de Acme con subscription al curso X NO puede ver progreso de su equipo en el curso Y.
+  - **`lib/admin.ts` ampliado** — Funciones para el panel org admin: `getOrganizationsWhereUserIsAdmin(userId)`, `getOrganizationKPIs(orgId)` (seats total/asignados/vacantes + certificados emitidos por su equipo), `assignEmailsToOrganization({orgId, courseSlug, emails})` (validación email, dedupe, comprobación de capacidad, asignación a seats vacantes en cascada, magic link via `supabase.auth.signInWithOtp` en Supabase), `revokeSeatById(seatId, reason)` (soft delete, conserva user_progress), `getUserRoleInOrganization()`, `getTeamProgressForOrganization()` (cruza user_progress y exam_attempt agregado por user del equipo).
+  - **`hooks/useOrgRole(slug)`** — Resuelve organización por slug + rol del usuario actual. Estados: `undefined` (cargando), `null` (no existe), `Organization+role`.
+  - **`OrgAdminLayout`** — Shell propio: header con logo PV + "[Nombre org] / Panel de organización" + email + tema + idioma + sign out + link "Volver al curso". Sidebar con Dashboard, Seats, Progreso del equipo + bloque "Próximamente" (Certificados, Perfil). Renderiza estados de loading/no-existe/no-autorizado (redirige a `/`). Pasa contexto a páginas hijas via `Outlet context` (organizationId, name, slug).
+  - **4 páginas org-admin (lazy-loaded)**:
+    - **`OrgDashboardPage`** (`/org/:slug/admin`) — 4 KPI cards (Seats contratados, Asignados con %, Vacantes con tono accent si hay, Certificados), callout invitar al equipo si hay seats vacantes, lista de subscriptions con link a seats filtrados
+    - **`OrgSeatsListPage`** (`/org/:slug/admin/seats`) — Lista de seats con badges de estado (Vacante / Invitado amber / Activo emerald / Revocado red), filtros por estado (tabs con conteos), filtro por curso desde URL `?curso=slug` con chip removible, acción revocar inline (modal con motivo opcional)
+    - **`OrgSeatsInvitePage`** (`/org/:slug/admin/seats/invitar`) — Form para invitar emails en bulk: selector curso, textarea con N emails (separador por línea/coma/punto-y-coma), validación inline (válidos/inválidos/exceden capacidad), parsing+dedup automático, summary post-envío con invitados, ya asignados y remaining seats
+    - **`OrgTeamProgressPage`** (`/org/:slug/admin/progreso`) — Tabla con email, estado (Registrado/Invitado), barra de progreso, última actividad, certificado. 4 stat cards con totales. Selector de curso si hay varias subscriptions
+  - **`App.tsx`** — Rama temprana para `/org/:slug/admin/*` análoga a la de `/admin/*`. Sin sesión → `/login` con state.from. Con sesión pero sin rol admin → `OrgAdminLayout` redirige internamente a `/`.
+  - **`CatalogPage` ampliada** — Nueva sección "Organizaciones que gestionas" con cards de las orgs donde el user es admin. Auto-redirect (atajo de 1 curso → curso) se desactiva si hay orgs admin. Espera a cargar `getOrganizationsWhereUserIsAdmin` antes de decidir.
+
+  **Flujo completo B2B funcional ahora**: Plain Vanilla crea org en `/admin/organizaciones/nueva` → crea subscription con N seats en `/admin/organizaciones/:slug/subscriptions/nueva` → asigna primer admin (manualmente con SQL o desde el panel admin en R.2.5) → admin de la org entra a `/org/:slug/admin` → invita N emails → Supabase manda magic link a cada uno → cuando entran, el trigger `handle_new_user` vincula su seat automáticamente → tienen acceso al curso → su progreso se ve en el panel org.
+
+  Bundle inicial: 219 KB gzip (techo 290 KB) ✓. Lazy-load de admin + org-admin: 0 KB en bundle alumno.
+
+---
+
 ## 2026-05-13 (continuación) — Fase R.2
 
 - `[Arch]` Fase R.2 — Admin Plain Vanilla MVP.
