@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { Sun, Moon, Menu, Activity, Search, Glasses, Timer } from 'lucide-react'
+import { Sun, Moon, Menu, Activity, Search, Glasses, Timer, Wrench } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
 import { useReadingMode } from '@/hooks/useReadingMode'
@@ -157,6 +157,24 @@ export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
                   </span>
                 )}
               </NavLink>
+              {user?.isPlatformAdmin && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    [
+                      'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
+                      isActive
+                        ? 'text-[var(--text-active)] bg-[var(--bg-active)]'
+                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
+                    ].join(' ')
+                  }
+                  aria-label="Panel admin de Plain Vanilla"
+                  title="Panel admin"
+                >
+                  <Wrench className="size-[15px] stroke-[1.75]" aria-hidden />
+                  <span className="hidden sm:inline">Admin</span>
+                </NavLink>
+              )}
               <a
                 href="https://github.com/plainvanillaESP/agent365-cert-course"
                 target="_blank"
