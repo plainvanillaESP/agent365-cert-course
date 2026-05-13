@@ -34,16 +34,17 @@ const CatalogPage = lazy(() => import('@/pages/CatalogPage').then(m => ({ defaul
 const VerifyPage = lazy(() => import('@/pages/VerifyPage').then(m => ({ default: m.VerifyPage })))
 
 // Basename del router:
-//   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
+//   - Modo offline (`VITE_OFFLINE=1` durante build): vacío para que las
 //     rutas SPA funcionen al servir desde cualquier carpeta.
-//   - Producción GitHub Pages: /agent365-cert-course
-//   - Dev: vacío.
-const basename =
-  import.meta.env.VITE_OFFLINE === '1'
-    ? ''
-    : import.meta.env.PROD
-      ? '/agent365-cert-course'
-      : ''
+//   - Producción (Vercel sirviendo learn.plainvanilla.ai en raíz): vacío.
+//   - Dev local: vacío.
+//
+// El antiguo deploy a GitHub Pages requería `/agent365-cert-course` como
+// basename porque vivía en `plainvanillaesp.github.io/agent365-cert-course/`.
+// Tras la migración a Vercel + dominio propio (fase Q), el sitio vive en
+// raíz, así que cualquier basename hace que el router no encuentre la URL
+// actual y se quede en pantalla blanca.
+const basename = ''
 
 /**
  * Fallback de Suspense mientras carga una página. Mantiene el shell
