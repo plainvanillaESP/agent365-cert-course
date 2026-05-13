@@ -1,7 +1,9 @@
 import { NavLink, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Settings as SettingsIcon } from 'lucide-react'
+import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Settings as SettingsIcon, Sparkles } from 'lucide-react'
+import { useFlashcards } from '@/hooks/useFlashcards'
 import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { useUnlockState } from '@/hooks/useModuleProgress'
 import { ModuleRow } from '@/components/ModuleRow'
 
@@ -21,6 +23,9 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
   const { id } = useParams<{ id: string }>()
   const currentModuleId = id ? parseInt(id, 10) : null
   const { isUnlocked } = useUnlockState()
+  const courseCtx = useCourseOptional()
+  const href = (path = '') =>
+    courseCtx ? courseCtx.href(path) : `/${path.replace(/^\/+/, '')}`
 
   return (
     <>
@@ -48,7 +53,7 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
         <div className="py-4 px-3 space-y-0.5">
           {/* Home */}
           <NavLink
-            to="/"
+            to={href('')}
             end
             onClick={onClose}
             className={({ isActive }) =>
@@ -83,6 +88,9 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
             currentModuleId={currentModuleId}
             onItemClick={onClose}
           />
+
+          {/* Repaso (flashcards SM-2) */}
+          <RepasoLink onItemClick={onClose} />
 
           {/* Ajustes */}
           <div className="pt-3 mt-3 border-t border-[var(--border-subtle)]">
@@ -119,6 +127,9 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
   const modules = MODULES.filter(m => area.modulos.includes(m.id))
   const containsCurrent = currentModuleId != null && area.modulos.includes(currentModuleId)
   const [expanded, setExpanded] = useState(containsCurrent)
+  const courseCtx = useCourseOptional()
+  const areaHref = (p = '') =>
+    courseCtx ? courseCtx.href(p) : `/${p.replace(/^\/+/, '')}`
 
   // Re-expandir si el módulo activo cambia y entra en esta área
   useEffect(() => {
@@ -173,7 +184,7 @@ function AreaGroup({ area, currentModuleId, onItemClick, isUnlocked }: AreaGroup
                     return (
                       <li key={s.slug}>
                         <NavLink
-                          to={`/modulo/${m.id}/${s.slug}`}
+                          to={areaHref(`modulo/${m.id}/${s.slug}`)}
                           onClick={onItemClick}
                           className={({ isActive }) =>
                             [
@@ -211,6 +222,8 @@ function ExamSection({
 }) {
   const isCurrent = module.id === currentModuleId
   const isProduced = module.estado === 'producido'
+  const courseCtx = useCourseOptional()
+  const examHref = courseCtx ? courseCtx.href('examen') : '/examen'
 
   return (
     <div className="pt-4 mt-3 border-t border-[var(--border-subtle)]">
@@ -219,7 +232,7 @@ function ExamSection({
       </div>
       {isProduced ? (
         <NavLink
-          to="/examen"
+          to={examHref}
           onClick={onItemClick}
           className={({ isActive }) =>
             [
@@ -240,5 +253,40 @@ function ExamSection({
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * Link al repaso espaciado (flashcards). Muestra una pildora con el
+ * número de cards vencidas hoy si hay alguna; si no, solo el texto.
+ */
+function RepasoLink({ onItemClick }: { onItemClick?: () => void }) {
+  const { dueCount } = useFlashcards()
+  const courseCtx = useCourseOptional()
+  const repasoHref = courseCtx ? courseCtx.href('repaso') : '/repaso'
+  return (
+    <NavLink
+      to={repasoHref}
+      onClick={onItemClick}
+      className={({ isActive }) =>
+        [
+          'flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] no-underline transition-colors',
+          isActive
+            ? 'bg-[var(--bg-active)] text-[var(--text-active)] font-medium'
+            : 'text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]',
+        ].join(' ')
+      }
+    >
+      <Sparkles className="size-[15px] shrink-0 stroke-[1.75]" aria-hidden />
+      <span>Repaso</span>
+      {dueCount > 0 && (
+        <span
+          className="ml-auto inline-flex items-center justify-center min-w-[1.5rem] h-5 px-1.5 rounded-full bg-[var(--color-pv-purple-500)]/15 text-[11px] font-semibold text-[var(--color-pv-purple-600)] dark:text-[var(--color-pv-purple-300)] tabular-nums"
+          aria-label={`${dueCount} flashcards pendientes`}
+        >
+          {dueCount}
+        </span>
+      )}
+    </NavLink>
   )
 }

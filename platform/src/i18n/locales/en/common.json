@@ -1,0 +1,51 @@
+{
+  "header": {
+    "search": "Search",
+    "progress": "Progress",
+    "github": "Repository on GitHub",
+    "readingMode": "Enter reading mode",
+    "readingModeExit": "Exit reading mode",
+    "focusStart": "Start focus mode (Pomodoro 25/5)",
+    "focusStop": "Stop timer",
+    "themeLight": "Switch to light mode",
+    "themeDark": "Switch to dark mode",
+    "menu": "Open navigation",
+    "language": "Language"
+  },
+  "nav": {
+    "home": "Course home",
+    "exam": "Final exam",
+    "review": "Review",
+    "settings": "Settings",
+    "saveAndQuit": "Save and quit"
+  },
+  "common": {
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "loading": "Loading…",
+    "error": "Error",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "module": {
+    "section": {
+      "teoria": "Theory",
+      "labs": "Labs",
+      "quiz": "Practice",
+      "resources": "Resources"
+    },
+    "notes": "Notes",
+    "duration": "{{minutes}} min",
+    "questionsInExam": "{{count}} question in the exam",
+    "questionsInExam_plural": "{{count}} questions in the exam"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "hint": "Press <kbd>?</kbd> anytime to open this help."
+  }
+}

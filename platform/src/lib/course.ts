@@ -1,194 +1,137 @@
 /**
- * Catálogo del curso: las 5 áreas de competencia y los 17 módulos.
+ * Compatibilidad y atajos al curso "por defecto" de PV-Learn.
  *
- * Esta es la "tabla de contenidos" que el shell usa para construir la home
- * y la navegación. Sincronizada con docs/arquitectura-curso.md v1.2.
+ * Hasta la fase de multi-curso (Fase 8), este archivo definía
+ * estáticamente todos los metadatos del curso Agent 365. Ahora delega
+ * en `lib/coursesRegistry.ts`, que carga dinámicamente los cursos
+ * disponibles en `cursos/<slug>/course.yaml` y los módulos en
+ * `cursos/<slug>/modulos/<m>/module.yaml`.
  *
- * Para reutilizar la plataforma con otro curso PV-Learn (ver
- * docs/reusar-plataforma.md), basta con sustituir los metadatos
- * (COURSE_*) y la lista de MODULES/AREAS. Los componentes de la home
- * y la navegación leen de aquí.
+ * Convenciones:
+ *
+ *   - **`useCourse()`** (hook) es la API recomendada para componentes
+ *     que necesitan los datos del curso activo en tiempo de
+ *     renderizado, basado en el `:slug` de la URL.
+ *
+ *   - Las exportaciones de esta archivo (`COURSE_TITLE`, `MODULES`,
+ *     `AREAS`, `findModule`, etc.) son una **vista del curso por
+ *     defecto**, conservadas para no romper componentes que aún no
+ *     usan el hook. Cuando el usuario navegue a `/cursos/<slug>/...`,
+ *     el provider sobreescribe estos valores en context y los
+ *     componentes que sí usan el hook reciben el curso correcto.
+ *
+ *   - El `defaultCourseSlug()` se calcula del registry. Para fijar uno
+ *     concreto en un deployment, cambiar `cursos/<slug>/course.yaml`
+ *     (o configurar un orden en el registry si llega un futuro
+ *     deployment multi-curso real).
  */
 
-/* --------------------------- Metadatos del curso -------------------------- */
+import {
+  defaultCourseSlug,
+  getCourse,
+  contentModules as registryContentModules,
+  examModule as registryExamModule,
+  findModule as registryFindModule,
+  getAreaForModule as registryGetAreaForModule,
+  formatDuration as registryFormatDuration,
+  type CourseData,
+} from './coursesRegistry'
 
-/**
- * Slug del curso, único e inmutable. Se usa para:
- *
- *   - Prefijar todas las storage keys del navegador (`pv-learn-{slug}-…`).
- *   - Diferenciar cursos cuando convivan varios en un mismo dominio
- *     (fase 8 del roadmap, ver `docs/roadmap-y-deuda-tecnica.md`).
- *
- * IMPORTANTE: si se cambia este valor en un curso ya en producción,
- * todos los alumnos pierden su progreso guardado (las keys cambian).
- * Solo cambiar al arrancar un curso nuevo.
- *
- * Limitación: los `import.meta.glob` de Vite NO pueden consumir este
- * valor (necesitan strings literales). Por eso los paths a los archivos
- * del curso siguen hardcoded en `lib/exam.ts` y `lib/quiz.ts`. Si
- * cambia el slug, hay que cambiarlos también ahí.
- */
-export const COURSE_SLUG = 'agent365-cert'
+export type { ModuleStatus, CourseArea, CourseModule } from './coursesRegistry'
+export { formatDuration } from './coursesRegistry'
 
-/**
- * Prefijo de las storage keys del navegador. Derivado de `COURSE_SLUG`
- * para que múltiples cursos servidos desde el mismo dominio no colisionen.
- *
- * Patrón: `pv-learn-{slug}-{ámbito}-{detalle}`.
- *
- * Ejemplos:
- *   pv-learn-agent365-cert-exam-current
- *   pv-learn-agent365-cert-quiz-m5-history
- *   pv-learn-agent365-cert-lab-m9
- *
- * Nota: hoy los hooks usan el prefijo legacy `agent365-…` por
- * compatibilidad con los alumnos que ya tienen progreso guardado.
- * Cuando llegue la fase 8 (multi-curso) se migrará via un step de
- * un-shot que renombra keys antiguas al nuevo prefijo.
- */
+/* ---------------------- Curso por defecto ----------------------- */
+
+const _defaultSlug = defaultCourseSlug()
+const _defaultCourse: CourseData | undefined = getCourse(_defaultSlug)
+
+if (!_defaultCourse) {
+  // Esto solo ocurriría si no hay ningún curso en `cursos/`. En ese
+  // caso, los exports caen a placeholders neutros para no romper el
+  // bundle, pero la app no será funcional hasta que haya al menos un
+  // course.yaml válido.
+  console.error('[course] No se encontró ningún curso en el registry.')
+}
+
+/* ----------------------- Metadatos del curso por defecto ----------------------- */
+
+export const COURSE_SLUG = _defaultCourse?.slug ?? _defaultSlug
 export const STORAGE_PREFIX = `pv-learn-${COURSE_SLUG}`
 
-/** Título principal del curso, visible en la home y en los breadcrumbs. */
-export const COURSE_TITLE = 'Microsoft Agent 365 IT Admin'
+export const COURSE_TITLE = _defaultCourse?.shortTitle ?? 'PV-Learn'
+export const COURSE_EYEBROW = `${_defaultCourse?.editor ?? 'Plain Vanilla Solutions'} · Curso de certificación`
+export const COURSE_DESCRIPTION = _defaultCourse?.description ?? ''
+export const COURSE_LOGO = 'agent365-logo-256.png' // sigue siendo asset estático del shell
 
-/** Eyebrow corto sobre el título en la home. */
-export const COURSE_EYEBROW = 'Plain Vanilla Solutions · Curso de certificación'
+export const COURSE_CERT_TITLE = _defaultCourse?.certificateTitle ?? COURSE_TITLE
+export const COURSE_CERT_LEGAL_NAME = _defaultCourse?.certificateLegalName ?? COURSE_TITLE
 
-/** Descripción del curso para la home y meta tags. */
-export const COURSE_DESCRIPTION =
-  'Curso de certificación para administradores IT sobre Microsoft Agent 365 y la gobernanza de agentes de IA en Microsoft 365. 17 módulos estructurados, evaluación final medible y constancia de finalización.'
-
-/** Logo cuadrado del curso, relativo a BASE_URL. */
-export const COURSE_LOGO = 'agent365-logo-256.png'
-
-/**
- * Título que aparece en el certificado, debajo de "ha completado
- * satisfactoriamente el examen de certificación". Suele ser una forma
- * más formal del título del curso.
- */
-export const COURSE_CERT_TITLE = 'Microsoft Agent 365 IT Administrator'
-
-/**
- * Nombre del curso para la nota legal del certificado (después de
- * "del curso"). Versión narrativa, en cursiva.
- */
-export const COURSE_CERT_LEGAL_NAME = 'Microsoft Agent 365 — Certificación profesional para administradores IT'
-
-/** Título del bloque de examen en su pantalla previa. */
 export const COURSE_EXAM_TITLE = 'Examen de certificación'
-
-/** Descripción del examen en la pantalla previa. */
 export const COURSE_EXAM_INTRO =
   'Pon a prueba lo aprendido en los módulos del curso. El examen está cronometrado y simula las condiciones de una certificación profesional.'
 
-/* --------------------------------------------------------------------------- */
+/* ----------------------- Listas derivadas del curso por defecto ----------------------- */
 
-export type ModuleStatus = 'producido' | 'en_revision' | 'pendiente'
+import type { CourseArea, CourseModule } from './coursesRegistry'
 
-export interface CourseArea {
-  id: number
-  nombre: string
-  nombreEs: string
-  pesoExamen: number
-  modulos: number[]
-}
-
-export interface CourseModule {
-  id: number
-  slug: string
-  titulo: string
-  duracionMin: number
-  areaExamen: number
-  estado: ModuleStatus
-  faseProduccion: number
-  preguntas: number
-}
-
-export const AREAS: CourseArea[] = [
-  {
-    id: 1,
-    nombre: 'Plan and configure Microsoft Agent 365',
-    nombreEs: 'Planificación y configuración',
-    pesoExamen: 15,
-    modulos: [1, 2, 3, 4, 5],
-  },
-  {
-    id: 2,
-    nombre: 'Manage agent identities with Microsoft Entra Agent ID',
-    nombreEs: 'Identidades de agentes con Entra Agent ID',
-    pesoExamen: 30,
-    modulos: [6, 9],
-  },
-  {
-    id: 3,
-    nombre: 'Manage the agent registry and lifecycle',
-    nombreEs: 'Registry y ciclo de vida',
-    pesoExamen: 15,
-    modulos: [7, 8],
-  },
-  {
-    id: 4,
-    nombre: 'Implement data protection with Microsoft Purview',
-    nombreEs: 'Protección de datos con Purview',
-    pesoExamen: 20,
-    modulos: [10, 11],
-  },
-  {
-    id: 5,
-    nombre: 'Monitor, investigate and govern',
-    nombreEs: 'Monitorización, investigación y gobernanza',
-    pesoExamen: 20,
-    modulos: [12, 13, 14, 15, 16],
-  },
+// Fallback estático para entornos sin Vite (ej. `npm run test:exam` con
+// Node puro, donde `import.meta.glob` no existe y el registry no puede
+// descubrir los YAML del curso). Estos valores son idénticos a los del
+// course.yaml de agent365-cert; cuando ese yaml cambie, hay que
+// actualizar aquí también. Si en el browser el registry encuentra el
+// curso, los exports usan ese y este fallback queda sin uso.
+const FALLBACK_AREAS: CourseArea[] = [
+  { id: 1, nombre: 'Plan and configure Microsoft Agent 365', nombreEs: 'Planificación y configuración', pesoExamen: 15, modulos: [1, 2, 3, 4, 5] },
+  { id: 2, nombre: 'Manage agent identities with Microsoft Entra Agent ID', nombreEs: 'Identidades de agentes con Entra Agent ID', pesoExamen: 30, modulos: [6, 9] },
+  { id: 3, nombre: 'Manage the agent registry and lifecycle', nombreEs: 'Registry y ciclo de vida', pesoExamen: 15, modulos: [7, 8] },
+  { id: 4, nombre: 'Implement data protection with Microsoft Purview', nombreEs: 'Protección de datos con Purview', pesoExamen: 20, modulos: [10, 11] },
+  { id: 5, nombre: 'Monitor, investigate and govern', nombreEs: 'Monitorización, investigación y gobernanza', pesoExamen: 20, modulos: [12, 13, 14, 15, 16] },
 ]
 
-export const MODULES: CourseModule[] = [
-  { id: 1,  slug: 'modulo-01-fundamentos',                  titulo: 'Fundamentos: ¿Qué es Microsoft Agent 365?',         duracionMin: 60,  areaExamen: 1, estado: 'producido', faseProduccion: 2, preguntas: 3  },
-  { id: 2,  slug: 'modulo-02-arquitectura',                  titulo: 'Arquitectura y componentes',                         duracionMin: 75,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 3  },
-  { id: 3,  slug: 'modulo-03-licenciamiento',                titulo: 'Licenciamiento, prerrequisitos y planificación',    duracionMin: 60,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 1  },
-  { id: 4,  slug: 'modulo-04-roles-administrativos',         titulo: 'Roles administrativos y delegación',                duracionMin: 45,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 1  },
-  { id: 5,  slug: 'modulo-05-configuracion-inicial',         titulo: 'Configuración inicial del tenant',                  duracionMin: 75,  areaExamen: 1, estado: 'producido', faseProduccion: 3, preguntas: 1  },
-  { id: 6,  slug: 'modulo-06-entra-agent-id',                titulo: 'Microsoft Entra Agent ID e identidades',            duracionMin: 105, areaExamen: 2, estado: 'producido', faseProduccion: 4, preguntas: 11 },
-  { id: 7,  slug: 'modulo-07-agent-registry-map',            titulo: 'Agent Registry y Agent Map',                         duracionMin: 75,  areaExamen: 3, estado: 'producido', faseProduccion: 4, preguntas: 4  },
-  { id: 8,  slug: 'modulo-08-ciclo-vida-agentes',            titulo: 'Despliegue, distribución y ciclo de vida',          duracionMin: 90,  areaExamen: 3, estado: 'producido', faseProduccion: 4, preguntas: 5  },
-  { id: 9,  slug: 'modulo-09-permisos-conditional-access',   titulo: 'Permisos, accesos y Conditional Access',            duracionMin: 183, areaExamen: 2, estado: 'producido', faseProduccion: 4, preguntas: 7  },
-  { id: 10, slug: 'modulo-10-purview-proteccion-datos',      titulo: 'Microsoft Purview y protección de datos',           duracionMin: 183, areaExamen: 4, estado: 'producido', faseProduccion: 5, preguntas: 5  },
-  { id: 11, slug: 'modulo-11-dlp-sensitivity-compliance',    titulo: 'DLP, sensitivity labels y compliance',              duracionMin: 210, areaExamen: 4, estado: 'producido', faseProduccion: 5, preguntas: 7  },
-  { id: 12, slug: 'modulo-12-monitorizacion-defender',       titulo: 'Monitorización, auditoría y reporting con Defender', duracionMin: 220, areaExamen: 5, estado: 'producido', faseProduccion: 5, preguntas: 7  },
-  { id: 13, slug: 'modulo-13-copilot-control-system',        titulo: 'Copilot Control System integrado con Agent 365',     duracionMin: 117, areaExamen: 5, estado: 'producido', faseProduccion: 5, preguntas: 1  },
-  { id: 14, slug: 'modulo-14-gobernanza-avanzada',           titulo: 'Gobernanza avanzada y multi-tenant',                duracionMin: 132, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 2  },
-  { id: 15, slug: 'modulo-15-troubleshooting',               titulo: 'Troubleshooting y operación',                       duracionMin: 117, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 1  },
-  { id: 16, slug: 'modulo-16-costes-optimizacion',           titulo: 'Costes, optimización y mejores prácticas',          duracionMin: 117, areaExamen: 5, estado: 'producido', faseProduccion: 6, preguntas: 1  },
-  { id: 17, slug: 'modulo-17-examen-certificacion',          titulo: 'Examen de certificación',                           duracionMin: 90,  areaExamen: 0, estado: 'producido', faseProduccion: 7, preguntas: 60 },
-]
+export const AREAS: CourseArea[] = _defaultCourse?.areas.length ? _defaultCourse.areas : FALLBACK_AREAS
+export const MODULES: CourseModule[] = _defaultCourse?.modules ?? []
 
-export const COURSE_TOTAL_MIN = MODULES.slice(0, 16).reduce((sum, m) => sum + m.duracionMin, 0)
-export const COURSE_EXAM_MIN = 90
+export const COURSE_TOTAL_MIN = _defaultCourse
+  ? registryContentModules(_defaultCourse).reduce((sum, m) => sum + m.duracionMin, 0)
+  : 0
+export const COURSE_EXAM_MIN = _defaultCourse?.examMinutes ?? 90
 
-/** Módulos de contenido (excluye el examen final, que es el último). */
-export const CONTENT_MODULES = MODULES.filter(m => m.areaExamen !== 0)
+export const CONTENT_MODULES: CourseModule[] = _defaultCourse
+  ? registryContentModules(_defaultCourse)
+  : []
 
-/** Módulo del examen final. */
-export const EXAM_MODULE = MODULES.find(m => m.areaExamen === 0) ?? MODULES[MODULES.length - 1]
+// Fallback: si el curso no declara módulo de examen, devuelve el
+// último módulo de la lista para mantener la firma no-nullable (los
+// consumers actuales asumen que siempre hay examen).
+export const EXAM_MODULE: CourseModule = _defaultCourse
+  ? (registryExamModule(_defaultCourse) ?? _defaultCourse.modules[_defaultCourse.modules.length - 1])
+  : ({
+      id: 0,
+      slug: 'noop',
+      titulo: 'Sin examen',
+      duracionMin: 0,
+      areaExamen: 0,
+      estado: 'pendiente' as const,
+      faseProduccion: 0,
+      preguntas: 0,
+    })
 
-/** Total de preguntas declaradas (suma de la columna `preguntas`, sin el examen). */
 export const COURSE_TOTAL_QUESTIONS = CONTENT_MODULES.reduce((sum, m) => sum + m.preguntas, 0)
 
-/** Ruta del primer módulo de contenido. Útil como CTA inicial. */
 export const COURSE_START_PATH = `/modulo/${CONTENT_MODULES[0]?.id ?? 1}/teoria`
 
+/* ----------------------- Helpers retrocompatibles ----------------------- */
+
 export function findModule(id: number | string): CourseModule | undefined {
-  const numId = typeof id === 'string' ? parseInt(id, 10) : id
-  return MODULES.find(m => m.id === numId)
+  if (!_defaultCourse) return undefined
+  return registryFindModule(_defaultCourse, id)
 }
 
 export function getAreaForModule(moduleId: number): CourseArea | undefined {
-  return AREAS.find(a => a.modulos.includes(moduleId))
+  if (!_defaultCourse) return undefined
+  return registryGetAreaForModule(_defaultCourse, moduleId)
 }
 
-export function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`
-  const h = Math.floor(minutes / 60)
-  const m = minutes % 60
-  return m === 0 ? `${h}h` : `${h}h ${m}min`
-}
+// Re-export para evitar warnings de unused-import si alguna versión
+// previa importaba registryFormatDuration directamente.
+void registryFormatDuration

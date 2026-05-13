@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { CheckCircle2, XCircle, RotateCcw, Award, Clock } from 'lucide-react'
 import { Button, ButtonLink } from '@/components/Button'
 import { EXAM_PASS_PCT, type AreaBreakdown } from '@/lib/exam'
 import type { ExamAttempt } from '@/hooks/useExamState'
+import { celebrateBig } from '@/lib/confetti'
 import { ExamReview } from './ExamReview'
 
 interface ExamResultProps {
@@ -26,6 +28,13 @@ export function ExamResult({
     : 'text-amber-700 dark:text-amber-300'
 
   const cooldownActive = cooldownUntil !== null && cooldownUntil > Date.now()
+
+  // Celebración al aprobar el examen final. Se dispara solo cuando se
+  // entra por primera vez a este resultado (cambio de `attempt.id`). Si
+  // el alumno vuelve a esta vista navegando atrás, no se repite.
+  useEffect(() => {
+    if (passed) void celebrateBig()
+  }, [passed, attempt.id])
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">

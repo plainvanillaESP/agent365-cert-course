@@ -1,11 +1,24 @@
 import { lazy, Suspense, useState } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation, Navigate } from 'react-router-dom'
 import { Header } from '@/components/Header'
 import { NavSidebar } from '@/components/NavSidebar'
 import { Skeleton, SkeletonParagraph } from '@/components/Skeleton'
 import { ShortcutsModal } from '@/components/ShortcutsModal'
+import { FocusTimer } from '@/components/FocusTimer'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts'
 import { CONTENT_MODULES } from '@/lib/course'
+import { defaultCourseSlug } from '@/lib/coursesRegistry'
+import { CourseProvider } from '@/contexts/CourseContext'
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { getFocusSnapshot, startWork, pause, resume } from '@/lib/focusStore'
+
+// SearchPalette arrastra todo el contenido del curso (índice). Lazy-load
+// para que no entre en el bundle inicial; el chunk se descarga la primera
+// vez que el alumno abre la búsqueda con Cmd+K, / o el botón del header.
+const SearchPalette = lazy(() =>
+  import('@/components/SearchPalette').then(m => ({ default: m.SearchPalette })),
+)
 
 // Las páginas se cargan bajo demanda con React.lazy. Esto baja el
 // bundle inicial; Vite genera un chunk por página.
@@ -15,6 +28,10 @@ const ProgressPage = lazy(() => import('@/pages/ProgressPage').then(m => ({ defa
 const ExamPage = lazy(() => import('@/pages/ExamPage').then(m => ({ default: m.ExamPage })))
 const CertificatePage = lazy(() => import('@/pages/CertificatePage').then(m => ({ default: m.CertificatePage })))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const RepasoPage = lazy(() => import('@/pages/RepasoPage').then(m => ({ default: m.RepasoPage })))
+const LoginPage = lazy(() => import('@/pages/LoginPage').then(m => ({ default: m.LoginPage })))
+const CatalogPage = lazy(() => import('@/pages/CatalogPage').then(m => ({ default: m.CatalogPage })))
+const VerifyPage = lazy(() => import('@/pages/VerifyPage').then(m => ({ default: m.VerifyPage })))
 
 // Basename del router:
 //   - Modo offline (`VITE_OFFLINE` activo durante build): vacío para que las
@@ -59,22 +76,32 @@ function AppShell({
   setNavOpen,
   shortcutsOpen,
   setShortcutsOpen,
+  searchOpen,
+  setSearchOpen,
 }: {
   navOpen: boolean
   setNavOpen: (v: boolean) => void
   shortcutsOpen: boolean
   setShortcutsOpen: (v: boolean) => void
+  searchOpen: boolean
+  setSearchOpen: (v: boolean) => void
 }) {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams<{ id?: string; section?: string }>()
 
-  // Helpers para navegar al módulo siguiente/anterior cuando estamos
-  // dentro de uno. Si no estamos en /modulo, los atajos no hacen nada.
-  const currentModuleId = (() => {
-    const m = location.pathname.match(/^\/modulo\/(\d+)/)
-    return m ? parseInt(m[1], 10) : null
-  })()
+  // Slug y módulo activos derivados de la URL. La ruta canónica es
+  // `/cursos/<slug>/modulo/<id>/<section>`. Si la URL no encaja, los
+  // atajos relacionados con módulos no hacen nada (los globales sí).
+  const urlMatch = location.pathname.match(/^\/cursos\/([^/]+)(?:\/modulo\/(\d+))?/)
+  const activeSlug = urlMatch?.[1] ?? defaultCourseSlug()
+  const currentModuleId = urlMatch?.[2] ? parseInt(urlMatch[2], 10) : null
+  void activeSlug // consumido por <CourseProvider> al rodear AppShell
+
+  const coursePath = (path = '') => {
+    const clean = path.replace(/^\/+/, '')
+    return `/cursos/${activeSlug}${clean ? '/' + clean : ''}`
+  }
 
   const goToModuleDelta = (delta: number) => {
     if (currentModuleId === null) return
@@ -84,7 +111,7 @@ function AppShell({
     const next = ids[idx + delta]
     if (next === undefined) return
     const section = params.section ?? 'teoria'
-    navigate(`/modulo/${next}/${section}`)
+    navigate(coursePath(`modulo/${next}/${section}`))
   }
 
   // Definición de atajos globales. Algunos solo tienen efecto en
@@ -99,28 +126,49 @@ function AppShell({
       handler: () => setShortcutsOpen(true),
     },
     {
+      key: 'k',
+      meta: true,
+      description: 'Buscar en el curso',
+      group: 'Ayuda',
+      enableInInputs: true,
+      handler: () => setSearchOpen(true),
+    },
+    {
+      key: '/',
+      description: 'Buscar en el curso',
+      group: 'Ayuda',
+      handler: () => setSearchOpen(true),
+    },
+    {
       key: 'g',
       description: 'Ir al inicio',
       group: 'Navegación',
-      handler: () => navigate('/'),
+      handler: () => navigate(coursePath()),
     },
     {
       key: 'p',
       description: 'Ir al progreso',
       group: 'Navegación',
-      handler: () => navigate('/progreso'),
+      handler: () => navigate(coursePath('progreso')),
     },
     {
       key: 'e',
       description: 'Ir al examen',
       group: 'Navegación',
-      handler: () => navigate('/examen'),
+      handler: () => navigate(coursePath('examen')),
     },
     {
       key: 's',
       description: 'Ir a ajustes',
       group: 'Navegación',
       handler: () => navigate('/ajustes'),
+    },
+    {
+      key: 'R',
+      shift: true,
+      description: 'Ir al repaso (flashcards)',
+      group: 'Navegación',
+      handler: () => navigate(coursePath('repaso')),
     },
     {
       key: 'j',
@@ -138,25 +186,57 @@ function AppShell({
       key: 't',
       description: 'Cambiar a Teoría',
       group: 'En un módulo',
-      handler: () => currentModuleId !== null && navigate(`/modulo/${currentModuleId}/teoria`),
+      handler: () =>
+        currentModuleId !== null && navigate(coursePath(`modulo/${currentModuleId}/teoria`)),
     },
     {
       key: 'q',
       description: 'Cambiar a Quiz',
       group: 'En un módulo',
-      handler: () => currentModuleId !== null && navigate(`/modulo/${currentModuleId}/quiz-practica`),
+      handler: () =>
+        currentModuleId !== null && navigate(coursePath(`modulo/${currentModuleId}/quiz-practica`)),
     },
     {
       key: 'l',
       description: 'Cambiar a Laboratorios',
       group: 'En un módulo',
-      handler: () => currentModuleId !== null && navigate(`/modulo/${currentModuleId}/laboratorios`),
+      handler: () =>
+        currentModuleId !== null && navigate(coursePath(`modulo/${currentModuleId}/laboratorios`)),
     },
     {
       key: 'r',
       description: 'Cambiar a Recursos',
       group: 'En un módulo',
-      handler: () => currentModuleId !== null && navigate(`/modulo/${currentModuleId}/recursos`),
+      handler: () =>
+        currentModuleId !== null && navigate(coursePath(`modulo/${currentModuleId}/recursos`)),
+    },
+    {
+      key: 'n',
+      description: 'Abrir/cerrar el panel de notas',
+      group: 'En un módulo',
+      handler: () => {
+        if (currentModuleId === null) return
+        window.dispatchEvent(new CustomEvent('pv-learn:toggle-notes'))
+      },
+    },
+    {
+      key: 'i',
+      description: 'Modo lectura inmersivo',
+      group: 'Vista',
+      handler: () => {
+        window.dispatchEvent(new CustomEvent('pv-learn:toggle-reading-mode'))
+      },
+    },
+    {
+      key: 'f',
+      description: 'Modo focus (Pomodoro 25/5)',
+      group: 'Vista',
+      handler: () => {
+        const snap = getFocusSnapshot()
+        if (snap.phase === 'idle') startWork()
+        else if (snap.running) pause()
+        else resume()
+      },
     },
     {
       key: 'Escape',
@@ -164,15 +244,26 @@ function AppShell({
       group: 'General',
       enableInInputs: true,
       handler: () => {
-        if (shortcutsOpen) setShortcutsOpen(false)
+        if (searchOpen) setSearchOpen(false)
+        else if (shortcutsOpen) setShortcutsOpen(false)
         else if (navOpen) setNavOpen(false)
       },
     },
   ]
 
-  useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen])
+  useKeyboardShortcuts(shortcuts, [currentModuleId, params.section, navOpen, shortcutsOpen, searchOpen])
+
+  // Shell minimal (sin sidebar y con header simplificado) en cuatro casos:
+  //   - alumno sin sesión activa
+  //   - estamos en /login
+  //   - estamos en /cert/:id (verificación pública, accesible sin auth)
+  const { user } = useAuth()
+  const isPublicRoute =
+    location.pathname === '/login' || location.pathname.startsWith('/cert/')
+  const minimal = !user || isPublicRoute
 
   return (
+    <CourseProvider slug={activeSlug}>
     <div className="min-h-dvh flex flex-col">
       {/*
         Skip link a11y. Solo visible cuando recibe foco con Tab. Permite a
@@ -186,9 +277,12 @@ function AppShell({
         Saltar al contenido
       </a>
 
-      <Header onMenuToggle={() => setNavOpen(!navOpen)} />
+      <Header
+        onMenuToggle={minimal ? undefined : () => setNavOpen(!navOpen)}
+        onSearchClick={minimal ? undefined : () => setSearchOpen(true)}
+      />
       <div className="flex flex-1 min-h-0">
-        <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />
+        {!minimal && <NavSidebar open={navOpen} onClose={() => setNavOpen(false)} />}
         <main
           id="main-content"
           tabIndex={-1}
@@ -196,14 +290,50 @@ function AppShell({
         >
           <Suspense fallback={<PageFallback />}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/progreso" element={<ProgressPage />} />
-              <Route path="/modulo/:id" element={<ModulePage />} />
-              <Route path="/modulo/:id/:section" element={<ModulePage />} />
-              <Route path="/examen" element={<ExamPage />} />
-              <Route path="/certificado/:attemptId" element={<CertificatePage />} />
-              <Route path="/ajustes" element={<SettingsPage />} />
-              <Route path="*" element={<HomePage />} />
+              {/* Rutas públicas (no requieren sesión) */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cert/:verificationId" element={<VerifyPage />} />
+
+              {/* `/` es el catálogo de cursos asignados al alumno. Si solo
+                  hay uno, CatalogPage redirige a su home. */}
+              <Route path="/" element={<RequireAuth><CatalogPage /></RequireAuth>} />
+
+              {/* Ajustes del alumno (global, no asociado a un curso) */}
+              <Route
+                path="/ajustes"
+                element={<RequireAuth><SettingsPage /></RequireAuth>}
+              />
+
+              {/* Rutas del curso activo. */}
+              <Route
+                path="/cursos/:slug/*"
+                element={
+                  <RequireAuth>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="progreso" element={<ProgressPage />} />
+                      <Route path="modulo/:id" element={<ModulePage />} />
+                      <Route path="modulo/:id/:section" element={<ModulePage />} />
+                      <Route path="examen" element={<ExamPage />} />
+                      <Route path="certificado/:attemptId" element={<CertificatePage />} />
+                      <Route path="repaso" element={<RepasoPage />} />
+                      <Route path="*" element={<HomePage />} />
+                    </Routes>
+                  </RequireAuth>
+                }
+              />
+
+              {/* Aliases legacy: bookmarks anteriores a Fase 8 siguen vivos. */}
+              <Route path="/progreso" element={<DefaultCourseRedirect to="progreso" />} />
+              <Route path="/modulo/:id" element={<LegacyModuleRedirect />} />
+              <Route path="/modulo/:id/:section" element={<LegacyModuleRedirect />} />
+              <Route path="/examen" element={<DefaultCourseRedirect to="examen" />} />
+              <Route
+                path="/certificado/:attemptId"
+                element={<LegacyCertificateRedirect />}
+              />
+              <Route path="/repaso" element={<DefaultCourseRedirect to="repaso" />} />
+              <Route path="*" element={<RequireAuth><CatalogPage /></RequireAuth>} />
             </Routes>
           </Suspense>
         </main>
@@ -214,22 +344,86 @@ function AppShell({
         onClose={() => setShortcutsOpen(false)}
         shortcuts={shortcuts.filter(s => s.key !== 'Escape')}
       />
+
+      {searchOpen && (
+        <Suspense fallback={null}>
+          <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </Suspense>
+      )}
+
+      {/* Tarjeta flotante del Pomodoro. Se autoesconde si phase === 'idle'. */}
+      <FocusTimer />
     </div>
+    </CourseProvider>
   )
+}
+
+/* --------------------- Gate de autenticación --------------------- */
+
+/**
+ * Wrapper que exige sesión activa para renderizar `children`. Si no
+ * hay usuario, redirige a `/login` y pasa la ruta original en
+ * `state.from` para volver tras el sign-in.
+ */
+function RequireAuth({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth()
+  const location = useLocation()
+  if (!user) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname + location.search }}
+        replace
+      />
+    )
+  }
+  return <>{children}</>
+}
+
+/* --------------------- Aliases / redirects --------------------- */
+
+/**
+ * Redirige a `/cursos/<defaultSlug>/<tail>`. Útil para las rutas
+ * legacy sin slug y para `/` mientras no haya catálogo/login.
+ */
+function DefaultCourseRedirect({ to }: { to: string }) {
+  const slug = defaultCourseSlug()
+  const clean = to.replace(/^\/+/, '')
+  return <Navigate to={`/cursos/${slug}${clean ? '/' + clean : ''}`} replace />
+}
+
+function LegacyModuleRedirect() {
+  const slug = defaultCourseSlug()
+  const { id, section } = useParams<{ id: string; section?: string }>()
+  const tail = section ? `${id}/${section}` : `${id}`
+  return <Navigate to={`/cursos/${slug}/modulo/${tail}`} replace />
+}
+
+function LegacyCertificateRedirect() {
+  const slug = defaultCourseSlug()
+  const { attemptId } = useParams<{ attemptId: string }>()
+  return <Navigate to={`/cursos/${slug}/certificado/${attemptId}`} replace />
 }
 
 export function App() {
   const [navOpen, setNavOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   return (
-    <BrowserRouter basename={basename}>
-      <AppShell
-        navOpen={navOpen}
-        setNavOpen={setNavOpen}
-        shortcutsOpen={shortcutsOpen}
-        setShortcutsOpen={setShortcutsOpen}
-      />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter basename={basename}>
+        <AuthProvider>
+          <AppShell
+            navOpen={navOpen}
+            setNavOpen={setNavOpen}
+            shortcutsOpen={shortcutsOpen}
+            setShortcutsOpen={setShortcutsOpen}
+            searchOpen={searchOpen}
+            setSearchOpen={setSearchOpen}
+          />
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }

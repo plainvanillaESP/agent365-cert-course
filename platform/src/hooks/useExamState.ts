@@ -37,9 +37,7 @@ import {
   selectExamQuestions,
   type ExamScoring,
 } from '../lib/exam'
-
-const CURRENT_KEY = 'agent365-exam-current'
-const HISTORY_KEY = 'agent365-exam-history'
+import { useCourseStorageKey } from '@/lib/storage'
 
 export type ExamPhase = 'pre-start' | 'in-progress' | 'result'
 
@@ -154,6 +152,8 @@ function computeCooldown(history: ExamAttempt[]): number | null {
 /* --------------------------------- hook ----------------------------------- */
 
 export function useExamState(): UseExamStateReturn {
+  const CURRENT_KEY = useCourseStorageKey('exam-current')
+  const HISTORY_KEY = useCourseStorageKey('exam-history')
   const [phase, setPhase] = useState<ExamPhase>('pre-start')
   const [current, setCurrent] = useState<CurrentSnapshot | null>(null)
   const [lastResult, setLastResult] = useState<ExamAttempt | null>(null)

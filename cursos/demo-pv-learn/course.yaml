@@ -1,0 +1,63 @@
+spec_version: "1.0"
+
+# Identidad del curso
+id: demo-pv-learn
+slug: demo-pv-learn
+nombre: "PV-Learn — Demo de la plataforma"
+nombre_corto: "PV-Learn Demo"
+descripcion_corta: "Curso de demostración para validar que la plataforma PV-Learn es plug-and-play: cualquier paquete que cumpla la spec se sirve sin tocar código."
+idioma: es-ES
+duracion_total_min: 30
+audiencia: "Editores que evalúan PV-Learn como plataforma de e-learning"
+editor: "Plain Vanilla Solutions SL"
+version_curso: "0.1.0"
+fecha_publicacion: "2026-05-12"
+
+modalidad_predominante: markdown
+
+# Branding distinto para verificar visualmente que la plataforma aplica
+# los tokens del curso, no los de Agent 365.
+branding:
+  color_primario: "#16A34A"
+  color_acento: "#22D3EE"
+  gradiente: ["#16A34A", "#22D3EE"]
+  fuente_titulares: "Bricolage Grotesque"
+  fuente_cuerpo: "Instrument Sans"
+
+# Una única área para mantener el curso pequeño.
+areas_examen:
+  - id: 1
+    nombre_es: "Demostración"
+    nombre_en: "Demo"
+    peso_pct: 100
+    modulos: [1]
+
+criterios_finalizacion_modulo:
+  teoria_scroll_pct_min: 80
+  quiz_practica_pct_min: 70
+  labs_intentados_min: 1
+  video_visto_pct_min: 80
+  audio_escuchado_pct_min: 80
+
+modo_navegacion: "libre"
+
+# Sin examen final en el curso demo. La spec espera el bloque para que
+# el motor sepa cómo construir el examen; aquí lo dejamos a 0 para que
+# el validador no exija banco-examen.md ni cuente preguntas.
+examen_final:
+  archivo: "banco-examen.md"
+  duracion_min: 0
+  numero_preguntas: 0
+  puntaje_aprobado_pct: 70
+  intentos_max: 3
+  espera_tras_max_intentos_dias: 1
+  desbloqueado_cuando: "todos-los-modulos-completados"
+
+certificado:
+  habilitado: false
+
+prerrequisitos_formales: []
+
+# Listado de slugs de módulos (en orden).
+modulos:
+  - modulo-01-bienvenida

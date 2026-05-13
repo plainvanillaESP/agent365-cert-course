@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { CheckCircle2, RotateCcw, History, Trash2 } from 'lucide-react'
+import { CheckCircle2, RotateCcw, History, Trash2, Repeat2, ListChecks } from 'lucide-react'
 import { useQuizState } from '@/hooks/useQuizState'
+import { celebrate } from '@/lib/confetti'
 import {
   isMultipleChoice,
   isMultipleResponse,
@@ -30,22 +31,30 @@ interface QuizProps {
 export function Quiz({ moduleId }: QuizProps) {
   const {
     questions,
+    mode,
     currentAnswers,
     submission,
     history,
     setAnswer,
     validate,
     reset,
+    startAdaptiveRound,
     clearHistory,
     allComplete,
+    lastFailedCount,
+    adaptivePendingCount,
   } = useQuizState(moduleId)
 
   const submission_ref = useRef<HTMLDivElement | null>(null)
 
-  // Al validar, hacer scroll suave al resultado
+  // Al validar, hacer scroll suave al resultado y, si todo correcto,
+  // lanzar confetti (respeta prefers-reduced-motion en lib/confetti.ts).
   useEffect(() => {
     if (submission && submission_ref.current) {
       submission_ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (submission.score === submission.total && submission.total > 0) {
+        void celebrate()
+      }
     }
   }, [submission])
 
@@ -65,6 +74,11 @@ export function Quiz({ moduleId }: QuizProps) {
 
   return (
     <div className="space-y-6">
+      {/* Banner del modo adaptativo (solo cuando estamos repasando). */}
+      {mode === 'adaptive' && (
+        <AdaptiveBanner pending={questions.length} onExit={reset} submitted={!!submission} />
+      )}
+
       {/* Resultado o explicación */}
       <div ref={submission_ref}>
         {submission ? (
@@ -146,14 +160,56 @@ export function Quiz({ moduleId }: QuizProps) {
             )}
           </>
         ) : (
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={reset}
-            iconLeft={<RotateCcw className="size-[16px] stroke-[2]" aria-hidden />}
-          >
-            Reiniciar práctica
-          </Button>
+          <>
+            {/* En modo full: tras validar, ofrecer repaso adaptativo si
+                hubo fallos y queda algo fuera de cooldown. */}
+            {mode === 'full' && lastFailedCount > 0 && adaptivePendingCount > 0 && (
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={startAdaptiveRound}
+                iconLeft={<Repeat2 className="size-[16px] stroke-[2]" aria-hidden />}
+              >
+                Repasar las {adaptivePendingCount} que fallaste
+              </Button>
+            )}
+            {/* En modo adaptive: si todavía quedan falladas, ofrecer
+                otra ronda; si no, volver al quiz completo. */}
+            {mode === 'adaptive' && lastFailedCount > 0 && adaptivePendingCount > 0 && (
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={startAdaptiveRound}
+                iconLeft={<Repeat2 className="size-[16px] stroke-[2]" aria-hidden />}
+              >
+                Otra ronda · {adaptivePendingCount} pendientes
+              </Button>
+            )}
+            <Button
+              variant={
+                mode === 'full' && lastFailedCount > 0 && adaptivePendingCount > 0
+                  ? 'secondary'
+                  : 'primary'
+              }
+              size="lg"
+              onClick={reset}
+              iconLeft={
+                mode === 'adaptive' ? (
+                  <ListChecks className="size-[16px] stroke-[2]" aria-hidden />
+                ) : (
+                  <RotateCcw className="size-[16px] stroke-[2]" aria-hidden />
+                )
+              }
+            >
+              {mode === 'adaptive' ? 'Volver al quiz completo' : 'Reiniciar práctica'}
+            </Button>
+            {mode === 'full' && lastFailedCount > 0 && adaptivePendingCount === 0 && (
+              <span className="text-[12.5px] text-[var(--text-muted)]">
+                Las {lastFailedCount} preguntas falladas están en cooldown. Vuelve más tarde
+                para repasarlas.
+              </span>
+            )}
+          </>
         )}
       </div>
 
@@ -161,6 +217,49 @@ export function Quiz({ moduleId }: QuizProps) {
       {history.length > 0 && (
         <AttemptHistory history={history} onClear={clearHistory} />
       )}
+    </div>
+  )
+}
+
+/**
+ * Banner sticky-info que avisa al alumno de que está en una ronda
+ * adaptativa (solo las preguntas que falló), con un atajo claro para
+ * volver al quiz completo.
+ */
+function AdaptiveBanner({
+  pending,
+  onExit,
+  submitted,
+}: {
+  pending: number
+  onExit: () => void
+  submitted: boolean
+}) {
+  return (
+    <div
+      role="status"
+      className="rounded-lg border border-[var(--color-pv-purple-500)]/40 bg-[var(--color-pv-purple-500)]/10 px-4 py-3 flex items-center gap-3"
+    >
+      <Repeat2
+        className="size-[18px] text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] shrink-0"
+        aria-hidden
+      />
+      <div className="flex-1 min-w-0 text-[13px]">
+        <span className="font-semibold text-[var(--text-primary)]">Modo repaso</span>
+        <span className="text-[var(--text-secondary)]"> · </span>
+        <span className="text-[var(--text-secondary)]">
+          {submitted
+            ? 'Acabas de validar esta ronda. Los aciertos entran en cooldown 30 min.'
+            : `Practicas ${pending} pregunta${pending === 1 ? '' : 's'} que fallaste. No cuenta para el progreso oficial.`}
+        </span>
+      </div>
+      <button
+        type="button"
+        onClick={onExit}
+        className="shrink-0 text-[12.5px] font-medium text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded px-1"
+      >
+        Salir del repaso
+      </button>
     </div>
   )
 }

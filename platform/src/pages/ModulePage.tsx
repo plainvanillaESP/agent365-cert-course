@@ -1,6 +1,6 @@
 import { useParams, Navigate, NavLink, Link } from 'react-router-dom'
-import { useEffect } from 'react'
-import { BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight, Check } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { BookOpenText, FlaskConical, ClipboardCheck, Link2, ChevronLeft, ArrowRight, Check, NotebookPen } from 'lucide-react'
 import { findModule, getAreaForModule, formatDuration } from '@/lib/course'
 import { loadContent, type ContentType } from '@/lib/content'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer'
@@ -14,8 +14,13 @@ import { getLabForModule } from '@/lib/labs'
 import { Resources } from '@/components/resources/Resources'
 import { getResourcesForModule } from '@/lib/resources'
 import { ScrollProgress } from '@/components/ScrollProgress'
+import { NotesPanel } from '@/components/NotesPanel'
+import { Highlighter } from '@/components/Highlighter'
+import { Fade } from '@/components/Transitions'
 import { markSectionVisited, type TrackedSection } from '@/lib/progress'
 import { useModuleProgress, useUnlockState } from '@/hooks/useModuleProgress'
+import { useCourse } from '@/contexts/CourseContext'
+import { useCourseStorageKey } from '@/lib/storage'
 
 const VALID_SECTIONS: ContentType[] = ['teoria', 'laboratorios', 'quiz-practica', 'recursos']
 
@@ -28,6 +33,9 @@ const SECTION_META = {
 
 export function ModulePage() {
   const { id, section = 'teoria' } = useParams<{ id: string; section?: string }>()
+  const { href } = useCourse()
+  const moduleIdRaw = id ? parseInt(id, 10) : 0
+  const scrollKey = useCourseStorageKey(`reading-m${moduleIdRaw}-teoria`)
 
   const moduleId = id ? parseInt(id, 10) : NaN
   const module = !isNaN(moduleId) ? findModule(moduleId) : undefined
@@ -51,14 +59,33 @@ export function ModulePage() {
   const progress = useModuleProgress(isNaN(moduleId) ? -1 : moduleId)
   const { isUnlocked } = useUnlockState()
 
-  if (!module) return <Navigate to="/" replace />
+  // Panel de notas del alumno. Estado local de la página: la persistencia
+  // del contenido vive en `useNotes`. Al cambiar de módulo el panel se
+  // cierra para que el alumno no edite por error las notas del módulo
+  // anterior.
+  const [notesOpen, setNotesOpen] = useState(false)
+  useEffect(() => {
+    setNotesOpen(false)
+  }, [moduleId])
+
+  // El atajo `n` vive en `App.tsx` para que aparezca en el modal de
+  // ayuda con el resto de atajos globales. Solo dispara un custom event
+  // si estamos en una ruta de módulo; aquí lo escuchamos y traduce a
+  // toggle del estado local del panel.
+  useEffect(() => {
+    const onToggle = () => setNotesOpen(o => !o)
+    window.addEventListener('pv-learn:toggle-notes', onToggle)
+    return () => window.removeEventListener('pv-learn:toggle-notes', onToggle)
+  }, [])
+
+  if (!module) return <Navigate to={href()} replace />
   // Alias legacy: /modulo/X/evaluacion → /modulo/X/quiz-practica.
   // Bookmarks o enlaces externos al path antiguo siguen funcionando.
   if (section === 'evaluacion') {
-    return <Navigate to={`/modulo/${moduleId}/quiz-practica`} replace />
+    return <Navigate to={href(`modulo/${moduleId}/quiz-practica`)} replace />
   }
   if (!VALID_SECTIONS.includes(section as ContentType)) {
-    return <Navigate to={`/modulo/${moduleId}/teoria`} replace />
+    return <Navigate to={href(`modulo/${moduleId}/teoria`)} replace />
   }
   // Gate de acceso (Bloque D.4): si el módulo está bloqueado en modo
   // secuencial, redirigir a /progreso con un querystring para que la
@@ -66,7 +93,7 @@ export function ModulePage() {
   // efímero. La URL queda guardable en bookmarks; al desbloquear, el
   // mensaje desaparece naturalmente.
   if (!isUnlocked(moduleId)) {
-    return <Navigate to={`/progreso?locked=${moduleId}`} replace />
+    return <Navigate to={href(`progreso?locked=${moduleId}`)} replace />
   }
 
   const content = loadContent(module.slug, section as ContentType)
@@ -104,60 +131,88 @@ export function ModulePage() {
             )}
           </div>
 
-          {/* Tabs de sección */}
-          <div className="mt-5 flex flex-wrap gap-1 -mb-[1px] border-b border-transparent">
-            {Object.entries(SECTION_META).map(([slug, meta]) => {
-              const Icon = meta.icon
-              const isCompleted = progress.sections[slug as TrackedSection]?.status === 'completed'
-              return (
-                <NavLink
-                  key={slug}
-                  to={`/modulo/${module.id}/${slug}`}
-                  end
-                  className={({ isActive }) =>
-                    [
-                      'inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium rounded-t-md border-b-2 transition-colors no-underline',
-                      isActive
-                        ? 'text-[var(--text-active)] border-[var(--border-active)]'
-                        : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] border-transparent',
-                    ].join(' ')
-                  }
-                >
-                  <Icon className="size-[14px] stroke-[1.75]" aria-hidden />
-                  <span>{meta.label}</span>
-                  {isCompleted && (
-                    <Check
-                      className="size-[13px] stroke-[2.5] text-emerald-600 dark:text-emerald-400"
-                      aria-label="Sección completada"
-                    />
-                  )}
-                </NavLink>
-              )
-            })}
+          {/* Tabs de sección + botón Notas */}
+          <div className="mt-5 flex flex-wrap items-end justify-between gap-2 -mb-[1px] border-b border-transparent">
+            <div className="flex flex-wrap gap-1">
+              {Object.entries(SECTION_META).map(([slug, meta]) => {
+                const Icon = meta.icon
+                const isCompleted = progress.sections[slug as TrackedSection]?.status === 'completed'
+                return (
+                  <NavLink
+                    key={slug}
+                    to={href(`modulo/${module.id}/${slug}`)}
+                    end
+                    className={({ isActive }) =>
+                      [
+                        'inline-flex items-center gap-2 px-3 py-2 text-[13px] font-medium rounded-t-md border-b-2 transition-colors no-underline',
+                        isActive
+                          ? 'text-[var(--text-active)] border-[var(--border-active)]'
+                          : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] border-transparent',
+                      ].join(' ')
+                    }
+                  >
+                    <Icon className="size-[14px] stroke-[1.75]" aria-hidden />
+                    <span>{meta.label}</span>
+                    {isCompleted && (
+                      <Check
+                        className="size-[13px] stroke-[2.5] text-emerald-600 dark:text-emerald-400"
+                        aria-label="Sección completada"
+                      />
+                    )}
+                  </NavLink>
+                )
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setNotesOpen(o => !o)}
+              aria-expanded={notesOpen}
+              aria-controls="module-notes-panel"
+              className={[
+                'inline-flex items-center gap-1.5 h-8 px-2.5 mb-0.5 rounded-md text-[12.5px] font-medium border transition-colors',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
+                notesOpen
+                  ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)] border-[var(--color-pv-purple-500)]/40'
+                  : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] border-[var(--border-default)]',
+              ].join(' ')}
+            >
+              <NotebookPen className="size-[14px] stroke-[1.75]" aria-hidden />
+              <span>Notas</span>
+              <kbd
+                className="hidden md:inline-flex items-center justify-center h-4 min-w-[1rem] px-1 rounded border border-[var(--border-strong)] bg-[var(--bg-surface-2)] font-mono text-[10px] font-semibold text-[var(--text-muted)] ml-0.5"
+                aria-hidden
+              >
+                N
+              </kbd>
+            </button>
           </div>
         </div>
 
         {/* Barra de progreso de lectura, solo en teoría con contenido */}
         {section === 'teoria' && content && (
-          <ScrollProgress storageKey={`agent365-reading-m${module.id}-teoria`} />
+          <ScrollProgress storageKey={scrollKey} />
         )}
 
-        {/* Contenido */}
-        {section === 'quiz-practica' && getQuestionsForModule(module.id).length > 0 ? (
-          <Quiz moduleId={module.id} />
-        ) : section === 'laboratorios' && getLabForModule(module.id) ? (
-          <Lab moduleId={module.id} />
-        ) : section === 'recursos' && getResourcesForModule(module.id) ? (
-          <Resources moduleId={module.id} />
-        ) : content ? (
-          <MarkdownRenderer
-            body={content.body}
-            moduleSlug={module.slug}
-            variant={section === 'laboratorios' ? 'lab' : 'default'}
-          />
-        ) : (
-          <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
-        )}
+        {/* Contenido — envuelto en Fade con key por sección para que el
+            cambio de tab dispare una animación de entrada suave. Respeta
+            prefers-reduced-motion en el CSS. */}
+        <Fade fadeKey={`${module.id}-${section}`}>
+          {section === 'quiz-practica' && getQuestionsForModule(module.id).length > 0 ? (
+            <Quiz moduleId={module.id} />
+          ) : section === 'laboratorios' && getLabForModule(module.id) ? (
+            <Lab moduleId={module.id} />
+          ) : section === 'recursos' && getResourcesForModule(module.id) ? (
+            <Resources moduleId={module.id} />
+          ) : content ? (
+            <MarkdownRenderer
+              body={content.body}
+              moduleSlug={module.slug}
+              variant={section === 'laboratorios' ? 'lab' : 'default'}
+            />
+          ) : (
+            <NotProducedNotice section={section} faseProduccion={module.faseProduccion} />
+          )}
+        </Fade>
 
         {/* Navegación entre módulos */}
         {(prevAvail || nextAvail) && (
@@ -168,7 +223,7 @@ export function ModulePage() {
             <div>
               {prevAvail && prevModule && (
                 <Link
-                  to={`/modulo/${prevModule.id}/teoria`}
+                  to={href(`modulo/${prevModule.id}/teoria`)}
                   className="group block px-4 py-3 rounded-md border border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
                 >
                   <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
@@ -184,7 +239,7 @@ export function ModulePage() {
             <div className="text-right">
               {nextAvail && nextModule && (
                 <Link
-                  to={`/modulo/${nextModule.id}/teoria`}
+                  to={href(`modulo/${nextModule.id}/teoria`)}
                   className="group block px-4 py-3 rounded-md border border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
                 >
                   <div className="flex items-center justify-end gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
@@ -208,6 +263,30 @@ export function ModulePage() {
           section !== 'laboratorios' &&
           section !== 'recursos' && <TableOfContents />}
       </aside>
+
+      {/* Panel de notas — drawer lateral derecho */}
+      <div id="module-notes-panel">
+        <NotesPanel
+          open={notesOpen}
+          onClose={() => setNotesOpen(false)}
+          moduleId={module.id}
+          moduleTitle={module.titulo}
+        />
+      </div>
+
+      {/* Highlighter — solo en secciones de prosa (teoría/labs). El
+          selector busca el `<article.markdown-body>` que MarkdownRenderer
+          monta. Si la sección actual no usa MarkdownRenderer (quiz,
+          recursos), getContainer devolverá null y el componente no
+          intentará pintar nada. */}
+      {(section === 'teoria' || section === 'laboratorios') && (
+        <Highlighter
+          getContainer={() => document.querySelector<HTMLElement>('article.markdown-body')}
+          moduleId={module.id}
+          section={section}
+          contentKey={`${module.id}-${section}`}
+        />
+      )}
     </div>
   )
 }

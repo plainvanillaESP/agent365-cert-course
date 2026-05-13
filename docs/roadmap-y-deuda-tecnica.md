@@ -72,56 +72,56 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
-| **Búsqueda global** sobre todo el contenido del curso (teoría, quiz, labs, recursos) con `cmd+k`. Resultados con snippet + módulo y sección de origen | Alto | 8–12 h | Nuevo `SearchPalette`, `searchIndex.ts` con prebuild |
-| **Atajos de teclado** globales (`j`/`k` siguiente/anterior módulo, `t`/`q`/`l`/`r` cambio de sección, `?` para help, `/` para search) | Medio | 3–4 h | Nuevo `useKeyboardShortcuts`, `ShortcutsHelp` modal |
-| **Indicador de progreso permanente** en el header (no solo en `/progreso`): pildora con `% completado` | Medio | 1–2 h | Aprovecha Badge + Stat |
-| **Breadcrumbs estructurados** con esquema accesible (aria-current, schema.org BreadcrumbList) | Bajo | 2 h | Nuevo `Breadcrumbs` |
+| ~~**Búsqueda global** sobre todo el contenido del curso (teoría, quiz, labs, recursos) con `cmd+k`. Resultados con snippet + módulo y sección de origen~~ ✅ H.3 | Alto | 8–12 h | `components/SearchPalette.tsx`, `lib/search.ts` |
+| ~~**Atajos de teclado** globales (`j`/`k` siguiente/anterior módulo, `t`/`q`/`l`/`r` cambio de sección, `?` para help, `/` para search)~~ ✅ H.2 + H.3 | Medio | 3–4 h | `hooks/useKeyboardShortcuts.tsx`, `components/ShortcutsModal.tsx` |
+| ~~**Indicador de progreso permanente** en el header (no solo en `/progreso`): pildora con `% completado`~~ ✅ H.2 | Medio | 1–2 h | `components/Header.tsx` + `useCourseProgress` |
+| ~~**Breadcrumbs estructurados** con esquema accesible (aria-current, schema.org BreadcrumbList)~~ ✅ H.2 | Bajo | 2 h | `components/Breadcrumbs.tsx` |
 
 ### 2.2 Aprendizaje activo
 
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
-| **Notas del alumno por módulo**: bloc lateral colapsable donde el alumno escribe sus notas en markdown, persistencia en localStorage, exportable a `.md` | Alto | 6–8 h | Nuevo `NotesPanel`, `useNotes` hook |
-| **Highlighter sobre la teoría**: seleccionar texto → guardar como destacado, vista de "tus destacados" por módulo | Alto | 10–14 h | Compleja: requiere rangos persistentes, posicionamiento |
-| **Modo focus / Pomodoro**: temporizador 25/5 que oculta sidebar y notificaciones, contador acumulado de tiempo de estudio | Medio | 4–6 h | Nuevo `FocusMode`, usa Modal |
-| **Práctica adaptativa**: en quizzes, las preguntas falladas se reinyectan automáticamente al final con cooldown | Alto | 4–6 h | Modificación de `useQuizState` |
-| **Flashcards generadas desde el banco**: vista alternativa donde cada pregunta se ve como tarjeta de repaso espaciado (Anki-like, SM-2) | Alto | 12–16 h | Nuevo módulo entero `Flashcards`, `useSpacedRepetition` |
+| ~~**Notas del alumno por módulo**: bloc lateral colapsable donde el alumno escribe sus notas en markdown, persistencia en localStorage, exportable a `.md`~~ ✅ I.1 | Alto | 6–8 h | `components/NotesPanel.tsx`, `hooks/useNotes.ts` |
+| ~~**Highlighter sobre la teoría**: seleccionar texto → guardar como destacado, vista de "tus destacados" por módulo~~ ✅ L.1 (vista pendiente) | Alto | 10–14 h | `lib/highlights.ts`, `hooks/useHighlights.ts`, `components/Highlighter.tsx` |
+| ~~**Modo focus / Pomodoro**: temporizador 25/5 que oculta sidebar y notificaciones, contador acumulado de tiempo de estudio~~ ✅ K.1 | Medio | 4–6 h | `lib/focusStore.ts`, `components/FocusTimer.tsx`, `hooks/useFocusMode.ts` |
+| ~~**Práctica adaptativa**: en quizzes, las preguntas falladas se reinyectan automáticamente al final con cooldown~~ ✅ I.2 | Alto | 4–6 h | `hooks/useQuizState.ts`, `components/quiz/Quiz.tsx` |
+| ~~**Flashcards generadas desde el banco**: vista alternativa donde cada pregunta se ve como tarjeta de repaso espaciado (Anki-like, SM-2)~~ ✅ L.7 | Alto | 12–16 h | `lib/srs.ts`, `hooks/useFlashcards.ts`, `pages/RepasoPage.tsx`, `components/flashcards/` |
 
 ### 2.3 Visual y micro-interacciones
 
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
-| **Skeleton states** para cargas (ahora no hay nada visible) | Medio | 2–3 h | Nuevo `Skeleton`, sustituir spinners |
-| **Animaciones de transición** entre secciones del módulo (Teoría → Quiz → Labs) con framer-motion | Medio | 4–6 h | Wrapper de página, prefers-reduced-motion respetado |
-| **Confetti / celebración** al completar un módulo o aprobar el examen (sutil, no infantil) | Bajo | 1 h | Lib `canvas-confetti`, dispara desde Certificate y ProgressPage |
-| **Modo lectura inmersivo** para teoría: full-width sin sidebar, fuente serif opcional, tracking y line-height ampliados | Medio | 2–3 h | Toggle en header, clase CSS `.reading-mode` |
-| **Vista de tabla de contenidos sticky** en el módulo (mini-mapa de los H2/H3 del markdown) | Alto | 3–4 h | Ya existe `TableOfContents`, mejorar sticky + active highlight |
+| ~~**Skeleton states** para cargas (ahora no hay nada visible)~~ ✅ H.2 | Medio | 2–3 h | `components/Skeleton.tsx` |
+| ~~**Animaciones de transición** entre secciones del módulo (Teoría → Quiz → Labs) con framer-motion~~ ✅ L.2 (CSS, sin lib) | Medio | 4–6 h | `components/Transitions.tsx` + keyframes en `index.css` |
+| ~~**Confetti / celebración** al completar un módulo o aprobar el examen (sutil, no infantil)~~ ✅ K.2 | Bajo | 1 h | `lib/confetti.ts` con lazy-load + respeto prefers-reduced-motion |
+| ~~**Modo lectura inmersivo** para teoría: full-width sin sidebar, fuente serif opcional, tracking y line-height ampliados~~ ✅ J.1 | Medio | 2–3 h | `hooks/useReadingMode.ts` + CSS `data-reading-mode="on"` |
+| ~~**Vista de tabla de contenidos sticky** en el módulo (mini-mapa de los H2/H3 del markdown)~~ ✅ J.1 | Alto | 3–4 h | `components/TableOfContents.tsx` reescrito |
 
 ### 2.4 Multimedia y contenido rico
 
 | Mejora | Impacto | Esfuerzo | Componentes |
 |---|---|---|---|
 | **Video embed con marcadores**: si el curso incluye videos (YouTube/Vimeo/MP4), poder marcar timestamps y volver a ellos | Alto | 8–12 h | Nuevo `VideoPlayer` con scrubber, marcadores |
-| **Diagramas Mermaid interactivos** en teoría (flowcharts, sequence diagrams, mindmaps) | Medio | 2–3 h | Plugin de markdown para `mermaid` |
+| ~~**Diagramas Mermaid interactivos** en teoría (flowcharts, sequence diagrams, mindmaps)~~ ✅ K.2 | Medio | 2–3 h | `components/MermaidBlock.tsx` + override de `<pre>` en `MarkdownRenderer` |
 | **Code playgrounds**: bloques de código ejecutables (Sandpack para JS/TS, equivalente para PowerShell) | Alto | 6–10 h | Componente que detecta `lang="powershell run"` etc. |
-| **Imágenes responsive con srcset** (hoy se sirve siempre la versión completa) | Medio | 2–3 h | Adaptación de `ZoomableImage` y pipeline de assets |
+| ~~**Imágenes responsive con srcset** (hoy se sirve siempre la versión completa)~~ ✅ L.5 (lazy + decoding async; srcset pendiente hasta que haya PNGs grandes) | Medio | 2–3 h | `loading="lazy"` y `decoding="async"` añadidos a `ZoomableImage` y `Certificate` |
 
 ### 2.5 Accesibilidad y rendimiento
 
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
-| **Skip links** al inicio de cada página (saltar a contenido principal) | Bajo | 30 min |
-| **Audit AAA**: pasar axe-core sobre todas las páginas, corregir los warnings | Medio | 4–6 h |
-| **Code-splitting por ruta**: hoy todo el JS va en un solo bundle (~500 KB warning de Vite) | Medio | 2–3 h |
-| **PWA con service worker**: la plataforma es instalable, funciona offline tras la primera visita | Alto | 6–10 h |
-| **Modo alto contraste** detectado automáticamente (`prefers-contrast: more`) | Bajo | 2 h |
-| **Soporte completo de teclado** en lightbox (ya está bien), drag-drop de quiz (revisar) y resto de interactivos | Medio | 3–4 h |
+| ~~**Skip links** al inicio de cada página (saltar a contenido principal)~~ ✅ H.2 | Bajo | 30 min |
+| ~~**Audit AAA**: pasar axe-core sobre todas las páginas, corregir los warnings~~ ✅ M.2 (axe en dev runtime) | Medio | 4–6 h | `@axe-core/react` cargado bajo `import.meta.env.DEV` en `main.tsx` |
+| ~~**Code-splitting por ruta**: hoy todo el JS va en un solo bundle (~500 KB warning de Vite)~~ ✅ H.2 + H.3 | Medio | 2–3 h |
+| ~~**PWA con service worker**: la plataforma es instalable, funciona offline tras la primera visita~~ ✅ L.4 | Alto | 6–10 h | `vite-plugin-pwa` + manifest en `vite.config.ts` |
+| ~~**Modo alto contraste** detectado automáticamente (`prefers-contrast: more`)~~ ✅ L.3 | Bajo | 2 h | CSS bajo `@media (prefers-contrast: more)` |
+| ~~**Soporte completo de teclado** en lightbox (ya está bien), drag-drop de quiz (revisar) y resto de interactivos~~ ✅ L.3 (auditado) | Medio | 3–4 h | KeyboardSensor de dnd-kit + Ordering con botones |
 
 ### 2.6 Social y prueba social
 
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
-| **Compartir certificado**: botones de compartir en LinkedIn, Twitter/X con OG image dinámico generado | Alto | 4–6 h |
+| ~~**Compartir certificado**: botones de compartir en LinkedIn, Twitter/X con OG image dinámico generado~~ ✅ L.6 (OG dinámico pendiente, requiere backend) | Alto | 4–6 h | `components/ShareButtons.tsx` |
 | **Verificación pública del certificado**: URL `/cert/{verificationId}` que muestra el certificado a cualquier visitante (sin necesidad de hacer el curso) | Alto | 6–8 h, requiere backend mínimo |
 | **Insignias Open Badges** estándar al completar el curso (Mozilla Open Badges v2) | Medio | 4–6 h, requiere emisor de badges |
 
@@ -129,8 +129,8 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 | Mejora | Impacto | Esfuerzo |
 |---|---|---|
-| **i18n completo** con react-i18next: UI traducible (botones, labels, mensajes), curso en español de origen pero plataforma EN-ES-FR | Alto | 8–12 h base + traducción ongoing |
-| **Toggle de idioma** en el header con detección de `navigator.language` | Bajo | 2 h |
+| ~~**i18n completo** con react-i18next: UI traducible (botones, labels, mensajes), curso en español de origen pero plataforma EN-ES-FR~~ ✅ M.1 (infra; migración de strings ongoing) | Alto | 8–12 h base + traducción ongoing | `i18n/`, `locales/{es,en}/common.json` |
+| ~~**Toggle de idioma** en el header con detección de `navigator.language`~~ ✅ M.1 | Bajo | 2 h | `components/LanguageSwitcher.tsx` |
 
 ---
 
@@ -138,9 +138,9 @@ Lo que la plataforma tiene hoy es sólido pero estándar. Para diferenciarse y e
 
 Del roadmap original (la home tenía las Fases 0–9 hasta G.2 que las quitamos). Las fases 0–7 están **completas** (curso terminado, plataforma desplegada, examen funcional). Lo que queda:
 
-### 3.1 Fase 8 — Plataforma multi-curso 🔴 Mayor
+### 3.1 Fase 8 — Plataforma multi-curso ✅ Resuelto (N.1)
 
-Hoy un deployment = un curso. Para servir varios cursos PV-Learn desde el mismo dominio:
+Refactor completado en N.1. La arquitectura ya es multi-curso, aunque solo hay un curso poblado:
 
 | Componente | Esfuerzo |
 |---|---|
@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-12 tras Fase G.5.*
+*Última actualización: 2026-05-12 tras Fase P (backend Supabase env-gated + verify page).*

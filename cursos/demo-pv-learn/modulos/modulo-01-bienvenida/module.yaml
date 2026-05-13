@@ -1,0 +1,25 @@
+spec_version: "1.0"
+id: 1
+slug: modulo-01-bienvenida
+titulo: "Bienvenida a PV-Learn"
+duracion_min: 30
+area_examen: 1
+estado: producido
+fase_produccion: 1
+ultima_actualizacion: 2026-05-12
+prerrequisitos: []
+prerrequisitos_externos: []
+objetivos_aprendizaje:
+  - id: OA-01.1
+    texto: "Entender qué es PV-Learn y para qué tipo de cursos sirve."
+    bloom: Comprender
+  - id: OA-01.2
+    texto: "Identificar la estructura de un paquete de curso (course.yaml, módulos)."
+    bloom: Recordar
+glosario: []
+secciones:
+  - tipo: teoria
+    archivo: teoria.md
+  - tipo: quiz-practica
+    archivo: quiz-practica.md
+preguntas_aporta_examen_final: 0

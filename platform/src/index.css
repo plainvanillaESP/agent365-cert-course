@@ -842,3 +842,197 @@ html.dark .badge-status-deprecated {
     background-image: none;
   }
 }
+
+/* ============================================================================
+ * Modo lectura inmersivo
+ *
+ * Se activa cuando el `<html>` lleva `data-reading-mode="on"` (gestionado por
+ * `hooks/useReadingMode.ts`). Cambia el layout para favorecer la lectura
+ * larga:
+ *
+ *   - Oculta la sidebar de módulos y la tabla de contenidos lateral.
+ *   - Ensancha el contenedor de teoría y lo centra en el viewport.
+ *   - Aumenta la altura de línea y el tracking sutilmente.
+ *   - Mantiene los breadcrumbs y el header del módulo (orientación).
+ *
+ * Importante: el modo se aplica en cualquier sección del módulo, no solo
+ * teoría. En quiz/labs/recursos el efecto principal es ensanchar y ocultar
+ * la sidebar, lo que también es deseable.
+ * ============================================================================ */
+
+html[data-reading-mode='on'] nav[aria-label='Navegación del curso'],
+html[data-reading-mode='on'] nav[aria-label='Tabla de contenidos'] {
+  display: none;
+}
+
+html[data-reading-mode='on'] .markdown-body {
+  font-size: 16px;
+  line-height: 1.72;
+  letter-spacing: 0.005em;
+}
+
+html[data-reading-mode='on'] .markdown-body h2,
+html[data-reading-mode='on'] .markdown-body h3 {
+  letter-spacing: -0.005em;
+}
+
+/* En reading mode el "main" tiene padding propio; eliminamos el grid de
+   dos columnas con TOC, todo a una columna ancha. La regla afecta al grid
+   principal de ModulePage. */
+html[data-reading-mode='on'] main > div.grid {
+  display: block;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Botón flotante "Salir del modo lectura" se mantiene visible (lo coloca
+   ModulePage con `position: fixed`). No hace falta CSS extra. */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-reading-mode='on'] {
+    /* nada que animar en este modo, pero garantizamos no introducir transiciones */
+  }
+}
+
+/* ============================================================================
+ * Highlights del alumno
+ *
+ * Marks aplicadas por `components/Highlighter.tsx`. Cuatro colores que el
+ * alumno elige al guardar (yellow, green, pink, purple). Los estilos vienen
+ * con un poco de padding, esquinas redondeadas y cursor hand para indicar
+ * que se puede pulsar (al clicar se ofrece quitar).
+ * ============================================================================ */
+
+mark.pv-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.12s ease-out;
+}
+
+mark.pv-highlight-yellow {
+  background-color: #fff59d; /* amber 200 visualmente */
+}
+html.dark mark.pv-highlight-yellow {
+  background-color: rgba(255, 235, 130, 0.32);
+  color: inherit;
+}
+
+mark.pv-highlight-green {
+  background-color: #c8e6c9;
+}
+html.dark mark.pv-highlight-green {
+  background-color: rgba(180, 240, 180, 0.28);
+  color: inherit;
+}
+
+mark.pv-highlight-pink {
+  background-color: #f8bbd0;
+}
+html.dark mark.pv-highlight-pink {
+  background-color: rgba(255, 170, 200, 0.28);
+  color: inherit;
+}
+
+mark.pv-highlight-purple {
+  background-color: #d1b3ff;
+}
+html.dark mark.pv-highlight-purple {
+  background-color: rgba(190, 150, 255, 0.32);
+  color: inherit;
+}
+
+/* ============================================================================
+ * Transiciones reutilizables
+ *
+ * Animaciones CSS ligeras consumidas por `components/Transitions.tsx`. Se
+ * usan vía un wrapper con `key` que remonta al cambiar (típico al cambiar
+ * de sección dentro de un módulo o al moverse entre rutas). Respetan
+ * `prefers-reduced-motion`.
+ * ============================================================================ */
+
+@keyframes pv-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pv-fade-in {
+  animation: pv-fade-in 220ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes pv-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.pv-slide-in-right {
+  animation: pv-slide-in-right 260ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-fade-in,
+  .pv-slide-in-right {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+ * Alto contraste
+ *
+ * Se activa automáticamente cuando el SO/navegador reporta
+ * `prefers-contrast: more`. Sube los contrastes de bordes y texto, vuelve
+ * los muted al color secondary y endurece los focus rings.
+ *
+ * No requiere intervención del usuario: se aplica solo. Para validación
+ * con axe-core o similar, comprobar bajo este media query.
+ * ============================================================================ */
+
+@media (prefers-contrast: more) {
+  :root {
+    /* Bordes más oscuros para que se distingan a primera vista */
+    --border-subtle: var(--color-neutral-300);
+    --border-default: var(--color-neutral-400);
+    --border-strong: var(--color-neutral-600);
+    /* Texto muted se acerca a secondary para subir contraste */
+    --text-muted: var(--color-neutral-700);
+    --text-faint: var(--color-neutral-500);
+  }
+  html.dark {
+    --border-subtle: var(--color-neutral-600);
+    --border-default: var(--color-neutral-500);
+    --border-strong: var(--color-neutral-300);
+    --text-muted: #E2E1DD;
+    --text-faint: #9A988F;
+  }
+  /* Focus ring más grueso para que destaque sin ambigüedad. */
+  :focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+  /* Subrayar todos los links del contenido (no solo on hover) en alto
+     contraste para que se identifiquen sin depender del color. */
+  .markdown-body a {
+    text-decoration: underline;
+  }
+  /* Marks del highlighter: borde para que se distingan del fondo cuando
+     el color sea sutil. */
+  mark.pv-highlight {
+    outline: 1px solid currentColor;
+    outline-offset: 0;
+  }
+}

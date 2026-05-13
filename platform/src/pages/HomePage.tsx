@@ -15,15 +15,17 @@ import {
   COURSE_EYEBROW,
   COURSE_DESCRIPTION,
   COURSE_LOGO,
-  COURSE_START_PATH,
   formatDuration,
 } from '@/lib/course'
 import { useUnlockState } from '@/hooks/useModuleProgress'
+import { useCourse } from '@/contexts/CourseContext'
 
 export function HomePage() {
   const { isUnlocked } = useUnlockState()
+  const { href } = useCourse()
   const numTotalModules = MODULES.length
   const numContentModules = CONTENT_MODULES.length
+  const courseStartPath = href(`modulo/${CONTENT_MODULES[0]?.id ?? 1}/teoria`)
 
   return (
     <div className="max-w-[var(--layout-content-max)] mx-auto">
@@ -41,7 +43,7 @@ export function HomePage() {
         }
         actions={
           <ButtonLink
-            to={COURSE_START_PATH}
+            to={courseStartPath}
             variant="primary"
             size="lg"
             iconRight={<ArrowRight className="size-4 stroke-[2.25]" aria-hidden />}

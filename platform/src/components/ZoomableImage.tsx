@@ -129,6 +129,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
           src={src}
           alt={alt}
           loading="lazy"
+          decoding="async"
           className="max-w-full h-auto block rounded-md transition-[box-shadow] duration-200 group-hover:shadow-md"
         />
         <span
@@ -185,6 +186,7 @@ export function ZoomableImage({ src, alt, className }: ZoomableImageProps) {
             src={src}
             alt={alt}
             draggable={false}
+            decoding="async"
             onLoad={() => setLoaded(true)}
             onError={() => setLoaded(true)}
             onClick={e => e.stopPropagation()}

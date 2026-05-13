@@ -8,6 +8,7 @@ import {
   countCorrect,
   getLabForModule,
 } from '@/lib/labs'
+import { useCourseStorageKey } from '@/lib/storage'
 
 interface LabState {
   lab: LabExercise | null
@@ -25,11 +26,9 @@ interface LabState {
   totalScenarios: number
 }
 
-const STATE_KEY_PREFIX = 'agent365-lab-m'
-
 export function useLabState(moduleId: number): LabState {
   const lab = useMemo(() => getLabForModule(moduleId), [moduleId])
-  const stateKey = `${STATE_KEY_PREFIX}${moduleId}-state`
+  const stateKey = useCourseStorageKey(`lab-m${moduleId}-state`)
 
   const [answers, setAnswers] = useState<LabAnswers>(() => (lab ? emptyLabAnswers(lab) : {}))
   const [validated, setValidated] = useState<LabAnswers | null>(null)

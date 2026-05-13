@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Printer, ArrowLeft, Trash2 } from 'lucide-react'
 import { ButtonLink, Button } from '@/components/Button'
+import { ShareButtons } from '@/components/ShareButtons'
+import { useCourse } from '@/contexts/CourseContext'
 import type { ExamAttempt } from '@/hooks/useExamState'
 import { CertificateSeal } from './CertificateSeal'
 import { CertificateBadge } from './CertificateBadge'
@@ -8,7 +10,7 @@ import { COURSE_CERT_TITLE, COURSE_CERT_LEGAL_NAME } from '@/lib/course'
 
 const LOGO_POSITIVO = `${import.meta.env.BASE_URL}logotipo-positivo.svg`
 
-const LEARNER_NAME_KEY = 'agent365-learner-name'
+const LEARNER_NAME_KEY = 'pv-learn-learner-name'
 
 function loadStoredName(): string {
   if (typeof localStorage === 'undefined') return ''
@@ -52,6 +54,7 @@ interface CertificateProps {
 export function Certificate({ attempt }: CertificateProps) {
   const [name, setName] = useState(() => loadStoredName())
   const [consent, setConsent] = useState<boolean>(() => loadStoredName().length > 0)
+  const { href } = useCourse()
 
   // Si el alumno acepta el consentimiento, persistimos al teclear.
   // Si lo desactiva, eliminamos lo guardado previamente.
@@ -70,7 +73,7 @@ export function Certificate({ attempt }: CertificateProps) {
       <div className="print:hidden max-w-4xl mx-auto space-y-3">
         <div className="flex flex-wrap items-center gap-3 justify-between">
           <ButtonLink
-            to="/examen"
+            to={href('examen')}
             variant="ghost"
             size="md"
             iconLeft={<ArrowLeft className="size-[16px] stroke-[1.75]" aria-hidden />}
@@ -136,6 +139,25 @@ export function Certificate({ attempt }: CertificateProps) {
           Al pulsar imprimir, tu navegador abrirá el cuadro de impresión estándar.
           En la mayoría de navegadores puedes elegir <strong>«Guardar como PDF»</strong> como destino para obtener un archivo descargable.
         </p>
+
+        {/* Compartir: enlaces a redes (LinkedIn / X), Web Share API en
+            mobile y copia al portapapeles. El enlace lleva al
+            certificado en este navegador; cuando exista verificación
+            pública (fase 9 backend) el shareUrl podrá apuntar a la URL
+            verificable persistente. */}
+        <div className="pt-1">
+          <div className="text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-semibold mb-2">
+            Compartir
+          </div>
+          <ShareButtons
+            text={
+              name.trim()
+                ? `He aprobado el examen de certificación ${COURSE_CERT_TITLE}.`
+                : `Examen de certificación ${COURSE_CERT_TITLE} aprobado.`
+            }
+            title={`Certificado ${COURSE_CERT_TITLE}`}
+          />
+        </div>
       </div>
 
       {/* Lienzo del certificado */}
@@ -153,7 +175,12 @@ export function Certificate({ attempt }: CertificateProps) {
         <div className="h-full flex flex-col">
           {/* Cabecera */}
           <header className="flex items-center justify-between">
-            <img src={LOGO_POSITIVO} alt="Plain Vanilla" className="h-8" />
+            <img
+              src={LOGO_POSITIVO}
+              alt="Plain Vanilla"
+              className="h-8"
+              decoding="async"
+            />
             <div className="text-right">
               <div className="text-[10.5px] uppercase tracking-[0.12em] text-slate-500 font-semibold">
                 Certificado oficial

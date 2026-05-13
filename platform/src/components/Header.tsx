@@ -1,14 +1,22 @@
 import { Link, NavLink } from 'react-router-dom'
-import { Sun, Moon, Menu, Activity } from 'lucide-react'
+import { Sun, Moon, Menu, Activity, Search, Glasses, Timer } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { useCourseProgress } from '@/hooks/useModuleProgress'
+import { useReadingMode } from '@/hooks/useReadingMode'
+import { useFocusMode } from '@/hooks/useFocusMode'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { Logotipo } from '@/components/Logo'
 import { IconButton } from '@/components/Button'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { COURSE_TITLE, COURSE_LOGO } from '@/lib/course'
 
 interface HeaderProps {
   onMenuToggle?: () => void
+  onSearchClick?: () => void
 }
+
+const IS_MAC =
+  typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent)
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -18,9 +26,17 @@ function GithubIcon({ className }: { className?: string }) {
   )
 }
 
-export function Header({ onMenuToggle }: HeaderProps) {
+export function Header({ onMenuToggle, onSearchClick }: HeaderProps) {
   const { theme, toggle } = useTheme()
   const snapshots = useCourseProgress()
+  const { enabled: readingMode, toggle: toggleReading } = useReadingMode()
+  const focus = useFocusMode()
+  const courseCtx = useCourseOptional()
+  // En las páginas que viven dentro de un curso, los links del header
+  // resuelven a `/cursos/<slug>/…`. Fuera (ajustes globales, futuro
+  // login), apunta al curso por defecto.
+  const home = courseCtx ? courseCtx.href() : '/'
+  const progresoHref = courseCtx ? courseCtx.href('progreso') : '/progreso'
 
   // Progreso global del curso: media del % completado por módulo.
   // Para que la cifra crezca de forma estable usamos sections completas
@@ -51,7 +67,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           )}
 
           <Link
-            to="/"
+            to={home}
             className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
           >
             <Logotipo className="h-7 w-auto shrink-0" />
@@ -76,8 +92,37 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
         {/* Acciones */}
         <div className="flex items-center gap-1">
+          {onSearchClick && (
+            <>
+              {/* Botón compacto en mobile */}
+              <IconButton
+                onClick={onSearchClick}
+                label="Buscar en el curso"
+                size="md"
+                className="md:hidden"
+              >
+                <Search className="size-[17px]" />
+              </IconButton>
+              {/* Botón con atajo visible en desktop */}
+              <button
+                type="button"
+                onClick={onSearchClick}
+                aria-label="Buscar en el curso"
+                className="hidden md:inline-flex items-center gap-2 h-9 pl-2.5 pr-2 mr-1 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
+              >
+                <Search className="size-[14.5px] shrink-0" aria-hidden />
+                <span className="hidden lg:inline">Buscar</span>
+                <kbd
+                  className="inline-flex items-center justify-center h-5 min-w-[1.6rem] px-1 rounded border border-[var(--border-strong)] bg-[var(--bg-surface-2)] font-mono text-[10.5px] font-semibold text-[var(--text-muted)] tabular-nums"
+                  aria-hidden
+                >
+                  {IS_MAC ? '⌘K' : 'Ctrl+K'}
+                </kbd>
+              </button>
+            </>
+          )}
           <NavLink
-            to="/progreso"
+            to={progresoHref}
             className={({ isActive }) =>
               [
                 'inline-flex items-center gap-1.5 px-2.5 h-9 rounded-md text-[13px] font-medium transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]',
@@ -109,12 +154,43 @@ export function Header({ onMenuToggle }: HeaderProps) {
             <GithubIcon className="size-[17px]" />
           </a>
           <IconButton
+            onClick={() => (focus.phase === 'idle' ? focus.startWork() : focus.stop())}
+            label={
+              focus.phase === 'idle'
+                ? 'Iniciar modo focus (Pomodoro 25/5)'
+                : 'Detener el temporizador'
+            }
+            size="md"
+            aria-pressed={focus.phase !== 'idle'}
+            className={
+              focus.phase !== 'idle'
+                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                : undefined
+            }
+          >
+            <Timer className="size-[17px]" />
+          </IconButton>
+          <IconButton
+            onClick={toggleReading}
+            label={readingMode ? 'Salir del modo lectura' : 'Activar modo lectura'}
+            size="md"
+            aria-pressed={readingMode}
+            className={
+              readingMode
+                ? 'bg-[var(--color-pv-purple-500)]/15 text-[var(--color-pv-purple-700)] dark:text-[var(--color-pv-purple-300)]'
+                : undefined
+            }
+          >
+            <Glasses className="size-[17px]" />
+          </IconButton>
+          <IconButton
             onClick={toggle}
             label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             size="md"
           >
             {theme === 'dark' ? <Sun className="size-[17px]" /> : <Moon className="size-[17px]" />}
           </IconButton>
+          <LanguageSwitcher />
         </div>
       </div>
     </header>

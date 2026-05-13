@@ -336,6 +336,83 @@ Helpers `KeyChip` (tecla individual) y `KeyCombo` (varias teclas con `+`) render
 
 ---
 
+## Búsqueda global
+
+### `SearchPalette` + `lib/search.ts`
+
+Paleta de búsqueda tipo `Cmd+K` sobre todo el contenido del curso. La UI vive en `components/SearchPalette.tsx` (modal con lista de resultados y navegación por teclado) y el motor de indexación/matching en `lib/search.ts`.
+
+```tsx
+import { lazy, Suspense, useState } from 'react'
+const SearchPalette = lazy(() =>
+  import('@/components/SearchPalette').then(m => ({ default: m.SearchPalette })),
+)
+
+const [open, setOpen] = useState(false)
+{open && (
+  <Suspense fallback={null}>
+    <SearchPalette open={open} onClose={() => setOpen(false)} />
+  </Suspense>
+)}
+```
+
+Fuentes indexadas: módulos (título + área), secciones de teoría (troceadas por H2/H3), enunciados de quiz, escenarios de labs, recursos. El índice se construye una vez en memoria al primer uso.
+
+```ts
+import { searchCourse, highlight } from '@/lib/search'
+
+const results = searchCourse('agent id', 20) // hasta 20 hits
+// → [{ type, moduleId, title, snippet, to, tag, score }]
+
+const segments = highlight('Microsoft Entra Agent ID', 'agent id')
+// → [{ text, match }] para renderizar con <mark>
+```
+
+Matching: AND de todos los tokens, normaliza tildes/case, scoring con peso por tipo (módulos > teoría > quiz > labs > recursos) + boost si el match cae en el título + bonus por frase contigua.
+
+**Code-splitting**: cargar `SearchPalette` con `React.lazy()` mantiene el bundle inicial pequeño; el chunk con el índice solo se descarga al abrir la paleta.
+
+---
+
+## Notas del alumno
+
+### `NotesPanel` + `useNotes`
+
+Drawer lateral derecho para que el alumno tome notas en markdown por módulo. La UI vive en `components/NotesPanel.tsx`; el estado (texto, debounce de guardado, contadores, export) en `hooks/useNotes.ts`.
+
+```tsx
+import { NotesPanel } from '@/components/NotesPanel'
+
+const [open, setOpen] = useState(false)
+<NotesPanel
+  open={open}
+  onClose={() => setOpen(false)}
+  moduleId={module.id}
+  moduleTitle={module.titulo}
+/>
+```
+
+Toggle por teclado: el atajo `n` se registra en `App.tsx` (para que aparezca en el modal de ayuda) y dispara `CustomEvent('pv-learn:toggle-notes')` que `ModulePage` escucha localmente. Esto desacopla el atajo global del estado local del panel.
+
+```ts
+import { useNotes } from '@/hooks/useNotes'
+
+const {
+  notes,
+  setNotes,
+  savedAt,         // ms timestamp del último flush a localStorage
+  status,          // 'idle' | 'pending' | 'saved'
+  clear,
+  exportToMd,      // descarga notas-modulo-NN.md con frontmatter
+  characterCount,
+  wordCount,
+} = useNotes(moduleId)
+```
+
+Persistencia en `localStorage` bajo `agent365-notes-m{N}` con escritura debounced 300 ms. Si `localStorage` falla (modo privado, quota), degrada en silencio: el texto vive en memoria. El backdrop del panel aparece solo en pantallas `< lg`; en desktop convive con la lectura.
+
+---
+
 ## Botones y acciones
 
 ### `Button`

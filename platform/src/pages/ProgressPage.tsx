@@ -1,5 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
+import { useCourse } from '@/contexts/CourseContext'
 import {
   BookOpenText,
   FlaskConical,
@@ -45,6 +46,11 @@ export function ProgressPage() {
   const byModuleId = new Map(courseProgress.map(s => [s.moduleId, s]))
   const { isUnlocked } = useUnlockState()
   const [searchParams] = useSearchParams()
+  // useCourse() está disponible en esta página (vive bajo
+  // `/cursos/:slug/*`), pero el href() se consume dentro de
+  // sub-componentes que lo invocan por su cuenta. Aquí solo se importa
+  // para validar tipos.
+  void useCourse
 
   const producedModules = MODULES.filter(m => m.estado === 'producido' && m.id !== 17)
   const totalModules = producedModules.length
@@ -219,9 +225,10 @@ interface NextStep {
 
 function NextStepCard({ nextStep }: { nextStep: NextStep }) {
   const SectionIcon = SECTION_META[nextStep.pendingSection].icon
+  const { href } = useCourse()
   return (
     <Link
-      to={`/modulo/${nextStep.module.id}/${nextStep.pendingSection}`}
+      to={href(`modulo/${nextStep.module.id}/${nextStep.pendingSection}`)}
       className="group block rounded-lg border-2 border-[var(--color-pv-purple-300)] dark:border-[var(--color-pv-purple-700)] bg-gradient-to-br from-[var(--color-pv-purple-50)] to-[var(--color-pv-pink-50)] dark:from-[var(--color-pv-purple-900)]/30 dark:to-[var(--color-pv-pink-900)]/20 p-5 hover:border-[var(--color-pv-purple-500)] transition-colors no-underline"
     >
       <div className="flex items-start gap-4">
@@ -315,11 +322,12 @@ function ModuleRow({
   const isComplete = snapshot?.isModuleComplete ?? false
   const isLocked = isProduced && !unlocked
   const isAccessible = isProduced && unlocked
+  const { href } = useCourse()
 
   const Wrapper = isAccessible
     ? ({ children }: { children: React.ReactNode }) => (
         <Link
-          to={`/modulo/${module.id}/teoria`}
+          to={href(`modulo/${module.id}/teoria`)}
           className="flex items-center gap-4 px-5 py-4 hover:bg-[var(--bg-surface-hover)] transition-colors no-underline"
         >
           {children}
