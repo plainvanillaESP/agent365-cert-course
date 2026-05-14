@@ -61,6 +61,16 @@ const AdminSubscriptionNewPage = lazy(() =>
     default: m.AdminSubscriptionNewPage,
   })),
 )
+const AdminUsersListPage = lazy(() =>
+  import('@/pages/admin/AdminUsersListPage').then(m => ({
+    default: m.AdminUsersListPage,
+  })),
+)
+const AdminCertificatesListPage = lazy(() =>
+  import('@/pages/admin/AdminCertificatesListPage').then(m => ({
+    default: m.AdminCertificatesListPage,
+  })),
+)
 
 // Panel admin de organización (Fase R.3).
 const OrgAdminLayout = lazy(() =>
@@ -326,6 +336,8 @@ function AppShell({
                 path="organizaciones/:slug/subscriptions/nueva"
                 element={<AdminSubscriptionNewPage />}
               />
+              <Route path="usuarios" element={<AdminUsersListPage />} />
+              <Route path="certificados" element={<AdminCertificatesListPage />} />
               {/* Catch-all dentro del admin: vuelve al dashboard */}
               <Route path="*" element={<Navigate to="/admin" replace />} />
             </Route>

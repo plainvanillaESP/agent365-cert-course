@@ -804,3 +804,498 @@ export async function getTeamProgressForOrganization(
     }
   })
 }
+
+
+// ════════════════════════════════════════════════════════════════════
+//  R.2.5 — Gestión de miembros y listados globales
+// ════════════════════════════════════════════════════════════════════
+
+const LOCAL_MEMBERS_KEY = 'pv-learn-admin-org-members'
+const LOCAL_PENDING_INVITATIONS_KEY = 'pv-learn-admin-pending-invitations'
+
+interface MemberRow {
+  id: string
+  organization_id: string
+  user_id: string
+  role: string
+  joined_at: string
+}
+
+interface PendingInvitationRow {
+  id: string
+  organization_id: string
+  email: string
+  role: string
+  invited_by: string | null
+  created_at: string
+  expires_at: string | null
+  accepted_at: string | null
+}
+
+/** Datos enriquecidos para el panel admin (member + email del user). */
+export interface OrgMemberRow {
+  id: string
+  organizationId: string
+  userId: string
+  email: string | null
+  displayName: string | null
+  role: OrganizationRole
+  joinedAt: string
+}
+
+export interface PendingInvitation {
+  id: string
+  organizationId: string
+  email: string
+  role: OrganizationRole
+  createdAt: string
+  expiresAt: string | null
+}
+
+/**
+ * Lista members de una organización con email y display_name del user
+ * cargados via join.
+ */
+export async function listMembersForOrganization(
+  organizationId: string,
+): Promise<OrgMemberRow[]> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    const { data, error } = await supabase
+      .from('organization_member')
+      .select('id, organization_id, user_id, role, joined_at, user_profile!inner(email, display_name)')
+      .eq('organization_id', organizationId)
+    if (error) throw new Error(error.message)
+    const out: OrgMemberRow[] = []
+    for (const row of data ?? []) {
+      const r = row as MemberRow & {
+        user_profile:
+          | { email: string | null; display_name: string | null }
+          | Array<{ email: string | null; display_name: string | null }>
+          | null
+      }
+      const profRaw = r.user_profile
+      const prof = Array.isArray(profRaw) ? profRaw[0] ?? null : profRaw
+      out.push({
+        id: r.id,
+        organizationId: r.organization_id,
+        userId: r.user_id,
+        email: prof?.email ?? null,
+        displayName: prof?.display_name ?? null,
+        role: r.role as OrganizationRole,
+        joinedAt: r.joined_at,
+      })
+    }
+    return out
+  }
+  // Local: cargar de localStorage. No tenemos user_profile real;
+  // mostramos la información que tenemos.
+  const members = localRead<OrgMemberRow>(LOCAL_MEMBERS_KEY).filter(
+    m => m.organizationId === organizationId,
+  )
+  return members
+}
+
+/**
+ * Lista invitations pendientes (no aceptadas, no caducadas) de una org.
+ */
+export async function listPendingInvitations(
+  organizationId: string,
+): Promise<PendingInvitation[]> {
+  const now = Date.now()
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    const { data, error } = await supabase
+      .from('organization_pending_invitation')
+      .select('*')
+      .eq('organization_id', organizationId)
+      .is('accepted_at', null)
+      .order('created_at', { ascending: false })
+    if (error) throw new Error(error.message)
+    return (data ?? [])
+      .map(row => {
+        const r = row as PendingInvitationRow
+        return {
+          id: r.id,
+          organizationId: r.organization_id,
+          email: r.email,
+          role: r.role as OrganizationRole,
+          createdAt: r.created_at,
+          expiresAt: r.expires_at,
+        }
+      })
+      .filter(p => p.expiresAt == null || new Date(p.expiresAt).getTime() > now)
+  }
+  const all = localRead<PendingInvitation>(LOCAL_PENDING_INVITATIONS_KEY)
+  return all
+    .filter(p => p.organizationId === organizationId)
+    .filter(p => p.expiresAt == null || new Date(p.expiresAt).getTime() > now)
+}
+
+export interface AddOrgMemberInput {
+  organizationId: string
+  email: string
+  role: OrganizationRole
+}
+
+export interface AddOrgMemberResult {
+  kind: 'added' | 'invited'
+  email: string
+}
+
+/**
+ * Añade un member a una organización.
+ *
+ *   - Si el email ya existe en auth.users (user_profile): inserta
+ *     organization_member directamente. Devuelve {kind:'added'}.
+ *   - Si no existe: inserta organization_pending_invitation y dispara
+ *     magic link. Cuando el alumno entre, el trigger handle_new_user
+ *     materializará el organization_member. Devuelve {kind:'invited'}.
+ */
+export async function addOrganizationMember(
+  input: AddOrgMemberInput,
+): Promise<AddOrgMemberResult> {
+  const email = input.email.trim().toLowerCase()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error('Email no válido')
+  }
+
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    // 1) ¿Existe ya el user?
+    const { data: prof, error: profErr } = await supabase
+      .from('user_profile')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle()
+    if (profErr) throw new Error(profErr.message)
+
+    if (prof) {
+      // Existe: insert organization_member directamente
+      const userId = (prof as { id: string }).id
+      const { error } = await supabase.from('organization_member').insert({
+        organization_id: input.organizationId,
+        user_id: userId,
+        role: input.role,
+      })
+      if (error) {
+        // Si ya era member, error de unique → tratamos como éxito silencioso
+        if (error.code === '23505') {
+          return { kind: 'added', email }
+        }
+        throw new Error(error.message)
+      }
+      return { kind: 'added', email }
+    }
+
+    // No existe: pending invitation + magic link
+    const { error } = await supabase
+      .from('organization_pending_invitation')
+      .insert({
+        organization_id: input.organizationId,
+        email,
+        role: input.role,
+      })
+    if (error) {
+      if (error.code === '23505') {
+        // Ya había una invitation pendiente → re-disparamos el magic link
+      } else {
+        throw new Error(error.message)
+      }
+    }
+    try {
+      await supabase.auth.signInWithOtp({ email })
+    } catch {
+      /* swallow: rate-limit u otro; el admin puede reinvitar */
+    }
+    return { kind: 'invited', email }
+  }
+
+  // Backend local: simplemente persistimos en localStorage. Como no
+  // tenemos auth.users real, asumimos que es invitación pendiente y
+  // ya está.
+  const now = new Date().toISOString()
+  const existing = localRead<PendingInvitation>(LOCAL_PENDING_INVITATIONS_KEY)
+  if (
+    existing.some(
+      p =>
+        p.organizationId === input.organizationId &&
+        p.email.toLowerCase() === email,
+    )
+  ) {
+    return { kind: 'invited', email }
+  }
+  const newInv: PendingInvitation = {
+    id: uid(),
+    organizationId: input.organizationId,
+    email,
+    role: input.role,
+    createdAt: now,
+    expiresAt: null,
+  }
+  localWrite(LOCAL_PENDING_INVITATIONS_KEY, [newInv, ...existing])
+
+  // En local también guardamos un member ficticio para que la UI los
+  // vea reflejados como ya añadidos (el flujo dev no tiene Auth real).
+  const members = localRead<OrgMemberRow>(LOCAL_MEMBERS_KEY)
+  const member: OrgMemberRow = {
+    id: uid(),
+    organizationId: input.organizationId,
+    userId: uid(),
+    email,
+    displayName: email.split('@')[0],
+    role: input.role,
+    joinedAt: now,
+  }
+  localWrite(LOCAL_MEMBERS_KEY, [member, ...members])
+  return { kind: 'invited', email }
+}
+
+/**
+ * Elimina un member de una organización. Solo borra organization_member;
+ * el user_profile y su progreso se conservan.
+ */
+export async function removeOrganizationMember(memberId: string): Promise<void> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    const { error } = await supabase
+      .from('organization_member')
+      .delete()
+      .eq('id', memberId)
+    if (error) throw new Error(error.message)
+    return
+  }
+  const members = localRead<OrgMemberRow>(LOCAL_MEMBERS_KEY)
+  localWrite(
+    LOCAL_MEMBERS_KEY,
+    members.filter(m => m.id !== memberId),
+  )
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  Lista global de usuarios (panel Plain Vanilla)
+// ════════════════════════════════════════════════════════════════════
+
+export interface UserListItem {
+  id: string
+  email: string
+  displayName: string | null
+  createdAt: string
+  /** Cantidad de cursos a los que tiene acceso (cualquier vía) */
+  accessibleCoursesCount: number
+}
+
+/**
+ * Lista usuarios de la plataforma para el panel admin.
+ *
+ * MVP: devuelve user_profile + número de cursos accesibles calculado
+ * por unión de course_enrollment + course_purchase activas +
+ * organization_seat activos.
+ */
+export async function listAllUsers(options?: {
+  search?: string
+  limit?: number
+}): Promise<UserListItem[]> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    let q = supabase
+      .from('user_profile')
+      .select('id, email, display_name, created_at')
+      .order('created_at', { ascending: false })
+      .limit(options?.limit ?? 100)
+    if (options?.search?.trim()) {
+      q = q.ilike('email', `%${options.search.trim()}%`)
+    }
+    const { data, error } = await q
+    if (error) throw new Error(error.message)
+    const profiles = (data ?? []) as Array<{
+      id: string
+      email: string
+      display_name: string | null
+      created_at: string
+    }>
+    if (profiles.length === 0) return []
+
+    // Cargar las 3 fuentes en paralelo para los users devueltos.
+    const userIds = profiles.map(p => p.id)
+    const [enrol, purch, seats] = await Promise.all([
+      supabase
+        .from('course_enrollment')
+        .select('user_id, course_slug, expires_at')
+        .in('user_id', userIds),
+      supabase
+        .from('course_purchase')
+        .select('user_id, course_slug, expires_at')
+        .in('user_id', userIds),
+      supabase
+        .from('organization_seat')
+        .select('user_id, revoked_at, organization_subscription!inner(course_slug, expires_at)')
+        .in('user_id', userIds)
+        .is('revoked_at', null),
+    ])
+    const now = Date.now()
+    const countByUser = new Map<string, Set<string>>()
+    const add = (uid: string, slug: string) => {
+      let set = countByUser.get(uid)
+      if (!set) {
+        set = new Set()
+        countByUser.set(uid, set)
+      }
+      set.add(slug)
+    }
+    for (const r of (enrol.data ?? []) as Array<{
+      user_id: string
+      course_slug: string
+      expires_at: string | null
+    }>) {
+      if (!r.expires_at || new Date(r.expires_at).getTime() > now) {
+        add(r.user_id, r.course_slug)
+      }
+    }
+    for (const r of (purch.data ?? []) as Array<{
+      user_id: string
+      course_slug: string
+      expires_at: string | null
+    }>) {
+      if (!r.expires_at || new Date(r.expires_at).getTime() > now) {
+        add(r.user_id, r.course_slug)
+      }
+    }
+    for (const r of (seats.data ?? []) as Array<{
+      user_id: string
+      organization_subscription:
+        | { course_slug: string; expires_at: string | null }
+        | Array<{ course_slug: string; expires_at: string | null }>
+        | null
+    }>) {
+      const subRaw = r.organization_subscription
+      const sub = Array.isArray(subRaw) ? subRaw[0] : subRaw
+      if (sub && (!sub.expires_at || new Date(sub.expires_at).getTime() > now)) {
+        add(r.user_id, sub.course_slug)
+      }
+    }
+    return profiles.map(p => ({
+      id: p.id,
+      email: p.email,
+      displayName: p.display_name,
+      createdAt: p.created_at,
+      accessibleCoursesCount: countByUser.get(p.id)?.size ?? 0,
+    }))
+  }
+
+  // Local: no hay user_profile real. Devolvemos el current user solamente
+  // y, si hay invitations pendientes, también esos emails como
+  // "usuarios" para que la UI no esté vacía mientras se prueba.
+  const out: UserListItem[] = []
+  // current user
+  try {
+    const raw = localStorage.getItem('pv-learn-current-user')
+    if (raw) {
+      const u = JSON.parse(raw) as {
+        id: string
+        email: string
+        name: string
+        createdAt: number
+        assignedCourses: string[]
+      }
+      out.push({
+        id: u.id,
+        email: u.email,
+        displayName: u.name,
+        createdAt: new Date(u.createdAt).toISOString(),
+        accessibleCoursesCount: u.assignedCourses?.length ?? 0,
+      })
+    }
+  } catch {
+    /* ignore */
+  }
+  // pending invitations
+  const invs = localRead<PendingInvitation>(LOCAL_PENDING_INVITATIONS_KEY)
+  for (const inv of invs) {
+    if (!out.some(u => u.email === inv.email)) {
+      out.push({
+        id: inv.id,
+        email: inv.email,
+        displayName: null,
+        createdAt: inv.createdAt,
+        accessibleCoursesCount: 0,
+      })
+    }
+  }
+  if (options?.search?.trim()) {
+    const s = options.search.trim().toLowerCase()
+    return out.filter(u => u.email.toLowerCase().includes(s))
+  }
+  return out
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  Certificados emitidos (panel Plain Vanilla)
+// ════════════════════════════════════════════════════════════════════
+
+export interface IssuedCertificateRow {
+  attemptId: string
+  userId: string
+  email: string | null
+  displayName: string | null
+  courseSlug: string
+  scorePct: number
+  submittedAt: string
+  verificationId: string | null
+}
+
+export async function listIssuedCertificates(options?: {
+  courseSlug?: string
+  search?: string
+  limit?: number
+}): Promise<IssuedCertificateRow[]> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    let q = supabase
+      .from('exam_attempt')
+      .select(
+        'id, user_id, course_slug, score_pct, submitted_at, verification_id, passed, user_profile!inner(email, display_name)',
+      )
+      .eq('passed', true)
+      .order('submitted_at', { ascending: false })
+      .limit(options?.limit ?? 100)
+    if (options?.courseSlug?.trim()) {
+      q = q.eq('course_slug', options.courseSlug.trim())
+    }
+    const { data, error } = await q
+    if (error) throw new Error(error.message)
+    let rows = (data ?? []).map(row => {
+      const r = row as {
+        id: string
+        user_id: string
+        course_slug: string
+        score_pct: number
+        submitted_at: string
+        verification_id: string | null
+        user_profile:
+          | { email: string | null; display_name: string | null }
+          | Array<{ email: string | null; display_name: string | null }>
+          | null
+      }
+      const profRaw = r.user_profile
+      const prof = Array.isArray(profRaw) ? profRaw[0] ?? null : profRaw
+      return {
+        attemptId: r.id,
+        userId: r.user_id,
+        email: prof?.email ?? null,
+        displayName: prof?.display_name ?? null,
+        courseSlug: r.course_slug,
+        scorePct: r.score_pct,
+        submittedAt: r.submitted_at,
+        verificationId: r.verification_id,
+      }
+    })
+    if (options?.search?.trim()) {
+      const s = options.search.trim().toLowerCase()
+      rows = rows.filter(r => r.email?.toLowerCase().includes(s) ?? false)
+    }
+    return rows
+  }
+  // Local: no hay exam_attempt persistido en backend; devolver lista vacía.
+  return []
+}

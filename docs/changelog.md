@@ -8,6 +8,27 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-13 (continuación) — Fase R.2.5
+
+- `[Arch]` Fase R.2.5 — Completar admin Plain Vanilla. Cierra los huecos del MVP de R.2: añadir admin de org sin SQL manual + lista de usuarios + lista de certificados emitidos.
+  - **`supabase/schema-fase-r-2-5.sql` (nuevo)** — Tabla `organization_pending_invitation` (id, organization_id, email, role, invited_by, expires_at, accepted_at) con unique parcial para evitar dobles invitations a la misma org. Policies: platform_admin gestiona globalmente, org admins leen las de su org. Trigger `handle_new_user` ampliado: además de los pasos 1 (crear user_profile) y 2 (vincular seats pre-asignados de R.1), ahora hace un paso 3 — procesar invitations pendientes: crea `organization_member` para cada invitation con email match y aún no aceptada/caducada, y las marca como aceptadas. Esto materializa el "admin invitado pre-registro": Plain Vanilla añade `nuevo@empresa.com` como admin de Acme antes de que se registre, Supabase envía magic link, cuando entra el trigger lo convierte automáticamente en admin de Acme sin intervención manual.
+  - **`lib/admin.ts` ampliado** — 7 funciones nuevas:
+    - `listMembersForOrganization(orgId)` con join a `user_profile` (email, display_name)
+    - `listPendingInvitations(orgId)` filtra accepted_at IS NULL y expires_at futuro
+    - `addOrganizationMember({orgId, email, role})` — si el email ya existe en user_profile, inserta organization_member directamente; si no, inserta pending invitation y dispara magic link via `signInWithOtp`. Idempotente por unique constraints. Devuelve `{kind: 'added' | 'invited', email}`
+    - `removeOrganizationMember(memberId)` — borra organization_member, conserva user_profile y progreso
+    - `listAllUsers({search, limit})` — lista user_profile con `accessibleCoursesCount` calculado por unión de course_enrollment + course_purchase activas + organization_seat activos
+    - `listIssuedCertificates({courseSlug, search, limit})` — exam_attempt aprobados con join a user_profile, con filtros por curso y email
+  - **`AdminOrganizationDetailPage` ampliada** — Nueva sección "Administradores" entre los datos fiscales y las subscriptions: lista de members con badge de rol y email + lista de pendientes con badge "Pendiente" amber. Acciones: botón "Añadir admin" abre modal con form email + role (siempre `admin` por ahora), botón papelera por member abre modal de confirmación de borrado, callout success post-invitación con mensaje contextual ('X añadido inmediatamente' vs 'Invitación enviada, se activará al entrar'). Empty state con CTA si no hay admins.
+  - **`AdminUsersListPage` (nuevo)** — `/admin/usuarios`. Tabla con email, nombre, número de cursos accesibles, fecha de alta. Buscador en cabecera con debounce 250ms. Skeleton loaders. Empty states. Solo backend Supabase (en local devuelve current user + emails invitados como aproximación, para no estar vacío).
+  - **`AdminCertificatesListPage` (nuevo)** — `/admin/certificados`. Tabla con alumno (email + nombre), curso (slug mono), nota (% con formato), fecha emisión, link "Ver" a `/cert/:verificationId` público. Filtros: buscador por email con debounce, selector de curso (todos / curso específico desde registry). Skeleton + empty states.
+  - **`AdminLayout` sidebar reorganizada** — Items activos: Dashboard, Organizaciones, Usuarios, Certificados. Solo "Ventas B2C" queda en "Próximamente" (depende de R.4 Stripe).
+  - **App.tsx routing** — Rutas nuevas: `/admin/usuarios` y `/admin/certificados`. Lazy-loaded.
+
+  Bundle inicial: 219.23 KB gzip (techo 290 KB) ✓.
+
+---
+
 ## 2026-05-13 (continuación) — Fase R.3
 
 - `[Arch]` Fase R.3 — Admin de organización MVP. Cierra el ciclo B2B: el admin de la empresa cliente gestiona sus propios seats, invita al equipo y revisa progreso.
