@@ -175,7 +175,10 @@ Documentación detallada: [`docs/fase-r-monetizacion.md`](./fase-r-monetizacion.
 | **R.1 Foundation** | Doc de arquitectura, schema SQL ampliado (5 tablas + función `user_has_access_to_course` + trigger seat-binding), tipos TypeScript stub | 4–6 h | ✅ |
 | **R.2 Admin Plain Vanilla MVP** | Panel `/admin` con dashboard + CRUD orgs + crear subscriptions con seats vacantes. **R.2.5**: añadir admin a org desde UI con invitations pendientes + `/admin/usuarios` + `/admin/certificados` | 12–16 h | ✅ |
 | **R.3 Admin organización MVP** | Panel `/org/:slug/admin` con dashboard + seats con filtros + invitación masiva de emails con magic link + progreso del equipo. Pendiente para R.3.5: `/certificados`, `/perfil` | 10–14 h | ✅ (MVP) |
-| **R.4 B2C Stripe Checkout** | Landing comercial `/comprar`, Stripe Checkout one-time, webhook, course_purchase | 8–12 h | 🟡 |
+| **R.4.0 Pricing B2C por curso** | Tabla `course_pricing` editable desde `/admin/cursos`: precio, modelo de acceso (perpetuo/duración), estado de venta directa, stripe_price_id. Base para R.4.1+ | 4–6 h | ✅ |
+| **R.4.1 Landing pública (B2C)** | Landing en `/` para visitantes anónimos + landing del curso `/cursos/:slug` sin login con CTA comprar. Sin Stripe aún | 8–10 h | 🟡 |
+| **R.4.2 Stripe Checkout** | Vercel functions create-checkout-session + webhook, páginas `/comprar/:slug/*`, integración con `course_purchase` | 8–12 h | 🟡 — bloqueado por cuenta Stripe |
+| **R.4.3 Landing B2B sales** | Página `/empresas` para captar leads enterprise | 4–6 h | 🟡 |
 | **R.5 B2B Stripe Subscriptions** (opcional) | Self-service de subscriptions B2B. Si Plain Vanilla prefiere mantener facturación manual, se omite | 12–16 h | 🟡 |
 | **R.6 Generador PDF certificado** | Reemplazar `window.print()` por React-PDF o Puppeteer en server | 6–8 h | 🟡 |
 | **Total R completo** | | **52–72 h** | |

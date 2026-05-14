@@ -5,6 +5,7 @@ import {
   Building2,
   Users,
   Award,
+  BookOpen,
   ChevronLeft,
   LogOut,
   Sun,
@@ -163,6 +164,12 @@ export function AdminLayout() {
               icon={<Building2 className="size-[15px] stroke-[1.75]" aria-hidden />}
             >
               Organizaciones
+            </AdminNavItem>
+            <AdminNavItem
+              to="/admin/cursos"
+              icon={<BookOpen className="size-[15px] stroke-[1.75]" aria-hidden />}
+            >
+              Cursos
             </AdminNavItem>
             <AdminNavItem
               to="/admin/usuarios"
