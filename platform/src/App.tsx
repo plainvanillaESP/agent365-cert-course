@@ -11,6 +11,7 @@ import { CONTENT_MODULES } from '@/lib/course'
 import { defaultCourseSlug } from '@/lib/coursesRegistry'
 import { CourseProvider } from '@/contexts/CourseContext'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { ToastProvider } from '@/contexts/ToastContext'
 import { getFocusSnapshot, startWork, pause, resume } from '@/lib/focusStore'
 
 // SearchPalette arrastra todo el contenido del curso (índice). Lazy-load
@@ -552,14 +553,16 @@ export function App() {
     <ErrorBoundary>
       <BrowserRouter basename={basename}>
         <AuthProvider>
-          <AppShell
-            navOpen={navOpen}
-            setNavOpen={setNavOpen}
-            shortcutsOpen={shortcutsOpen}
-            setShortcutsOpen={setShortcutsOpen}
-            searchOpen={searchOpen}
-            setSearchOpen={setSearchOpen}
-          />
+          <ToastProvider>
+            <AppShell
+              navOpen={navOpen}
+              setNavOpen={setNavOpen}
+              shortcutsOpen={shortcutsOpen}
+              setShortcutsOpen={setShortcutsOpen}
+              searchOpen={searchOpen}
+              setSearchOpen={setSearchOpen}
+            />
+          </ToastProvider>
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>

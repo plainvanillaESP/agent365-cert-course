@@ -12,6 +12,7 @@ import { listCourses } from '@/lib/coursesRegistry'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
+import { useToast } from '@/contexts/ToastContext'
 import type { OrgContextValue } from '@/components/OrgAdminLayout'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -19,6 +20,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export function OrgSeatsInvitePage() {
   const ctx = useOutletContext<OrgContextValue>()
   const navigate = useNavigate()
+  const toast = useToast()
 
   const [subs, setSubs] = useState<OrganizationSubscription[]>([])
   const [loadingSubs, setLoadingSubs] = useState(true)
@@ -93,8 +95,16 @@ export function OrgSeatsInvitePage() {
         emails: validEmails,
       })
       setResult(res)
+      if (res.invited.length > 0) {
+        toast.show({
+          kind: 'success',
+          message: `${res.invited.length} ${res.invited.length === 1 ? 'invitación enviada' : 'invitaciones enviadas'}`,
+        })
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudieron invitar los emails')
+      const msg = err instanceof Error ? err.message : 'No se pudieron invitar los emails'
+      setError(msg)
+      toast.show({ kind: 'error', message: msg })
     } finally {
       setSubmitting(false)
     }

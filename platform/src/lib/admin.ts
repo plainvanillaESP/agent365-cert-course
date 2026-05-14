@@ -69,6 +69,69 @@ function uid(): string {
   return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
 
+/**
+ * Traduce errores de Supabase/Postgres a mensajes humanos en español.
+ * Los códigos vienen de https://www.postgresql.org/docs/current/errcodes-appendix.html
+ * y el formato de mensaje que devuelve PostgREST.
+ *
+ * Si no reconocemos el error, devolvemos su `message` directamente como
+ * último recurso.
+ */
+export function humanizeSupabaseError(
+  err: { code?: string; message?: string; details?: string } | null | undefined,
+): string {
+  if (!err) return 'Error desconocido'
+  const msg = err.message ?? ''
+  const code = err.code
+
+  // Códigos Postgres estándar
+  if (code === '23505') {
+    // unique_violation. El mensaje suele incluir el nombre del constraint.
+    if (msg.includes('slug')) return 'Ya existe una organización con ese slug. Elige otro.'
+    if (msg.includes('email')) return 'Este email ya está registrado.'
+    if (msg.includes('assigned_email')) return 'Este email ya tiene un seat asignado en esta organización.'
+    return 'Este registro ya existe.'
+  }
+  if (code === '23503') {
+    // foreign_key_violation
+    return 'No se puede completar la acción porque depende de un registro que no existe.'
+  }
+  if (code === '23502') {
+    // not_null_violation
+    return 'Falta rellenar un campo obligatorio.'
+  }
+  if (code === '23514') {
+    // check_violation
+    if (msg.includes('role')) return 'El rol indicado no es válido.'
+    return 'El valor introducido no cumple las reglas de validación.'
+  }
+  if (code === '42501') {
+    // insufficient_privilege (RLS bloqueó la operación)
+    return 'No tienes permisos para realizar esta acción.'
+  }
+  if (code === 'PGRST116') {
+    // PostgREST: no rows returned cuando .single() esperaba 1
+    return 'El elemento solicitado no existe.'
+  }
+  if (code === 'PGRST204') {
+    return 'No se ha podido encontrar el recurso.'
+  }
+
+  // Errores comunes de magic link / auth
+  if (msg.toLowerCase().includes('rate limit')) {
+    return 'Demasiados intentos. Espera unos minutos antes de volver a probar.'
+  }
+  if (msg.toLowerCase().includes('invalid email')) {
+    return 'El email no es válido.'
+  }
+  if (msg.toLowerCase().includes('network')) {
+    return 'Error de conexión. Comprueba tu red.'
+  }
+
+  // Caída a mensaje original como último recurso
+  return msg || 'Error desconocido'
+}
+
 // ════════════════════════════════════════════════════════════════════
 //  Mapeo snake_case ↔ camelCase entre Postgres y el frontend
 // ════════════════════════════════════════════════════════════════════
@@ -231,7 +294,7 @@ export async function listOrganizations(): Promise<Organization[]> {
       .from('organization')
       .select('*')
       .order('created_at', { ascending: false })
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return (data ?? []).map(r => fromOrgRow(r as OrganizationRow))
   }
   return localRead<Organization>(LOCAL_ORGS_KEY)
@@ -245,7 +308,7 @@ export async function getOrganization(slug: string): Promise<Organization | null
       .select('*')
       .eq('slug', slug)
       .maybeSingle()
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return data ? fromOrgRow(data as OrganizationRow) : null
   }
   const orgs = localRead<Organization>(LOCAL_ORGS_KEY)
@@ -277,8 +340,26 @@ export async function createOrganization(input: OrganizationInput): Promise<Orga
       })
       .select()
       .single()
-    if (error) throw new Error(error.message)
-    return fromOrgRow(data as OrganizationRow)
+    if (error) throw new Error(humanizeSupabaseError(error))
+    const created = fromOrgRow(data as OrganizationRow)
+    // Auto-añadir al caller (platform_admin) como admin de la org
+    // recién creada. Esto evita el "no puedo entrar al panel de la
+    // org que acabo de crear" — el admin Plain Vanilla puede usar
+    // /org/:slug/admin sin ser miembro explícito.
+    try {
+      const { data: sess } = await supabase.auth.getSession()
+      const callerId = sess.session?.user?.id
+      if (callerId) {
+        await supabase.from('organization_member').insert({
+          organization_id: created.id,
+          user_id: callerId,
+          role: 'admin',
+        })
+      }
+    } catch {
+      /* no bloquear la creación de la org si esto falla */
+    }
+    return created
   }
   // Local: chequeo de unicidad de slug y persistencia en localStorage
   const orgs = localRead<Organization>(LOCAL_ORGS_KEY)
@@ -303,6 +384,106 @@ export async function createOrganization(input: OrganizationInput): Promise<Orga
   return created
 }
 
+/**
+ * Actualiza datos de una organización. El slug es inmutable (rompería
+ * URLs y bookmarks); todo lo demás es editable.
+ */
+export interface OrganizationUpdate {
+  name?: string
+  legalName?: string | null
+  taxId?: string | null
+  billingEmail?: string | null
+  contactEmail?: string
+  country?: string | null
+  notes?: string | null
+}
+
+export async function updateOrganization(
+  organizationId: string,
+  patch: OrganizationUpdate,
+): Promise<Organization> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    const dbPatch: Record<string, unknown> = { updated_at: new Date().toISOString() }
+    if (patch.name !== undefined) dbPatch.name = patch.name.trim()
+    if (patch.legalName !== undefined) dbPatch.legal_name = patch.legalName
+    if (patch.taxId !== undefined) dbPatch.tax_id = patch.taxId
+    if (patch.billingEmail !== undefined) dbPatch.billing_email = patch.billingEmail
+    if (patch.contactEmail !== undefined) dbPatch.contact_email = patch.contactEmail.trim()
+    if (patch.country !== undefined) dbPatch.country = patch.country
+    if (patch.notes !== undefined) dbPatch.notes = patch.notes
+    const { data, error } = await supabase
+      .from('organization')
+      .update(dbPatch)
+      .eq('id', organizationId)
+      .select()
+      .single()
+    if (error) throw new Error(humanizeSupabaseError(error))
+    return fromOrgRow(data as OrganizationRow)
+  }
+  const orgs = localRead<Organization>(LOCAL_ORGS_KEY)
+  const idx = orgs.findIndex(o => o.id === organizationId)
+  if (idx < 0) throw new Error('Organización no encontrada')
+  const now = new Date().toISOString()
+  const updated: Organization = {
+    ...orgs[idx],
+    ...(patch.name !== undefined ? { name: patch.name.trim() } : {}),
+    ...(patch.legalName !== undefined ? { legalName: patch.legalName } : {}),
+    ...(patch.taxId !== undefined ? { taxId: patch.taxId } : {}),
+    ...(patch.billingEmail !== undefined ? { billingEmail: patch.billingEmail } : {}),
+    ...(patch.contactEmail !== undefined ? { contactEmail: patch.contactEmail.trim() } : {}),
+    ...(patch.country !== undefined ? { country: patch.country } : {}),
+    ...(patch.notes !== undefined ? { notes: patch.notes } : {}),
+    updatedAt: now,
+  }
+  orgs[idx] = updated
+  localWrite(LOCAL_ORGS_KEY, orgs)
+  return updated
+}
+
+/**
+ * Elimina una organización en cascada. Postgres CASCADE se encarga de
+ * los registros dependientes (subscriptions → seats, members,
+ * pending_invitations). El user_profile de los miembros se conserva,
+ * solo se rompe el vínculo con la org.
+ *
+ * Acción destructiva; la UI debe confirmar.
+ */
+export async function deleteOrganization(organizationId: string): Promise<void> {
+  if (isSupabaseEnabled()) {
+    const supabase = getSupabase()!
+    const { error } = await supabase
+      .from('organization')
+      .delete()
+      .eq('id', organizationId)
+    if (error) throw new Error(humanizeSupabaseError(error))
+    return
+  }
+  // Local: borrar en cascada manualmente.
+  const orgs = localRead<Organization>(LOCAL_ORGS_KEY)
+  localWrite(LOCAL_ORGS_KEY, orgs.filter(o => o.id !== organizationId))
+  const subs = localRead<OrganizationSubscription>(LOCAL_SUBS_KEY)
+  const ownedSubIds = new Set(
+    subs.filter(s => s.organizationId === organizationId).map(s => s.id),
+  )
+  localWrite(LOCAL_SUBS_KEY, subs.filter(s => s.organizationId !== organizationId))
+  const seats = localRead<OrganizationSeat>(LOCAL_SEATS_KEY)
+  localWrite(
+    LOCAL_SEATS_KEY,
+    seats.filter(s => !ownedSubIds.has(s.subscriptionId)),
+  )
+  const members = localRead<OrgMemberRow>(LOCAL_MEMBERS_KEY)
+  localWrite(
+    LOCAL_MEMBERS_KEY,
+    members.filter(m => m.organizationId !== organizationId),
+  )
+  const pending = localRead<PendingInvitation>(LOCAL_PENDING_INVITATIONS_KEY)
+  localWrite(
+    LOCAL_PENDING_INVITATIONS_KEY,
+    pending.filter(p => p.organizationId !== organizationId),
+  )
+}
+
 // ════════════════════════════════════════════════════════════════════
 //  Subscriptions
 // ════════════════════════════════════════════════════════════════════
@@ -325,7 +506,7 @@ export async function listSubscriptionsForOrganization(
       .select('*')
       .eq('organization_id', organizationId)
       .order('created_at', { ascending: false })
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return (data ?? []).map(r => fromSubRow(r as SubscriptionRow))
   }
   return localRead<OrganizationSubscription>(LOCAL_SUBS_KEY).filter(
@@ -352,7 +533,7 @@ export async function createSubscription(
       })
       .select()
       .single()
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     const sub = fromSubRow(data as SubscriptionRow)
     // Crear los seats vacantes a la vez (mismo número que seats_total)
     const seatRows = Array.from({ length: input.seatsTotal }, () => ({
@@ -409,7 +590,7 @@ export async function listSeatsForOrganization(
       .select('*, organization_subscription!inner(organization_id)')
       .eq('organization_subscription.organization_id', organizationId)
       .order('created_at', { ascending: false })
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return (data ?? []).map(r => fromSeatRow(r as SeatRow))
   }
   // Local: necesitamos cruzar seats con subs
@@ -449,7 +630,7 @@ export async function getOrganizationsWhereUserIsAdmin(
       .select('role, organization!inner(*)')
       .eq('user_id', userId)
       .eq('role', 'admin')
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     const out: Organization[] = []
     for (const r of data ?? []) {
       const orgRaw = (r as { organization: OrganizationRow | OrganizationRow[] | null })
@@ -615,7 +796,7 @@ export async function assignEmailsToOrganization(
         .from('organization_seat')
         .update({ assigned_email: email, assigned_at: now })
         .eq('id', seat.id)
-      if (error) throw new Error(error.message)
+      if (error) throw new Error(humanizeSupabaseError(error))
       // Dispara magic link al email para que entre. Si el usuario ya
       // existe en auth.users, recibirá un email de "log in". Si no
       // existe, recibirá un email de signup; al pulsarlo el trigger
@@ -664,7 +845,7 @@ export async function revokeSeatById(
       .eq('id', seatId)
       .select()
       .single()
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return fromSeatRow(data as SeatRow)
   }
   const seats = localRead<OrganizationSeat>(LOCAL_SEATS_KEY)
@@ -695,7 +876,7 @@ export async function getUserRoleInOrganization(
       .eq('user_id', userId)
       .eq('organization_id', organizationId)
       .maybeSingle()
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return data ? ((data as { role: OrganizationRole }).role) : null
   }
   // Local: si el user creó la org, lo asumimos admin (modo dev)
@@ -865,7 +1046,7 @@ export async function listMembersForOrganization(
       .from('organization_member')
       .select('id, organization_id, user_id, role, joined_at, user_profile!inner(email, display_name)')
       .eq('organization_id', organizationId)
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     const out: OrgMemberRow[] = []
     for (const row of data ?? []) {
       const r = row as MemberRow & {
@@ -911,7 +1092,7 @@ export async function listPendingInvitations(
       .eq('organization_id', organizationId)
       .is('accepted_at', null)
       .order('created_at', { ascending: false })
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return (data ?? [])
       .map(row => {
         const r = row as PendingInvitationRow
@@ -968,7 +1149,7 @@ export async function addOrganizationMember(
       .select('id')
       .eq('email', email)
       .maybeSingle()
-    if (profErr) throw new Error(profErr.message)
+    if (profErr) throw new Error(humanizeSupabaseError(profErr))
 
     if (prof) {
       // Existe: insert organization_member directamente
@@ -983,7 +1164,7 @@ export async function addOrganizationMember(
         if (error.code === '23505') {
           return { kind: 'added', email }
         }
-        throw new Error(error.message)
+        throw new Error(humanizeSupabaseError(error))
       }
       return { kind: 'added', email }
     }
@@ -1000,7 +1181,7 @@ export async function addOrganizationMember(
       if (error.code === '23505') {
         // Ya había una invitation pendiente → re-disparamos el magic link
       } else {
-        throw new Error(error.message)
+        throw new Error(humanizeSupabaseError(error))
       }
     }
     try {
@@ -1062,7 +1243,7 @@ export async function removeOrganizationMember(memberId: string): Promise<void> 
       .from('organization_member')
       .delete()
       .eq('id', memberId)
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     return
   }
   const members = localRead<OrgMemberRow>(LOCAL_MEMBERS_KEY)
@@ -1107,7 +1288,7 @@ export async function listAllUsers(options?: {
       q = q.ilike('email', `%${options.search.trim()}%`)
     }
     const { data, error } = await q
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     const profiles = (data ?? []) as Array<{
       id: string
       email: string
@@ -1263,7 +1444,7 @@ export async function listIssuedCertificates(options?: {
       q = q.eq('course_slug', options.courseSlug.trim())
     }
     const { data, error } = await q
-    if (error) throw new Error(error.message)
+    if (error) throw new Error(humanizeSupabaseError(error))
     let rows = (data ?? []).map(row => {
       const r = row as {
         id: string

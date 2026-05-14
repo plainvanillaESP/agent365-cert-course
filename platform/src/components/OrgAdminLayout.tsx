@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet, Link, useParams, Navigate } from 'react-router-dom'
+import {
+  NavLink,
+  Outlet,
+  Link,
+  useParams,
+  useLocation,
+} from 'react-router-dom'
 import {
   LayoutDashboard,
   Armchair,
@@ -8,6 +14,8 @@ import {
   LogOut,
   Sun,
   Moon,
+  Menu,
+  X,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/hooks/useTheme'
@@ -17,12 +25,6 @@ import { IconButton } from '@/components/Button'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Callout } from '@/components/Callout'
 
-/**
- * Contexto que las páginas hijas pueden consumir para conocer la
- * organización activa sin volver a llamar `useOrgRole`.
- *
- * Lo simple es prop-drillearlo via Outlet context.
- */
 export interface OrgContextValue {
   organizationId: string
   organizationName: string
@@ -34,16 +36,29 @@ export function OrgAdminLayout() {
   const { user, signOut } = useAuth()
   const { theme, toggle } = useTheme()
   const { organization, role, error } = useOrgRole(slug)
-
-  // Aria announce para cambios de página dentro del admin
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const location = useLocation()
   const [announce, setAnnounce] = useState('')
+
+  useEffect(() => {
+    setDrawerOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [drawerOpen])
+
   useEffect(() => {
     if (organization) {
       setAnnounce(`Panel admin de ${organization.name} cargado`)
     }
   }, [organization])
 
-  // Estados de error / no autorizado / no encontrado
   if (organization === undefined) {
     return (
       <div className="min-h-dvh flex items-center justify-center">
@@ -72,8 +87,26 @@ export function OrgAdminLayout() {
   }
 
   if (role !== 'admin') {
-    // Sesión válida pero no admin de ESTA org → no autorizado.
-    return <Navigate to="/" replace />
+    // Mostramos un mensaje breve antes de redirigir para que el user
+    // entienda por qué le saca de la página, en vez del "back to home"
+    // silencioso de antes.
+    return (
+      <div className="min-h-dvh flex flex-col items-center justify-center px-6 text-center max-w-md mx-auto">
+        <h1 className="text-[22px] font-semibold text-[var(--text-primary)] mb-2">
+          Acceso restringido
+        </h1>
+        <p className="text-[14px] text-[var(--text-secondary)] mb-6">
+          No eres administrador de <strong>{organization.name}</strong>. Si crees que
+          deberías serlo, contacta con quien gestiona la organización.
+        </p>
+        <Link
+          to="/"
+          className="text-[13px] font-medium text-[var(--color-pv-purple-600)] dark:text-[var(--color-pv-purple-300)] hover:underline"
+        >
+          Volver al inicio
+        </Link>
+      </div>
+    )
   }
 
   const ctx: OrgContextValue = {
@@ -88,10 +121,18 @@ export function OrgAdminLayout() {
         {announce}
       </span>
 
-      {/* Header admin org */}
       <header className="sticky top-0 z-30 h-[var(--layout-header-h)] backdrop-blur-md border-b border-[var(--border-default)] bg-[var(--bg-overlay)]">
         <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              label="Abrir navegación de la organización"
+              size="md"
+              className="lg:hidden -ml-1.5"
+            >
+              <Menu className="size-5" />
+            </IconButton>
+
             <Link
               to={`/org/${organization.slug}/admin`}
               className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
@@ -142,12 +183,42 @@ export function OrgAdminLayout() {
         </div>
       </header>
 
-      {/* Body */}
+      {drawerOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          aria-hidden
+          onClick={() => setDrawerOpen(false)}
+        />
+      )}
+
       <div className="flex">
         <aside
-          className="hidden lg:block w-60 shrink-0 border-r border-[var(--border-default)] sticky top-[var(--layout-header-h)] h-[calc(100dvh-var(--layout-header-h))] overflow-y-auto py-4 px-3"
+          className={[
+            'fixed lg:sticky z-50 lg:z-0 inset-y-0 left-0 top-0 lg:top-[var(--layout-header-h)]',
+            'w-64 lg:w-60 shrink-0 border-r border-[var(--border-default)]',
+            'h-dvh lg:h-[calc(100dvh-var(--layout-header-h))] overflow-y-auto',
+            'bg-[var(--bg-page)] lg:bg-transparent',
+            'py-4 px-3 transition-transform duration-200',
+            drawerOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          ].join(' ')}
           aria-label="Navegación del panel de organización"
         >
+          <div className="lg:hidden flex items-center justify-between mb-4 pb-2 border-b border-[var(--border-default)] px-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <Logotipo className="h-6 w-auto shrink-0" />
+              <span className="text-[12.5px] font-semibold text-[var(--text-primary)] truncate">
+                {organization.name}
+              </span>
+            </div>
+            <IconButton
+              onClick={() => setDrawerOpen(false)}
+              label="Cerrar navegación"
+              size="md"
+            >
+              <X className="size-5" />
+            </IconButton>
+          </div>
+
           <nav className="space-y-0.5">
             <OrgNavItem
               to={`/org/${organization.slug}/admin`}
@@ -182,6 +253,16 @@ export function OrgAdminLayout() {
                 Perfil de la organización
               </OrgNavItem>
             </div>
+          </div>
+
+          <div className="lg:hidden mt-6 pt-4 border-t border-[var(--border-subtle)]">
+            <Link
+              to="/"
+              className="flex items-center gap-2 h-9 px-2.5 rounded-md text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors no-underline"
+            >
+              <ChevronLeft className="size-[14px] stroke-[2]" aria-hidden />
+              Volver al curso
+            </Link>
           </div>
         </aside>
 

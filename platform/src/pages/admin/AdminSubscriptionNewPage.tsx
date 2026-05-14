@@ -7,10 +7,12 @@ import { listCourses } from '@/lib/coursesRegistry'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
+import { useToast } from '@/contexts/ToastContext'
 
 export function AdminSubscriptionNewPage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
+  const toast = useToast()
   const [org, setOrg] = useState<Organization | null | undefined>(undefined)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -63,8 +65,14 @@ export function AdminSubscriptionNewPage() {
         notes: form.notes || null,
       })
       navigate(`/admin/organizaciones/${org.slug}`)
+      toast.show({
+        kind: 'success',
+        message: `Subscription creada con ${form.seatsTotal} seat${form.seatsTotal === 1 ? '' : 's'}`,
+      })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo crear la subscription')
+      const msg = err instanceof Error ? err.message : 'No se pudo crear la subscription'
+      setError(msg)
+      toast.show({ kind: 'error', message: msg })
     } finally {
       setSaving(false)
     }
