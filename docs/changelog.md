@@ -8,6 +8,20 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-14 — Fase R.4.0
+
+- `[Arch]` Fase R.4.0 — Configuración B2C por curso. Base del modelo comercial para B2C: precio, modelo de acceso y estado de venta directa por cada curso del registry, editable desde el admin Plain Vanilla sin tocar código.
+  - **`supabase/schema-fase-r-4-0.sql` (nuevo)** — Tabla `course_pricing` con `course_slug` como PK. Columnas: `b2c_enabled`, `b2c_price_cents` (entero para evitar floats), `currency` (default EUR), `access_model` ('perpetual' | 'duration'), `access_duration_months`, `stripe_price_id`, `notes`. Dos check constraints garantizan consistencia: si `access_model='perpetual'` entonces `access_duration_months` IS NULL; si `b2c_enabled=true` entonces `b2c_price_cents > 0`. RLS: platform_admin manage, lectura pública (cualquiera puede leer; las landings B2C lo necesitan sin sesión). Trigger `touch_course_pricing` mantiene `updated_at` al día.
+  - **`lib/coursePricing.ts` (nuevo)** — Módulo separado de `admin.ts` porque tiene lectura pública. Tipos: `CoursePricing`, `AccessModel`. API: `getCoursePricing(slug)`, `listAllCoursePricing()`, `listPublishedCoursesForSale()` (B2C habilitado Y precio > 0), `upsertCoursePricing(input)` con validación cliente (precio requerido si b2c_enabled, meses requeridos si duration, fuerza null si perpetual). Helpers de formato: `formatPrice(cents, currency)` con Intl.NumberFormat, `describeAccessModel({accessModel, accessDurationMonths})` con casos comunes (1 mes, 12 meses, 24 meses) y fallback genérico.
+  - **`AdminCoursesListPage` (nuevo)** — `/admin/cursos`. Lista todos los cursos del registry como cards con: badge de estado (verde "A la venta" / amber "Pendiente Stripe" si b2c_enabled pero sin stripe_price_id / gris "No a la venta"), precio formateado, descripción del modelo de acceso, stripe_price_id si existe, fecha última edición. Para cursos sin configuración, mensaje "Sin configuración B2C. Solo disponible por seats B2B". Click en Editar abre modal con form completo: toggle B2C, precio + moneda (select EUR/USD/GBP/MXN), radio modelo de acceso (Permanente / Por duración) con input meses condicional, stripe price ID con placeholder `price_...`, notas internas. Validación inline y errores humanizados.
+  - **`AdminLayout` sidebar** — Item "Cursos" añadido entre "Organizaciones" y "Usuarios" con icono BookOpen.
+
+  Bundle inicial: 220.01 KB gzip (techo 290) ✓.
+
+  **Esto NO incluye Stripe todavía**. R.4.0 es solo la base de datos del pricing. Permite a Plain Vanilla decidir, ya hoy, qué cursos van a estar a la venta y a qué precio. Cuando R.4.1 conecte Stripe, la columna `stripe_price_id` se rellena y los cursos pasan a estar comprables.
+
+---
+
 ## 2026-05-14 — Fase R polish UX
 
 - `[UX]` Sprint de pulido sobre todo el trabajo de Fase R, antes de seguir con features. Mejora siete cosas que rechinaban en el uso real:
