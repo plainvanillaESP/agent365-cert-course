@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams, Navigate } from 'react-router-dom'
+import { Link, useParams, Navigate, useNavigate } from 'react-router-dom'
 import {
   ChevronLeft,
   Plus,
@@ -12,6 +12,8 @@ import {
   Trash2,
   Clock,
   Send,
+  Pencil,
+  AlertTriangle,
 } from 'lucide-react'
 import {
   getOrganization,
@@ -21,6 +23,8 @@ import {
   listPendingInvitations,
   addOrganizationMember,
   removeOrganizationMember,
+  updateOrganization,
+  deleteOrganization,
   type OrgMemberRow,
   type PendingInvitation,
   type AddOrgMemberResult,
@@ -34,9 +38,12 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
 import { Modal } from '@/components/Modal'
+import { useToast } from '@/contexts/ToastContext'
 
 export function AdminOrganizationDetailPage() {
   const { slug } = useParams<{ slug: string }>()
+  const navigate = useNavigate()
+  const toast = useToast()
   const [org, setOrg] = useState<Organization | null | undefined>(undefined)
   const [subs, setSubs] = useState<OrganizationSubscription[]>([])
   const [seats, setSeats] = useState<OrganizationSeat[]>([])
@@ -46,12 +53,14 @@ export function AdminOrganizationDetailPage() {
 
   // Modal añadir admin
   const [addOpen, setAddOpen] = useState(false)
-
   // Modal confirmar borrar member
   const [removing, setRemoving] = useState<OrgMemberRow | null>(null)
-
-  // Última invitación (banner success)
-  const [lastInvite, setLastInvite] = useState<AddOrgMemberResult | null>(null)
+  // Modal editar org
+  const [editOpen, setEditOpen] = useState(false)
+  // Modal eliminar org
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState('')
+  const [deletingNow, setDeletingNow] = useState(false)
 
   const reload = async (orgId: string) => {
     const [s1, s2, m, p] = await Promise.all([
@@ -131,38 +140,31 @@ export function AdminOrganizationDetailPage() {
           title={org.name}
           description={org.legalName ?? org.contactEmail}
         />
-        <a
-          href={`/org/${org.slug}/admin`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] no-underline"
-          aria-label="Abrir el panel admin de esta organización"
-        >
-          <ExternalLink className="size-[14px]" aria-hidden />
-          Panel de la organización
-        </a>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            variant="ghost"
+            size="sm"
+            iconLeft={<Pencil className="size-[13px]" />}
+            onClick={() => setEditOpen(true)}
+          >
+            Editar
+          </Button>
+          <a
+            href={`/org/${org.slug}/admin`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-[12.5px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)]"
+            aria-label="Abrir el panel admin de esta organización"
+          >
+            <ExternalLink className="size-[13px]" aria-hidden />
+            Panel de la organización
+          </a>
+        </div>
       </div>
 
       {error && (
         <Callout kind="warning" className="mb-4">
           <p className="text-[13px] m-0">{error}</p>
-        </Callout>
-      )}
-
-      {lastInvite && (
-        <Callout kind="info" className="mb-4">
-          <p className="text-[13px] m-0">
-            {lastInvite.kind === 'added' ? (
-              <>
-                <strong>{lastInvite.email}</strong> añadido como administrador.
-              </>
-            ) : (
-              <>
-                Invitación enviada a <strong>{lastInvite.email}</strong>. Recibirá un
-                magic link y cuando entre se convertirá automáticamente en administrador.
-              </>
-            )}
-          </p>
         </Callout>
       )}
 
@@ -375,6 +377,30 @@ export function AdminOrganizationDetailPage() {
         )}
       </section>
 
+      {/* Zona peligrosa */}
+      <section className="mt-12 rounded-lg border border-red-500/30 bg-red-500/5 p-5">
+        <h2 className="text-[14px] font-semibold text-red-700 dark:text-red-300 mb-2 flex items-center gap-1.5">
+          <AlertTriangle className="size-[14px]" aria-hidden />
+          Zona peligrosa
+        </h2>
+        <p className="text-[13px] text-[var(--text-secondary)] mb-4 leading-relaxed">
+          Eliminar la organización borrará también sus subscriptions, seats e invitaciones
+          en cascada. El progreso de los alumnos en sus cursos se conserva, pero perderán
+          el acceso si lo tenían sólo por esta organización.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteConfirm('')
+            setDeleteOpen(true)
+          }}
+          className="inline-flex items-center gap-2 h-9 px-4 rounded-md border border-red-500/40 bg-transparent text-red-700 dark:text-red-300 hover:bg-red-500/10 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+        >
+          <Trash2 className="size-[14px]" aria-hidden />
+          Eliminar organización
+        </button>
+      </section>
+
       {/* Modal añadir admin */}
       <AddAdminModal
         open={addOpen}
@@ -383,7 +409,13 @@ export function AdminOrganizationDetailPage() {
         onClose={() => setAddOpen(false)}
         onSuccess={async res => {
           setAddOpen(false)
-          setLastInvite(res)
+          toast.show({
+            kind: 'success',
+            message:
+              res.kind === 'added'
+                ? `${res.email} añadido como administrador`
+                : `Invitación enviada a ${res.email}. Se activará automáticamente cuando entre.`,
+          })
           await reload(org.id)
         }}
       />
@@ -421,6 +453,316 @@ export function AdminOrganizationDetailPage() {
           </button>
         </div>
       </Modal>
+
+      {/* Modal editar organización */}
+      <EditOrgModal
+        open={editOpen}
+        organization={org}
+        onClose={() => setEditOpen(false)}
+        onSaved={async updated => {
+          setEditOpen(false)
+          setOrg(updated)
+          toast.show({
+            kind: 'success',
+            message: 'Datos de la organización actualizados.',
+          })
+        }}
+      />
+
+      {/* Modal eliminar organización */}
+      <Modal
+        open={deleteOpen}
+        onClose={() => !deletingNow && setDeleteOpen(false)}
+        ariaLabel="Eliminar organización"
+        size="sm"
+        header={
+          <h2 className="text-[16px] font-semibold text-red-700 dark:text-red-300 flex items-center gap-1.5">
+            <AlertTriangle className="size-[15px]" aria-hidden />
+            Eliminar organización
+          </h2>
+        }
+      >
+        <p className="text-[13.5px] text-[var(--text-secondary)] mb-4 leading-relaxed">
+          Vas a eliminar <strong className="text-[var(--text-primary)]">{org.name}</strong>{' '}
+          y todo lo asociado: <strong>{subs.length}</strong> subscription{subs.length === 1 ? '' : 's'},{' '}
+          <strong>{seats.length}</strong> seat{seats.length === 1 ? '' : 's'}, <strong>{members.length}</strong>{' '}
+          administrador{members.length === 1 ? '' : 'es'} y <strong>{pending.length}</strong>{' '}
+          invitación{pending.length === 1 ? '' : 'es'} pendiente{pending.length === 1 ? '' : 's'}.
+          Esta acción no se puede deshacer.
+        </p>
+        <label
+          htmlFor="delete-confirm"
+          className="block text-[12.5px] font-medium text-[var(--text-secondary)] mb-1.5"
+        >
+          Escribe <code className="px-1 py-0.5 rounded bg-[var(--bg-surface-2)] text-[12px] font-mono text-[var(--text-primary)]">{org.slug}</code> para confirmar
+        </label>
+        <input
+          id="delete-confirm"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          value={deleteConfirm}
+          onChange={e => setDeleteConfirm(e.target.value)}
+          disabled={deletingNow}
+          className="w-full px-3 py-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] text-[13px] font-mono focus:outline-none focus:ring-2 focus:ring-red-500 mb-4"
+        />
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => setDeleteOpen(false)}
+            disabled={deletingNow}
+          >
+            Cancelar
+          </Button>
+          <button
+            type="button"
+            disabled={deleteConfirm !== org.slug || deletingNow}
+            onClick={async () => {
+              if (deleteConfirm !== org.slug) return
+              setDeletingNow(true)
+              try {
+                await deleteOrganization(org.id)
+                toast.show({
+                  kind: 'success',
+                  message: `Organización ${org.name} eliminada.`,
+                })
+                navigate('/admin/organizaciones', { replace: true })
+              } catch (e) {
+                toast.show({
+                  kind: 'error',
+                  message:
+                    e instanceof Error ? e.message : 'No se pudo eliminar la organización',
+                })
+                setDeletingNow(false)
+              }
+            }}
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-red-600 hover:bg-red-700 disabled:bg-red-600/40 disabled:cursor-not-allowed text-white text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          >
+            {deletingNow ? 'Eliminando…' : 'Eliminar definitivamente'}
+          </button>
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+function EditOrgModal({
+  open,
+  organization,
+  onClose,
+  onSaved,
+}: {
+  open: boolean
+  organization: Organization
+  onClose: () => void
+  onSaved: (updated: Organization) => void
+}) {
+  const [name, setName] = useState(organization.name)
+  const [legalName, setLegalName] = useState(organization.legalName ?? '')
+  const [taxId, setTaxId] = useState(organization.taxId ?? '')
+  const [billingEmail, setBillingEmail] = useState(organization.billingEmail ?? '')
+  const [contactEmail, setContactEmail] = useState(organization.contactEmail)
+  const [country, setCountry] = useState(organization.country ?? '')
+  const [notes, setNotes] = useState(organization.notes ?? '')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // Resetear el form cuando se abre con nuevos datos
+  useEffect(() => {
+    if (open) {
+      setName(organization.name)
+      setLegalName(organization.legalName ?? '')
+      setTaxId(organization.taxId ?? '')
+      setBillingEmail(organization.billingEmail ?? '')
+      setContactEmail(organization.contactEmail)
+      setCountry(organization.country ?? '')
+      setNotes(organization.notes ?? '')
+      setError(null)
+    }
+  }, [open, organization])
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (submitting || !name.trim() || !contactEmail.trim()) return
+    setSubmitting(true)
+    setError(null)
+    try {
+      const updated = await updateOrganization(organization.id, {
+        name: name.trim(),
+        legalName: legalName.trim() || null,
+        taxId: taxId.trim() || null,
+        billingEmail: billingEmail.trim() || null,
+        contactEmail: contactEmail.trim(),
+        country: country.trim() || null,
+        notes: notes.trim() || null,
+      })
+      onSaved(updated)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudieron guardar los cambios')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <Modal
+      open={open}
+      onClose={() => !submitting && onClose()}
+      ariaLabel="Editar organización"
+      size="md"
+      header={
+        <div>
+          <h2 className="text-[16px] font-semibold text-[var(--text-primary)]">
+            Editar organización
+          </h2>
+          <p className="text-[12.5px] text-[var(--text-muted)] mt-0.5">
+            El slug <code className="font-mono">{organization.slug}</code> no se puede
+            cambiar.
+          </p>
+        </div>
+      }
+    >
+      <form onSubmit={onSubmit} className="space-y-3" noValidate>
+        <EditField
+          id="edit-org-name"
+          label="Nombre"
+          required
+          value={name}
+          onChange={setName}
+          disabled={submitting}
+        />
+        <EditField
+          id="edit-org-legal-name"
+          label="Razón social"
+          value={legalName}
+          onChange={setLegalName}
+          disabled={submitting}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <EditField
+            id="edit-org-tax-id"
+            label="CIF / VAT"
+            value={taxId}
+            onChange={setTaxId}
+            disabled={submitting}
+            mono
+          />
+          <EditField
+            id="edit-org-country"
+            label="País"
+            value={country}
+            onChange={setCountry}
+            disabled={submitting}
+            placeholder="ES"
+            mono
+          />
+        </div>
+        <EditField
+          id="edit-org-contact"
+          label="Email de contacto"
+          required
+          type="email"
+          value={contactEmail}
+          onChange={setContactEmail}
+          disabled={submitting}
+        />
+        <EditField
+          id="edit-org-billing"
+          label="Email de facturación"
+          type="email"
+          value={billingEmail}
+          onChange={setBillingEmail}
+          disabled={submitting}
+        />
+        <div>
+          <label
+            htmlFor="edit-org-notes"
+            className="block text-[12.5px] font-medium text-[var(--text-secondary)] mb-1.5"
+          >
+            Notas internas
+          </label>
+          <textarea
+            id="edit-org-notes"
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            rows={3}
+            disabled={submitting}
+            className="w-full px-3 py-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] text-[13px] resize-y focus:outline-none focus:ring-2 focus:ring-[var(--color-pv-purple-500)]"
+          />
+        </div>
+
+        {error && (
+          <Callout kind="warning">
+            <p className="text-[13px] m-0">{error}</p>
+          </Callout>
+        )}
+
+        <div className="flex items-center justify-end gap-2 pt-2">
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            type="button"
+            disabled={submitting}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!name.trim() || !contactEmail.trim() || submitting}
+          >
+            {submitting ? 'Guardando…' : 'Guardar cambios'}
+          </Button>
+        </div>
+      </form>
+    </Modal>
+  )
+}
+
+function EditField({
+  id,
+  label,
+  value,
+  onChange,
+  disabled,
+  required,
+  type,
+  placeholder,
+  mono,
+}: {
+  id: string
+  label: string
+  value: string
+  onChange: (v: string) => void
+  disabled?: boolean
+  required?: boolean
+  type?: string
+  placeholder?: string
+  mono?: boolean
+}) {
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="block text-[12.5px] font-medium text-[var(--text-secondary)] mb-1.5"
+      >
+        {label}
+        {required && <span className="text-[var(--color-pv-purple-600)] ml-1">*</span>}
+      </label>
+      <input
+        id={id}
+        type={type ?? 'text'}
+        required={required}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        disabled={disabled}
+        placeholder={placeholder}
+        className={[
+          'w-full px-3 py-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] text-[13.5px]',
+          'focus:outline-none focus:ring-2 focus:ring-[var(--color-pv-purple-500)]',
+          mono ? 'font-mono' : '',
+        ].join(' ')}
+      />
     </div>
   )
 }

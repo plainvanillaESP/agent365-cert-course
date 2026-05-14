@@ -5,9 +5,11 @@ import { createOrganization } from '@/lib/admin'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
+import { useToast } from '@/contexts/ToastContext'
 
 export function AdminOrganizationNewPage() {
   const navigate = useNavigate()
+  const toast = useToast()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -58,8 +60,14 @@ export function AdminOrganizationNewPage() {
         notes: form.notes || null,
       })
       navigate(`/admin/organizaciones/${created.slug}`)
+      toast.show({
+        kind: 'success',
+        message: `Organización ${created.name} creada. Ya eres administrador.`,
+      })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo crear la organización')
+      const msg = err instanceof Error ? err.message : 'No se pudo crear la organización'
+      setError(msg)
+      toast.show({ kind: 'error', message: msg })
     } finally {
       setSaving(false)
     }

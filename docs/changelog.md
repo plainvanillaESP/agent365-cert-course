@@ -8,6 +8,23 @@ Tipos: `[Setup]` `[Investigación]` `[Diseño]` `[Contenido]` `[Build]` `[Fix]` 
 
 ---
 
+## 2026-05-14 — Fase R polish UX
+
+- `[UX]` Sprint de pulido sobre todo el trabajo de Fase R, antes de seguir con features. Mejora siete cosas que rechinaban en el uso real:
+  - **Mobile**: `AdminLayout` y `OrgAdminLayout` ahora tienen menú hamburguesa con drawer overlay en `< lg`. Antes, el panel admin era inutilizable desde el móvil porque la sidebar estaba `hidden lg:block` sin alternativa. Drawer con backdrop, transición translate-x, cierre con Escape, focus management, link "Volver al alumno" / "Volver al curso" incluido en mobile dentro del drawer.
+  - **Auto-añadir Plain Vanilla como admin al crear org**: `createOrganization` ahora inserta automáticamente al caller (platform_admin) como `organization_member` con rol `admin` de la org recién creada. Esto resuelve el "creo una org pero no puedo entrar a su panel /org/:slug/admin porque no soy admin de ella". Antes había que ejecutar SQL manual o pasar por R.2.5 para auto-asignarse.
+  - **Mensajes de error humanos**: helper `humanizeSupabaseError()` en `lib/admin.ts` traduce códigos Postgres (23505 unique_violation, 23503 fk_violation, 23502 not_null, 23514 check_violation, 42501 RLS), códigos PostgREST (PGRST116, PGRST204), y errores comunes de magic link/network a mensajes en español. Aplicado a las ~18 llamadas a Supabase que lanzaban `error.message` raw. Antes: "duplicate key value violates unique constraint organization_slug_key". Ahora: "Ya existe una organización con ese slug. Elige otro."
+  - **Sistema de toasts efímeros**: nuevo `ToastContext` con `useToast()` hook montado en `App.tsx` envolviendo `AppShell`. Toasts kind success/error/info, auto-dismiss 4s configurable, animación CSS `toast-in` añadida a `index.css`. Reemplaza callouts persistentes que se quedaban en la página al recargar. Aplicado a: añadir/quitar admin, crear org, crear subscription, revocar seat, invitar emails, editar org, eliminar org. Cuando hay error, el toast acompaña al callout en la página (no lo sustituye, así no se pierde el contexto).
+  - **Editar organización**: nueva función `updateOrganization(id, patch)` en API + modal `EditOrgModal` accesible desde botón "Editar" en el header del detalle de org. Form modal con name, legalName, taxId, billingEmail, contactEmail, country, notes. Slug NO editable (rompería URLs y bookmarks).
+  - **Eliminar organización**: nueva función `deleteOrganization(id)` en API + modal de confirmación con input que requiere escribir el slug exacto para activar el botón. Cascade automático en Postgres (subscriptions → seats; members; pending_invitations). En modo local hacemos cascade manualmente. Nueva sección "Zona peligrosa" al final del detalle de org con borde rojo y texto explicativo del impacto del borrado.
+  - **Sincronización de buscadores con URL**: `AdminUsersListPage` y `AdminCertificatesListPage` ahora persisten `?q=` (y `?curso=` en certs) en URL params con debounce 250ms. Permite compartir o bookmarkear un filtro, y mantiene el estado al pulsar atrás.
+  - **Empty states contextuales en modo dev local**: cuando `isSupabaseEnabled() === false` y la lista está vacía, mensaje adicional explicando "Estás en modo dev local, los datos que ves son de tu sesión" para evitar confundir "no hay nada" con "el backend no funciona".
+  - **Acceso restringido en `/org/:slug/admin`**: en lugar de redirigir silenciosamente al `/` cuando el user no es admin de la org, ahora muestra una pantalla "Acceso restringido" con el nombre de la org y un link de vuelta al inicio. Útil cuando alguien comparte un link de su panel con un compañero que no es admin.
+
+  Bundle inicial: 219.91 KB gzip (techo 290 KB) ✓. Ningún test roto (34/34 exam, 58/58 unit).
+
+---
+
 ## 2026-05-13 (continuación) — Fase R.2.5
 
 - `[Arch]` Fase R.2.5 — Completar admin Plain Vanilla. Cierra los huecos del MVP de R.2: añadir admin de org sin SQL manual + lista de usuarios + lista de certificados emitidos.

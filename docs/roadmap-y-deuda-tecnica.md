@@ -208,4 +208,4 @@ Si solo se va a invertir trabajo limitado, este es el orden con mejor relación 
 
 ---
 
-*Última actualización: 2026-05-13 tras Fase R.2.5 (admin Plain Vanilla completo: añadir admin a org desde UI con invitations pendientes, lista usuarios, lista certificados).*
+*Última actualización: 2026-05-14 tras sprint de polish UX (mobile drawer admin, auto-admin al crear org, errores humanizados, toasts, editar/eliminar org, sync URL en buscadores).*

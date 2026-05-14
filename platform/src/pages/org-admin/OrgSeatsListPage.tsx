@@ -11,6 +11,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
 import { Modal } from '@/components/Modal'
+import { useToast } from '@/contexts/ToastContext'
 import type { OrgContextValue } from '@/components/OrgAdminLayout'
 
 type SeatFilter = 'all' | 'assigned' | 'vacant' | 'revoked'
@@ -20,6 +21,7 @@ export function OrgSeatsListPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const courseFromUrl = searchParams.get('curso') ?? null
   const [filter, setFilter] = useState<SeatFilter>('all')
+  const toast = useToast()
 
   const [seats, setSeats] = useState<OrganizationSeat[]>([])
   const [subs, setSubs] = useState<OrganizationSubscription[]>([])
@@ -83,13 +85,22 @@ export function OrgSeatsListPage() {
 
   const handleRevoke = async () => {
     if (!revoking) return
+    const target = revoking
     try {
-      await revokeSeatById(revoking.id, revokeReason.trim() || undefined)
+      await revokeSeatById(target.id, revokeReason.trim() || undefined)
       setRevoking(null)
       setRevokeReason('')
       await reload()
+      toast.show({
+        kind: 'success',
+        message: target.assignedEmail
+          ? `Seat de ${target.assignedEmail} revocado`
+          : 'Seat revocado',
+      })
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'No se pudo revocar el seat')
+      const msg = e instanceof Error ? e.message : 'No se pudo revocar el seat'
+      setError(msg)
+      toast.show({ kind: 'error', message: msg })
     }
   }
 

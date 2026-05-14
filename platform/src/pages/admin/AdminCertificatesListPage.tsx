@@ -1,23 +1,45 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Award, Mail, ExternalLink, Search, X } from 'lucide-react'
 import { listIssuedCertificates, type IssuedCertificateRow } from '@/lib/admin'
+import { isSupabaseEnabled } from '@/lib/supabase'
 import { listCourses } from '@/lib/coursesRegistry'
 import { PageHeader } from '@/components/PageHeader'
 import { Callout } from '@/components/Callout'
 
 export function AdminCertificatesListPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialSearch = searchParams.get('q') ?? ''
+  const initialCourse = searchParams.get('curso') ?? ''
   const [certs, setCerts] = useState<IssuedCertificateRow[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [courseSlug, setCourseSlug] = useState<string>('')
-  const [search, setSearch] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [courseSlug, setCourseSlug] = useState<string>(initialCourse)
+  const [search, setSearch] = useState(initialSearch)
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch)
 
   const courses = listCourses()
 
+  // Debounce search + sync a URL
   useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(search), 250)
+    const id = setTimeout(() => {
+      setDebouncedSearch(search)
+      const next = new URLSearchParams(searchParams)
+      if (search) next.set('q', search)
+      else next.delete('q')
+      setSearchParams(next, { replace: true })
+    }, 250)
     return () => clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
+
+  // Sync courseSlug a URL inmediatamente
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams)
+    if (courseSlug) next.set('curso', courseSlug)
+    else next.delete('curso')
+    setSearchParams(next, { replace: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseSlug])
 
   useEffect(() => {
     let canceled = false
@@ -108,6 +130,12 @@ export function AdminCertificatesListPage() {
               ? 'No hay certificados que coincidan con los filtros.'
               : 'Aún no se ha emitido ningún certificado.'}
           </p>
+          {!isSupabaseEnabled() && !debouncedSearch && !courseSlug && (
+            <p className="text-[12px] text-[var(--text-muted)] mt-2">
+              Estás en modo dev local: los certificados se emiten en
+              Supabase. Configura el backend para verlos aquí.
+            </p>
+          )}
         </div>
       ) : (
         <div className="mt-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] overflow-hidden">

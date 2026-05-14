@@ -1,4 +1,5 @@
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Building2,
@@ -8,6 +9,8 @@ import {
   LogOut,
   Sun,
   Moon,
+  Menu,
+  X,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/hooks/useTheme'
@@ -18,21 +21,47 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 /**
  * Layout dedicado al panel admin de Plain Vanilla.
  *
- * Diferente del layout del alumno: header propio sin elementos de
- * curso, sidebar específica con las secciones del admin, y un link
- * para volver al lado alumno por si la persona logueada también
- * tiene cursos asignados.
+ *   - Header propio (sin slot del curso del alumno).
+ *   - Sidebar fija en >= lg con secciones del admin.
+ *   - En mobile (< lg), drawer overlay con menú hamburguesa para
+ *     poder navegar desde el móvil.
+ *   - Link "Volver al alumno" para alternar al lado consumidor.
  */
 export function AdminLayout() {
   const { user, signOut } = useAuth()
   const { theme, toggle } = useTheme()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const location = useLocation()
+
+  // Cierra el drawer al navegar
+  useEffect(() => {
+    setDrawerOpen(false)
+  }, [location.pathname])
+
+  // Cerrar con Escape
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [drawerOpen])
 
   return (
     <div className="min-h-dvh bg-[var(--bg-page)]">
-      {/* Header admin */}
       <header className="sticky top-0 z-30 h-[var(--layout-header-h)] backdrop-blur-md border-b border-[var(--border-default)] bg-[var(--bg-overlay)]">
         <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              label="Abrir navegación admin"
+              size="md"
+              className="lg:hidden -ml-1.5"
+            >
+              <Menu className="size-5" />
+            </IconButton>
+
             <Link
               to="/admin"
               className="flex items-center gap-3 min-w-0 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-pv-purple-500)] rounded-md px-1 py-1 -mx-1"
@@ -83,23 +112,68 @@ export function AdminLayout() {
         </div>
       </header>
 
-      {/* Body: sidebar + main */}
+      {/* Backdrop drawer mobile */}
+      {drawerOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          aria-hidden
+          onClick={() => setDrawerOpen(false)}
+        />
+      )}
+
       <div className="flex">
         <aside
-          className="hidden lg:block w-60 shrink-0 border-r border-[var(--border-default)] sticky top-[var(--layout-header-h)] h-[calc(100dvh-var(--layout-header-h))] overflow-y-auto py-4 px-3"
+          className={[
+            'fixed lg:sticky z-50 lg:z-0 inset-y-0 left-0 top-0 lg:top-[var(--layout-header-h)]',
+            'w-64 lg:w-60 shrink-0 border-r border-[var(--border-default)]',
+            'h-dvh lg:h-[calc(100dvh-var(--layout-header-h))] overflow-y-auto',
+            'bg-[var(--bg-page)] lg:bg-transparent',
+            'py-4 px-3 transition-transform duration-200',
+            drawerOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          ].join(' ')}
           aria-label="Navegación del panel admin"
         >
+          {/* Cabecera drawer mobile */}
+          <div className="lg:hidden flex items-center justify-between mb-4 pb-2 border-b border-[var(--border-default)] px-1">
+            <div className="flex items-center gap-2">
+              <Logotipo className="h-6 w-auto" />
+              <span className="text-[12.5px] font-semibold text-[var(--text-primary)]">
+                Admin
+              </span>
+            </div>
+            <IconButton
+              onClick={() => setDrawerOpen(false)}
+              label="Cerrar navegación"
+              size="md"
+            >
+              <X className="size-5" />
+            </IconButton>
+          </div>
+
           <nav className="space-y-0.5">
-            <AdminNavItem to="/admin" end icon={<LayoutDashboard className="size-[15px] stroke-[1.75]" aria-hidden />}>
+            <AdminNavItem
+              to="/admin"
+              end
+              icon={<LayoutDashboard className="size-[15px] stroke-[1.75]" aria-hidden />}
+            >
               Dashboard
             </AdminNavItem>
-            <AdminNavItem to="/admin/organizaciones" icon={<Building2 className="size-[15px] stroke-[1.75]" aria-hidden />}>
+            <AdminNavItem
+              to="/admin/organizaciones"
+              icon={<Building2 className="size-[15px] stroke-[1.75]" aria-hidden />}
+            >
               Organizaciones
             </AdminNavItem>
-            <AdminNavItem to="/admin/usuarios" icon={<Users className="size-[15px] stroke-[1.75]" aria-hidden />}>
+            <AdminNavItem
+              to="/admin/usuarios"
+              icon={<Users className="size-[15px] stroke-[1.75]" aria-hidden />}
+            >
               Usuarios
             </AdminNavItem>
-            <AdminNavItem to="/admin/certificados" icon={<Award className="size-[15px] stroke-[1.75]" aria-hidden />}>
+            <AdminNavItem
+              to="/admin/certificados"
+              icon={<Award className="size-[15px] stroke-[1.75]" aria-hidden />}
+            >
               Certificados
             </AdminNavItem>
           </nav>
@@ -114,9 +188,23 @@ export function AdminLayout() {
               </AdminNavItem>
             </div>
           </div>
+
+          {/* Link "Volver al alumno" en mobile dentro del drawer */}
+          <div className="lg:hidden mt-6 pt-4 border-t border-[var(--border-subtle)]">
+            <Link
+              to="/"
+              className="flex items-center gap-2 h-9 px-2.5 rounded-md text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)] transition-colors no-underline"
+            >
+              <ChevronLeft className="size-[14px] stroke-[2]" aria-hidden />
+              Volver al alumno
+            </Link>
+          </div>
         </aside>
 
-        <main id="main-content" className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <main
+          id="main-content"
+          className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-6 lg:py-8"
+        >
           <Outlet />
         </main>
       </div>

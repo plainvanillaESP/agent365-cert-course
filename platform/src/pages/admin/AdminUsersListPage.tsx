@@ -1,19 +1,30 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Search, Users, BookOpen, Mail, X } from 'lucide-react'
 import { listAllUsers, type UserListItem } from '@/lib/admin'
+import { isSupabaseEnabled } from '@/lib/supabase'
 import { PageHeader } from '@/components/PageHeader'
 import { Callout } from '@/components/Callout'
 
 export function AdminUsersListPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialSearch = searchParams.get('q') ?? ''
   const [users, setUsers] = useState<UserListItem[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [search, setSearch] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [search, setSearch] = useState(initialSearch)
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch)
 
-  // Debounce simple para no consultar en cada tecla
+  // Debounce + propagar a URL params
   useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(search), 250)
+    const id = setTimeout(() => {
+      setDebouncedSearch(search)
+      const next = new URLSearchParams(searchParams)
+      if (search) next.set('q', search)
+      else next.delete('q')
+      setSearchParams(next, { replace: true })
+    }, 250)
     return () => clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   useEffect(() => {
@@ -87,6 +98,13 @@ export function AdminUsersListPage() {
               ? `Ningún usuario coincide con "${debouncedSearch}".`
               : 'Aún no hay usuarios registrados en la plataforma.'}
           </p>
+          {!isSupabaseEnabled() && !debouncedSearch && (
+            <p className="text-[12px] text-[var(--text-muted)] mt-2">
+              Estás en modo dev local: la lista solo refleja tu sesión actual y los emails
+              que hayas invitado en esta sesión. Configura Supabase para ver usuarios
+              reales.
+            </p>
+          )}
         </div>
       ) : (
         <div className="mt-4 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] overflow-hidden">
