@@ -2,6 +2,8 @@ import { NavLink, Outlet, Link } from 'react-router-dom'
 import {
   LayoutDashboard,
   Building2,
+  Users,
+  Award,
   ChevronLeft,
   LogOut,
   Sun,
@@ -94,6 +96,12 @@ export function AdminLayout() {
             <AdminNavItem to="/admin/organizaciones" icon={<Building2 className="size-[15px] stroke-[1.75]" aria-hidden />}>
               Organizaciones
             </AdminNavItem>
+            <AdminNavItem to="/admin/usuarios" icon={<Users className="size-[15px] stroke-[1.75]" aria-hidden />}>
+              Usuarios
+            </AdminNavItem>
+            <AdminNavItem to="/admin/certificados" icon={<Award className="size-[15px] stroke-[1.75]" aria-hidden />}>
+              Certificados
+            </AdminNavItem>
           </nav>
 
           <div className="mt-8 pt-4 border-t border-[var(--border-subtle)]">
@@ -102,13 +110,7 @@ export function AdminLayout() {
             </p>
             <div className="space-y-0.5 opacity-50 pointer-events-none">
               <AdminNavItem to="#" icon={null}>
-                Usuarios
-              </AdminNavItem>
-              <AdminNavItem to="#" icon={null}>
                 Ventas B2C
-              </AdminNavItem>
-              <AdminNavItem to="#" icon={null}>
-                Certificados
               </AdminNavItem>
             </div>
           </div>
