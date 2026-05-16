@@ -2,7 +2,7 @@ import { NavLink, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { ChevronRight, Home as HomeIcon, BookOpenText, FlaskConical, ClipboardCheck, Link2, Settings as SettingsIcon, Sparkles } from 'lucide-react'
 import { useFlashcards } from '@/hooks/useFlashcards'
-import { AREAS, MODULES, type CourseArea, type CourseModule } from '@/lib/course'
+import { AREAS, MODULES, EXAM_MODULE, type CourseArea, type CourseModule } from '@/lib/course'
 import { useCourseOptional } from '@/contexts/CourseContext'
 import { useUnlockState } from '@/hooks/useModuleProgress'
 import { ModuleRow } from '@/components/ModuleRow'
@@ -82,9 +82,14 @@ export function NavSidebar({ open, onClose }: NavSidebarProps) {
             ))}
           </div>
 
-          {/* Examen final */}
+          {/* Examen final
+              EXAM_MODULE viene de course.ts y siempre está definido
+              (fallback al último módulo si el yaml no marca uno como
+              examen). `MODULES[16]` era un acceso por índice fijo que
+              fallaba con `undefined` cuando el curso tenía 16 módulos
+              de contenido sin examen aparte. */}
           <ExamSection
-            module={MODULES[16]}
+            module={EXAM_MODULE}
             currentModuleId={currentModuleId}
             onItemClick={onClose}
           />
