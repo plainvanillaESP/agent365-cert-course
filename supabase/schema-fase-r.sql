@@ -44,27 +44,9 @@ alter table public.organization enable row level security;
 -- Las organizaciones solo las gestionan platform_admins (via service_role)
 -- y los admins de la propia org las pueden leer. Member normal puede leer
 -- el nombre de su org para mostrarlo en la UI.
-drop policy if exists "members can read own org" on public.organization;
-create policy "members can read own org" on public.organization
-  for select using (
-    exists (
-      select 1 from public.organization_member m
-      where m.organization_id = organization.id
-        and m.user_id = auth.uid()
-    )
-  );
-
--- Update solo admins de la org.
-drop policy if exists "org admins can update own org" on public.organization;
-create policy "org admins can update own org" on public.organization
-  for update using (
-    exists (
-      select 1 from public.organization_member m
-      where m.organization_id = organization.id
-        and m.user_id = auth.uid()
-        and m.role = 'admin'
-    )
-  );
+-- Nota: las policies que dependen de organization_member se definen más
+-- abajo, tras crear esa tabla. Postgres valida las referencias de CREATE
+-- POLICY inmediatamente, no al final de la transacción.
 
 
 -- ────────────────────── organization_member ───────────────────────────────
@@ -92,6 +74,30 @@ create policy "members read own org members" on public.organization_member
       select 1 from public.organization_member m
       where m.organization_id = organization_member.organization_id
         and m.user_id = auth.uid()
+    )
+  );
+
+
+-- Policies sobre organization que dependían de organization_member:
+drop policy if exists "members can read own org" on public.organization;
+create policy "members can read own org" on public.organization
+  for select using (
+    exists (
+      select 1 from public.organization_member m
+      where m.organization_id = organization.id
+        and m.user_id = auth.uid()
+    )
+  );
+
+-- Update solo admins de la org.
+drop policy if exists "org admins can update own org" on public.organization;
+create policy "org admins can update own org" on public.organization
+  for update using (
+    exists (
+      select 1 from public.organization_member m
+      where m.organization_id = organization.id
+        and m.user_id = auth.uid()
+        and m.role = 'admin'
     )
   );
 
