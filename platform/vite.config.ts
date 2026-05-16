@@ -132,6 +132,15 @@ export default defineConfig({
 
   build: {
     outDir: 'dist',
-    sourcemap: false,
+    // Sourcemaps en producción: permiten ver el archivo/línea real cuando
+    // un usuario reporta un error desde el ErrorBoundary. El bundle gana
+    // ~10-15% en tamaño de assets servidos, pero el JS minificado en sí
+    // no cambia; solo se publican los archivos .map adicionales que el
+    // navegador descarga solo cuando hay DevTools abierto o cuando un
+    // error tiene una stack que apunta a un sourcemap conocido. En
+    // producción real para muchos clientes podríamos cambiar a
+    // 'hidden' (los .map se generan pero el navegador no los descarga),
+    // pero para depurar issues ahora preferimos visibles.
+    sourcemap: true,
   },
 })
