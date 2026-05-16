@@ -127,9 +127,36 @@ async function localSignOut(): Promise<void> {
 async function supabaseLoadCurrentUser(): Promise<User | null> {
   const supabase = getSupabase()
   if (!supabase) return null
-  const { data: { session }, error } = await supabase.auth.getSession()
-  if (error || !session?.user) return null
-  const u = session.user
+
+  // `getSession()` puede colgarse si el localStorage contiene un
+  // refresh_token corrupto o firmado con una clave anterior (cambio de
+  // env var del proyecto, etc.). El cliente entra en un bucle de
+  // refresh que nunca completa y la app queda en "Comprobando sesión…".
+  //
+  // Defensivo: timeout de 8s. Si vence, asumimos que la sesión está
+  // rota, limpiamos el storage de auth para arrancar fresco, y
+  // devolvemos null (LoginPage).
+  let sessionResult: Awaited<ReturnType<typeof supabase.auth.getSession>>
+  try {
+    sessionResult = await Promise.race([
+      supabase.auth.getSession(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('getSession timeout')), 8000),
+      ),
+    ])
+  } catch (err) {
+    console.warn('[auth] getSession timed out, clearing stale auth storage', err)
+    try {
+      await supabase.auth.signOut({ scope: 'local' })
+    } catch {
+      /* si signOut falla también, ignoramos */
+    }
+    return null
+  }
+
+  const { data, error } = sessionResult
+  if (error || !data?.session?.user) return null
+  const u = data.session.user
 
   // Cursos accesibles: tres fuentes en paralelo (R.1).
   //   1. course_enrollment (cortesía / asignación manual del admin)
