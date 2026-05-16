@@ -113,21 +113,23 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
             </button>
           </div>
 
-          {isDev && (
-            <details className="mt-8 text-left">
-              <summary className="text-[12px] text-[var(--text-muted)] cursor-pointer mb-2">
-                Detalles del error (solo visible en desarrollo)
-              </summary>
-              <pre className="text-[11px] font-mono text-red-700 dark:text-red-300 bg-[var(--bg-surface-2)] p-3 rounded overflow-x-auto whitespace-pre-wrap m-0">
-                {message}
-                {'\n\n'}
-                {this.state.error.stack}
-                {this.state.errorInfo?.componentStack
-                  ? '\n\nComponent stack:' + this.state.errorInfo.componentStack
-                  : ''}
-              </pre>
-            </details>
-          )}
+          {/* Detalles colapsables: mensaje siempre, stack solo en dev. El
+              mensaje del error es información necesaria para diagnosticar
+              y NO expone secretos por sí mismo. El stack incluye paths del
+              bundle (minificado en prod), así que tampoco. Aún así, el
+              <details> sale colapsado para no estresar al usuario. */}
+          <details className="mt-8 text-left">
+            <summary className="text-[12px] text-[var(--text-muted)] cursor-pointer mb-2 inline-flex items-center gap-1.5">
+              Detalles técnicos del error
+            </summary>
+            <pre className="text-[11px] font-mono text-red-700 dark:text-red-300 bg-[var(--bg-surface-2)] p-3 rounded overflow-x-auto whitespace-pre-wrap m-0 max-h-64 overflow-y-auto">
+              {message}
+              {isDev && this.state.error.stack ? '\n\n' + this.state.error.stack : ''}
+              {isDev && this.state.errorInfo?.componentStack
+                ? '\n\nComponent stack:' + this.state.errorInfo.componentStack
+                : ''}
+            </pre>
+          </details>
         </div>
       </div>
     )
