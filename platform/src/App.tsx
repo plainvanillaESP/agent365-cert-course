@@ -488,8 +488,13 @@ function AppShell({
  * `state.from` para volver tras el sign-in.
  */
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth()
+  const { user, status } = useAuth()
   const location = useLocation()
+  // Esperamos a resolver la sesión antes de decidir; ver
+  // RequirePlatformAdmin para los detalles del race condition.
+  if (status === 'loading') {
+    return <PageFallback />
+  }
   if (!user) {
     return (
       <Navigate
@@ -508,8 +513,14 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
  * porque la sesión es válida, simplemente no tiene permisos).
  */
 function RequirePlatformAdmin({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth()
+  const { user, status } = useAuth()
   const location = useLocation()
+  // Mientras el AuthContext carga la sesión (status='loading'), `user` es
+  // null. No podemos decidir si redirigir a /login porque aún no sabemos
+  // si hay sesión. Mostrar un fallback minimal (o nada) hasta resolver.
+  if (status === 'loading') {
+    return <PageFallback />
+  }
   if (!user) {
     return (
       <Navigate

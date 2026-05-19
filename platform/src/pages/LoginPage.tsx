@@ -4,7 +4,6 @@ import { LogIn, Mail, CheckCircle2, GraduationCap, ShieldCheck, Sparkles } from 
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/Button'
 import { Callout } from '@/components/Callout'
-import { Imagotipo } from '@/components/Logo'
 
 interface LocationState {
   from?: string
@@ -128,12 +127,6 @@ export function LoginPage() {
         />
 
         <div className="max-w-md text-white">
-          {/* Imagotipo en blanco (negative=true) porque el panel tiene un
-              gradiente púrpura→rosa de fondo y la versión con gradiente
-              brand se confunde con él. La versión sólida blanca contrasta
-              limpiamente sobre el color. */}
-          <Imagotipo className="size-10 mb-8" negative />
-
           <h2 className="text-[36px] font-bold leading-[1.1] tracking-tight mb-5">
             Aprende. Certifícate. Avanza.
           </h2>
