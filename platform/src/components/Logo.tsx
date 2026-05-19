@@ -18,16 +18,31 @@ interface LogoProps {
   alt?: string
 }
 
+interface ImagotipoProps extends LogoProps {
+  /**
+   * Si `true`, usa la versión sólida blanca del iris (para fondos oscuros
+   * o de color sólido como el panel izquierdo del login). Si `false` o no
+   * se pasa, usa la versión con gradiente brand (rosa→púrpura) que
+   * destaca sobre fondos claros y neutros.
+   */
+  negative?: boolean
+}
+
 const BASE = import.meta.env.BASE_URL
 
 /**
- * Solo el iris. Gradient pink→purple sobre fondo transparente. Mismo asset
- * en cualquier tema.
+ * Solo el iris. Por defecto, gradient pink→purple sobre fondo transparente.
+ * Pasa `negative` para usar la versión blanca sólida (apropiada para
+ * superficies de color como el panel left del LoginPage).
  */
-export function Imagotipo({ className = 'size-8', alt = 'Plain Vanilla' }: LogoProps) {
+export function Imagotipo({
+  className = 'size-8',
+  alt = 'Plain Vanilla',
+  negative = false,
+}: ImagotipoProps) {
   return (
     <img
-      src={`${BASE}imagotipo.svg`}
+      src={`${BASE}${negative ? 'imagotipo-negativo.svg' : 'imagotipo.svg'}`}
       alt={alt}
       className={className}
       decoding="async"
