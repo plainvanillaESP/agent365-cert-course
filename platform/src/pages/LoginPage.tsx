@@ -128,7 +128,11 @@ export function LoginPage() {
         />
 
         <div className="max-w-md text-white">
-          <Imagotipo className="size-10 mb-8" />
+          {/* Imagotipo en blanco (negative=true) porque el panel tiene un
+              gradiente púrpura→rosa de fondo y la versión con gradiente
+              brand se confunde con él. La versión sólida blanca contrasta
+              limpiamente sobre el color. */}
+          <Imagotipo className="size-10 mb-8" negative />
 
           <h2 className="text-[36px] font-bold leading-[1.1] tracking-tight mb-5">
             Aprende. Certifícate. Avanza.
