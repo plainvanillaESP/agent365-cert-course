@@ -111,6 +111,16 @@ export default defineConfig({
             navigateFallback: '/index.html',
             navigateFallbackDenylist: [/^\/api\//, /\/sw\.js$/, /\/assets\//],
             cleanupOutdatedCaches: true,
+            // skipWaiting + clientsClaim: cuando hay una nueva versión
+            // del SW, toma el control inmediatamente sin esperar al
+            // siguiente reload. Es lo que evita que un usuario se quede
+            // bloqueado en un bundle obsoleto tras un deploy con bugfix
+            // crítico (caso de los race conditions en RequireAuth post
+            // PR #81). Trade-off: cualquier estado en memoria de la
+            // versión vieja se descarta. Aceptable porque la app es
+            // mayormente stateless del lado SW.
+            skipWaiting: true,
+            clientsClaim: true,
           },
         }),
   ].filter(Boolean),
