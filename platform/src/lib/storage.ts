@@ -21,7 +21,7 @@
  * añadir un step one-shot que renombre `agent365-*` → `pv-learn-agent365-cert-*`.
  */
 
-import { useCourse } from '@/contexts/CourseContext'
+import { useCourseOptional } from '@/contexts/CourseContext'
 import { defaultCourseSlug } from '@/lib/coursesRegistry'
 
 /**
@@ -45,14 +45,22 @@ export function activeCourseSlug(): string {
  * Construye una storage key para el curso activo, p.ej.
  * `useCourseStorageKey('notes-m9')` → `'pv-learn-agent365-cert-notes-m9'`.
  *
- * Como es un hook, solo puede llamarse en componentes que viven bajo
- * `<CourseProvider>` (es decir, cualquier página dentro de
- * `/cursos/:slug/*`). Los hooks per-course (useNotes, useQuizState,
- * useHighlights, useFlashcards…) lo usan internamente.
+ * Históricamente solo funcionaba dentro de `<CourseProvider>` y lanzaba
+ * si se llamaba fuera. Esto causaba crashes en escenarios edge donde un
+ * componente del shell (NavSidebar/RepasoLink → useFlashcards →
+ * useCourseStorageKey) se montaba antes de que CourseProvider tuviera
+ * un curso resolvido (p.ej. al aterrizar en `/` con un hash de error de
+ * OTP expirado de Supabase).
+ *
+ * Ahora cae a `defaultCourseSlug()` si no hay provider. Los hooks
+ * consumidores leen datos del default y nada se rompe; cuando el
+ * provider se monta con el curso correcto, los hooks re-renderizan con
+ * la key correcta.
  */
 export function useCourseStorageKey(detail: string): string {
-  const { course } = useCourse()
-  return `pv-learn-${course.slug}-${detail}`
+  const ctx = useCourseOptional()
+  const slug = ctx?.course.slug ?? defaultCourseSlug()
+  return `pv-learn-${slug}-${detail}`
 }
 
 /**
